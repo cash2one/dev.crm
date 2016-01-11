@@ -1,0 +1,194 @@
+<?php
+
+class IExpertTeam extends EViewModel {
+
+    public $teamId;
+    public $teamName;
+    public $teamCode;
+    public $faculty;
+    public $facultyCode;
+    public $disTags;
+    public $slogan;
+    public $desc;
+    public $teamUrl;
+    public $introImageUrl;
+//    public $detailUrl;
+    public $teamPageUrl;
+    public $cityName;
+    public $hospital;          //Hospital's name
+    public $imageUrl;       // App 团队图标 
+    public $teamLeader;   // IExpertLeader
+    public $members;       //array(IExpertMember)
+
+    public function initModel($model, $attributesMap = null) {
+        if (is_null($attributesMap)) {
+            $attributesMap = $this->attributesMapping();
+        }
+        /**
+         * @TODO: move this part to EViewModel::initModel().
+         */
+        foreach ($attributesMap as $imodelAttr => $modelAttr) {
+            $this->{$imodelAttr} = $model->{$modelAttr};
+        }
+        /*
+          $this->teamId = $model->id;
+          $this->teamName = $model->name;
+          $this->teamCode = $model->code;
+          $this->slogan = $model->slogan;
+          $this->desc = $model->description;
+          $this->introImageUrl = $model->banner_url;
+         * 
+         */
+        //   $this->detailUrl = $model->detail_url;
+        // html static page for each expert team.
+        //$this->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $this->teamCode));
+         $this->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('id' => $this->teamId));
+        // html5 page for additional expert team details.
+        $this->teamDetailUrl = Yii::app()->createAbsoluteUrl('/mobile/expertteam/detail', array('code' => $this->teamCode));
+        // used for app to load expert team data.
+        $this->teamUrl = Yii::app()->createAbsoluteUrl('api/view', array('model' => 'expertteam', 'id' => $this->teamId));
+        $this->imageUrl = $model->getAppImageUrl();
+        $disTagsStr = explode(",", $model->dis_tags);
+        foreach ($disTagsStr as $dtStr) {
+            if ($dtStr != "") {
+                $this->disTags[] = $dtStr;
+            }
+        }
+    }
+
+    public function attributesMapping() {
+        return array(
+            'teamId' => 'id',
+            'teamName' => 'name',
+            'teamCode' => 'code',
+            'slogan' => 'slogan',
+            'desc' => 'description',
+            'introImageUrl' => 'banner_url'
+        );
+    }
+
+    public function addRelatedModel(ExpertTeam $model, $with = null) {
+        if (arrayNotEmpty($with)) {
+            foreach ($with as $relatedAttr) {
+                $relatedModel = $model->{$relatedAttr};
+                if (is_null($relatedModel)) {
+                    continue;
+                }
+                switch ($relatedAttr) {
+                    case "expteamLeader":
+                        $this->setIExpertLeader($relatedModel);
+                        break;
+                    case "expteamMembers":
+                        $this->addIExpertMemebers($relatedModel);
+                        break;
+                    case "expteamHospital":
+                        // $this->setIHospital($relatedModel);  // for use in future.                        
+                        $this->setHospitalName($relatedModel);  // for api 2.0, IExpertTeam.hospital = 医院名称.
+                        break;
+                    case "expteamHpDept":
+                        $this->setIHospitalDepartment($relatedModel);
+                        break;
+                    case "expteamFaculty":
+                        //$this->setIFaculty($relatedModel);     // for use in future.                                      
+                        $this->setFacultyName($relatedModel);  // for api 2.0, IExpertTeam.facutly = IExpertTeam.faculty = 科室名称.
+                        break;
+                    case "expteamCity":
+                        $this->setILocationCity($relatedModel);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        // Remove teamLeader from members if exist.
+        // @Note: check the actual attribute name for teamLeader and members in setIExpertLeader() & addIExpertMemebers().
+        if (isset($this->teamLeader) && arrayNotEmpty($this->members)) {
+            foreach ($this->members as $key => $member) {
+                if ($this->teamLeader->id == $member->id) {
+                    //   unset($member);
+                    unset($this->members[$key]);
+                    $this->members = array_values($this->members);  // reset array keys.
+                    break;
+                }
+            }
+        }
+    }
+
+    public function setIExpertLeader($model, $attrName = 'teamLeader') {
+        if ($model instanceof Doctor) {
+            $imodel = new IExpertLeader();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    public function addIExpertMemebers($models, $attrName = 'members') {
+        if (arrayNotEmpty($models)) {
+            foreach ($models as $model) {
+                $imodel = new IExpertMember();
+                $imodel->initModel($model);
+                $this->addIExpertMember($imodel, $attrName);
+            }
+        }
+    }
+
+    public function addIExpertMember(IExpertMember $imodel, $attrName = 'members') {
+        $this->{$attrName}[] = $imodel;
+    }
+
+    public function setHospitalName($model, $attrName = 'hospital') {
+        $this->{$attrName} = $model->getName(); // for api 2.0.
+        $this->hpName = $model->getName();       // for use in future.
+    }
+
+    public function setIHospital($model, $attrName = 'hospital') {
+        if ($model instanceof Hospital) {
+            $imodel = new IHospital();
+            $imodel->initModel($model, array('id', 'name', 'class', 'type'));
+
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    public function setIHospitalDepartment($model, $attrName = 'hpDept') {
+
+        if ($model instanceof HospitalDepartment) {
+            $imodel = new IHospitalDepartment();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    public function setFacultyName($model, $attrName = 'faculty') {
+        $this->{$attrName} = $model->getName(); // for api 2.0
+        $this->facultyName = $model->getName();    // for use in future.
+    }
+
+    public function setIFaculty($model, $attrName = 'faculty') {
+        if ($model instanceof Faculty) {
+            $imodel = new IFaculty();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    public function setILocationCity($model, $attrName = 'city') {
+        if ($model instanceof RegionCity) {
+            $imodel = new ILocationCity();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+}

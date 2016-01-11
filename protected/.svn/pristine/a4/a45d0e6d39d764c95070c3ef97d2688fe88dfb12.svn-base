@@ -1,0 +1,258 @@
+<?php
+
+class BookingController extends Controller {
+
+    private $model = null;  // Booking
+
+    /**
+     * @return array action filters
+     */
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+            'postOnly + delete', // we only allow deletion via POST request
+            'userContext + create index',
+        );
+    }
+
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules() {
+        return array(
+            array('allow', // allow all users to perform 'index' and 'view' actions
+                'actions' => array('index', 'view', 'test', 'quickbook'),
+                'users' => array('*'),
+            ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('ajaxCreate', 'update'),
+                'users' => array('@'),
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Displays a particular model.
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionView($id) {
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
+        ));
+    }
+
+    /**
+     * Updates a particular model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id the ID of the model to be updated
+     */
+    public function actionQuickbook() {
+        $this->show_header = false;
+        $this->show_footer = false;
+        $userId = Yii::app()->user->id;
+
+        $form = new BookingForm();
+        $form->initModel($userId);
+
+        if (Yii::app()->request->isPostRequest === false) {
+            $form->setValuesFromRequest($_GET);
+            $form->loadData();
+        } else {
+            $this->createBooking($form);
+        }
+        $this->render('quickbook', array(
+            'model' => $form,
+        ));
+    }
+
+    /**
+     * Creates a new model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     */
+    public function actionAjaxCreate() {
+        $this->headerUTF8();
+
+
+        if (isset($_POST['BookingForm'])) {
+            $user = $this->loadUser();
+            // create a BookingForm.
+            $form = new BookingForm();
+            $form->initModel($user->getId());
+            $form->attributes = $_POST['BookingForm'];
+            // Uncomment the following line if AJAX validation is needed
+            $this->performAjaxValidation($form);
+
+
+            $bookingMgr = new BookingManager();
+            $bookingMgr->createBooking($form, false);
+
+            //   $files = CUploadedFile::getInstances($form, 'files');
+            //   var_dump($_FILES);
+            //   var_dump($files);
+            if ($this->isAjaxRequest()) {
+                if ($form->getErrors()) {
+                    echo $form->getErrorsInJson();
+                } else {
+                    echo CJSON::encode(array('status' => true));
+                }
+                Yii::app()->end();
+            }
+            /*
+              $json = CJSON::encode($form->getErrors());
+              var_dump($form->getErrors());
+              echo $form->getErrorsInJson();
+              //echo $json;
+             * 
+             */
+        } else {
+            echo 'Invalid request.';
+            Yii::app()->end();
+        }
+    }
+
+    /**
+     * Updates a particular model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id the ID of the model to be updated
+     */
+    public function actionUpdate($id) {
+        $model = $this->loadModel($id);
+
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+
+        if (isset($_POST['Booking'])) {
+            $model->attributes = $_POST['Booking'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $model->id));
+        }
+
+        $this->render('update', array(
+            'model' => $model,
+        ));
+    }
+
+    /**
+     * Lists all models.
+     */
+    public function actionIndex() {
+        $dataProvider = new CActiveDataProvider('Booking');
+        $this->render('index', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    /**
+     * Returns the data model based on the primary key given in the GET variable.
+     * If the data model is not found, an HTTP exception will be raised.
+     * @param integer $id the ID of the model to be loaded
+     * @return Booking the loaded model
+     * @throws CHttpException
+     */
+    public function loadModel($id) {
+        if (is_null($this->model)) {
+            $this->model = Booking::model()->findByPk($id);
+        }
+        if (is_null($this->model)) {
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        return $this->model;
+    }
+
+    /**
+     * Performs the AJAX validation.
+     * @param Booking $model the model to be validated
+     */
+    protected function performAjaxValidation($model) {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'booking-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+    }
+
+    public function actionTest() {
+        $user = $this->loadUser();
+
+        // create a BookingForm.
+        $form = new BookingForm();
+        $form->initModel($user->getId());
+
+        $this->renderPartial("_form", array(
+            'model' => $form
+        ));
+    }
+
+    /**
+     * /booking/quickbook?type=4&hid=$hid&dept=$dept
+     * @param BookingForm $form
+     */
+    protected function createBooking(BookingForm $form) {
+
+        if (isset($_POST['BookingForm'])) {
+            $values = $_POST['BookingForm'];
+            $form->attributes = $values;
+            $form->setValuesFromRequest($values, "post");
+
+            // Uncomment the following line if AJAX validation is needed
+            $this->performAjaxValidation($form);
+            // loads data accroding to values from request.
+            $form->loadData();
+
+            $bookingMgr = new BookingManager();
+            //    if ($bookingMgr->createBooking($form, false)) {   // do not check verify_code.
+            if ($bookingMgr->createBooking($form)) {
+                // Send email to inform admin.
+                $ibooking = $bookingMgr->loadIBooking($form->id);
+                if (isset($ibooking)) {
+                    $emailMgr = new EmailManager();
+                    $emailMgr->sendEmailQuickBooking($ibooking);
+                }
+
+                // store successful message id in session.
+                $this->setFlashMessage("booking.success", "预约成功!我们的客服人员会在第一时间与您确认您的预约细节。");
+                $this->refresh(true);     // terminate and refresh the current page.
+            } else {
+                
+            }
+        }
+    }
+
+    /*
+      protected function createBooking(BookingForm $form) {
+      // Get booking details from querystring.
+      $get = $_GET;
+      if (isset($get['target'])) {
+      $form->setBookingTarget($get['target']);
+      }
+      if (isset($get['fid'])) {
+      $form->setFacultyId($get['fid']);
+      }
+      if (isset($_POST['BookingForm'])) {
+      $form->attributes = $_POST['BookingForm'];
+      $bookingMgr = new BookingManager();
+      //if ($bookingMgr->createBooking($form, false)) {   // do not check verify_code.
+      if ($bookingMgr->createBooking($form)) {
+      // Send email to inform admin.
+      $booking = $bookingMgr->loadBookingById($form->id, array("facultyBooked"));
+      if (isset($booking)) {
+      $emailMgr = new EmailManager();
+      $emailMgr->sendEmailQuickBooking($booking);
+      }
+
+      // store successful message id in session.
+      $this->setFlashMessage("booking.success", "预约成功!我们的客服人员会在第一时间与您确认您的预约细节。");
+      $this->refresh(true);     // terminate and refresh the current page.
+      } else {
+
+      }
+      }
+      }
+     * 
+     */
+}

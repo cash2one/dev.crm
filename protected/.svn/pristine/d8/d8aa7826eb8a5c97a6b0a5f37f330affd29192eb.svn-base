@@ -1,0 +1,13 @@
+<?php
+
+class IDoctorAvatar extends EViewModel {
+
+    public function initModel(DoctorAvatar $model) {
+        $this->id = $model->getId();
+        $this->doctorId = $model->getDoctorId();        
+        $this->url = $model->getAbsFileUrl();
+        $this->urlTN = $model->getAbsThumbnailUrl();
+        $this->size = $model->getFileSize();
+    }
+
+}

@@ -1,0 +1,101 @@
+<?php
+
+class ApiViewHospitalSearch extends EApiService {
+
+    private $hospitals;
+    private $locations;
+    private $cityId;
+    private $currentLocation;
+    private $querystring;
+
+    public function __construct($querystring) {
+        parent::__construct();
+        $this->querystring = $querystring;
+        $this->querystring['is_show'] = 1;
+        $this->querystring['order'] = 'display_order';
+        $this->cityId = isset($querystring['city']) ? $querystring['city'] : null;
+    }
+
+    protected function loadData() {
+        // load Hospitals.
+        $this->loadHospitals();
+        // load Location Navigation.
+        $this->loadLocations();
+    }
+
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'currentLocation' => $this->currentLocation,
+                'locations' => $this->locations,
+                'hospitals' => $this->hospitals,
+            );
+        }
+    }
+
+    private function loadHospitals() {
+        if (is_null($this->hospitals)) {
+            $this->hospitals = array();
+            $hospitalSearch = new HospitalSearch();
+            $hospitals = $hospitalSearch->search($this->querystring);
+            if (arrayNotEmpty($hospitals)) {
+                $this->setHospitals($hospitals);
+            }
+        }
+    }
+
+    private function loadLocations() {
+        if (is_null($this->locations)) {
+            $this->locations = array();
+            $data = array(
+                array(
+                    'id' => 1, 'name' => '北京',
+                ),
+                array(
+                    'id' => 73, 'name' => '上海',
+                ),
+                array(
+                    'id' => 74, 'name' => '南京',
+                ),
+                array(
+                    'id' => 87, 'name' => '杭州',
+                ),
+            );
+            $this->setLocationList($data);
+            $this->setCurrentLocation($this->cityId);
+        }
+    }
+
+    private function setHospitals(array $models) {
+        foreach ($models as $model) {
+            $data = new stdClass();
+            $data->id = $model->getId();
+            $data->name = $model->getName();
+            $data->imageUrl = $model->getAbsUrlAvatar();
+            $data->hpClass = $model->getClass();
+            $data->hpType = $model->getType();
+            $data->phone = $model->getPhone();
+            $this->hospitals[] = $data;
+        }
+    }
+
+    private function setLocationList(array $list) {
+        foreach ($list as $city) {
+            $data = new stdClass();
+            $data->id = $city['id'];
+            $data->name = $city['name'];
+            $this->locations[] = $data;
+        }
+    }
+
+    private function setCurrentLocation($cityId) {
+        foreach ($this->locations as $location) {
+            if ($location->id == $cityId) {
+                $this->currentLocation = $location;
+                break;
+            }
+        }
+    }
+
+}

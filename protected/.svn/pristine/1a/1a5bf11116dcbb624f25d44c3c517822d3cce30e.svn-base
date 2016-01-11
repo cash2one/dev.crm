@@ -1,0 +1,9 @@
+<?php
+
+class IExpertMember extends IDoctor {
+
+    public function initModel(Doctor $model){
+        parent::initModel($model);
+    }
+}
+

@@ -1,0 +1,59 @@
+<?php
+
+class ApiViewDoctorSearch extends EApiService {
+
+    private $searchInputs;
+    private $doctorSearch;
+    private $doctors;
+
+    public function __construct($searchInputs) {
+        parent::__construct();
+        $this->searchInputs = $searchInputs;
+        $this->doctorSearch = new DoctorSearch($this->searchInputs);
+    }
+
+    protected function loadData() {
+        // load Doctors.
+        $this->loadDoctors();
+    }
+
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'doctors' => $this->doctors,
+            );
+        }
+    }
+
+    private function loadDoctors() {
+        if (is_null($this->doctors)) {
+            $models = $this->doctorSearch->search();
+            if (arrayNotEmpty($models)) {
+                $this->setDoctors($models);
+            }
+        }
+    }
+
+    private function setDoctors(array $models) {
+        foreach ($models as $model) {
+            $data = new stdClass();
+            $data->id = $model->getId();
+            $data->name = $model->getName();
+            $data->docName = $data->name;   //@TODO delete.
+            $data->mTitle = $model->getMedicalTitle();
+            $data->aTitle = $model->getAcademicTitle();
+            // $data->hospital = $model->getHospitalId();
+            $data->hpName = $model->getHospitalName();
+            $data->hospital = $data->hpName;    //@TODO delete.
+            $data->hpDeptId = $model->getHpDeptId();
+            $data->hpDeptName = $model->getHpDeptName();
+            $data->desc = $model->getDescription();
+            $data->imageUrl = $model->getAbsUrlAvatar();
+            $data->urlImage = $data->imageUrl;  //@TODO delete.
+            $data->bookingUrl = Yii::app()->createAbsoluteUrl('/mobile/home/enquiry', array('doctor' => $data->id));    // @used by app.
+            $this->doctors[] = $data;
+        }
+    }
+
+}

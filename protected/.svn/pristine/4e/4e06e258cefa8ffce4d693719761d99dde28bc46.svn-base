@@ -1,0 +1,220 @@
+<?php
+
+/**
+ * This is the model class for table "sales_order".
+ *
+ * The followings are the available columns in table 'sales_order':
+ * @property integer $id
+ * @property string $ref_no
+ * @property integer $user_id
+ * @property integer $bk_id
+ * @property integer $bk_type
+ * @property string $subject
+ * @property string $description
+ * @property integer $is_paid
+ * @property string $date_open
+ * @property string $date_closed
+ * @property string $created_by
+ * @property string $total_amount
+ * @property integer $discount_percent
+ * @property string $discount_amount
+ * @property string $final_amount
+ * @property string $currency
+ * @property string $date_created
+ * @property string $date_updated
+ * @property string $date_deleted
+ */
+class SalesOrder extends EActiveRecord {
+
+    public $bk_ref_no;
+
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return 'sales_order';
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('ref_no, bk_id, bk_type, date_open, subject, final_amount', 'required', 'message'=>'请填写{attribute}'),
+            array('user_id, bk_id, bk_type, is_paid, discount_percent', 'numerical', 'integerOnly' => true),
+            array('ref_no', 'length', 'max' => 16),
+            array('subject', 'length', 'max' => 100),
+            array('description', 'length', 'max' => 500),
+            array('created_by', 'length', 'max' => 50),
+            array('total_amount, discount_amount, final_amount', 'length', 'max' => 10),
+            array('currency', 'length', 'max' => 3),
+            array('date_closed, date_created, date_updated, date_deleted', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, ref_no, user_id, bk_id, bk_type, subject, description, is_paid, date_open, date_closed, created_by, total_amount, discount_percent, discount_amount, final_amount, currency, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'ref_no' => '订单号',
+            'user_id' => 'User',
+            'bk_id' => 'Bk',
+            'bk_type' => 'Bk Type',
+            'subject' => '订单标题',
+            'description' => '订单详情',
+            'is_paid' => 'Is Paid',
+            'date_open' => 'Date Open',
+            'date_closed' => 'Date Closed',
+            'created_by' => 'Created By',
+            'total_amount' => '金额',
+            'discount_percent' => 'Discount Percent',
+            'discount_amount' => 'Discount Amount',
+            'final_amount' => '金额',
+            'currency' => 'Currency',
+            'date_created' => 'Date Created',
+            'date_updated' => 'Date Updated',
+            'date_deleted' => 'Date Deleted',
+        );
+    }
+
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('ref_no', $this->ref_no, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('bk_id', $this->bk_id);
+        $criteria->compare('bk_type', $this->bk_type);
+        $criteria->compare('subject', $this->subject, true);
+        $criteria->compare('description', $this->description, true);
+        $criteria->compare('is_paid', $this->is_paid);
+        $criteria->compare('date_open', $this->date_open, true);
+        $criteria->compare('date_closed', $this->date_closed, true);
+        $criteria->compare('created_by', $this->created_by, true);
+        $criteria->compare('total_amount', $this->total_amount, true);
+        $criteria->compare('discount_percent', $this->discount_percent);
+        $criteria->compare('discount_amount', $this->discount_amount, true);
+        $criteria->compare('final_amount', $this->final_amount, true);
+        $criteria->compare('currency', $this->currency, true);
+        $criteria->compare('date_created', $this->date_created, true);
+        $criteria->compare('date_updated', $this->date_updated, true);
+        $criteria->compare('date_deleted', $this->date_deleted, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return SalesOrder the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function initFromBk($model) {
+        $this->ref_no = $model->ref_no;
+        $this->user_id = $model->user_id;
+        $this->bk_id = $model->id;
+        $this->bk_type = StatCode::TRANS_TYPE_BK;
+        $this->is_paid = 0;
+        $this->created_by = Yii::app()->user->id;
+        $this->date_open = new DateTime();
+    }
+
+    public function initFromPb($model) {
+        $this->ref_no = $model->ref_no;
+        $this->user_id = $model->user_id;
+        $this->bk_id = $model->id;
+        $this->bk_type = StatCode::TRANS_TYPE_PB;
+        $this->is_paid = 0;
+        $this->created_by = Yii::app()->user->id;
+        $this->date_open = new CDbExpression('NOW()');
+    }
+
+    public function createRefNo($refNo, $bkId, $bkType) {
+        $db = Yii::app()->db;
+        $sql = "SELECT COUNT(*) FROM sales_order WHERE bk_id = " . $bkId . " AND bk_type = " . $bkType;
+        $result = $db->createCommand($sql)->query();
+        foreach ($result as $r) {
+            $count = $r['COUNT(*)'] + 1;
+        }
+        if ($count < 10) {
+            $count = '0' . $count;
+        }
+        $this->ref_no = $refNo . $count;
+    }
+
+    public function setAmount($v) {
+        //prepare for auto calculate amount
+        //no discount now
+        $this->final_amount = $v;
+        $this->total_amount = $this->final_amount;
+        $this->discount_percent = 0;
+        $this->discount_amount = 0;
+    }
+
+    /** getters and setters * */
+    public function getSubject() {
+        return $this->subject;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setSubject($v) {
+        $this->subject = $v;
+    }
+
+    public function setDescription($v) {
+        $this->description = $v;
+    }
+
+    public function setIsPaid($v) {
+        $this->is_paid = $v;
+    }
+
+    public function setDateOpen($v) {
+        $this->date_open = $v;
+    }
+
+    public function setDateClosed($v) {
+        $this->date_closed = $v;
+    }
+
+}

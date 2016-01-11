@@ -1,0 +1,22 @@
+<?php
+
+class ILocationCity extends EViewModel {
+
+    public $id;
+    public $name;    
+
+    public function initModel($model) {
+        $this->id = $model->getId();
+        $this->name = $model->name;
+        //$this->stateId = $model->state_id;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+}

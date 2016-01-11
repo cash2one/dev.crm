@@ -1,0 +1,76 @@
+<?php
+
+class PatientManager {
+
+    public function loadPatientInfoById($id, $attributes = null, $with = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        $criteria = new CDbCriteria();
+        $criteria->select = $attributes;
+        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('t.id', $id);
+        if (is_array($with)) {
+            $criteria->with = $with;
+        }
+        return PatientInfo::model()->find($criteria);
+    }
+
+    public function loadPatientMRById($id, $attributes = '*', $with = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        $criteria = new CDbCriteria();
+        $criteria->select = $attributes;
+        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('t.id', $id);
+        if (is_array($with)) {
+            $criteria->with = $with;
+        }
+        return PatientMR::model()->find($criteria);
+    }
+
+    public function loadPatientMRByPatientId($patientId, $attributes = null, $with = null) {
+        return PatientMR::model()->getByPatientId($patientId, $attributes, $with);
+    }
+
+    public function loadPatientMRFilesByMRId($mrid, $attributes = null, $with = null) {
+        return PatientMRFile::model()->getAllByMRId($mrid, $attributes, $with);
+    }
+
+    public function loadPatientBookingById($bookingId, $attributes = null, $with = null) {
+        return PatientBooking::model()->getById($bookingId, $with);
+    }
+
+    public function createPatientMRFile(PatientMR $patientMR) {
+        $patientId = $patientMR->getPatientId();
+        $creatorId = $patientMR->getCreatorId();
+        $mrid = $patientMR->getId();
+        $uploadField = PatientMRFile::model()->file_upload_field;
+        $file = EUploadedFile::getInstanceByName($uploadField);
+        if (isset($file)) {
+            $output['filemodel'] = $this->savePatientMRFile($mrid, $patientId,$creatorId, $file);
+        } else {
+            $output['error'] = 'missing uploaded file in - ' . $uploadField;
+        }
+        return $output;
+    }
+
+    /**
+     * Get EUploadedFile from $_FILE. 
+     * Create DoctorCert model. 
+     * Save file in filesystem. 
+     * Save model in db.
+     * @param EUploadedFile $file EUploadedFile::getInstances()
+     * @param integer $doctorId Doctor.id     
+     * @return DoctorCert 
+     */
+    private function savePatientMRFile($mrid, $patientId, $creatorId, $file) {
+        $pFile = new PatientMRFile();
+        $pFile->initModel($mrid, $patientId, $creatorId, $file);
+        $pFile->saveModel();
+
+        return $pFile;
+    }
+
+}

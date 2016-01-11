@@ -1,0 +1,10 @@
+<?php
+
+class BookingController extends MobileController {
+
+
+    public function actionView(){
+        $this->render("view");
+    }
+
+}

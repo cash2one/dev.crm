@@ -1,0 +1,148 @@
+<?php
+
+class ApiViewOpenCity extends EApiViewService {
+
+    public function __construct() {
+        parent::__construct();
+        $this->results = new stdClass();
+    }
+
+    protected function loadData() {
+        $this->loadCity();
+    }
+
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'errorCode' => 0,
+                'errorMsg' => 'success',
+                'results' => $this->results,
+            );
+        }
+    }
+
+    public function loadCity()
+    {
+        $data = array(
+                array(
+                    'id' => 1,
+                    'state' => '热门城市',
+                    'subCity' => array(
+                        array(
+                            'id' => 1,
+                            'city' => '北京',
+                        ),
+                        array(
+                            'id' => 73,
+                            'city' => '上海',
+                        ),
+                        array(
+                            'id' => 200,
+                            'city' => '广州',
+                        ),
+                    ),
+                ),
+                array(
+                    'id' => 10,
+                    'state' => '江苏',
+                    'subCity' => array(
+                        array(
+                            'id' => 74,
+                            'city' => '南京',
+                        ),
+                        array(
+                            'id' => 75,
+                            'city' => '无锡',
+                        ),
+                        array(
+                            'id' => 76,
+                            'city' => '徐州',
+                        ),
+                        array(
+                            'id' => 77,
+                            'city' => '常州',
+                        ),
+                        array(
+                            'id' => 78,
+                            'city' => '苏州',
+                        ),
+                        array(
+                            'id' => 79,
+                            'city' => '南通',
+                        ),
+                        array(
+                            'id' => 80,
+                            'city' => '连云港',
+                        ),
+                        array(
+                            'id' => 81,
+                            'city' => '淮安',
+                        ),
+                        array(
+                            'id' => 82,
+                            'city' => '盐城',
+                        ),
+                        array(
+                            'id' => 83,
+                            'city' => '扬州',
+                        ),
+                        array(
+                            'id' => 84,
+                            'city' => '镇江',
+                        ),
+                    ),
+                ),
+                array(
+                    'id' => 11,
+                    'state' => '浙江',
+                    'subCity' => array(
+                        array(
+                            'id' => 87,
+                            'city' => '杭州',
+                        ),
+                        array(
+                            'id' => 88,
+                            'city' => '宁波',
+                        ),
+                        array(
+                            'id' => 89,
+                            'city' => '温州',
+                        ),
+                        array(
+                            'id' => 90,
+                            'city' => '嘉兴',
+                        ),
+                        array(
+                            'id' => 91,
+                            'city' => '湖州',
+                        ),
+                        array(
+                            'id' => 93,
+                            'city' => '金华',
+                        ),
+                        array(
+                            'id' => 94,
+                            'city' => '衢州',
+                        ),
+                        array(
+                            'id' => 95,
+                            'city' => '舟山',
+                        ),
+                        array(
+                            'id' => 97,
+                            'city' => '丽水',
+                        ),
+
+                    ),
+                ),
+
+        );
+        $this->setCity($data);
+    }
+    private function setCity($data){
+        $this->results = $data;
+    }
+
+
+}

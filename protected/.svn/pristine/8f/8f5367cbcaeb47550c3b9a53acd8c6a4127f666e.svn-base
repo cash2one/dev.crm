@@ -1,0 +1,39 @@
+<?php
+
+
+class ExpertTeamSearch extends ESearchModel{
+
+    public function __construct($searchInputs, $with = null) {
+        parent::__construct($searchInputs, $with);
+    }
+
+    public function model() {
+        $this->model = new ExpertTeam();
+    }
+
+    public function getQueryFields() {
+        return array('city', 'disease');
+    }
+
+
+    //@修改
+    public function addQueryConditions() {
+        $this->criteria->addCondition('t.date_deleted is NULL');
+
+        if ($this->hasQueryParams()) {
+
+            // City.
+            if (isset($this->queryParams['city'])) {
+                $cityId = $this->queryParams['city'];
+                $this->criteria->compare('t.city_id', $cityId);
+            }
+            // Disease.
+            if (isset($this->queryParams['disease'])) {
+                $diseaseId = $this->queryParams['disease'];
+                $this->criteria->join .= 'left join disease_expteam_join dej on (t.`id`=dej.`expteam_id`)';
+                $this->criteria->compare("dej.disease_id", $diseaseId);
+                $this->criteria->distinct = true;
+            }
+        }
+    }
+} 

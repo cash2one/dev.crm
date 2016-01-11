@@ -1,0 +1,83 @@
+<?php
+
+class ExpertTeamManager {
+    
+    public function testLoad($id,$with=null){
+        $model = ExpertTeam::model()->getById($id, $with);
+    }
+
+    public function loadIExpertTeamJson($id) {
+        $output = $this->loadIExpertTeamById($id);
+        if (is_null($output)) {
+            return null;
+        } else {
+            return array('expertTeam' => $output);
+        }
+    }
+
+    public function loadIExpertTeamById($id, $with = null) {
+        if (is_null($with)) {
+            $with = array('expteamHospital', 'expteamLeader','expteamFaculty','expteamHpDept','expteamMembers');
+        }
+        $model = $this->loadExpertTeamById($id, $with);
+        if(isset($model)){
+            $iteam = new IExpertTeam();
+            $iteam->initModel($model);
+            return $iteam;
+        }else {
+            return null;
+        }
+    }
+    
+    public function loadTeamById($id,$with=null) {
+        $model = ExpertTeam::model()->getById($id, $with);
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Record is not found.');
+        }
+        return $model;
+    }
+
+    public function loadTeamByCode($code,$with=null) {
+        $model = ExpertTeam::model()->getByCode($code, $with);
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Record is not found.');
+        }
+        return $model;
+    }
+
+    // loads all teams belonging to given faculty.
+    public function loadTeamsByFacultyId($fid,$with=null,$options=null) {
+        if (is_null($with)) {
+            $with = array('expteamHospital', 'expteamLeader','expteamFaculty','expteamHpDept','expteamMembers');
+        }
+        return ExpertTeam::model()->getAllByFacultyId($fid,$with,$options);
+    }
+
+    // loads only ONE team belonging to given faculty.
+    public function loadTeamByFacultyId($fid) {
+        $model = ExpertTeam::model()->getByFacultyId($fid, $with);
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Record is not found.');
+        }
+        return $model;
+    }
+    
+    public function convertToIExpertTeam($model){
+        if($model instanceof IExpertTeam){
+            $iteam = new IExpertTeam();
+            $iteam->initModel($model);
+            return $iteam;
+        }else if(arrayNotEmpty($model)){
+            $iteams = array();
+            foreach ($model as $et){
+                $iteam = new IExpertTeam(); 
+                $iteam->initModel($et);
+                $iteams[] = $iteam;
+            }
+            return $iteams;
+        }else{
+            return null;
+        }
+    }
+
+}

@@ -1,0 +1,77 @@
+<?php
+//$booking IBooking.
+//$user User.
+$siteUrl = $this->createAbsoluteUrl('/');
+$bookingUrl = $this->createAbsoluteUrl('booking/view', array('refNo' => $booking->getReferenceNumber()));
+?>
+<div style="width:600px;">
+    <table cellpadding="10" style="width:100%;height:100%;background-color: #FAF8F8;border-collapse:collapse;font-family: 'Microsoft YaHei';">
+        <thead>
+            <tr style="background-color:#66CDCC;color:#fff;font-size:18px;text-align: left;border-bottom:1px solid #fff;">
+                <th colspan="2"><strong><i>Guidesky 伴客旅行</i></strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr xstyle="height:40px;text-indent:20px;color:#000">
+                <td colspan="2"><strong>亲爱的<?php echo $user->getNickname(); ?>，</strong></td>
+            </tr>
+            <tr xstyle="height:40px;text-indent:20px;color:#000;font:normal 13px 'Microsoft YaHei',sans-serif">
+                <td colspan="2">恭喜您，您在<a href="<?php echo $siteUrl; ?>">伴客</a>网站上的预订已得到伴客的确认。您离梦想的旅程仅差最后一步，立刻点击以下链接，完成付款吧！</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <a href="<?php echo $bookingUrl; ?>" style="display:inline-block;padding:8px 40px;margin:0;border:1px solid #f63;color:#fff;background-color: #f63;text-align: center;text-decoration: none;">立即付款</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">预订详情如下：</td>
+            </tr>
+            <tr>
+                <td style="width:20%;text-align: right;">伴游项目：</td><td><?php echo $trip->getTitle(); ?></td>
+            </tr>
+            <?php
+            $priceItem = $booking->getPriceItem();
+            if (empty($priceItem) === false) {
+                echo '<tr>';
+                echo '<td style="width:20%;text-align: right;">款项名称：</td><td>' . $priceItem . '</td>';
+                echo '</tr>';
+            }
+            ?>
+            <tr>
+                <td style="width:20%;text-align: right;">出行日期：</td><td><?php echo $booking->getStartDateText(); ?></td>
+            </tr>
+            <tr>
+                <td style="width:20%;text-align: right;">开始时间：</td><td><?php echo $booking->getStartTimeText(); ?></td>
+            </tr>
+            <tr>
+                <td style="width:20%;text-align: right;">成人：</td><td><?php echo $booking->getHeadcountText('无'); ?></td>
+            </tr>
+            <tr>
+                <td style="width:20%;text-align: right;">儿童：</td><td><?php echo $booking->getHeadcountChildText('无'); ?></td>
+            </tr>
+            <tr>
+                <td style="width:20%;text-align: right;">金额：</td><td><?php echo $booking->getTotalPriceText(); ?></td>
+            </tr>
+            <tr>
+                <td style="width:20%;text-align: right;">备注：</td><td><?php echo $booking->getRequest(); ?></td>
+            </tr>
+            <tr>
+                <td colspan="2">友情提示，请记得在查看预顶页面完善您的联系人信息。伴客网站会帮您保管您的预定金，直到旅行顺利完成后支付给伴客。</td>
+            </tr> 
+            <tr>
+                <td colspan="2"> 预祝您有一个完美的旅行！</td>
+            </tr>           
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr>
+                <td colspan="2">您真诚的：</td>
+            </tr> 
+            <tr>
+                <td colspan="2">伴客旅行</td>
+            </tr>
+            <tr>
+                <td colspan="2">www.guidesky.com</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,390 @@
+<?php
+
+/**
+ * Controller is the customized base controller class.
+ * All controller classes for this application should extend from this base class.
+ */
+abstract class Controller extends CController {
+
+    /**
+     * @var string the default layout for the controller view. Defaults to '//layouts/column1',
+     * meaning using a single column layout. See 'protected/views/layouts/column1.php'.
+     */
+    public $layout = '//layouts/layoutMain';
+    public $defaultAction = 'index';
+
+    /**
+     * @var array context menu items. This property will be assigned to {@link CMenu::items}.
+     */
+    public $menu = array();
+    public $pageTitle = '名医主刀 - 名医随时有,手术不再难';
+
+    /**
+     * @var array the breadcrumbs of the current page. The value of this property will
+     * be assigned to {@link CBreadcrumbs::links}. Please refer to {@link CBreadcrumbs::links}
+     * for more details on how to specify this property.
+     */
+    public $breadcrumbs = array();
+    public $content_container = 'container page-container';
+    public $site_menu = null;
+    public $show_header = true;
+    public $show_header_navbar = true;
+    public $show_footer = true;
+    public $current_user = null;
+
+    public function init() {
+        if (isset(Yii::app()->theme)) {
+            Yii::app()->clientScript->scriptMap = array(
+                //'jquery.js' => Yii::app()->theme->baseUrl . '/js/jquery-1.8.3.min.js',            
+                'jquery.js' => Yii::app()->theme->baseUrl . '/js/jquery-1.9.1.min.js',
+                'jquery.min.js' => Yii::app()->theme->baseUrl . '/js/jquery-1.9.1.min.js',
+                'jquery.yiiactiveform.js' => Yii::app()->theme->baseUrl . '/js/jquery.yiiactiveform.js',
+            );
+        }
+
+        Yii::app()->clientScript->registerCoreScript('jquery');
+
+        if ($this->isAgentApp()) {
+            //request is from mobile app.
+            $this->show_header = false;
+            $this->show_footer = false;
+        }
+
+        return parent::init();
+    }
+
+    /*
+     * In-class defined filter method, configured for use in the above filters() method.
+     * It is called before the actionCreate() action method is run in order to ensure a proper user content.
+     */
+
+    public function filterUserContext($filterChain) {
+        // Load User data model from session.
+        $this->loadUser();
+
+        //complete the running of other filters and execute the requested action.
+        $filterChain->run();
+    }
+
+    /**
+     * Performs the AJAX validation.
+     * @param User $model the model to be validated
+     */
+    protected function performAjaxValidation($model) {
+        //if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-form') {
+        if (isset($_POST['ajax'])) {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+    }
+
+    /**
+     * Protected method to load the associated User model class from login session.
+     * @return object the User data model based on the primary key stored in session.
+     */
+    public function loadUser($with = null) {
+        if (is_null($this->current_user)) {
+            if (isset(Yii::app()->user->id)) {
+                $this->current_user = User::model()->getById(Yii::app()->user->id, $with);
+            }
+            if (is_null($this->current_user)) {
+                throw new CHttpException(404, 'The requested page does not exist.');
+            }
+        }
+        return $this->current_user;
+    }
+
+    public function getCurrentUser() {
+        try {
+            return $this->loadUser();
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    //TODO: reimplement this method, remove throw exceptions in loadUser().
+    public function getCurrentUserId() {
+        return Yii::app()->user->id;
+    }
+
+    public function getCurrentUserRole() {
+        return (Yii::app()->user->getRole());
+    }
+
+    public function getHomeUrl() {
+        return Yii::app()->homeUrl;
+    }
+
+    /**
+     *
+     * @param boolean $request gets returnUrl from http request.
+     * @return string return url. 
+     */
+    public function getReturnUrl($fromRequest = false) {
+        if ($fromRequest) {
+            if (isset($_GET['returnUrl']))
+                return $_GET['returnUrl'];
+            else if (isset($_POST['returnUrl'])) {
+                return $_POST['returnUrl'];
+            }
+        }
+        return Yii::app()->user->returnUrl;
+    }
+
+    public function setReturnUrl($url) {
+        Yii::app()->user->setReturnUrl($url);
+    }
+
+    public function setPageTitle($title, $siteName = true) {
+        if ($siteName) {
+            $this->pageTitle = Yii::app()->name . ' - ' . $title;
+        } else {
+            $this->pageTitle = $title;
+        }
+    }
+
+    public function getFlashMessage($key) {
+        if (Yii::app()->user->hasFlash($key))
+            return Yii::app()->user->getFlash($key);
+        else
+            return null;
+    }
+
+    public function setFlashMessage($key, $msg) {
+        Yii::app()->user->setFlash($key, $msg);
+    }
+
+    public function hasFlashMessage($key) {
+        return Yii::app()->user->hasFlash($key);
+    }
+
+    public function getSession($key, $unset = false) {
+        $value = Yii::app()->session[$key];
+        if ($unset) {
+            unset(Yii::app()->session[$key]);
+        }
+        return $value;
+    }
+
+    public function setSession($key, $value) {
+        Yii::app()->session[$key] = $value;
+    }
+
+    public function clearSession($key) {
+        unset(Yii::app()->session[$key]);
+    }
+
+    public function renderJsonOutput($data) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo CJSON::encode($data);
+        foreach (Yii::app()->log->routes as $route) {
+            if ($route instanceof CWebLogRoute) {
+                $route->enabled = false; // disable any weblogroutes
+            }
+        }
+        Yii::app()->end();
+    }
+
+    public function isAjaxRequest() {
+        if (Yii::app()->request->isAjaxRequest) {
+            return true;
+        } else {
+            return ((isset($_GET['ajax']) && $_GET['ajax'] == 1) || (isset($_POST['ajax']) && $_POST['ajax'] == 1));
+        }
+    }
+
+    public function headerUTF8() {
+        header('Content-Type: text/html; charset=utf-8');
+    }
+
+    public function renderImageOutput($imageUrl, $type = 'jpg') {
+        $imginfo = getimagesize($imageUrl);
+        header("Content-type: {$imginfo['mime']}");
+        readfile($imageUrl);
+        /* header('Content-type: image/' . $type);
+          $content = file_get_contents($imageUrl);
+          echo $content;
+         */
+    }
+
+    public function throwPageNotFoundException($code = 404) {
+        throw new CHttpException($code, 'The requested page does not exist.');
+    }
+
+    public function loadTrafficAnalysisScript($filterDomain = true) {
+        $show = true;
+        if ($filterDomain) {
+            $baseUrl = Yii::app()->getBaseUrl(true);
+            if (strStartsWith($baseUrl, 'http://localhost') || strStartsWith($baseUrl, 'http://127.0.0.1')) {
+                $show = false;
+            }
+        }
+        if ($show) {
+            $this->renderPartial('//layouts/_scriptTrafficAnalysis');
+        }
+    }
+
+    /*
+      public function registerBaiduScript() {
+      Yii::app()->clientScript->registerScript(
+      'baidu.tongji', 'var _hmt = _hmt || [];
+      (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?bb37bf17b5e4b46bec97bd34f8c0ef26";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+      })();', CClientScript::POS_HEAD);
+      }
+     * 
+     */
+
+    /*
+      public function registerCNZZScript() {
+      Yii::app()->clientScript->registerScript('<script src="http://s95.cnzz.com/z_stat.php?id=1254558487&web_id=1254558487" language="JavaScript"></script>', CClientScript::POS_HEAD);
+      }
+     * 
+     */
+
+    public function isAgentApp() {
+        return ((isset($_GET['agent']) && $_GET['agent'] == 'app') || (isset($_POST['agent']) && $_POST['agent'] == 'app'));
+    }
+
+    public function handleMobileBrowserRedirect($defaultUrl = null) {
+        /*
+          $mycookie = new CHttpCookie('mycookie', 'this is my cookie');
+          $mycookie->expire = time() + 60 * 60 * 24 * 30;  //有限期30天
+          Yii::app()->request->cookies['mycookie'] = $mycookie;
+          $cookies=Yii::app()->request->cookies;
+          var_dump($cookies);
+         * 
+         */
+        $detect = Yii::app()->mobileDetect;
+        // client is mobile and url is not mobile.
+        if ($detect->isMobile()) {
+            $cookieName = "client.browsermode";
+            // var_dump(Yii::app()->request->cookies[$cookieName]);
+            if (isset(Yii::app()->request->cookies[$cookieName]) == false || Yii::app()->request->cookies[$cookieName] != "pc") {
+                $this->redirect(Yii::app()->params['baseUrlMobile']);
+            }
+        }
+    }
+
+    public function isBaseUrlMobile() {
+        // get rule like 'http://m.example.com'.
+        $baseUrl = Yii::app()->getBaseUrl(true);
+        /*
+          // remove 'http://' in url.
+          $baseUrl = str_ireplace('http://', '', $baseUrl);
+          // if starts with 'm.'.
+          return (strpos($baseUrl, 'm.') === 0);
+         */
+        return $baseUrl == Yii::app()->params['baseUrlMobile'];
+    }
+
+    public function setBrowserInSession($browser) {
+        Yii::app()->session['client.browser'] = $browser;
+    }
+
+    public function getUserIp() {
+
+        return Yii::app()->request->userHostAddress;
+        /*
+          $ip = 'Unknown';
+          if (getenv("HTTP_CLIENT_IP"))
+          $ip = getenv("HTTP_CLIENT_IP");
+          else if (getenv("HTTP_X_FORWARDED_FOR"))
+          $ip = getenv("HTTP_X_FORWARDED_FOR");
+          else if (getenv("REMOTE_ADDR"))
+          $ip = getenv("REMOTE_ADDR");
+
+          return $ip;
+         * 
+         */
+    }
+
+    /**
+     * Stores user's access info for every request.
+     */
+    public function storeUserAccessInfo() {
+        $coreAccess = new CoreAccess();
+        $coreAccess->user_host_ip = Yii::app()->request->getUserHostAddress();
+        $coreAccess->url = Yii::app()->request->getUrl();
+        $coreAccess->url_referrer = Yii::app()->request->getUrlReferrer();
+        $coreAccess->user_agent = Yii::app()->request->getUserAgent();
+        $coreAccess->user_host = Yii::app()->request->getUserHost();
+        $coreAccess->save();
+    }
+
+    public function isUserAgentWeixin() {
+        $userAgent = Yii::app()->request->getUserAgent();
+        return (strpos($userAgent, 'MicroMessenger') !== false);
+    }
+
+    public function loadSiteMenu() {
+        if (is_null($this->site_menu)) {
+            $urlFacultyView = $this->createUrl("faculty/view", array("name" => ""));
+            $this->site_menu = array(
+                'site' => array(
+                    "aboutus" => array("label" => "简介", "url" => $this->createUrl('site/page', array('view' => 'aboutus'))),
+                    "terms" => array("label" => "免责声明", "url" => $this->createUrl('site/page', array('view' => 'terms'))),
+                    "contactus" => array("label" => "联系我们", "url" => $this->createUrl('site/contactus')),
+                    "quickbook" => array("label" => "快速预约", "url" => $this->createUrl('site/enquiry')),
+                ),
+                'auth' => array(
+                    "userRegister" => array("label" => "用户注册", "url" => $this->createUrl("user/register")),
+                    "userLogin" => array("label" => "用户登录", "url" => $this->createUrl("user/login")),
+                    "doctorRegister" => array("label" => "医生注册", "url" => $this->createUrl("doctor/register"))
+                ),
+                /*
+                  'domestic' => array(
+                  '肝胆外科' => $this->createUrl('huizhen/view', array('id' => 'gandan')),
+                  '骨科' => $this->createUrl('huizhen/view', array('id' => 'guke')),
+                  // '胸外科' => $this->createUrl('huizhen/view', array('id' => 'xiongwaike')),
+                  // '泌尿外科' => $this->createUrl('huizhen/view', array('id' => 'miniaowaike')),
+                  '心血管' => $this->createUrl('huizhen/view', array('id' => 'xinxueguan')),
+                  '肿瘤' => $this->createUrl('huizhen/view', array('id' => 'zhongliu')),
+                  '妇产' => $this->createUrl('huizhen/view', array('id' => 'fuchan')),
+                  '神经科' => $this->createUrl('huizhen/view', array('id' => 'shenjingke')),
+                  //'整形美容' => $this->createUrl('huizhen/view', array('id' => 'zhengxing')),
+                  ),
+                 */
+                'serviceflow' => array(
+                    '国内服务流程' => $this->createUrl('service/domestic'),
+                    '海外服务流程' => $this->createUrl('service/overseas')
+                ),
+                'overseas' => array(
+                    /*
+                      '伊利莎白医院' => $this->createUrl('overseas/view', array('id' => 'elizabeth')),
+                      'divider' => '',
+                      '神经外科专题' => $this->createUrl('overseas/view', array('id' => 'neuroscience')),
+                     * 
+                     */
+                    '新加坡' => $this->createUrl('overseas/view', array('page' => 'sg')),
+                    '美国' => $this->createUrl('overseas/view', array('page' => 'usa')),
+                    '韩国' => $this->createUrl('overseas/view', array('page' => 'korea')),
+                    '日本' => $this->createUrl('overseas/view', array('page' => 'japan')),
+                    'divider' => '',
+                    '特色手术' => $this->createUrl('overseas/surgery'),
+                ),
+                'event' => array(
+                    '上海胆道疾病会诊中心' => $this->createUrl('event/view', array('page' => 'dandao')),
+                    '肝病新疗法' => $this->createUrl('event/view', array('page' => 'liubaochi'))
+                ),
+                'faculty' => array(
+                    "xinxueguan" => array("label" => "心血管科", "url" => $urlFacultyView . "心血管科"),
+                    "jiazhuangxianke" => array("label" => "甲状腺科", "url" => $urlFacultyView . "甲状腺科"),
+                    "yanke" => array("label" => "眼科", "url" => $urlFacultyView . "眼科"),
+                    "baineizhangke" => array("label" => "白内障科", "url" => $urlFacultyView . "白内障科"),
+                    "shenjingke" => array("label" => "神经外科", "url" => $urlFacultyView . "神经外科"),
+                    "jiezhichangaike" => array("label" => "结直肠癌科", "url" => $urlFacultyView . "结直肠癌科"),
+                    "gandan" => array("label" => "肝胆外科", "url" => $urlFacultyView . "肝胆外科"),
+                    "yixianwaike" => array("label" => "胰腺外科", "url" => $urlFacultyView . "胰腺外科"),
+                    "shengzhiyixueke" => array("label" => "生殖医学科", "url" => $urlFacultyView . "生殖医学科"),
+                    "zhongliu" => array("label" => "肿瘤外科", "url" => $urlFacultyView . "肿瘤外科"),
+                )
+            );
+        }
+        return $this->site_menu;
+    }
+
+}

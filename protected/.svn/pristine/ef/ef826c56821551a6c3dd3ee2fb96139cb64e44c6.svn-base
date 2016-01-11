@@ -1,0 +1,44 @@
+<?php
+
+class IUser extends EViewModel {
+
+    public $id;
+    public $username;
+    public $name;
+    public $email;
+   // public $qq;
+   // public $wexin;
+
+    public function initModel(User $model) {
+        $this->id = $model->getId();
+        $this->username = $model->getUsername();
+        $this->name = $model->getName();
+        $this->email = $model->getEmail();
+     //   $this->qq = $model->getQQ();
+     //   $this->weixin = $model->getWechat();
+    }
+
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    /*
+    public function getQQ() {
+        return $this->qq;
+    }
+
+    public function getWeixin() {
+        return $this->weixin;
+    }
+     *                                                                                                     
+     */
+
+}

@@ -1,0 +1,102 @@
+<?php
+
+class AuthManager {
+
+    public function sendAuthSmsVerifyCode($mobile, $actionType, $userIp) {
+        $errors = array();        
+        // create AuthSmsVerify record in db.
+        $smsVerify = $this->createAuthSmsVerify($mobile, $actionType, $userIp);
+        
+        if (isset($smsVerify) === false) {
+            $errors[] = 'null model';
+            return $errors;
+        }
+        if ($smsVerify->hasErrors()) {
+            $errors = $smsVerify->getErrors();
+            return $errors;
+        }
+        
+        // send sms verify code.
+        $smsMgr = new SmsManager();
+        $errors = $smsMgr->sendVerifyUserRegisterSms($smsVerify->getMobile(), $smsVerify->getCode(), $smsVerify->getExpiryDuration());
+
+        return $errors;
+    }
+
+    public function verifyAuthSmsCode($mobile, $code, $actionType, $userIp) {
+        // $userIp is not used.
+        $smsVerify = AuthSmsVerify::model()->getByMobileAndCodeAndActionType($mobile, $code, $actionType);
+        if (isset($smsVerify)) {
+            $smsVerify->checkValidity();
+        }
+
+        return $smsVerify;
+    }
+
+    public function createAuthSmsVerify($mobile, $actionType, $userIp = null) {
+        $smsVerify = new AuthSmsVerify();
+        //  $userSmsVerify->createSmsVerifyRegister($mobile);return $userSmsVerify;
+
+        $success = false;
+        switch ($actionType) {
+            case AuthSmsVerify::ACTION_USER_REGISTER:
+                $success = $smsVerify->createSmsVerifyRegister($mobile, $userIp);
+                break;
+            case AuthSmsVerify::ACTION_USER_PASSWORD_RESET:
+                $success = $smsVerify->createSmsVerifyPasswordReset($mobile, $userIp);
+                break;
+            case AuthSmsVerify::ACTION_BOOKING:
+                $success = $smsVerify->createSmsVerifyBooking($mobile, $userIp);
+                break;
+            default:
+                $smsVerify->addError('action_type', 'Invalid action type');
+                break;
+        }
+
+        return $smsVerify;
+    }
+
+    public function deActiveAuthSmsVerify($smsVerify) {
+        if ($smsVerify->isActive()) {
+            $smsVerify->deActivateRecord();
+        }
+        return $smsVerify;
+    }
+
+    /*
+
+      public function getAuthUser($with=null) {
+      $id = Yii::app()->user->id;
+      if (is_null($id))
+      return null;
+      else {
+      $user = User::model()->getById($id, $with);
+      return $user;
+      }
+      }
+
+      public function getAuthUserId() {
+      return Yii::app()->user->id;
+      }
+
+      public function isUserLoggedIn() {
+      return Yii::app()->user->isGuest === false;
+      }
+     */
+    /*
+      public function hasAdminAccess() {
+      $userId = $this->getAuthUserId();
+      if (is_null($userId))
+      return false;
+      else {
+      $cUser = CoreUser::model()->getByAttributes(array('id' => $userId, 'role' => CoreUser::ROLE_ADMIN));
+      return isset($cUser);
+      }
+      }
+     */
+
+    public function getUsersWithAdminAccess() {
+        return 'admin';
+    }
+
+}

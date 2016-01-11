@@ -1,0 +1,788 @@
+<?php
+
+class ExpertTeamData {
+
+    public $expertTeams;
+
+    public function __construct() {
+        $this->expertTeams = array();
+        //1.许建屏专家团队  team
+        $docTeam_xjp = new stdClass();
+        $docTeam_xjp->teamId = 1;
+        $docTeam_xjp->imageUrl = '';
+        $docTeam_xjp->teamName = '许建屏专家团队'; //团队名字
+        $docTeam_xjp->teamCode = 'team-xujianping';
+        $docTeam_xjp->hospital="北京阜外医院";
+        $docTeam_xjp->faculty = '心血管科';  //科室
+        $docTeam_xjp->facultyCode = 'xinxueguan';
+        $docTeam_xjp->slogan = '心血管外科国内前三甲';   //标语
+        //$docTeam_xjp->disTags = '各种重症心脏瓣膜病,复杂先天性心脏病,瓣膜病,冠心病,房缺、动脉导管未闭直视伞堵术,主动脉夹层,主动脉瘤,主动脉溃疡主动脉壁间血肿'; //擅长疾病   数组
+        $docTeam_xjp->disTags = array('各种重症心脏瓣膜病', '复杂先天性心脏病', '瓣膜病', '冠心病', '房缺、动脉导管未闭直视伞堵术', '主动脉夹层', '主动脉瘤', '主动脉溃疡主动脉壁间血肿'); //擅长疾病   数组
+        $docTeam_xjp->desc = '许建屏教授心血管明星专家团队由北京阜外心外科成人中心主任许建屏教授领衔,心胸外科主任医师高峰、副主任医师陈雷博士联袂组成。旨在打造国内顶级的心血管疾病专家团队,依托阜外医院和安贞医院雄厚的心血管诊疗平台,为全国的心血管疾病患者提供最专业、最权威、最可靠的医疗服务。';  //描述
+        $docTeam_xjp->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_xjp->teamCode));
+        $docTeam_xjp->webviewUrl = ''; // html5 页面内容
+        $docTeam_xjp->introImageUrl = "http://myzd.oss-cn-hangzhou.aliyuncs.com/static%2Fbanner_xinxueguan_1170x550.jpg";
+
+        //Leader
+        $teamLeader_xjp = new stdClass();
+        $teamLeader_xjp->docId = '0';  //id
+        $teamLeader_xjp->docName = '许建屏';  //队长姓名
+        $teamLeader_xjp->mTitle = '主任';  //主任,副主任,主治
+        $teamLeader_xjp->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_xjp->hospital = '北京阜外医院'; //所属医院
+        $teamLeader_xjp->hFaculty = '心外科成人中心'; //所属科室 (与所属医院有关)
+        $teamLeader_xjp->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_xjp->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F21C9DCA8D0052ECCAC3DF12EA60DEF49.png'; //头像链接
+        $teamLeader_xjp->desc = '获国家科学技术进步二等奖、首届中华医学奖二等奖及北京市科学技术进步二等奖各一项,获中国医学科学院成就奖多项。';  //个人简介
+
+        $docTeam_xjp->teamLeader = $teamLeader_xjp;
+
+        //members
+        $docTeam_xjp->members = array();
+        $member_gf = new stdClass();
+        $member_gf->docId = '0';  //id
+        $member_gf->docName = '高峰';  //姓名
+        $member_gf->mTitle = '主任医师';  //主任,副主任,主治
+        $member_gf->aTitle = '无';  //教授,副教授,无			
+        $member_gf->hospital = '北京安贞医院'; //所属医院
+        $member_gf->hFaculty = '心脏外科中心'; //所属科室 (与所属医院有关)
+        $member_gf->faculty = '';  //科室 (属于名医主刀后台)
+        $member_gf->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F2B882E697CC4A0AAD49C68EFE4F8B996.jpg'; //头像链接
+        $member_gf->desc = '先后师从著名心血管外科专家胡盛寿教授、许建屏教授,并获博士学位。参编多本心脏外科专著。';  //个人简介
+        $docTeam_xjp->members[] = $member_gf;
+
+        $member_cl = new stdClass();
+        $member_cl->docId = '0';  //id
+        $member_cl->docName = '陈雷';  //姓名
+        $member_cl->mTitle = '副主任医师';  //主任,副主任,主治
+        $member_cl->aTitle = '无';  //教授,副教授,无			
+        $member_cl->hospital = '北京安贞医院'; //所属医院
+        $member_cl->hFaculty = '心胸外科'; //所属科室 (与所属医院有关)
+        $member_cl->faculty = '';  //科室 (属于名医主刀后台)
+        $member_cl->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/wx%2F0AF7030F27998536EF0D54C228B8FBC7.jpg'; //头像链接
+        $member_cl->desc = '师从我国著名心血管外科专家胡盛寿院士。目前担任我国最大的主动脉疾病诊疗研究中心的医疗组长,每年收治主动脉疾病患者达1500例以上。';  //个人简介
+        $docTeam_xjp->members[] = $member_cl;
+
+        $surgeries_xjp = array(
+            '冠心病搭桥手术',
+            '各种重症心脏瓣膜病手术',
+            '复杂先天性心脏病手术',
+            '微创心脏手术（包括先天性心脏病,瓣膜病,冠心病）',
+            '房缺、动脉导管未闭直视伞堵术',
+            '主动脉夹层,主动脉瘤,主动脉溃疡',
+            '主动脉壁间血肿'
+        );
+        $docTeam_xjp->surgeries = $surgeries_xjp;   //擅长手术
+        //superiors
+        $superiors_xjp = new stdClass();
+        $superiors_xjp->name = '微创心脏手术';
+        $superiors_xjp->desc = '微创心脏手术包括先天性心脏病，瓣膜病，冠心病。心脏微创手术是一种新型诊断与治疗心血管疾病技术，经过穿刺体表血管，在DSA引导下，送入心脏导管，通过特定的心脏导管操作技术对心脏病进行确诊和治疗的诊治方法。 与心脏外科手术相比，心脏介入手术具有明显的优势： 1.手术创伤小 2.手术时间短 3.患者承受的痛苦轻 4.手术安全性高、术后恢复快、疗效立竿见影。';
+        $superiors_xjp->imageUrl = 'xinxueguan-img.png';
+        $docTeam_xjp->superiors = $superiors_xjp;   //优势技术
+
+
+        $this->expertTeams[] = $docTeam_xjp;
+
+
+        //2.刘跃武专家团队 team
+        $docTeam_lyw = new stdClass();
+        $docTeam_lyw->teamId = 2;
+        $docTeam_lyw->imageUrl = '';
+        $docTeam_lyw->teamName = '刘跃武专家团队'; //团队名字
+        $docTeam_lyw->teamCode = 'team-liuyuewu';
+        $docTeam_lyw->hospital="北京协和医院";
+        $docTeam_lyw->faculty = '甲状腺科';  //科室
+        $docTeam_lyw->facultyCode = 'jiazhuangxianke';
+        $docTeam_lyw->slogan = '全国甲状腺手术第一刀';   //标语
+        $docTeam_lyw->disTags = array('甲状腺瘤', '甲状腺疾病', '甲亢', '肠疾病', '体表肿瘤', '直肠癌', '门静脉高压症', '肝囊肿'); //擅长疾病   数组
+        $docTeam_lyw->desc = '刘跃武教授甲状腺疾病明星专家团队由北京协和医院基本外科主任医师刘跃武教授领衔。在国内率先开展经锁骨下途径的腔镜甲状腺手术及甲状腺癌的选择性淋巴结清扫术。为国内甲状腺疾病患者提供最专业、最权威、最可靠的医疗服务。';  //描述
+        $docTeam_lyw->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_lyw->teamCode));
+        $docTeam_lyw->webviewUrl = ''; // html5 页面内容
+        $docTeam_lyw->introImageUrl = "http://myzd.oss-cn-hangzhou.aliyuncs.com/static%2Fbanner_jiazhuangxian_1170x550.jpg";
+        //
+        //Leader
+        $teamLeader_lyw = new stdClass();
+        $teamLeader_lyw->docId = '0';  //id
+        $teamLeader_lyw->docName = '刘跃武';  //队长姓名
+        $teamLeader_lyw->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_lyw->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_lyw->hospital = '北京协和医院'; //所属医院
+        $teamLeader_lyw->hFaculty = '甲状腺科'; //所属科室 (与所属医院有关)
+        $teamLeader_lyw->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_lyw->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F564A05EF74D487617991F26D3A3E0C9B.png'; //头像链接
+        $teamLeader_lyw->desc = '美国甲状腺协（ATA）会员，在国内率先开展经锁骨下途径的腔镜甲状腺手术及甲状腺癌的选择性淋巴结清扫术。';  //个人简介
+        $teamLeader_lyw->webviewUrl = ''; // html5 页面内容
+
+        $docTeam_lyw->teamLeader = $teamLeader_lyw;
+
+        //members
+        $docTeam_lyw->members = array();
+        $member_yhw = new stdClass();
+        $member_yhw->docId = '0';  //id
+        $member_yhw->docName = '袁宏伟';  //姓名
+        $member_yhw->mTitle = '主任医师';  //主任,副主任,主治
+        $member_yhw->aTitle = '无';  //教授,副教授,无			
+        $member_yhw->hospital = '北京协和医院'; //所属医院
+        $member_yhw->hFaculty = '基本外科'; //所属科室 (与所属医院有关)
+        $member_yhw->faculty = '';  //科室 (属于名医主刀后台)
+        $member_yhw->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/wx%2Fdoctor_yuanhongwei_beijingxieheyiyuan.jpg'; //头像链接
+        $member_yhw->desc = '袁宏伟，男，主治医师，1965年2月20日出生，医学硕士。擅长甲状腺、胃肠和门脉高压病等疾病的诊断和治疗';  //个人简介
+        $docTeam_lyw->members[] = $member_yhw;
+
+        $member_lhf = new stdClass();
+        $member_lhf->docId = '0';  //id
+        $member_lhf->docName = '刘洪沨';  //姓名
+        $member_lhf->mTitle = '副主任医师';  //主任,副主任,主治
+        $member_lhf->aTitle = '副教授';  //教授,副教授,无			
+        $member_lhf->hospital = '北京协和医院'; //所属医院
+        $member_lhf->hFaculty = '基本外科'; //所属科室 (与所属医院有关)
+        $member_lhf->faculty = '';  //科室 (属于名医主刀后台)
+        $member_lhf->imageUrl = "http://mingyihz.oss-cn-hangzhou.aliyuncs.com/wx%2Fdoctor_liuhongfeng_beijingxieheyiyuan.jpg"; //头像链接
+        $member_lhf->desc = '刘洪沨，男，副主任医师，副教授，2003年毕业于北京协和学院研究生院，博士学位。擅长胃肠外科、甲状腺外科、门脉高压症';  //个人简介
+        $docTeam_lyw->members[] = $member_lhf;
+
+        $surgeries_lyw = array(
+            '甲状腺瘤',
+            '甲状腺疾病',
+            '甲亢',
+            '肠疾病',
+            '体表肿瘤',
+            '直肠癌',
+            '门静脉高压症',
+            '肝囊肿'
+        );
+        $docTeam_lyw->surgeries = $surgeries_lyw;
+        //superiors
+        $superiors_lyw = new stdClass();
+        $superiors_lyw->name = '甲状腺疾病手术';
+        $superiors_lyw->desc = '难治性弥漫性毒性巨大甲状腺肿伴重度甲亢 甲状腺手术属于普外科基本手术之一，但是由于颈部手术涉及众多血管、神经，一些非常规、复杂的高难度甲状腺手术对外科医生的手术技巧具有极大的挑战性。刘教授领衔的明星专家团队在甲状腺疾病，尤其是甲状腺癌的诊治方面具有一定专长，每年完成甲状腺疾病方面的手术约500例。手术经验丰富，目前无一例患者发生喉返神经意外损伤投诉。';
+        $superiors_lyw->imageUrl = 'jiazhuangxian-img.png';
+        $docTeam_lyw->superiors = $superiors_lyw;
+
+        $this->expertTeams[] = $docTeam_lyw;
+
+
+        //3.朱思泉专家团队
+        $docTeam_zsq = new stdClass();
+        $docTeam_zsq->teamId = 3;
+        $docTeam_zsq->imageUrl = '';
+        $docTeam_zsq->teamName = '朱思泉专家团队'; //团队名字
+        $docTeam_zsq->teamCode = 'team-zhusiquan';
+        $docTeam_zsq->faculty = '白内障科';  //科室
+        $docTeam_zsq->hospital="北京同仁医院";
+        $docTeam_zsq->facultyCode = 'baineizhangke';
+        $docTeam_zsq->slogan = '国内白内障第一刀，成功手术25万例';   //标语
+        $docTeam_zsq->disTags = array('白内障', '近视眼手术', '眼部疾病', '近视', '葡萄膜病'); //擅长疾病   数组
+        $docTeam_zsq->desc = '朱思泉教授白内障疾病明星专家团队由北京同仁医院白内障中心主任朱思泉教授领衔。至今已成功的施行了各类白内障手术10万余例。最近在国内率先开展微创超声乳化手术的临床研究，对先天白内障的遗传、生化及蛋白质组学进行系统研究，获得了多项国家级基金的资助。';  //描述
+        $docTeam_zsq->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_zsq->teamCode));
+        $docTeam_zsq->webviewUrl = ''; // html5 页面内容
+        $docTeam_zsq->introImageUrl = "http://myzd.oss-cn-hangzhou.aliyuncs.com/static%2Fbanner_baineizhang_1170x550.jpg";
+        //
+        //Leader
+        $teamLeader_zsq = new stdClass();
+        $teamLeader_zsq->docId = '0';  //id
+        $teamLeader_zsq->docName = '朱思泉';  //队长姓名
+        $teamLeader_zsq->mTitle = '主任';  //主任,副主任,主治
+        $teamLeader_zsq->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_zsq->hospital = '北京同仁医院'; //所属医院
+        $teamLeader_zsq->hFaculty = '白内障中心'; //所属科室 (与所属医院有关)
+        $teamLeader_zsq->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_zsq->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F5A322E253A94F25EE4B167D4473BE5AF.png'; //头像链接
+        $teamLeader_zsq->desc = '医学博士，临床和科研双学位博士生导师，首席临床专家，国家十一五重大项目课题高效微创白内障治疗系统的项目负责人,获得国家出版基金资助专著屈光与白内障手术学.发表论文60余篇,sci20余篇。';  //个人简介
+
+        $docTeam_zsq->teamLeader = $teamLeader_zsq;
+
+        //members
+        $docTeam_zsq->members = array();
+        $member_zy_M = new stdClass();
+        $member_zy_M->docId = '0';  //id
+        $member_zy_M->docName = '赵阳(男)';  //姓名
+        $member_zy_M->mTitle = '主治医师';  //主任,副主任,主治
+        $member_zy_M->aTitle = '无';  //教授,副教授,无			
+        $member_zy_M->hospital = '北京同仁医院'; //所属医院
+        $member_zy_M->hFaculty = '眼科'; //所属科室 (与所属医院有关)
+        $member_zy_M->faculty = '';  //科室 (属于名医主刀后台)
+        $member_zy_M->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/wx%2Fdoctor_zhaoyang_m_beijingtongrenyiyuan.jpg'; //头像链接
+        $member_zy_M->desc = '赵阳(男)，医学博士，中华医学会眼科分会会员。';  //个人简介
+        $docTeam_zsq->members[] = $member_zy_M;
+
+        $member_zy_F = new stdClass();
+        $member_zy_F->docId = '0';  //id
+        $member_zy_F->docName = '赵阳(女)';  //姓名
+        $member_zy_F->mTitle = '主治医师';  //主任,副主任,主治
+        $member_zy_F->aTitle = '无';  //教授,副教授,无			
+        $member_zy_F->hospital = '北京同仁医院'; //所属医院
+        $member_zy_F->hFaculty = '眼科'; //所属科室 (与所属医院有关)
+        $member_zy_F->faculty = '';  //科室 (属于名医主刀后台)
+        $member_zy_F->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/wx%2Fdoctor_zhaoyang_beijingtongrenyiyuan.jpg'; //头像链接
+        $member_zy_F->desc = '赵阳(女)，眼科学博士，1998年毕业于首都医科大学。擅长白内障，眼综合';  //个人简介
+        $docTeam_zsq->members[] = $member_zy_F;
+
+        $member_tj = new stdClass();
+        $member_tj->docId = '0';  //id
+        $member_tj->docName = '陶靖';  //姓名
+        $member_tj->mTitle = '副主任医师';  //主任,副主任,主治
+        $member_tj->aTitle = '无';  //教授,副教授,无			
+        $member_tj->hospital = '北京同仁医院'; //所属医院
+        $member_tj->hFaculty = '白内障中心'; //所属科室 (与所属医院有关)
+        $member_tj->faculty = '';  //科室 (属于名医主刀后台)
+        $member_tj->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/wx%2Fdoctor_taojing_beijingtongrenyiyuan.jpg'; //头像链接
+        $member_tj->desc = '陶靖，女，副主任医师。毕业于中山大学，眼科学临床与科研双博士学位。擅长白内障疾病的诊断和手术治疗。';  //个人简介
+        $docTeam_zsq->members[] = $member_tj;
+
+        $surgeries_zsq = array(
+            '白内障',
+            '近视眼手术',
+            '眼部疾病',
+            '近视',
+            '葡萄膜病'
+        );
+        $docTeam_zsq->surgeries = $surgeries_zsq;
+        //superiors
+        $superiors_zsq = new stdClass();
+        $superiors_zsq->name = '白内障疾病手术';
+        $superiors_zsq->desc = '朱思泉专家团队对复杂情况下（如小瞳孔、青光眼、虹膜炎、眼外伤、驼背、晶体脱位等）的白内障手术有丰富的经验；并且在国内还率先进行了超声乳化白内障吸除联合粘连房角分离术预防青光眼发作的研究，300多只眼手术后无1眼再发作青光眼。至今已成功的施行了各类白内障手术3万余例。';
+        $superiors_zsq->imageUrl = 'baineizhang-img.png';
+        $docTeam_zsq->superiors = $superiors_zsq;
+
+        $this->expertTeams[] = $docTeam_zsq;
+
+        //4.卢海专家团队
+        $docTeam_lh = new stdClass();
+        $docTeam_lh->teamId = 4;
+        $docTeam_lh->imageUrl = '';
+        $docTeam_lh->teamName = '卢海专家团队'; //团队名字
+        $docTeam_lh->teamCode = 'team-luhai';
+        $docTeam_lh->hospital="北京同仁医院";
+        $docTeam_lh->faculty = '眼科';  //科室
+        $docTeam_lh->facultyCode = 'yanke';
+        $docTeam_lh->slogan = '眼底疾病顶级专家团队';   //标语
+        $docTeam_lh->disTags = array('眼底病', '眼外伤', '复杂白内障手术', '糖尿病视网膜病变的治疗', '儿童玻璃体视网膜疾病'); //擅长疾病   数组
+        $docTeam_lh->desc = '卢海教授眼底病科疾病明星专家团队擅长眼科临床诊断及治疗技术，手术技术全面。在全国率先开展白内障联合玻璃体手术治疗复杂及难治性眼底病及眼外伤，尤其是糖尿病视网膜病变的治疗及儿童玻璃体视网膜疾病的手术治疗目前处国内领先水平。对于复杂性白内障的手术治疗具有丰富经验。';  //描述
+        $docTeam_lh->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_lh->teamCode));
+        $docTeam_lh->webviewUrl = ''; // html5 页面内容
+        $docTeam_lh->introImageUrl = "http://myzd.oss-cn-hangzhou.aliyuncs.com/static%2Fbanner_yanke_1170x550.jpg";
+
+        //Leader
+        $teamLeader_lh = new stdClass();
+        $teamLeader_lh->docId = '0';  //id
+        $teamLeader_lh->docName = '卢海';  //队长姓名
+        $teamLeader_lh->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_lh->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_lh->hospital = '北京同仁医院'; //所属医院
+        $teamLeader_lh->hFaculty = '眼底病科'; //所属科室 (与所属医院有关)
+        $teamLeader_lh->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_lh->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F6845119B70DC0619A770419079C0BD58.png'; //头像链接
+        $teamLeader_lh->desc = '卢海，男，主任医师，教授，眼科副主任，眼外伤科主任。常年从事首都医科大学各类教学工作，具有丰富的临床教学经验。在国内率先开展微创玻璃体手术并在国内开展了大量的技术推广工作。微创玻璃体视网膜手术水平达到国内领先水平。曾获赛克勒中国医师年度奖。';  //个人简介
+
+        $docTeam_lh->teamLeader = $teamLeader_lh;
+
+        //members
+        $surgeries_lh = array(
+            '眼底病',
+            '眼外伤',
+            '复杂白内障手术',
+            '糖尿病视网膜病变的治疗',
+            '儿童玻璃体视网膜疾病'
+        );
+        $docTeam_lh->surgeries = $surgeries_lh;
+        //superiors
+        $superiors_lh = new stdClass();
+        $superiors_lh->name = '微创玻璃体手术';
+        $superiors_lh->desc = '传统的玻切术一般都要在白眼球的表层做戒指大小的(长约40～45mm)环形切口，牵引四条直肌，缝合固定角膜接触镜固定环，在眼球内层做三个长为 1mm米的穿刺口，才能进入位于眼球中部的玻璃体腔，切割有病变的玻璃体。因为切口都比较大，需要用缝线来缝合才能封闭切口。 微创玻璃体切割手术是使用特制的套管针直接穿刺巩膜（白眼球），通过三个直径为0.5mm的针眼建立手术所需通道，进入 玻璃体腔进行手术。套管拔除后切口能够自行封闭，不需要缝合，创伤很小。';
+        $superiors_lh->imageUrl = 'yandibingke-img.png';
+        $docTeam_lh->superiors = $superiors_lh;
+
+        $this->expertTeams[] = $docTeam_lh;
+
+        //5.张东专家团队
+        $docTeam_zd = new stdClass();
+        $docTeam_zd->teamId = 5;
+        $docTeam_zd->imageUrl = '';
+        $docTeam_zd->teamName = '张东专家团队'; //团队名字
+        $docTeam_zd->teamCode = 'team-zhangdong';
+        $docTeam_zd->hospital="北京天坛医院";
+        $docTeam_zd->faculty = '神经外科';  //科室
+        $docTeam_zd->facultyCode = 'shenjingke';
+        $docTeam_zd->slogan = '脑血管手术顶级专家团队';   //标语
+        $docTeam_zd->disTags = array('脑动脉瘤', '脑血管畸形', '颈动脉狭窄', '颅内外血管搭桥手术治疗烟雾病', '动脉粥样硬化等缺血性脑血管病'); //擅长疾病   数组
+        $docTeam_zd->desc = '张东教授神经外科疾病明星专家团队主要从事神经外科疾病尤其是脑血管疾病和脑肿瘤的显微外科治疗，专长脑动脉瘤、脑血管畸形、颈动脉狭窄手术及介入治疗、以及颅内外血管搭桥手术治疗烟雾病和动脉粥样硬化等缺血性脑血管病。为国内神经外科疾病患者提供最专业、最权威、最可靠的医疗服务。';  //描述
+        $docTeam_zd->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_zd->teamCode));
+        $docTeam_zd->webviewUrl = ''; // html5 页面内容
+        $docTeam_zd->introImageUrl = "http://myzd.oss-cn-hangzhou.aliyuncs.com/static%2Fbanner_naoxueguan_1170x550.jpg";
+
+        //Leader
+        $teamLeader_zd = new stdClass();
+        $teamLeader_zd->docId = '0';  //id
+        $teamLeader_zd->docName = '张东';  //队长姓名
+        $teamLeader_zd->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_zd->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_zd->hospital = '北京天坛医院'; //所属医院
+        $teamLeader_zd->hFaculty = '神经外科'; //所属科室 (与所属医院有关)
+        $teamLeader_zd->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_zd->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F1A8A1C98599F36B20E21C31D886C80A6.png'; //头像链接
+        $teamLeader_zd->desc = '张东，男，主任医师，教授，医学博士，博士生导师，曾在比利时自由大学Erasme医院访问。现任首都医科大学附属北京天坛医院脑血管病中心脑血管3病区主任，卫生部脑卒中筛查与防治工程中青年专家委员会专家。参与十一五科技攻关等重大科研计划。获得国家科技进步二等奖二项，中华医学科技奖一等奖和北京市科技进步一等奖、二等奖多项。';  //个人简介
+
+        $docTeam_zd->teamLeader = $teamLeader_zd;
+
+        //members
+
+        $surgeries_zd = array(
+            '脑动脉瘤',
+            '脑血管畸形',
+            '颈动脉狭窄',
+            '颅内外血管搭桥手术治疗烟雾病',
+            '动脉粥样硬化等缺血性脑血管病'
+        );
+        $docTeam_zd->surgeries = $surgeries_zd;
+        //superiors
+        $superiors_zd = new stdClass();
+        $superiors_zd->name = '颅内动脉狭窄血管成形和支架置入术';
+        $superiors_zd->desc = '颅内动脉狭窄是缺血性卒中的重要病因，在亚洲缺血性卒中患者中约是颅外动脉狭窄的2倍。目前对于颅内动脉狭窄的药物治疗未能达到理想的疗效。随着技术的进步，血管成形和支架置入术因其安全、可靠、损伤小、疗效肯定的优点，成为治疗颅内动脉狭窄的有效手段。';
+        $superiors_zd->imageUrl = 'shenjingwaike-img.png';
+        $docTeam_zd->superiors = $superiors_zd;
+
+        $this->expertTeams[] = $docTeam_zd;
+
+        //6.郭传瑸专家团队
+        $docTeam_gcb = new stdClass();
+        $docTeam_gcb->teamId = 6;
+        $docTeam_gcb->imageUrl = '';
+        $docTeam_gcb->teamName = '郭传瑸专家团队'; //团队名字
+        $docTeam_gcb->teamCode = 'team-guochuanbin';
+        $docTeam_gcb->hospital="北大口腔医院";
+        $docTeam_gcb->faculty = '肿瘤外科';  //科室
+        $docTeam_gcb->facultyCode = 'zhongliuwaike';
+        $docTeam_gcb->slogan = '口腔肿瘤手术全国第一人';   //标语
+        $docTeam_gcb->disTags = array('口腔颌面', '咽旁颞下区及颅底肿瘤', '口腔颌面部肿瘤', '舌癌', '口腔颌面部囊肿', '关节损伤', '口腔修复', '颈动脉体瘤'); //擅长疾病   数组
+        $docTeam_gcb->desc = '郭传瑸教授颌面外科疾病明星专家团队由北京大学口腔医院颌面外科郭传瑸教授领衔。团队擅长于口腔颌面、咽旁颞下区及颅底肿瘤的诊断和手术治疗，数字外科技术在颅底区肿瘤诊治的应用。为国内神经外科疾病患者提供最专业、最权威、最可靠的医疗服务。';  //描述
+        $docTeam_gcb->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_gcb->teamCode));
+        $docTeam_gcb->webviewUrl = ''; // html5 页面内容
+        $docTeam_gcb->introImageUrl = "";
+
+        //Leader
+        $teamLeader_gcb = new stdClass();
+        $teamLeader_gcb->docId = '0';  //id
+        $teamLeader_gcb->docName = '郭传瑸';  //队长姓名
+        $teamLeader_gcb->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_gcb->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_gcb->hospital = '北大口腔医院'; //所属医院
+        $teamLeader_gcb->hFaculty = '颌面外科'; //所属科室 (与所属医院有关)
+        $teamLeader_gcb->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_gcb->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F2C62DC5E5EC51B393BE8662067DC8161.png'; //头像链接
+        $teamLeader_gcb->desc = '郭传瑸，男，主任医师，教授，博士生导师，北京大学口腔医学院院长，北京大学口腔医学院口腔颌面外科副主任。长期从事口腔颌面外科的教学、临床和基础研究，在口腔颌面及咽旁颅底肿瘤诊治方面有较高造诣。主持完成国家级课题二项，市级二项。获2008年北京大学杨芙清王阳元院士优秀教学科研奖获，各种科技奖励8次，其中以第一负责人身份获2001年度北京市科学技术进步奖三等奖。目前主持国家科技部863重点项目一项，自然科学基金项目一项，并负责一项十一五科技支撑计划项目的分课题。';  //个人简介
+
+        $docTeam_gcb->teamLeader = $teamLeader_gcb;
+
+        //members
+        $surgeries_gcb = array(
+            '口腔颌面、咽旁颞下区及颅底肿瘤的手术治疗',
+            '口腔颌面部肿瘤',
+            '舌癌',
+            '口腔颌面部囊肿',
+            '关节损伤',
+            '口腔修复',
+            '颈动脉体瘤'
+        );
+        $docTeam_gcb->surgeries = $surgeries_gcb;
+        //superiors
+        $superiors_gcb = new stdClass();
+        $superiors_gcb->name = '口腔颌面、咽旁颞下区及颅底肿瘤手术';
+        $superiors_gcb->desc = '颅底-颞下区手术一般经过翼静脉丛所在区域，该区手术最多见的出血是静脉丛出血，一般缝扎可止血，由于手术视野相对狭小，手术难度非常大。在富集的敏感神经周围，要求手术技术非常精湛。';
+        $superiors_gcb->imageUrl = 'kouqiang-img.png';
+        $docTeam_gcb->superiors = $superiors_gcb;
+
+        $this->expertTeams[] = $docTeam_gcb;
+
+        //7.顾晋专家团队
+        $docTeam_gj = new stdClass();
+        $docTeam_gj->teamId = 7;
+        $docTeam_gj->imageUrl = '';
+        $docTeam_gj->teamName = '顾晋专家团队'; //团队名字
+        $docTeam_gj->teamCode = 'team-gujin';
+        $docTeam_gj->hospital="北京肿瘤医院";
+        $docTeam_gj->faculty = '结直肠癌外科';  //科室
+        $docTeam_gj->facultyCode = 'jiezhichangaike';
+        $docTeam_gj->slogan = '直肠癌第一刀，美国外科学院院士';   //标语
+        $docTeam_gj->disTags = array('直肠癌', '结肠癌', '胃癌', '贲门癌', '肿瘤', '胃肠道间质瘤', '肠肿瘤', '直肠息肉', '直肠肛管疾病'); //擅长疾病   数组
+        $docTeam_gj->desc = '顾晋教授直肠癌明星专家团队由北京肿瘤医院结直肠肿瘤外科顾晋教授领衔。主要在直肠癌的临床和基础研究,临床方面对直肠癌保留神经的根治手术,直肠癌全系膜切除手术以及术前新辅助治疗治疗进展期直肠癌等方面积累了较丰富的经验。团队始终坚持工作在临床第一线，对消化道肿瘤的诊断和治疗积累了丰富的经验。较早地在中国开展直肠癌全系膜去切除术并积极倡导开展低位直肠癌术前辅助治疗。';  //描述
+        $docTeam_gj->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_gj->teamCode));
+        $docTeam_gj->webviewUrl = ''; // html5 页面内容
+        $docTeam_gj->introImageUrl = "";
+
+        //Leader
+        $teamLeader_gj = new stdClass();
+        $teamLeader_gj->docId = '0';  //id
+        $teamLeader_gj->docName = '顾晋';  //队长姓名
+        $teamLeader_gj->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_gj->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_gj->hospital = '北京肿瘤医院'; //所属医院
+        $teamLeader_gj->hFaculty = '结直肠肿瘤外科'; //所属科室 (与所属医院有关)
+        $teamLeader_gj->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_gj->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2Fdoctor_gujin_bejingzhongliuyiyuan.png'; //头像链接
+        $teamLeader_gj->desc = '2007年获美国外科学院院士(FACS)，美国AACR的active member ,曾任中华医学会肿瘤学分会主任委员，现任中国抗癌协会副秘书长,中国抗癌协会大肠癌专业委员会副主任委员,中华医学会北京肿瘤专业委员会主任委员,中华外科学会结直肠肛门专业学组副组长。自毕业以来，始终坚持工作在临床第一线，对消化道肿瘤的诊断和治疗积累了丰富的经验。在教学方面培养了多名硕士和博士研究生，先后发表论文60余篇。曾获国家"863"高技术专项基金，北京大学"211"基金';  //个人简介
+
+        $docTeam_gj->teamLeader = $teamLeader_gj;
+
+        //members
+        $docTeam_gj->members = array();
+        $member_lm = new stdClass();
+        $member_lm->docId = '0';  //id
+        $member_lm->docName = '李明';  //姓名
+        $member_lm->mTitle = '主任医师';  //主任,副主任,主治
+        $member_lm->aTitle = '副教授';  //教授,副教授,无			
+        $member_lm->hospital = '北京肿瘤医院'; //所属医院
+        $member_lm->hFaculty = '结直肠肿瘤外科'; //所属科室 (与所属医院有关)
+        $member_lm->faculty = '';  //科室 (属于名医主刀后台)
+        $member_lm->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/wx%2Fdoctor_liming_beijingzhongliuyiyuan.jpg'; //头像链接
+        $member_lm->desc = '擅长胃肠专业，特别是结直肠癌的综合治疗，腹腔镜手术。';  //个人简介
+        $docTeam_gj->members[] = $member_lm;
+
+        $member_pyf = new stdClass();
+        $member_pyf->docId = '0';  //id
+        $member_pyf->docName = '彭亦凡';  //姓名
+        $member_pyf->mTitle = '副主任医师';  //主任,副主任,主治
+        $member_pyf->aTitle = '无';  //教授,副教授,无			
+        $member_pyf->hospital = '北京肿瘤医院'; //所属医院
+        $member_pyf->hFaculty = '结直肠肿瘤外科'; //所属科室 (与所属医院有关)
+        $member_pyf->faculty = '';  //科室 (属于名医主刀后台)
+        $member_pyf->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/wx%2Fdoctor_pengyifan_beijingzhongliuyiyuan.jpg'; //头像链接
+        $member_pyf->desc = '彭亦凡，男，副主任医师，毕业于北京大学医学部，于2006年获得肿瘤学博士学位。擅长结直肠肿瘤，胃癌的手术及综合治疗';  //个人简介
+        $docTeam_gj->members[] = $member_pyf;
+
+        $member_yyf = new stdClass();
+        $member_yyf->docId = '0';  //id
+        $member_yyf->docName = '姚云峰';  //姓名
+        $member_yyf->mTitle = '副主任医师';  //主任,副主任,主治
+        $member_yyf->aTitle = '副教授';  //教授,副教授,无			
+        $member_yyf->hospital = '北京肿瘤医院'; //所属医院
+        $member_yyf->hFaculty = '结直肠肿瘤外科'; //所属科室 (与所属医院有关)
+        $member_yyf->faculty = '';  //科室 (属于名医主刀后台)
+        $member_yyf->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2Fdoctor_yaoyunfeng_beijingzhongliuyiyuan.jpg'; //头像链接
+        $member_yyf->desc = '姚云峰，男，副主任医师，副教授。毕业于北京大学医学部，于2005年获得肿瘤学博士学位。擅长胃癌，结直肠癌,胃肠道间质瘤及其他腹部肿瘤.微创外科手术。';  //个人简介
+        $docTeam_gj->members[] = $member_yyf;
+
+        $surgeries_gj = array(
+            '临床方面对直肠癌保留神经的根治手术',
+            '直肠癌全系膜切除手术',
+            '直肠癌',
+            '结肠癌',
+            '胃癌',
+            '贲门癌',
+            '肿瘤',
+            '胃肠道间质瘤',
+            '肠肿瘤',
+            '直肠息肉',
+            '直肠肛管疾病'
+        );
+        $docTeam_gj->surgeries = $surgeries_gj;
+        //superiors
+        $superiors_gj = new stdClass();
+        $superiors_gj->name = '直肠癌全系膜切除手术';
+        $superiors_gj->desc = '术中先从左侧游离乙状结肠，解剖出肠系膜下静脉，分别距主动脉和脾静脉1cm处结扎肠系膜下动静脉，完成淋巴结清扫。随后在直视下用剪刀或电刀沿盆腔脏层、壁层筋膜之间将左右腹下神经内侧的脏层筋膜，恶性肿瘤以及直肠周围系膜完全游离，直至肛提肌平面，保持脏层筋膜的完整性，在处理直肠侧韧带时靠近盆壁锐性分离，尽量避免钳夹结扎，这样可以避免损伤盆筋膜而保护自主神经丛。';
+        $superiors_gj->imageUrl = 'zhichangai-img.png';
+        $docTeam_gj->superiors = $superiors_gj;
+
+        $this->expertTeams[] = $docTeam_gj;
+
+        //8.王学浩专家团队
+        $docTeam_wxh = new stdClass();
+        $docTeam_wxh->teamId = 8;
+        $docTeam_wxh->imageUrl = '';
+        $docTeam_wxh->teamName = '王学浩专家团队'; //团队名字
+        $docTeam_wxh->teamCode = 'team-wangxuehao';
+        $docTeam_wxh->hospital="南京医科大学第一附属医院";
+        $docTeam_wxh->faculty = '肝胆外科';  //科室
+        $docTeam_wxh->facultyCode = 'gandan';
+        $docTeam_wxh->slogan = '国内肝胆领域泰斗';   //标语
+        $docTeam_wxh->disTags = array('腹部外科和肝胆外科疑难复杂疾病诊治', '肝癌', '胆道肿瘤', '消化系统肿瘤', '肝硬化', '门脉高压症', '消化系统肿瘤', '脾肿大伴功能亢进', '肝内外胆管结石'); //擅长疾病   数组
+        $docTeam_wxh->desc = '王学浩教授明星专家团队由南京医科大学第一附属医院肝脏外科研究所所长王学浩教授领衔。是我国活体肝移植的开拓者，将活体肝移植技术向全国20余个省市推广，为活体肝脏移植在我国深入发展起到引领和推动作用。同时当代中国肝癌介入治疗的开创者，为我国肝癌的现代介入治疗奠定了基础。';  //描述
+        $docTeam_wxh->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_wxh->teamCode));
+        $docTeam_wxh->webviewUrl = ''; // html5 页面内容
+        $docTeam_wxh->introImageUrl = "http://myzd.oss-cn-hangzhou.aliyuncs.com/static%2Fbanner_gandanwaike_1170x550.jpg";
+
+        //Leader
+        $teamLeader_wxh = new stdClass();
+        $teamLeader_wxh->docId = '0';  //id
+        $teamLeader_wxh->docName = '王学浩';  //队长姓名
+        $teamLeader_wxh->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_wxh->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_wxh->hospital = '南京医科大学第一附属医院'; //所属医院
+        $teamLeader_wxh->hFaculty = '肝脏外科'; //所属科室 (与所属医院有关)
+        $teamLeader_wxh->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_wxh->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2FF6BE51BFC94519816DB31FBB169E1FB1.png'; //头像链接
+        $teamLeader_wxh->desc = '王学浩，男，主任医师，教授，博导，中国工程院院士，先后在国内外杂志发表论文300余篇，其中通讯作者或第一作者发表SCI论文50余篇。第一完成人获国家科技进步二等奖1项，省部级一等奖1项，省部级二等奖8项。承担多项国家级科研项目。先后获江苏省政府白求恩式医务工作者、 全国卫生系统先进工作者、江苏省优秀共产党员标兵、江苏省劳动模范、南京市科技功臣等称号';  //个人简介
+
+        $docTeam_wxh->teamLeader = $teamLeader_wxh;
+
+        //members
+        $surgeries_wxh = array(
+            '腹部外科和肝胆外科疑难复杂疾病诊治',
+            '肝移植',
+            '活体肝移植及手术',
+            '肝癌',
+            '胆道肿瘤',
+            '消化系统肿瘤',
+            '肝硬化',
+            '门脉高压症',
+            '脾肿大伴功能亢进',
+            '肝内外胆管结石 '
+        );
+        $docTeam_wxh->surgeries = $surgeries_wxh;
+        //superiors
+        $superiors_wxh = new stdClass();
+        $superiors_wxh->name = '活体肝移植技术';
+        $superiors_wxh->desc = '活体肝移植是解决世界性供肝短缺的重要手段，儿童活体肝移植于1988年开始应用于临床，成人间活体右半肝肝移植则于1996年由香港范上达首次应用于临床，由于供体的安全性问题,直到2000年以后，成人间活体肝移植（A-ALDLT）才在欧美及全世界广泛开展。由于A-A LDLT仅有10余年历史，加上手术难度大，国内没有多少医生可以做到。';
+        $superiors_wxh->imageUrl = 'ganzangwaike-img.png';
+        $docTeam_wxh->superiors = $superiors_wxh;
+
+        $this->expertTeams[] = $docTeam_wxh;
+
+        //9.苗毅专家团队
+        $docTeam_my = new stdClass();
+        $docTeam_my->teamId = 9;
+        $docTeam_my->imageUrl = '';
+        $docTeam_my->teamName = '苗毅专家团队'; //团队名字
+        $docTeam_my->teamCode = 'team-miaoyi';
+        $docTeam_my->hospital="南京医科大学第一附属医院";
+        $docTeam_my->faculty = '胰腺外科';  //科室
+        $docTeam_my->facultyCode = 'yixianwaike';
+        $docTeam_my->slogan = '江苏普外科首席学科带头人';   //标语
+        $docTeam_my->disTags = array('胰腺癌', '胰腺疾病', '肝囊肿', '胆结石', '胰腺囊肿', '结肠癌', '胆管癌', '肠肿瘤', '肝肿瘤', '壶腹周围癌', '腹膜后肿瘤', '血管瘤', '胃癌', '体表肿瘤'); //擅长疾病   数组
+        $docTeam_my->desc = '苗毅教授明星专家团队由江苏省人民医院普外科苗毅教授领衔。 致力于普外科临床、每年为300余例患者施行各类疑难手术，具有丰富的临床经验，把握胰腺外科发展动向，不断开展技术创新，为患者解决痛苦。';  //描述
+        $docTeam_my->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_my->teamCode));
+        $docTeam_my->webviewUrl = ''; // html5 页面内容
+        $docTeam_my->introImageUrl = "";
+
+        //Leader
+        $teamLeader_my = new stdClass();
+        $teamLeader_my->docId = '0';  //id
+        $teamLeader_my->docName = '苗毅';  //队长姓名
+        $teamLeader_my->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_my->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_my->hospital = '南京医科大学第一附属医院'; //所属医院
+        $teamLeader_my->hFaculty = '胰腺外科'; //所属科室 (与所属医院有关)
+        $teamLeader_my->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_my->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F0FF395838DF1C7DDF1B5EC89060301ED.png'; //头像链接
+        $teamLeader_my->desc = '苗毅，男，主任医师，教授，大外科主任，普外科主任，博士生导师 作为江苏省政府重点学科普通外科学的首席学科带头人，先后在国内外杂志发表论文70余篇，其中SCI收录31篇， 其中第一作者及通讯作者12篇，SCI引证指数近800次。主编英文专著1部，中文专著6部。承担10多项科研项目，其中“国家重大支撑项目十一五计划”子课题1项，国家自然科学基金项目1项，获省、部、厅级以上科研成果10余项。';  //个人简介
+
+        $docTeam_my->teamLeader = $teamLeader_my;
+
+        //members
+        $docTeam_my->members = array();
+
+        $member_jkr = new stdClass();
+        $member_jkr->docId = '0';  //id
+        $member_jkr->docName = '蒋奎荣';  //姓名
+        $member_jkr->mTitle = '主任医师';  //主任,副主任,主治
+        $member_jkr->aTitle = '教授';  //教授,副教授,无			
+        $member_jkr->hospital = '江苏省人民医院'; //所属医院
+        $member_jkr->hFaculty = '普外科'; //所属科室 (与所属医院有关)
+        $member_jkr->faculty = '';  //科室 (属于名医主刀后台)
+        $member_jkr->imageUrl = ''; //头像链接
+        $member_jkr->desc = '中华医学会外科学分会青年委员、中华医学会外科手术学组委员、江苏省医学会胰腺病学学会秘书、江苏省医学会胰腺外科学组副组长、江苏省医学会外科学分会委员。擅长常见胰腺疾病的诊断及手术治疗。';  //个人简介
+        $docTeam_my->members[] = $member_jkr;
+
+        $member_gwt = new stdClass();
+        $member_gwt->docId = '0';  //id
+        $member_gwt->docName = '吴峻立';  //姓名
+        $member_gwt->mTitle = '副主任医师';  //主任,副主任,主治
+        $member_gwt->aTitle = '教授';  //教授,副教授,无			
+        $member_gwt->hospital = '江苏省人民医院'; //所属医院
+        $member_gwt->hFaculty = '普外科'; //所属科室 (与所属医院有关)
+        $member_gwt->faculty = '';  //科室 (属于名医主刀后台)
+        $member_gwt->imageUrl = ''; //头像链接
+        $member_gwt->desc = '中华医学会外科学分会门脉高压学组委员。擅长胰腺疾病及门脉高压症的诊治';  //个人简介
+        $docTeam_my->members[] = $member_gwt;
+
+        $member_wjl = new stdClass();
+        $member_wjl->docId = '0';  //id
+        $member_wjl->docName = '高文涛';  //姓名
+        $member_wjl->mTitle = '副主任医师';  //主任,副主任,主治
+        $member_wjl->aTitle = '副教授';  //教授,副教授,无			
+        $member_wjl->hospital = '江苏省人民医院'; //所属医院
+        $member_wjl->hFaculty = '普外科'; //所属科室 (与所属医院有关)
+        $member_wjl->faculty = '';  //科室 (属于名医主刀后台)
+        $member_wjl->imageUrl = ''; //头像链接
+        $member_wjl->desc = '江苏省医学会外科分会胰腺外科学组委员。擅长胰腺、十二指肠良恶性肿瘤、囊肿、结石的外科及微创腹腔镜手术治疗';  //个人简介
+        $docTeam_my->members[] = $member_wjl;
+
+        $surgeries_my = array(
+            '胰腺癌',
+            '胰腺疾病',
+            '肝囊肿',
+            '胆结石',
+            '胰腺囊肿',
+            '结肠癌',
+            '胆管癌',
+            '肠肿瘤',
+            '肝肿瘤',
+            '壶腹周围癌',
+            '腹膜后肿瘤',
+            '血管瘤',
+            '胃癌',
+            '体表肿瘤'
+        );
+        $docTeam_my->surgeries = $surgeries_my;
+        //superiors
+        $superiors_my = new stdClass();
+        $superiors_my->name = '肿瘤射频灭活技术';
+        $superiors_my->desc = '肿瘤射频灭活技术是一项更先进的热消融杀灭肿瘤的新技术。这种新型的射频设备设计巧妙，可以抓住直径达５厘米的肿瘤，产生球形的高温区、均匀作用于肿瘤，并能自如控制温度；还可以进行重叠消融，可以对直径８厘米甚至更大的肿瘤产生作用。射频热消融术又是一种微创性肿瘤原位治疗技术，一般术后病人当天即可出院，这一技术对胰腺、肺、肾等器官的肿瘤也有较好的效果。';
+        $superiors_my->imageUrl = 'yixianwaike-img.png';
+        $docTeam_my->superiors = $superiors_my;
+
+        $this->expertTeams[] = $docTeam_my;
+
+        //10.刘嘉茵专家团队
+        $docTeam_ljy = new stdClass();
+        $docTeam_ljy->teamId = 10;
+        $docTeam_ljy->imageUrl = '';
+        $docTeam_ljy->teamName = '刘嘉茵专家团队'; //团队名字
+        $docTeam_ljy->teamCode = 'team-liujiayin';
+        $docTeam_ljy->hospital="江苏省人民医院";
+        $docTeam_ljy->faculty = '生殖医学科';  //科室
+        $docTeam_ljy->facultyCode = 'shengzhiyixueke';
+        $docTeam_ljy->slogan = '不孕不育治疗及生殖领域权威专家';   //标语
+        $docTeam_ljy->disTags = array('妇科生殖内分泌和不孕症', '不孕不育', '习惯性流产', '试管婴儿', '胰腺囊肿', '卵巢囊肿', '流产'); //擅长疾病   数组
+        $docTeam_ljy->desc = '刘嘉茵教授明星专家团队由江苏省人民医院生殖医学中心刘嘉茵教授领衔。 组建了临床生殖医学中心，开展以“试管婴儿”技术为代表的一系列辅助生育项目和相关的基础研究工作。';  //描述
+        $docTeam_ljy->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_ljy->teamCode));
+        $docTeam_ljy->webviewUrl = ''; // html5 页面内容
+        $docTeam_ljy->introImageUrl = "";
+
+        //Leader
+        $teamLeader_ljy = new stdClass();
+        $teamLeader_ljy->docId = '0';  //id
+        $teamLeader_ljy->docName = '刘嘉茵';  //队长姓名
+        $teamLeader_ljy->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_ljy->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_ljy->hospital = '江苏省人民医院'; //所属医院
+        $teamLeader_ljy->hFaculty = '生殖医学科'; //所属科室 (与所属医院有关)
+        $teamLeader_ljy->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_ljy->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F844E4645FD958D40A80BCCE2AD4A6C92.png'; //头像链接
+        $teamLeader_ljy->desc = '刘嘉茵，女，主任医师，教授，临床生殖医学中心主任，江苏省妇幼保健院、江苏省人民医院河西分院副院长，妇产科教研室主任，博士生导师，医学博士省生殖医学重点实验室副主任。现任中华医学会计划生育学会常委、江苏省医学会妇产科学会委员，江苏省医学会遗传学会副主任委员，南京市医学会计划生育学会副主任委员。';  //个人简介
+
+        $docTeam_ljy->teamLeader = $teamLeader_ljy;
+
+        //members
+        $surgeries_ljy = array(
+            '妇科生殖内分泌和不孕症',
+            '不孕不育', '习惯性流产',
+            '试管婴儿',
+            '胰腺囊肿',
+            '卵巢囊肿',
+            '流产'
+        );
+        $docTeam_ljy->surgeries = $surgeries_ljy;
+        //superiors
+        $superiors_ljy = new stdClass();
+        $superiors_ljy->name = '试管婴儿技术';
+        $superiors_ljy->desc = '试管婴儿技术是一种特殊的技术，是把卵子和精子都拿到体外来，让它们在体外人工控制的环境中完成受精过程，然后把早期胚胎移植到女性的子宫中，在子宫中孕育成为孩子。利用体外受精技术产生的婴儿称为试管婴儿。';
+        $superiors_ljy->imageUrl = 'shengzhi-img.png';
+        $docTeam_ljy->superiors = $superiors_ljy;
+
+        $this->expertTeams[] = $docTeam_ljy;
+        
+        //11.龚晓明专家团队
+        $docTeam_gxm = new stdClass();
+        $docTeam_gxm->teamId = 11;
+        $docTeam_gxm->imageUrl = '';
+        $docTeam_gxm->teamName = '龚晓明专家团队'; //团队名字
+        $docTeam_gxm->teamCode = 'team-gongxiaoming';
+        $docTeam_gxm->hospital="上海市第一妇婴保健院";
+        $docTeam_gxm->faculty = '妇科';  //科室
+        $docTeam_gxm->facultyCode = 'fuke';
+        $docTeam_gxm->slogan = '中国妇产科网创始人';   //标语
+        $docTeam_gxm->disTags = array('子宫肌瘤', '卵巢肿瘤的诊治', '生殖道畸形的矫治', '压力性尿失禁', '子宫脱垂', '阴道壁膨出的手术'); //擅长疾病   数组
+        $docTeam_gxm->desc = '龚晓明教授明星专家团队，由中国妇产科网创始人龚晓明医生领衔。龚晓明在一妇婴妇科团队任妇科副主任及微创专业组组长，团队成员长期从事妇产科临床一线，在临床手术方面具有丰富的经验。同时龚晓明专家团队在国内外各大妇产科医院也具有深远影响力。';  //描述
+        $docTeam_gxm->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_gxm->teamCode));
+        $docTeam_gxm->webviewUrl = ''; // html5 页面内容
+        $docTeam_gxm->introImageUrl = "";
+
+        //Leader
+        $teamLeader_gxm = new stdClass();
+        $teamLeader_gxm->docId = '0';  //id
+        $teamLeader_gxm->docName = '龚晓明';  //队长姓名
+        $teamLeader_gxm->mTitle = '副主任';  //主任,副主任,主治
+        $teamLeader_gxm->aTitle = '副教授';  //教授,副教授,无			
+        $teamLeader_gxm->hospital = '上海市第一妇婴保健院'; //所属医院
+        $teamLeader_gxm->hFaculty = '妇科'; //所属科室 (与所属医院有关)
+        $teamLeader_gxm->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_gxm->imageUrl = ''; //头像链接
+        $teamLeader_gxm->desc = '龚晓明，妇产科副主任医师，副教授，98年毕业自中国协和医科大学后一直在北京协和医院妇产科工作，历任住院医师、住院总医师、主治医师、副主任医师。2013年9月转到上海市第一妇婴保健院工作任妇科副主任及微创负责人。';  //个人简介
+
+        $docTeam_gxm->teamLeader = $teamLeader_gxm;
+
+        //members
+        $surgeries_gxm = array(
+            '子宫肌瘤',
+            '卵巢肿瘤的诊治',
+            '生殖道畸形的矫治',
+            '压力性尿失禁',
+            '子宫脱垂',
+            '阴道壁膨出的手术'
+        );
+        $docTeam_gxm->surgeries = $surgeries_gxm;
+        //superiors
+        $superiors_gxm = new stdClass();
+        $superiors_gxm->name = '腹腔镜下子宫肌瘤摘除术';
+        $superiors_gxm->desc = '腹腔镜下子宫肌瘤摘除术被国际医学界称为不开刀“绿色手术”，医生在病人的腹部隐蔽处开3个3毫米大小的小切口，然后放入腹腔镜。通过连接腹腔镜的电视监视屏，可清晰地观察腹腔内的情况，确定肌瘤的位置，随后对瘤体进行剥离，吸出病灶组织，患者通常术后6小时即可下床活动，2-3天即可治愈出院，具有并发症少及不影响生理功能等优点。一次性治愈率高，术后并发症几率由之前的9.7%降低为1.3%。';
+        $superiors_gxm->imageUrl = 'fuchan-img.png';
+        $docTeam_gxm->superiors = $superiors_gxm;
+
+        $this->expertTeams[] = $docTeam_gxm;
+        
+        //12.李世亭专家团队
+        $docTeam_lst = new stdClass();
+        $docTeam_lst->teamId = 12;
+        $docTeam_lst->imageUrl = '';
+        $docTeam_lst->teamName = '李世亭专家团队'; //团队名字
+        $docTeam_lst->teamCode = 'team-lishiting';
+        $docTeam_lst->hospital="上海新华医院";
+        $docTeam_lst->faculty = '神经外科';  //科室
+        $docTeam_lst->facultyCode = 'shengjingke';
+        $docTeam_lst->slogan = '中国颅神经网创始人';   //标语
+        $docTeam_lst->disTags = array('三叉神经痛', '面肌痉挛', '舌咽神经痛', '眼睑痉挛', '梅杰综合症的治疗在脑膜瘤', '垂体瘤', '颅咽管瘤','神经鞘瘤的微创治疗'); //擅长疾病   数组
+        $docTeam_lst->desc = '李世亭教授明星专家团队，由新华医院神经外科主任医师兼上海交通大学颅神经疾病诊治中心主任李世亭专家领衔。团队擅长脑膜瘤、垂体瘤、颅咽管瘤、髓母细胞瘤及先天性脊柱裂的微创手术治疗，尤其是近年来采用单鼻孔经蝶入路技术和改良的经终板入路等现代手术新技术，明显提高了脑肿瘤的全切除率，降低了手术并发症，同样，系统研究和完善了微血管减压术的手术技术，使三叉神经痛、面肌痉挛和舌咽神经痛的手术有效率达到99%，疾病治愈率大于95%，手术并发症低于1%。';  //描述
+        $docTeam_lst->teamPageUrl = Yii::app()->createAbsoluteUrl('expertteam/view', array('code' => $docTeam_lst->teamCode));
+        $docTeam_lst->webviewUrl = ''; // html5 页面内容
+        $docTeam_lst->introImageUrl = "";
+
+        //Leader
+        $teamLeader_lst = new stdClass();
+        $teamLeader_lst->docId = '0';  //id
+        $teamLeader_lst->docName = '李世亭';  //队长姓名
+        $teamLeader_lst->mTitle = '主任医师';  //主任,副主任,主治
+        $teamLeader_lst->aTitle = '教授';  //教授,副教授,无			
+        $teamLeader_lst->hospital = '上海新华医院'; //所属医院
+        $teamLeader_lst->hFaculty = '神经外科'; //所属科室 (与所属医院有关)
+        $teamLeader_lst->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_lst->imageUrl = ''; //头像链接
+        $teamLeader_lst->desc = '李世亭，男，教授，主任医师，博士研究生导师，现任上海交通大学颅神经疾病诊治中心主任，中华医学会神经外科分会全国委员，中国医师协会中国功能神经外科专家委员会委员期致力于脑肿瘤和颅神经疾病的基础与临床研究，以第一作者发表论文80余篇，其中SCI收录32篇，主编专著1部，参编专著8部。曾荣获卫生部科技进步三等奖、上海市科技进步二等奖、上海市临床医疗成果二等奖、上海市创造发明奖、上海市生命科学奖、上海市医学银蛇奖、上海市医学科技三等奖。并被授予上海市劳动模范，上海市新长征突击手，上海市卫生局先进工作者，并入选首届上海市医苑新星、上海市卫生系统优秀学科带头人计划、上海市科技启明星及启明星跟踪计划、上海市曙光学者、教育部新世纪优秀人才等。';  //个人简介
+
+        $docTeam_lst->teamLeader = $teamLeader_lst;
+
+        //members
+        $surgeries_lst = array(
+            '三叉神经痛',
+            '面肌痉挛',
+            '舌咽神经痛',
+            '眼睑痉挛',
+            '梅杰综合症的治疗在脑膜瘤',
+            '垂体瘤',
+            '颅咽管瘤',
+            '神经鞘瘤的微创治疗'
+        );
+        $docTeam_lst->surgeries = $surgeries_lst;
+        //superiors
+        $superiors_lst = new stdClass();
+        $superiors_lst->name = '单鼻孔经蝶入路技术';
+        $superiors_lst->desc = '经蝶入路是常用的一类术式，包括经口鼻蝶入路、经鼻前庭蝶窦入路、经筛蝶入路，其中单鼻孔直接经蝶入路是最为简化的一种，该手术术程较短，大约在120min以内，步骤简化、容易掌握、省时省力，可有效切除突向蝶窦、呈柱状向鞍上延伸及局限于蝶鞍内垂体腺瘤，无严重并发症发生，对脑组织无损伤、无牵拉，是一种值得推广的改良术式。';
+        $superiors_lst->imageUrl = 'shengjingwaike-img.png';
+        $docTeam_lst->superiors = $superiors_lst;
+
+        $this->expertTeams[] = $docTeam_lst;
+        //print_r($facultyExpertTeams);
+    }
+
+}
+

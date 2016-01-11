@@ -1,0 +1,117 @@
+<?php
+
+class IExpertTeam extends EViewModel {
+
+    public $teamId;
+    public $teamName;
+    public $teamCode;
+    public $faculty;
+    public $facultyCode;
+    public $disTags;
+    public $slogan;
+    public $desc;
+    public $introImageUrl;
+    public $detailUrl;
+    public $teamPageUrl;
+    public $cityName;
+    
+    public $hospital;          //IHospital Object
+    public $teamLeader;   //IDoctor Object
+    public $members;       //array(key => IDoctor Object)
+
+    public function initModel(ExpertTeam $model) {
+
+        $this->teamId = $model->id;
+        $this->teamName = $model->name;
+        $this->teamCode = $model->code;
+        $this->slogan = $model->slogan;
+        $this->desc = $model->description;
+        $this->introImageUrl = $model->banner_url;
+        $this->detailUrl = $model->detail_url;
+        $this->teamPageUrl=Yii::app()->createAbsoluteUrl('expertteam/view',array('code'=>$this->teamCode));
+
+        $disTagsStr = explode(",", $model->dis_tags);
+        foreach ($disTagsStr as $dtStr) {
+            if($dtStr != ""){
+                $this->disTags[] = $dtStr;
+            }
+        }
+        
+        if (isset($model->expteamCity)) {
+            $this->cityName = $model->expteamCity->name;
+        }
+
+        if (isset($model->expteamHospital)) {
+            $this->hospital = $model->expteamHospital->short_name;
+        }
+        if (isset($model->expteamLeader)) {
+            $this->setILeader($model->expteamLeader);
+        }
+        if(isset($model->expteamMembers)){
+            $this->setIMembers($model->expteamMembers);
+        }
+        if (isset($model->expteamFaculty)) {
+            $this->faculty = $model->expteamFaculty->name;
+            $this->facultyCode = $model->expteamFaculty->code;
+        }
+        if (isset($model->expteamHpDept)) {
+            $this->setIHpDept($model->expteamHpDept);
+        }
+        
+    }
+
+    public function setILeader($model) {
+        if ($model instanceof Doctor) {
+            $idr = new IExpertLeader();
+            $idr->initModel($model);
+            $this->teamLeader = $idr;
+        } else {
+            $this->teamLeader = $model;
+        }
+    }
+
+    public function setIMembers($model) {
+            foreach ($model as $value) {
+                if($value->id  != $this->teamLeader->id){
+                    if ($value instanceof Doctor) {
+                        $idr = new IExpertMember();
+                        $idr->initModel($value);
+                        $this->members[] = $idr;
+                    } else {
+                        $this->members[] = $value;
+                    }
+                }
+            }
+    }
+
+    public function setIHospital($model) {
+        if ($model instanceof Hospital) {
+            $ih = new IHospital();
+            $ih->initModel($model);
+            $this->ihospital = $ih;
+        } else {
+            $this->ihospital = $model;
+        }
+    }
+
+    public function setIFaculty($model) {
+        if ($model instanceof Faculty) {
+            $if = new IFaculty();
+            $if->initModel($model);
+            $this->ifaculty = $if;
+        } else {
+            $this->ifaculty = $model;
+        }
+    }
+
+    public function setIHpDept($model) {
+        if ($model instanceof HospitalDepartment) {
+            $ihd = new IHospitalDepartment();
+            $ihd->initModel($model);
+            $this->ihpDept = $ihd;
+        } else {
+            $this->ihpDept = $model;
+        }
+    }
+
+}

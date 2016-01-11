@@ -1,0 +1,419 @@
+<?php
+
+class PaymentController extends WebsiteController {
+
+    private $booking;
+
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules() {
+        return array(
+            array('allow', // allow all users to perform 'index' and 'view' actions
+                'actions' => array('dopay', 'doPingxxPay', 'alipayReturn', 'alipayNotify', 'pingxxReturn'),
+                'users' => array('*'),
+            ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array(''),
+                'users' => array('@'),
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    public function actionDopay() {
+        $output = array('status' => 'no');
+        try {
+            $post = json_decode(file_get_contents('php://input'), true);
+            if (isset($post['ref_no'])) {
+                $refNo = $post['ref_no'];
+            }
+            $channel = $post['channel'];
+            $amount = 0.01 * 100;
+            $orderNo = substr(md5(time()), 0, 12);
+            $extra = array();
+            switch ($channel) {
+                case'alipay_pc_direct':
+                    $extra = array(
+                        //'success_url' => $this->createAbsoluteUrl('test/pingreturn'),
+                        'success_url' => 'http://test.mingyizd.com/test/alipayreturn',
+                            // 'success_url' => 'http://192.168.31.239/myzd/test/pingreturn',
+                            // 'cancel_url' => 'http://www.yourdomain.com/cancel'
+                    );
+                    break;
+                case 'alipay_wap':
+                    $extra = array(
+                        'success_url' => 'http://test.mingyizd.com/test/alipayreturn',
+                        //'success_url' => 'http://192.168.31.239/myzd/test/pingreturn',
+                        'cancel_url' => 'http://test.mingyizd.com/test/alipaycancel'
+                    );
+                    break;
+                case 'upmp_wap':
+                    $extra = array(
+                        'result_url' => 'http://www.yourdomain.com/result?code='
+                    );
+                    break;
+                case 'bfb_wap':
+                    $extra = array(
+                        'result_url' => 'http://www.yourdomain.com/result?code=',
+                        'bfb_login' => true
+                    );
+                    break;
+                case 'upacp_wap':
+                    $extra = array(
+                        'result_url' => 'http://www.yourdomain.com/result'
+                    );
+                    break;
+                case 'wx_pub':
+                    $extra = array(
+                        'open_id' => 'Openid'
+                    );
+                    break;
+                case 'wx_pub_qr':
+                    $extra = array(
+                        'product_id' => 'Productid'
+                    );
+                    break;
+                case 'yeepay_wap':
+                    $extra = array(
+                        'product_category' => '1',
+                        'identity_id' => 'your identity_id',
+                        'identity_type' => 1,
+                        'terminal_type' => 1,
+                        'terminal_id' => 'your terminal_id',
+                        'user_ua' => 'your user_ua',
+                        'result_url' => 'http://www.yourdomain.com/result'
+                    );
+                    break;
+                case 'jdpay_wap':
+                    $extra = array(
+                        'success_url' => 'http://www.yourdomain.com',
+                        'fail_url' => 'http://www.yourdomain.com',
+                        'token' => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
+                    );
+                    break;
+            }
+
+            // get order by refNo from db.
+            // create a new payment from order.
+            // create ping request object
+            // $amount = intval($order->final_amount * 100);
+            // $orderNo = $payment->UID;
+            require_once('protected/sdk/pingpp-php-master/init.php');
+            // do ping++ request.
+            // ......
+            \Pingpp\Pingpp::setApiKey('sk_live_bLGCW9m1aX5KvTSeT04G0KyP');    // live key
+
+            try {
+                $ch = \Pingpp\Charge::create(
+                                array(
+                                    'subject' => 'Your Subject',
+                                    'body' => 'Your Body',
+                                    'amount' => $amount,
+                                    'order_no' => $orderNo,
+                                    'currency' => 'cny',
+                                    'extra' => $extra,
+                                    'channel' => $channel,
+                                    'client_ip' => $_SERVER['REMOTE_ADDR'],
+                                    'app' => array('id' => 'app_SWv9qLSGWj1GKqbn')
+                                )
+                );
+                // update payment.out_trade_no from $ch.
+                // create payment data from ping $ch.
+                echo $ch;
+                Yii::app()->end();
+            } catch (\Pingpp\Error\Base $e) {
+                header('Status: ' . $e->getHttpStatus());
+                echo($e->getHttpBody());
+            }
+
+
+            // echo ping++ return data from request. // \Pingpp\Charge::create();
+        } catch (\Pingpp\Error\Base $e) {
+            header('Status: ' . $e->getHttpStatus());
+            echo($e->getHttpBody());
+        } catch (CDbException $cdbex) {
+            $output['errorMsg'] = 'error loading data';
+        } catch (CException $cex) {
+            $output['errorMsg'] = 'error loading data';
+        }
+        $this->renderJsonOutput($output);
+        // var_dump($input_data);
+    }
+
+    /*
+      public function actionDoPay() {
+      if (isset($_POST['order'])) {
+      $values = $_POST['order'];
+      if(isset($values['ref_no'])===false){
+      //exception.
+      }
+      $refNo = $values['ref_no'];
+      //$orderMgr = // loadSalesOrderByRefNo($refNo);
+      if(isset($order)===false){
+      // exception.
+      }
+      // create sales payment from order.
+      $paymentMgr
+
+
+      }
+      if (isset($_POST['MedicalRecordBooking']['id'])) {
+      $values = $_POST['MedicalRecordBooking'];
+      //TODO: add pay_method in $_POST.
+      $bookingId = filter_var($values['id'], FILTER_VALIDATE_INT);
+      if ($bookingId === false || is_null($bookingId)) {
+      // id is not integer.
+      echo CJSON::encode(array('status' => 'false', 'error' => 'Wrong id'));
+      } else {
+      $mrMgr = new MedicalRecordManager();
+      // throws CHttpException.
+      $mrBooking = $mrMgr->loadMedicalRecordBooking($bookingId);
+      $payMethod = 1; // Alipay - create_direct_pay_by_user.
+      $paymentMgr = new PaymentManager();
+      $mrbPayment = $paymentMgr->BookingPayment($mrBooking, $payMethod);
+      if (isset($mrbPayment)) {
+      if ($mrbPayment->hasErrors() === false) {
+      //$this->redirect($mrbPayment->getRequestUrl());
+      echo CHtml::link($mrbPayment->getRequestUrl(), $mrbPayment->getRequestUrl(), array('target' => '_blank'));
+      } else {
+      $errors = $mrbPayment->getErrors();
+      echo CJSON::encode(array('status' => 'false', 'errors' => $errors));
+      }
+      } else {
+      echo CJSON::encode(array('status' => 'false', 'errors' => array('访问错误')));
+      }
+      }
+      }
+      //  $this->render('doPay');
+      }
+     * 
+     */
+
+    public function actionDoPingxxPay() {
+        require_once('protected/sdk/pingpp-php-master/init.php');
+        $output = new stdClass();
+        //$output->status = 'no';
+        $output->errorMsg = null;
+        $output->pingCharge = null;
+        try {
+            $post = json_decode(file_get_contents('php://input'), true);
+            if (isset($post['ref_no'])) {
+                $refno = $post['ref_no'];
+            } else {
+                throw new CException('invalid parameters - missing ref_no.');
+            }
+            if (isset($post['channel'])) {
+                $channel = strtolower($post['channel']);
+            } else {
+                throw new CException('invalid parameters - missing channel.');
+            }
+            if (isset($post['ref_url'])) {
+                $refurl = strtolower($post['ref_url']);
+            } else {
+                throw new CException('invalid parameters - missing ref_url.');
+            }
+            $payMgr = new PayManager();
+            $output->pingCharge = $payMgr->doPingxxPay($refno, $channel, $refurl);
+        } catch (\Pingpp\Error\Base $e) {
+            header('Status: ' . $e->getHttpStatus());
+            $output->errorMsg = $e->getHttpBody();
+            Yii::log($e->getHttpBody(), CLogger::LEVEL_ERROR, __METHOD__);
+        } catch (CDbException $cdbex) {
+            Header("http/1.1 404 Not Found");
+            $output->errorMsg = 'error loading data';
+            Yii::log($cdbex->getMessage(), CLogger::LEVEL_ERROR, __METHOD__);
+        } catch (CException $cex) {
+            Header("http/1.1 400 Bad Request");
+            $output->errorMsg = $cex->getMessage();
+            Yii::log($cex->getMessage(), CLogger::LEVEL_ERROR, __METHOD__);
+        }
+
+        if (is_null($output->errorMsg)) {
+            // success.
+            echo $output->pingCharge;
+        } else {
+            //error.
+            throw new CHttpException(404, $output->errorMsg);
+        }
+    }
+
+    public function actionPingxxReturn() {
+        $post = json_decode(file_get_contents('php://input'), true);
+        Yii::log(CJSON::encode($post), CLogger::LEVEL_ERROR, __METHOD__);
+        $payMgr = new PayManager();
+        $pingChargeId = $post['data']['object']['id'];
+        $orderNo = $post['data']['object']['order_no'];
+        Yii::log($orderNo, CLogger::LEVEL_ERROR, __METHOD__);
+        $payment = SalesPayment::model()->getByAttributes(array('uid' => $orderNo, 'ping_charge_id' => $pingChargeId));
+        if (isset($payment) && $post['type'] == 'charge.succeeded') {
+            //交易成功
+            $payMgr->updateDataAfterTradeSuccess($payment, $post);
+        } else if (isset($payment) && $post['type'] != 'charge.succeeded') {
+            //交易失败
+            $payMgr->updateDataAfterTradeFail($payment, $post);
+        } else if ($payment == NULL) {
+            //没有此笔交易
+        }
+    }
+
+    public function actionAlipayReturn() {
+//        $outTradeNo = '681A8E882725CE4B0DDB7BEBAE436347';
+        $outTradeNo = $_GET['out_trade_no'];
+        $payment = SalesPayment::model()->getByAttributes(array('uid' => $outTradeNo), array('paymentOrder'));
+//        $order = $payment->paymentOrder;
+
+        $this->redirect(array('alipayResult', 'paymentcode' => $payment->uid));
+
+        /*
+          $paymentMgr = new PaymentManager();
+          $payment = $paymentMgr->updateAlipayReturn();
+          //$uid = $_GET['out_trade_no'];
+          //$payment = $paymentMgr->loadPaymentByUID($uid);
+
+          if (isset($payment) === false) {
+          $error = new stdClass();
+          $error->code = '';
+          $error->msg = '请求链接不正确。';
+          $this->render("error", array(
+          'error' => $error
+          ));
+          } else {
+          //TODO: redirect to payment/result instead.
+          // reload payment from db.
+          $payment = $paymentMgr->loadPaymentByUID($payment->getUID(), array('mrbpUser', 'mrbpBooking'));
+          $ipayment = new IMrBookingPayment();
+          $ipayment->initModel($payment);
+          $ipayment->setBuyer($payment->getUser());
+          $ipayment->setBooking($payment->getBooking());
+          $this->render('return2', array(
+          'payment' => $ipayment
+          ));
+          }
+         */
+    }
+
+    public function actionAlipayResult($paymentcode) {
+        $payment = SalesPayment::model()->getByAttributes(array('uid' => $paymentcode), array('paymentOrder'));
+        $order = $payment->paymentOrder;
+        if ($order === null) {
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        $this->show_header=true;
+        $this->show_footer=false;
+        $this->show_baidushangqiao=false;
+        $this->render('result', array('model' => $order));
+    }
+    
+    public function actionAlipayCancel(){
+        $get = $_GET;
+        var_dump($get);exit;
+    }
+
+    /*
+      public function actionAlipayNotify() {
+      // $paymentMgr = new PaymentManager();
+      // $success = $paymentMgr->updateAlipayNotify();
+      //$log = CJSON::encode(Yii::app()->request);
+      $log = Yii::app()->request->queryString;
+      Yii::log($log);
+      $success = true;
+      if ($success) {
+      echo 'success';
+      } else {
+      echo 'fail';
+      }
+      }
+     * 
+     */
+
+    public function actionYeepayReturn() {
+        $outTradeNo = '';
+//        $outTradeNo = $_GET['out_trade_no'];
+        $payment = SalesPayment::model()->getByAttributes(array('uid' => $outTradeNo), array('paymentOrder'));
+
+        $this->redirect(array('alipayResult', 'paymentcode' => $payment->uid));
+    }
+
+    public function actionPayBooking($ref) {
+
+        $bookingMgr = new BookingManager();
+        $booking = $bookingMgr->loadBookingByRefNo($ref);
+
+        if (isset($_POST['payment'])) {
+            $paymentMgr = new PaymentManager();
+            $payment = $paymentMgr->BookingPayment($booking, $payMethod);
+        }
+    }
+
+    public function actionAlipay($bid) {
+        $booking = $this->loadBookingById($bid, array('mrbUser', 'mrbMedicalRecord', 'mrbFaculty'));
+
+        if (isset($_POST['payment'])) {
+            $post = $_POST['payment'];
+            $bookingId = $post['bid'];
+            $booking = $this->loadBookingById($bookingId, array('mrbUser', 'mrbMedicalRecord', 'mrbFaculty'));
+            $payMethod = 1;
+
+            $paymentMgr = new PaymentManager();
+            $payment = $paymentMgr->BookingPayment($booking, $payMethod);
+            if (isset($payment)) {
+                if ($payment->hasErrors() === false) {
+                    $this->redirect($payment->getRequestUrl());
+                    echo CHtml::link($payment->getRequestUrl(), $payment->getRequestUrl(), array('target' => '_blank'));
+                } else {
+                    $errors = $payment->getErrors();
+                    echo CJSON::encode(array('status' => 'false', 'errors' => $errors));
+                }
+            } else {
+                echo CJSON::encode(array('status' => 'false', 'errors' => array('访问错误')));
+            }
+        }
+        $this->render('alipay', array(
+            'booking' => $booking
+        ));
+    }
+
+    public function actionTest() {
+        if (isset($_POST['payment']['amt'])) {
+            $amt = floatval($_POST['payment']['amt']);
+            $payMethod = 1;
+            $booking = new MedicalRecordBooking();
+            $booking->id = 100000;
+            $booking->user_id = 3;
+            $booking->faculty_id = 1;
+            $booking->subject = '测试付款';
+            $booking->total_price = $amt;
+            $booking->currency = 'RMB';
+
+            $paymentMgr = new PaymentManager();
+            $payment = $paymentMgr->BookingPayment($booking, $payMethod);
+            if (isset($payment)) {
+                if ($payment->hasErrors() === false) {
+                    $this->redirect($payment->getRequestUrl());
+                    echo CHtml::link($payment->getRequestUrl(), $payment->getRequestUrl(), array('target' => '_blank'));
+                } else {
+                    $errors = $payment->getErrors();
+                    echo CJSON::encode(array('status' => 'false', 'errors' => $errors));
+                }
+            } else {
+                echo CJSON::encode(array('status' => 'false', 'errors' => array('访问错误')));
+            }
+        }
+        $this->render('test');
+    }
+
+    public function loadBookingById($id, $with = null) {
+        $model = MedicalRecordBooking::model()->getById($id, $with);
+        if (is_null($model)) {
+            $this->throwPageNotFoundException();
+        } else {
+            return $model;
+        }
+    }
+
+}

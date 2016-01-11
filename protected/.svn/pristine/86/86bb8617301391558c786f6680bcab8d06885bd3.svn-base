@@ -1,0 +1,184 @@
+<?php
+
+class DoctorManager {
+
+    public function createDoctor(DoctorForm $form, $checkVerifyCode = true) {
+        if ($form->validate()) {
+            if ($checkVerifyCode) {
+                // check sms verify code.
+                $userIp = Yii::app()->request->getUserHostAddress();
+                $smsVerify = $this->_checkVerifyCode($form->getMobile(), $form->getVerifyCode(), $userIp);
+                if (is_null($smsVerify)) {
+                    $form->addError('verify_code', AuthSmsVerify::getErrorMessage(AuthSmsVerify::ERROR_NOT_FOUND));
+                    return false;
+                } else if ($smsVerify->isValid() === false) {
+                    $form->addError('verify_code', $smsVerify->getError('code'));
+                    return false;
+                }
+            }
+
+
+            $model = new Doctor();
+            $model->attributes = $form->attributes;
+            $model->scenario = $form->scenario;
+            $model->prepareNewModel();
+            if ($model->save() === false) {
+                $form->addErrors($model->getErrors());
+            } else {
+                if (isset($smsVerify)) {
+                    $smsVerify->deActivateAllRecords();
+                }
+                // Create BookingFile from $_FILES.
+                // saves uploaded files into filesystem and db.
+                $form->id = $model->getId();
+                $this->createDoctorFiles($model->getId());
+            }
+        }
+        return ($form->hasErrors() === false);
+    }
+
+    public function createDoctorFiles($doctorId) {
+        $uploadField = DoctorFile::model()->file_upload_field;
+        $files = EUploadedFile::getInstancesByName($uploadField);
+
+        $output = array();
+        if (arrayNotEmpty($files)) {
+            foreach ($files as $file) {
+                $output[] = $this->_saveDoctorFile($file, $doctorId);
+            }
+        }
+        return $output;
+    }
+
+    /**
+     * Get EUploadedFile from $_FILE. Create BookingFile model. Save file in filesystem. Save model in db.
+     * @param EUploadedFile $file EUploadedFile::getInstances()
+     * @param integer $bookingId Booking.id     
+     * @return BookingFile 
+     */
+    private function _saveDoctorFile($file, $doctorId) {
+        $dFile = new DoctorFile();
+        $dFile->initModel($doctorId, $file);
+        $dFile->saveModel();
+
+        return $dFile;
+    }
+    
+     /**
+     * 
+     * @param type $mobile
+     * @param type $code
+     * @param type $userIp
+     * @return type AuthSmsVerify
+     */
+    private function _checkVerifyCode($mobile, $code, $userIp = null) {
+        $authMgr = new AuthManager();
+        $actionType = AuthSmsVerify::ACTION_USER_REGISTER;
+        return $authMgr->verifyAuthSmsCode($mobile, $code, $actionType, $userIp);
+    }
+
+
+    public function updateDoctor(DoctorForm $form) {
+        if ($form->validate()) {
+            $model = $this->loadDoctorById($form->id);
+            $model->attributes = $form->attributes;
+            //TODO: enable validation on save.
+            if ($model->save(false) === false) {
+                $form->addErrors($model->getErrors());
+            }
+        }
+        return ($form->hasErrors() === false);
+    }
+
+    public function deleteDoctor(Doctor $model) {
+        // DoctorFacultyJoin.
+        FacultyDoctorJoin::model()->deleteAllByAttributes(array('doctor_id' => $model->id));
+        if (isset($model->doctorAvatar)) {
+            $model->doctorAvatar->delete();
+        }
+        // DoctorAvatar.
+        DoctorAavatar::model()->deleteAllByAttributes(array('doctor_id' => $model->id));
+        // Doctor. 
+        $model->delete();
+
+        return ($model->hasErrors() === false);
+    }
+
+    public function createDoctorAvatar(DoctorAvatarForm $form) {
+        if ($form->validate()) {
+            $avatar = new DoctorAvatar();
+            $avatar->saveNewModel($form->doctor_id, $form->image_url, $form->thumbnail_url, $form->display_order);
+            if ($avatar->hasErrors()) {
+                $form->addErrors($avatar->getErrors());
+            }
+        }
+        return ($form->hasErrors() === false);
+    }
+
+    public function updateDoctorAvatar(DoctorAvatarForm $form) {
+        if ($form->validate()) {
+            $doctor = $this->loadDoctorById($form->doctor_id, array('doctorAvatar'));
+            if (isset($doctor->doctorAvatar)) {
+                $avatar = $doctorAvatar;
+                $avatar->attributes = $form->attributes;
+                if ($avatar->save() === false) {
+                    $form->addErrors($avatar->getErrors());
+                }
+            } else {
+                throw new CHttpException(404, 'DoctorAvatar record is not found.');
+            }
+        }
+        return ($form->hasErrors() === false);
+    }
+
+    public function loadIDoctorJson($id) {
+        $idoctor = $this->loadIDoctor($id);
+        if (isset($idoctor)) {
+            return array('doctor' => $idoctor);
+        } else {
+            return null;
+        }
+    }
+
+    public function loadIDoctor($id) {
+        $doctor = $this->loadDoctorById($id, array('doctorAvatar', 'doctorHospital'));
+
+        $idoctor = new IDoctor();
+        $idoctor->initModel($doctor);
+        return $idoctor;
+    }
+
+    /*
+      public function loadIHospital($id, $fid = null) {
+      if (isset($fid)) {
+      $join = FacultyHospitalJoin::model()->getByFacultyIdAndHospitalId($fid, $id, array('hospital'));
+      if (is_null($join) || is_null($join->hospital)) {
+      return null;
+      } else {
+      $ihospital = new IHospital();
+      $ihospital->initModel($join->hospital);
+      $ihospital->facultyDesc = $join->getDescription();
+      return $ihospital;
+      }
+      } else {
+      $hospital = Hospital::model()->getById($id);
+      if (is_null($hospital)) {
+      return null;
+      } else {
+      $ihospital = new IHospital();
+      $ihospital->initModel($hospital);
+      return $ihospital;
+      }
+      }
+      }
+     */
+
+    public function loadDoctorById($id, $with = array()) {
+        $model = Doctor::model()->getById($id, $with);
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Record is not found.');
+        }
+        return $model;
+    }
+
+}

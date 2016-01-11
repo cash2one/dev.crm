@@ -1,0 +1,79 @@
+<?php
+
+class ApiViewOpenCity extends EApiViewService {
+
+    public function __construct() {
+        parent::__construct();
+        $this->results = new stdClass();
+    }
+
+    protected function loadData() {
+        $this->loadCity();
+    }
+
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'errorCode' => 0,
+                'errorMsg' => 'success',
+                'results' => $this->results,
+            );
+        }
+    }
+
+    public function loadCity()
+    {
+        $data = array(
+                array(
+                    'id' => 1,
+                    'state' => '热门城市',
+                    'subCity' => array(
+                        array(
+                            'id' => 1,
+                            'city' => '北京',
+                        ),
+                        array(
+                            'id' => 73,
+                            'city' => '上海',
+                        ),
+                        array(
+                            'id' => 200,
+                            'city' => '广州',
+                        ),
+                    ),
+                ),
+                array(
+                    'id' => 10,
+                    'state' => '江苏',
+                    'subCity' => array(
+                        array(
+                            'id' => 77,
+                            'city' => '常州',
+                        ),
+                    ),
+                ),
+                array(
+                    'id' => 11,
+                    'state' => '浙江',
+                    'subCity' => array(
+                        array(
+                            'id' => 87,
+                            'city' => '杭州',
+                        ),
+                        array(
+                            'id' => 91,
+                            'city' => '湖州',
+                        ),
+                    ),
+                ),
+
+        );
+        $this->setCity($data);
+    }
+    private function setCity($data){
+        $this->results = $data;
+    }
+
+
+}

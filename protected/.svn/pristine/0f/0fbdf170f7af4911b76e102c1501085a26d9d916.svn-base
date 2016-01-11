@@ -1,0 +1,151 @@
+<?php
+
+class IHospital extends EViewModel {
+
+    public $id;
+    public $name;
+    public $class;
+    public $type;
+    public $desc;    //Hospital.description.
+    public $phone;
+    public $address;
+    public $urlWebsite;
+    public $urlImage;
+    public $city;   // ICity
+    //  public $urlThumbnail;
+    public $facultyDesc;    //FacultyHospitalJoin.description.
+    public $departments;    // Array IHospitalDepartment.
+
+    public function initModel($model, $attributes = null) {
+        $attributesMap = $this->getAttributesMapping($attributes);
+
+        foreach ($attributesMap as $imodelAttr => $modelAttr) {
+            $this->{$imodelAttr} = $model->{$modelAttr};
+        }
+        /*
+          $this->id = $model->id;
+          $this->name = $model->getName();
+          $this->class = $model->getClass();
+          $this->type = $model->getType();
+          $this->desc = $model->getDescription();
+          $this->phone = $model->getPhone();
+          $this->address = $model->getAddress();
+          $this->urlWebsite = $model->getWebsite();
+         * 
+         */
+        $this->urlImage = $model->getAbsUrlAvatar();
+        $city = $model->getCity();
+        if (isset($city)) {
+            $this->setCity($city);
+        }
+        // $this->urlThumbnail=$this->urlImage;
+    }
+
+    public function attributesMapping() {
+        return array(
+            'id' => 'id',
+            'name' => 'name',
+            'class' => 'class',
+            'type' => 'type',
+            'desc' => 'description',
+            'phone' => 'phone',
+            'address' => 'address',
+            'urlWebsite' => 'website'
+        );
+    }
+
+    public function getCity() {
+        return $this->city;
+    }
+
+    public function setCity($city) {
+        if ($city instanceof RegionCity) {
+            $icity = new ILocationCity();
+            $icity->initModel($city);
+            $this->city = $icity;
+        } else if ($city instanceof ILocationCity) {
+            $this->city = $icity;
+        }
+    }
+
+    /**
+     * 
+     * @param array $hospitalDepts HospitalDepartment.
+     */
+    public function addHospitalDepartments($hospitalDepts) {
+        if (arrayNotEmpty($hospitalDepts)) {
+            foreach ($hospitalDepts as $dept) {
+                $idept = new IHospitalDepartment();
+                $idept->initModel($dept);
+                $this->addDepartment($idept);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param IHospitalDepartment $dept
+     */
+    public function addDepartment(IHospitalDepartment $dept) {
+        $this->departments[$dept->group][] = $dept;
+    }
+
+    public function getDepartments($flatten = false) {
+        if ($flatten) {
+            if (isset($this->departments) && arrayNotEmpty($this->departments)) {
+                $output = array();
+                foreach ($this->departments as $group) {
+                    foreach ($group as $dept) {
+                        $output[] = $dept;
+                    }
+                }
+                return $output;
+            } else {
+                return null;
+            }
+        } else {
+            return $this->departments;
+        }
+    }
+
+    public function getDescription($ntext = false) {
+        return $this->getTextAttribute($this->desc, $ntext);
+    }
+
+    public function getFacultyDesc($ntext = false) {
+        return $this->getTextAttribute($this->facultyDesc, $ntext);
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getClass() {
+        return $this->class;
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function getUrlImage() {
+        return $this->urlImage;
+    }
+
+    public function getPhone() {
+        return $this->phone;
+    }
+
+    public function getAddress() {
+        return $this->address;
+    }
+
+    public function getUrlWebsite() {
+        return $this->urlWebsite;
+    }
+
+}

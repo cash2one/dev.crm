@@ -1,0 +1,134 @@
+<?php
+
+class ApiViewBookingV4 extends EApiViewService {
+    private $user;
+    private $bookingId;
+    private $files;
+    private $id;
+//    private $hospital;
+//    private $hpDept;
+    private $bookingMgr;
+    private $modelBooking;      // Booking model.
+
+    //初始化类的时候将参数注入
+
+    public function __construct($user, $id) {
+        parent::__construct();
+        $this->results = new stdClass();
+        $this->user = $user;
+        $this->files = array();
+        $this->id = $id;
+        $this->bookingMgr = new BookingManager();
+    }
+
+    protected function loadData() {
+        // load Booking by id.
+        $this->loadBooking();
+//        $this->loadOwner();
+//        $this->loadExpertBooked();
+//        $this->loadBookingFiles();
+    }
+
+    //返回的参数
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'errorCode' => 0,
+                'errorMsg' => 'success',
+                'results' => $this->results->booking,
+            );
+        }
+    }
+
+    private function loadBooking() {
+        $model = Booking::model()->getByIdAndUser($this->id, $this->user->getId(), $this->user->getMobile());
+        $this->setBooking($model);
+    }
+
+    private function loadOwner() {
+        if (is_null($this->owner)) {
+            if (isset($this->modelBooking) && $this->modelBooking->getOwner() !== null) {
+                $owner = $this->modelBooking->getOwner();
+                $this->setOwner($owner);
+            }
+        }
+    }
+
+    private function loadExpertBooked() {
+        if (is_null($this->expertBooked)) {
+            if (isset($this->modelBooking) && $this->modelBooking->getExpertBooked() !== null) {
+                $expert = $this->modelBooking->getExpertBooked();
+                $this->setExpertBooked($expert);
+            }
+        }
+    }
+
+    private function loadBookingFiles() {
+        if (arrayNotEmpty($this->files) === false) {
+            if (isset($this->modelBooking)) {
+                $bookingFiles = $this->modelBooking->getBkFiles();
+                if (arrayNotEmpty($bookingFiles)) {
+                    $this->setBookingFiles($bookingFiles);
+                }
+            }
+        }
+    }
+
+    private function setBooking(Booking $model) {
+        $data = new stdClass();
+        $data->id = $model->getId();
+        $data->refNo = $model->getRefNo();
+        $data->userId = $model->getUserId();
+        $data->bkStatus = $model->getBkStatus();
+        $data->expertName = $model->getExpertNameBooked();
+        $data->mobile = $model->getMobile();
+        $data->hospitalName = $model->getHospitalName();
+        $data->hpDeptName = $model->getHpDeptName();
+        $data->patientName = $model->getContactName();
+        $data->diseaseName = $model->getDiseaseName();
+        $data->diseaseDetail = $model->getDiseaseDetail();
+        $data->dateCreated = $model->getDateCreated();
+        $bookingFiles = $model->getBkFiles();
+        print_r($bookingFiles);
+            if(arrayNotEmpty($bookingFiles)){
+                foreach ($bookingFiles as $bookingFile){
+                    $files = new stdClass();
+                    $files->id = $bookingFile->getId();
+                    $files->absFileUrl = $bookingFile->getAbsFileUrl();
+                    $files->absThumbnailUrl = $bookingFile->getAbsThumbnailUrl();
+                    $data->files[] = $files;
+                }
+            }else{
+                 $data->files[] = NULL;
+            }
+        $this->results->booking = $data;
+    }
+
+    private function setOwner(User $owner) {
+        $data = new stdClass();
+        $data->id = $owner->getId();
+        $data->mobile = $owner->getMobile();
+
+        $this->owner = $data;
+    }
+
+    private function setExpertBooked($model) {
+        $data = new stdClass();
+        $data->id = $model->getId();
+        $data->name = $model->getName();
+        $this->expertBooked = $data;
+    }
+
+    private function setBookingFiles(array $models) {
+        foreach ($models as $model) {
+            $data = new stdClass();
+            $data->id = $model->getId();
+            $data->url = $model->getAbsFileUrl(); // @TODO: delete.
+            $data->fileUrl = $model->getAbsFileUrl();
+            $data->tnUrl = $model->getAbsThumbnailUrl();
+            $this->files[] = $data;
+        }
+    }
+
+}

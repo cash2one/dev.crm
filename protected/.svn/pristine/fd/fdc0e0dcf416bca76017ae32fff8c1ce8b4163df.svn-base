@@ -1,0 +1,75 @@
+<?php
+
+abstract class Controller extends CController {
+
+    /**
+     * @var string the default layout for the controller view. Defaults to '//layouts/column1',
+     * meaning using a single column layout. See 'protected/views/layouts/column1.php'.
+     */
+    public $layout;
+    public $defaultAction;
+
+    /**
+     * @var array context menu items. This property will be assigned to {@link CMenu::items}.
+     */
+    public $menu;
+    public $pageTitle;
+
+    /**
+     * @var array the breadcrumbs of the current page. The value of this property will
+     * be assigned to {@link CBreadcrumbs::links}. Please refer to {@link CBreadcrumbs::links}
+     * for more details on how to specify this property.
+     */
+    public $breadcrumbs = array();
+
+    public function headerUTF8() {
+        header('Content-Type: text/html; charset=utf-8');
+    }
+
+    public function renderJsonOutput($data, $exit = true) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo CJSON::encode($data);
+        foreach (Yii::app()->log->routes as $route) {
+            if ($route instanceof CWebLogRoute || $route instanceof XWebDebugRouter) {
+                $route->enabled = false; // disable any weblogroutes
+            }
+        }
+        if ($exit) {
+            Yii::app()->end(200, true);
+        }
+    }
+
+    public function renderImageOutput($imageUrl, $type = 'jpg') {
+        $imginfo = getimagesize($imageUrl);
+        header("Content-type: {$imginfo['mime']}");
+        readfile($imageUrl);
+        /* header('Content-type: image/' . $type);
+          $content = file_get_contents($imageUrl);
+          echo $content;
+         */
+    }
+
+    public function isUserAgentApp() {
+        return ((isset($_GET['agent']) && $_GET['agent'] == 'app') || (isset($_POST['agent']) && $_POST['agent'] == 'app'));
+    }
+
+    public function isUserAgentWeixin() {
+        $userAgent = Yii::app()->request->getUserAgent();
+        return (strContains($userAgent, 'MicroMessenger'));
+    }
+
+    public function isUserAgentIOS() {
+        $userAgent = strtolower(Yii::app()->request->getUserAgent());
+        return strContains($userAgent, 'iphone') || strContains($userAgent, 'ipad');
+    }
+
+    public function isUserAgentAndroid() {
+        $userAgent = strtolower(Yii::app()->request->getUserAgent());
+        return strContains($userAgent, 'android');
+    }
+
+    public function getUserIp() {
+        return Yii::app()->request->userHostAddress;
+    }
+
+}

@@ -1,0 +1,32 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of OrderManager
+ *
+ * @author shuming
+ */
+class OrderManager {
+      //来自PatientBooking数据
+    public function initSalesOrder($model) {
+        $order = new SalesOrder();
+        $order->createRefNo($model->refNo, $model->id, $model->bk_type);
+        $order->user_id = $model->user_id;
+        $order->bk_id = $model->id;
+        $order->bk_type = $model->bk_type;
+        $order->is_paid = SalesOrder::ORDER_UNPAIDED;
+        $order->order_type = $model->order_type;
+        $order->subject = $model->subject;
+        $order->description = $model->description;
+        $order->created_by = Yii::app()->user->id;
+        $order->date_open = date('Y-m-d H:i:s');
+        $order->setAmount($model->amount);
+        return $order;
+    }
+    
+}

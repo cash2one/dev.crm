@@ -1,0 +1,34 @@
+<?php
+
+class IExpertLeader extends IDoctor {
+    
+    public function initModel(Doctor $model){
+        parent::initModel($model);
+      //  $this->docId = $model->getId();  //id
+      //  $this->docName = $model->getName();  //队长姓名
+        /*(
+         * ExpertTeamData:
+        "docId": "0",
+                    "docName": "许建屏",
+                    "mTitle": "主任医师",
+                    "aTitle": "教授",
+                    "hospital": "北京阜外医院",
+                    "hFaculty": "心外科成人中心",
+                    "faculty": "",
+                    "imageUrl": "http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F21C9DCA8D0052ECCAC3DF12EA60DEF49.png",
+                    "desc": "获国家科学技术进步二等奖、首届中华医学奖二等奖及北京市科学技术进步二等奖各一项,获中国医学科学院成就奖多项。"
+        */
+        /*
+        $teamLeader_xjp->mTitle = $model->getMedicalTitle();  //主任,副主任,主治
+        $teamLeader_xjp->aTitle = $model->getAcademicTitle();  //教授,副教授,无			
+        $teamLeader_xjp->hospital = $model->getHospital; //所属医院
+        $teamLeader_xjp->hFaculty = '心外科成人中心'; //所属科室 (与所属医院有关)
+        $teamLeader_xjp->faculty = '';  //科室 (属于名医主刀后台)
+        $teamLeader_xjp->imageUrl = 'http://mingyihz.oss-cn-hangzhou.aliyuncs.com/d%2F21C9DCA8D0052ECCAC3DF12EA60DEF49.png'; //头像链接
+        $teamLeader_xjp->desc = '获国家科学技术进步二等奖、首届中华医学奖
+         * 
+         */
+    }
+    
+}
+

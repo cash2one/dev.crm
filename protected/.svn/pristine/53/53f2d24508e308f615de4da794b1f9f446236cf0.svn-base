@@ -1,0 +1,45 @@
+<?php
+// $model IBooking.
+//$this->headerUTF8();
+?>
+
+<h3>预约详情：</h3>
+<table cellpadding="8" border="1">
+    <tbody>
+        <tr><td>预约号：</td><td><?php echo $model->refNo; ?></td></tr>
+        <tr><td>创建日期：</td><td><?php echo $model->createDate; ?></td></tr>
+        <tr><td>预约分类：</td><td><?php echo $model->bookType; ?></td></tr>
+        <?php
+        switch ($model->bookTypeCode) {
+            case '1':
+                ?>
+                <tr><td>所选科室：</td><td><b><?php echo $model->getFacultyName(); ?></b></td></tr>   
+                <?php
+                break;
+            case '2':
+                ?>
+                <tr><td>所选医生：</td><td><b><?php echo $model->getDoctorName(); ?></b></td></tr>   
+                <?php
+                break;
+            case '3':
+                ?>
+                <tr><td>专家团队：</td><td><b><?php echo $model->getExpertTeamName(); ?></b></td></tr>   
+                <?php
+                break;
+            case '4':
+                ?>
+                <tr><td>所选医院：</td><td><b><?php echo $model->getHospitalName(); ?></b></td></tr>   
+                <tr><td>所选科室：</td><td><b><?php echo $model->getDeptName(); ?></b></td></tr>   
+                <?php
+                break;
+            default:
+                break;
+        }
+        ?>
+
+        <tr><td>称呼：</td><td><b><?php echo $model->cName; ?></b></td></tr>    
+        <tr><td>手机：</td><td><b><?php echo $model->mobile; ?></b></td></tr>
+        <tr><td>病情：</td><td><b><?php echo $model->patientCondition; ?></b></td></tr>
+    </tbody>
+</table>
+<br />

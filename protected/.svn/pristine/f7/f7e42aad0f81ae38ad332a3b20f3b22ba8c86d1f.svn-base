@@ -1,0 +1,200 @@
+<?php
+
+class IDoctor extends EViewModel {
+
+    public $id;
+    public $name;
+    public $mobile;
+    public $urlImage;
+    public $hid; // Doctor.hospital_id
+    public $hospital;   //  Doctor->hospital->name
+    public $hFaculty;   //Doctor->faculty.
+    public $mTitle; // medical title
+    public $aTitle; // academic title
+    public $desc;
+    public $imageUrl;   //expertTeam pages , should be deleted, @2015-08-12
+    public $docName;    //expertTeam pages , should be deleted, @2015-08-12
+
+    public function initModel(Doctor $doctor) {
+        $this->id = $doctor->getId();
+        $this->name = $doctor->getName();
+        $this->mobile = $doctor->getMobile();
+        $this->urlImage = $doctor->getAbsUrlAvatar(true);
+        $this->hid = $doctor->getHospitalId();
+        $this->hpName = $doctor->getHospitalName();
+        $this->hospital = $doctor->getHospitalName();
+        $this->hFaculty = $doctor->getFaculty();
+        $this->hpDeptName = $doctor->getHpDeptName();
+        $this->mTitle = $doctor->getMedicalTitle();
+        $this->aTitle = $doctor->getAcademicTitle();
+        $this->desc = $doctor->getDescription();
+
+        $this->imageUrl = $doctor->getAbsUrlAvatar(true); //expertTeam pages , should be deleted, @2015-08-12
+        $this->docName = $doctor->getName(); //  expertTeam pages, should be deleted, @2015-08-12
+    }
+
+    public function addRelatedModel(Doctor $model, $with) {
+        if (arrayNotEmpty($with)) {
+            foreach ($with as $relatedAttr) {
+                $relatedModel = $model->{$relatedAttr};
+                if (is_null($relatedModel)) {
+                    continue;
+                }
+                switch ($relatedAttr) {                    
+                    case "doctorAvatar":
+                        $this->setIDoctorAvatar($relatedModel);
+                        break;
+                    case "doctorCerts":
+                        $this->addIDoctorCerts($relatedModel);
+                        break;
+                    case "doctorHospital":
+                        $this->setIHospital($relatedModel);
+                        break;
+                    case "doctorHpDept":
+                        $this->setIHospitalDepartment($relatedModel);
+                        break;
+                    case "doctorState":
+                        $this->setILocationState($relatedModel);
+                        break;
+                    case "doctorCity":
+                        $this->setILocationCity($relatedModel);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    public function setIDoctorAvatar($model, $attrName = "avatar") {
+        if ($model instanceof DoctorAvatar) {
+            $imodel = new IDoctorAvatar();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    public function setIHospital($model, $attrName = "hospital") {
+        if ($model instanceof Hospital) {
+            $imodel = new IHospital();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    public function setIHospitalDepartment($model, $attrName = "hpDept") {
+        if ($model instanceof HospitalDepartment) {
+            $imodel = new IHospitalDepartment();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    public function setILocationState($model, $attrName = "province") {
+        if ($model instanceof RegionState) {
+            $imodel = new ILocationState();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    public function setILocationCity($model, $attrName = "city") {
+        if ($model instanceof RegionCity) {
+            $imodel = new ILocationCity();
+            $imodel->initModel($model);
+            $this->{$attrName} = $imodel;
+        } else {
+            $this->{$attrName} = $model;
+        }
+    }
+
+    /**
+     * Cccepts an array of DoctorFile models.
+     * Convert it to IDoctorFile.
+     * Assign the resulting array to $this->certs.
+     * @param array $doctorCerts array of DoctorFile.
+     * @param string $attrName
+     */
+    public function addIDoctorCerts($doctorCerts, $attrName = 'certs') {
+        if (arrayNotEmpty($doctorCerts)) {
+            foreach ($doctorCerts as $cert) {
+                $idoctorCert = new IDoctorCert();
+                $idoctorCert->initModel($cert);
+                $this->addCert($idoctorCert, $attrName);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param IBookingCert $ibookingCert
+     */
+    public function addCert(IDoctorCert $idoctorCert, $attrName = "certs") {
+        $this->{$attrName}[] = $idoctorCert;
+    }
+
+    public function getDescritpion($ntext = false) {
+        return $this->getTextAttribute($this->desc, $ntext);
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getMobile() {
+        return $this->mobile;
+    }
+
+    public function getUrlImage() {
+        return $this->urlImage;
+    }
+
+    public function getHospitalId() {
+        return $this->hid;
+    }
+
+    public function getHospitalName() {
+        return $this->hospital;
+    }
+
+    public function getHospitalFaculty() {
+        return $this->hFaculty;
+    }
+
+    public function getMedicalTitle() {
+        return $this->mTitle;
+    }
+
+    public function getAcademicTitle() {
+        return $this->aTitle;
+    }
+
+    public function getDescription() {
+        return $this->desc;
+    }
+
+    public function getCityName() {
+        if (isset($this->city) && isset($this->city->name)) {
+            return $this->city->name;
+        } else {
+            return "";
+        }
+    }
+
+    public function getDoctorCerts() {
+        return isset($this->certs) ? $this->certs : null;
+    }
+
+}

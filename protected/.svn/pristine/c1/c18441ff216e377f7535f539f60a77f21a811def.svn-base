@@ -1,0 +1,59 @@
+<?php
+
+class IDoctor extends EViewModel {
+
+    public $id;
+    public $name;
+    public $urlImage;
+    public $hid; // Doctor.hospital_id
+    public $hospital;   //  Doctor->hospital->name
+    public $hFaculty;   //Doctor->faculty.
+    public $mTitle; // medical title
+    public $aTitle; // academic title
+    public $desc;
+
+    public function initModel(Doctor $doctor) {
+        $this->id = $doctor->getId();
+        $this->name = $doctor->getName();
+        $this->urlImage = $doctor->getAbsUrlAvatar(true);
+        $this->hid = $doctor->getHospitalId();
+        $this->hospital = $doctor->getHospitalName(true);
+        $this->hFaculty = $doctor->getFaculty();
+        $this->mTitle = $doctor->getMedicalTitle();
+        $this->aTitle = $doctor->getAcademicTitle();
+        $this->desc = $doctor->getDescription();
+    }
+
+    public function getDescritpion($ntext = false) {
+        return $this->getTextAttribute($this->desc, $ntext);
+    }
+    
+    public function getId(){
+        return $this->id;
+    }
+    public function getName(){
+        return $this->name;
+    }
+    public function getUrlImage(){
+        return $this->urlImage;
+    }
+    public function getHospitalId(){
+        return $this->hid;
+    }
+    public function getHospitalName(){
+        return $this->hospital;
+    }
+    public function getHospitalFaculty(){
+        return $this->hFaculty;
+    }
+    public function getMedicalTitle(){
+        return $this->mTitle;
+    }
+    public function getAcademicTitle(){
+        return $this->aTitle;
+    }
+    public function getDescription(){
+        return $this->desc;
+    }
+}
+

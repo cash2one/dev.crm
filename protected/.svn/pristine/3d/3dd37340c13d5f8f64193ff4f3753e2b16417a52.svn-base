@@ -1,0 +1,185 @@
+CREATE DATABASE  IF NOT EXISTS `myhz` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `myhz`;
+-- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
+--
+-- Host: 127.0.0.1    Database: myhz
+-- ------------------------------------------------------
+-- Server version	5.5.24-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `doctor_disease`
+--
+
+DROP TABLE IF EXISTS `doctor_disease`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor_disease` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `disease_id` int(11) NOT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `doctor_disease_idx` (`doctor_id`),
+  KEY `disease_disease_idx` (`disease_id`),
+  CONSTRAINT `disease_disease` FOREIGN KEY (`disease_id`) REFERENCES `disease` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `doctor_disease` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor_disease`
+--
+
+LOCK TABLES `doctor_disease` WRITE;
+/*!40000 ALTER TABLE `doctor_disease` DISABLE KEYS */;
+INSERT INTO `doctor_disease` (`id`, `doctor_id`, `disease_id`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,1,1,NULL,NULL,NULL),(2,1,2,NULL,NULL,NULL),(3,1,3,NULL,NULL,NULL),(4,2,1,NULL,NULL,NULL),(5,2,2,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `doctor_disease` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `doctor_avatar`
+--
+
+DROP TABLE IF EXISTS `doctor_avatar`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor_avatar` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` char(40) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `file_type` varchar(10) DEFAULT NULL,
+  `file_url` varchar(255) DEFAULT NULL,
+  `thumbnail_url` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `doctor_id_UNIQUE` (`doctor_id`),
+  UNIQUE KEY `uid_UNIQUE` (`uid`),
+  CONSTRAINT `doctorAvatar` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor_avatar`
+--
+
+LOCK TABLES `doctor_avatar` WRITE;
+/*!40000 ALTER TABLE `doctor_avatar` DISABLE KEYS */;
+INSERT INTO `doctor_avatar` (`id`, `uid`, `doctor_id`, `file_type`, `file_url`, `thumbnail_url`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'4D44AF15ABD8F6ED91C3100AF1906127534BA723',5,'jpg','upload/doctor/avatar/F96E8249F6E44AE5CCE48116DC59FE48.jpg','upload/doctor/avatar/F96E8249F6E44AE5CCE48116DC59FE48tn.jpg',NULL,'2015-01-23 22:56:03','2015-01-23 22:56:03',NULL),(2,'32A0A64F7F8F13B8C854D565A7438C3AE53EB3CF',6,'jpg','upload/doctor/avatar/2833E0D1E8B5F5DA055A0886D4CA00B2.jpg','upload/doctor/avatar/2833E0D1E8B5F5DA055A0886D4CA00B2tn.jpg',NULL,'2015-01-23 22:58:12','2015-01-23 22:58:12',NULL),(3,'FA2DA8417142C4D6967011F97AA493CB7D288A59',8,'jpg','upload/doctor/avatar/88C13D363F6637D2E9238B3FC746E039.jpg','upload/doctor/avatar/88C13D363F6637D2E9238B3FC746E039tn.jpg',NULL,'2015-01-23 22:59:48','2015-01-23 22:59:48',NULL),(4,'F8AF8F1511A5C6F586F041D2B67AB41FDDA445C6',9,'jpg','upload/doctor/avatar/09D49CC5C4DD802C1E8B5E50BE8F9D47.jpg','upload/doctor/avatar/09D49CC5C4DD802C1E8B5E50BE8F9D47tn.jpg',NULL,'2015-01-23 23:01:04','2015-01-23 23:01:04',NULL),(5,'432BA886DBD6D5860ED43E5188BB2A0ED19374BE',10,'jpg','upload/doctor/avatar/12539115FFAE172E7585560E9091805E.jpg','upload/doctor/avatar/12539115FFAE172E7585560E9091805Etn.jpg',NULL,'2015-01-23 23:02:27','2015-01-23 23:02:27',NULL),(7,'271AC7E77149CE2BD3997386FB7A72F37A7265FF',12,'jpg','upload/doctor/avatar/BDA7DBB2869DB0BB1C9CE50367BAE78A.jpg','upload/doctor/avatar/BDA7DBB2869DB0BB1C9CE50367BAE78Atn.jpg',NULL,'2015-01-23 23:03:20','2015-01-23 23:03:20',NULL),(8,'FCC0E8B66811E1906F169E3F1D0F30AD50B5D86A',13,'jpg','upload/doctor/avatar/AD675A98A3395C62A67C856BE2BCCBCA.jpg','upload/doctor/avatar/AD675A98A3395C62A67C856BE2BCCBCAtn.jpg',NULL,'2015-01-23 23:04:56','2015-01-23 23:04:56',NULL),(9,'72B95B65E0243058175AAB3E8520EC9565924566',14,'jpg','upload/doctor/avatar/9B9EED94000997387B723ED4948FA7E3.jpg','upload/doctor/avatar/9B9EED94000997387B723ED4948FA7E3tn.jpg',NULL,'2015-01-23 23:05:55','2015-01-23 23:05:55',NULL),(10,'0AF9B76853F7631DDA0ABE8E415528101389DED8',16,'jpg','upload/doctor/avatar/2B571F7705EC15CDA860DF20EC1710D2.jpg','upload/doctor/avatar/2B571F7705EC15CDA860DF20EC1710D2tn.jpg',NULL,'2015-01-23 23:06:24','2015-01-23 23:06:24',NULL),(11,'020B22E87C97B1D9DCCD0C8C5454017559DA6804',17,'jpg','upload/doctor/avatar/27A46BA88293A909C81D1B9AFC4D39F6.jpg','upload/doctor/avatar/27A46BA88293A909C81D1B9AFC4D39F6tn.jpg',NULL,'2015-01-23 23:06:46','2015-01-23 23:06:46',NULL),(12,'7E00AC0AF1C5ABA5605A1954624BBDFF5D0AD37F',20,'jpg','upload/doctor/avatar/C78AA755C637F29D7BF5E2A00AE0E973.jpg','upload/doctor/avatar/C78AA755C637F29D7BF5E2A00AE0E973tn.jpg',NULL,'2015-01-23 23:07:08','2015-01-23 23:07:08',NULL),(13,'86634FC79F11E00A457C70ABE74A0C1757833B77',7,'jpg','upload/doctor/avatar/612AF6C84375B85161E3C02000EDAAA6.jpg','upload/doctor/avatar/612AF6C84375B85161E3C02000EDAAA6tn.jpg',0,'2015-01-25 02:20:41','2015-01-25 02:20:41',NULL),(14,'08177E4A11E4FE5FD473E475D29836187A4BE753',32,'jpg','upload/doctor/avatar/93FEFF167A6A37B4186D4D1354808530.jpg','upload/doctor/avatar/93FEFF167A6A37B4186D4D1354808530tn.jpg',0,'2015-01-25 02:26:31','2015-01-25 02:26:31',NULL),(15,'ED00FA4B9611AA38A6F83525FE613C13FB8ECC0A',30,'jpg','upload/doctor/avatar/CD49BA91B5C9E5CE592F10285C53AA32.jpg','upload/doctor/avatar/CD49BA91B5C9E5CE592F10285C53AA32tn.jpg',0,'2015-01-25 02:28:26','2015-01-25 02:28:26',NULL),(17,'3BBC06CC766842D096B16FBA1561C80B726688C3',31,'jpg','upload/doctor/avatar/195DC5B1329A9FFA3DB91ED1484FB2E6.jpg','upload/doctor/avatar/195DC5B1329A9FFA3DB91ED1484FB2E6tn.jpg',0,'2015-01-25 02:30:37','2015-01-25 02:30:37',NULL),(18,'5CDE7E6DEAF0723864BCCBBD084DB71DEC1BEE66',3,'jpg','upload/doctor/avatar/68C55882E5C5C64D7E7D28DC14DE7703.jpg','upload/doctor/avatar/68C55882E5C5C64D7E7D28DC14DE7703tn.jpg',0,'2015-01-25 22:17:53','2015-01-25 22:17:53',NULL),(19,'26FDB305AE4AD1A8F45E17AA0340D63A84EEEA8E',4,'jpg','upload/doctor/avatar/DB23FB26AA52A812758FF32F3C5C5F05.jpg','upload/doctor/avatar/DB23FB26AA52A812758FF32F3C5C5F05tn.jpg',0,'2015-01-25 22:20:21','2015-01-25 22:20:21',NULL),(20,'5226CB5EAD5450CC6DD98DB6BCBA20B22551D528',1,'jpg','upload/doctor/avatar/396BE696FD748E7CFE8B1786DC35F230.jpg','upload/doctor/avatar/396BE696FD748E7CFE8B1786DC35F230tn.jpg',0,'2015-01-25 22:21:56','2015-01-25 22:21:56',NULL),(21,'8FEB550746CF1DA5A380E5A45EAB893BBBE2E092',2,'jpg','upload/doctor/avatar/CFF4BF82A36E3C173F57D7127F5A27D0.jpg','upload/doctor/avatar/CFF4BF82A36E3C173F57D7127F5A27D0tn.jpg',0,'2015-01-25 22:23:59','2015-01-25 22:23:59',NULL),(22,'649CEC33F3CF524D5796C6F42F19EA7B71B5E5E4',15,'jpg','upload/doctor/avatar/49432B824CDB0DFC6397E7C5CBC079F8.jpg','upload/doctor/avatar/49432B824CDB0DFC6397E7C5CBC079F8tn.jpg',0,'2015-01-25 22:28:43','2015-01-25 22:28:43',NULL);
+/*!40000 ALTER TABLE `doctor_avatar` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `doctor_profile`
+--
+
+DROP TABLE IF EXISTS `doctor_profile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor_profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `qualification` int(11) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `education` varchar(200) DEFAULT NULL,
+  `work_experience` varchar(200) DEFAULT NULL,
+  `work_start_year` int(11) DEFAULT NULL,
+  `lang` varchar(45) DEFAULT NULL,
+  `award` varchar(100) DEFAULT NULL,
+  `publication` varchar(100) DEFAULT NULL,
+  `website_url` varchar(100) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `doctor_id_UNIQUE` (`doctor_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor_profile`
+--
+
+LOCK TABLES `doctor_profile` WRITE;
+/*!40000 ALTER TABLE `doctor_profile` DISABLE KEYS */;
+INSERT INTO `doctor_profile` (`id`, `doctor_id`, `qualification`, `description`, `education`, `work_experience`, `work_start_year`, `lang`, `award`, `publication`, `website_url`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,1,0,'主任医师、科主任、安徽医科大学教授、中华医学会安徽省耳鼻咽喉头颈外科专业委员会常委、安徽省康复医学会耳鼻咽喉科专业委员会常委、安庆市耳鼻咽喉科分会主任委员、安庆市中西医结合耳鼻咽喉科协会副理事长兼秘书长、泛太平洋地区整形外科协会会员、《中国中西医结合耳鼻咽喉科杂志》编委',NULL,NULL,1992,NULL,'安庆市率先开展了鼓室成形+听小骨植入手术、耳硬化症的手术、鼻内镜下垂体瘤切除术、喉部激光手术、下咽癌切除+胸大肌皮瓣修复术、颈部气管造口成形术等特大、新手术，居省内先进水平。在国家级刊物上发表了论文十','于1999年参加首届全国大型医疗器械上岗考试并获得CDFI上岗证书。从事超声工作十多年，在《中国超声诊断杂志》、《皖南医学院学报》等国家级核心刊物上发表学术论文17篇。',NULL,NULL,NULL,NULL),(2,2,0,NULL,NULL,NULL,1995,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,3,0,NULL,NULL,NULL,2000,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,4,0,NULL,NULL,NULL,1988,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,5,0,NULL,NULL,NULL,1992,NULL,'发表论文30余篇，先后获得安徽省优秀科技论文一等奖1篇、安庆市优秀科技论文一等奖1篇，二等奖2篇，三等奖1篇。获得安庆市科学技术二等奖2项，三等奖1项，领衔中华预防医学会安庆片区科研项目1项。先后入编',NULL,NULL,NULL,NULL,NULL),(6,6,0,'1996年率先开展妇癌的手术和化疗及更年期妇女激素替代治疗；1999年参加安徽省卫生厅援外专家医疗队，赴也门工作两年并受该国省卫生厅的表彰；2006年率先开展晚期卵巢癌卷地毯式子宫切除+卵巢肿瘤切除+盆腹腔淋巴结清扫术；2007年成功治疗一例五胞胎孕妇',NULL,NULL,1984,NULL,'在CN杂志上发表论文10余篇，获安庆市科技进步二等奖一项、三等奖一项',NULL,NULL,NULL,NULL,NULL),(7,7,0,'主任医师,中国医师协会呼吸医师分会全国基层委员会委员，中华医学会安徽省呼吸内科分会常务委员、安徽省结核病学分会委员、安徽省抗癌协会肺癌专业委员会皖西南分会主任委员','1984年毕业于安徽医学院医学系','长期从事临床工作，能熟练诊治呼吸系统的常见病、多发病、少见病及疑难病，能独立完成专科重大会诊及抢救。在抢救危重症呼吸衰竭、肺心病等病人方面积累丰富的临床经验，并率先在我市开展有创、无创序贯呼吸支持抢救危重症呼吸衰竭，先后主持开展胸膜穿刺活检、经皮肺穿刺活检、透视下支气管镜肺活检、支气管镜下肺泡灌洗、支气管镜下气道内球囊扩张、气道内支架置入、气道内氩气刀治疗等呼吸介入技术。',1994,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,8,0,'中国医师协会肾脏病分会委员，中华医学会安徽省肾脏病分会常务委员，安徽省医院协会血液净化管理专业委员会常务委员，安徽医科大学兼职副教授，安庆市内科学会委员','1989年毕业于皖南医学院医疗系临床医学专业','从事内科、肾内科临床工作20年，具有丰富的临床理论与实践知识，主治各种原发性和继发性肾小球疾病、肾间质及肾血管疾病，在本地区率先开展腹膜透析、肾穿刺、颈内静脉永久性置管技术，获安庆市科技进步奖一项（B超定位下单人操作肾活检技术），擅长各种血液净化技术及临时性和永久性血管通路的建立及制作，其中钛轮钉制作动静脉内瘘技术处省内领先地位；先后荣获医院2009年度、2012年度优秀科主任称号',1988,NULL,'安庆市科技进步三等奖一项','学术论文10余篇',NULL,NULL,NULL,NULL),(9,9,0,'肾内科主任医师、科副主任、安医大兼职教授','1973年毕业于安徽医科大学医疗系',' 长期从事内科临床工作30余年，有着丰富的临床理论知识与实践经验。',1983,NULL,'获市政府科学技术进步奖一项','发表医学论文11篇，其中国家级论文5篇，省级刊物论文6篇',NULL,NULL,NULL,NULL),(10,10,0,NULL,'徐州医学院、安徽省立医院和天津眼科医院进修学习','专业从事眼前节疾病的Y-G激光治疗和儿童斜、弱视的诊治.',1990,NULL,NULL,'在各级医刊上发表论文15篇',NULL,NULL,NULL,NULL),(11,11,0,NULL,NULL,NULL,1992,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,12,0,'副教授，硕士生导师。广西医科大学第一附属医院心电诊断科科主任，广西医学会心电学专科分会副主任委员','1986年9月至1992年7月在华西医科大学攻读六年制本科临床医学专业，获医学学士学位；2004年9月至2007年7月在广西医科大学就读全日制硕士研究生内科学专业，获医学硕士学位。','1992年8月大学本科毕业至今一直在广西医科大学第一附属医院心电诊断科从事临床、教学及科研工作。',1992,NULL,'曾获广西科技进步三等奖1项；曾被评为“2011-2012学年度广西医科大学最受欢迎的老师”。',NULL,NULL,NULL,NULL,NULL),(13,13,0,'广西医科大学一附院男性学科（男科和性学科）主任，教授，主任医师，广西医科大学内科学教授、硕士生导师。中华医学会男科学分会全国委员，广西男科学会主任委员，中华医学会广西分会理事，广西性学会副会长，大学生性健康教育中心首席顾问。广西青年科技奖获得者，广西“新世纪十百千人才工程”入选人物','1979-1984 广州中山医科大学医学系（大学本科），1998-2001 日本国立东京大学农学和生命科学研究生院攻读博士学位','广西医科大学第一附院内分泌科、内科教研室，广西医科大学第一附院',1984,NULL,'科研获广西科技进步二等奖和广西医药科技进步二等奖。是广西男性学科的带头人和广西男科学会主要创始人，在国内外男性学科领域有一定学术影响',NULL,NULL,NULL,NULL,NULL),(14,14,0,NULL,NULL,NULL,1992,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(15,15,0,NULL,NULL,NULL,1992,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(16,16,0,'介入治疗科主任、放射科主任、教授、主任医师、硕士生导师。肿瘤介入治疗专家，影像学专家，放射学诊断和介入治疗的学科带头人。广西政协委员，广西抗癌协会常务理事、中国抗癌协会肿瘤介入诊疗专业委员会广西区委员、介入诊疗专业委员会主任委员。《中国介入影像与治疗学》杂志编委。肿瘤医学院诊断学教研室主任。',NULL,NULL,1992,NULL,'主持和主要参加6项科研课题的研究，获2000年广西医药卫生科技进步二等奖一项及2001年广西科技进步三等奖一项。共撰写专业论文20篇，2篇获广西自然科学学术论文二等奖。',NULL,NULL,NULL,NULL,NULL),(17,17,0,'胸瘤外科副主任、副教授、副主任医师、硕士生导师，胸外科专家','1984年毕业于广西医科大学医疗系本科        2000年赴德国进修留学一年 ','毕业后一直在附属肿瘤医院从事肿瘤胸外科工作。1990年晋升为主治医师，1996年晋升为副主任医师。2002年4月起任肿瘤胸外科副主任。',1984,NULL,'曾留学德国，主攻肺癌基因方面的研究，发明国家专利两项。承担自治区科技厅自然基金科研项目一项，卫生厅自筹资金科研项目一项。参加科研项目二项。获国家专利二项（本专业）。','发表“组胺及其受体与原发性肺癌”，“VATS在肺癌肺叶切除中的应用”，“VATS下食管癌切除二例报道”，“保留迷走神经干的贲门食管癌根治术”，“肺癌的基因治疗”等相关学术论文十余篇。',NULL,NULL,NULL,NULL),(18,20,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(19,21,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,30,0,NULL,'1982~1987 江苏徐州医学院1993~1996 第二军医大学 硕士2010~2012 第二军医大学 博士','病毒性肝炎及疑难病的治疗',1993,NULL,NULL,'在国内外杂志发表论文20余篇，参与编写多部书籍，如《桑福德抗微生物治疗指南》、《内科学理论与技术新进展》、《The Sanford Guide To Antimicrobial Therapy（第33',NULL,NULL,NULL,NULL),(21,31,0,'成功开展多项新技术、新疗法。负责多项国际多中心新药临床验证。任上海市全科医师及上海市住院医师规范化培训考核出题专家和考官，曾被评为第二军医大学校A级教员及住院医师规范化培训优秀教师','1990~1995 第二军医大学 本科1998~2001 第二军医大学 硕士2003年 德国弗莱格 实体肿瘤的细胞免疫治疗2004~2007 第二军医大学 博士','1995~2012年 上海长征医院 内科   2013~至今 上海东方肝胆外科医院 生物治疗科',1995,NULL,'以第1完成人获军队医疗成果奖三等奖1项，第2完成人获上海市科技进步二等奖和军队医疗成果奖二等奖各1项，其他还获得海市科技进步一等奖、中华医学科技奖二等奖、上海医学科技二等奖各1项。','共发表学术论文60多篇，其中第1作者发表SCI论文4篇，参与13部专著编写',NULL,NULL,NULL,NULL),(22,32,0,'','1996~2003 第二军医大学7年制本硕连读学员2008~2011 第二军医大学，博士生','2003~2005 东方肝胆外科医院 住院医师2005~2013 东方肝胆外科医院 主治医师2013~至今 东方肝胆外科医院 副主任医师',2007,NULL,'获军队医疗成果三等奖1项，获国家专利授权5项','获各类基金6项，其中2010年获得长三角联合攻关基金资助。发表论文30余篇，其中第一作者及通讯作者发表SCI论文7篇、总影响因子12.103。参编专著2部',NULL,NULL,NULL,NULL),(23,0,0,NULL,NULL,NULL,NULL,NULL,'','',NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `doctor_profile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `doctor`
+--
+
+DROP TABLE IF EXISTS `doctor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mobile` char(11) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `password` char(64) NOT NULL,
+  `salt` char(40) NOT NULL,
+  `password_raw` varchar(45) DEFAULT NULL,
+  `hospital_id` int(11) NOT NULL,
+  `faculty` varchar(45) DEFAULT NULL,
+  `fullname` varchar(45) NOT NULL,
+  `title` varchar(45) NOT NULL,
+  `gender` int(11) NOT NULL,
+  `expertise` varchar(200) NOT NULL,
+  `wechat` varchar(45) DEFAULT NULL,
+  `tel` varchar(45) DEFAULT NULL,
+  `date_activated` datetime DEFAULT NULL,
+  `date_verified` datetime DEFAULT NULL,
+  `last_login_time` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `doctor_hospital_idx` (`hospital_id`),
+  CONSTRAINT `doctor_hospital` FOREIGN KEY (`hospital_id`) REFERENCES `hospital` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor`
+--
+
+LOCK TABLES `doctor` WRITE;
+/*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
+INSERT INTO `doctor` (`id`, `mobile`, `email`, `password`, `salt`, `password_raw`, `hospital_id`, `faculty`, `fullname`, `title`, `gender`, `expertise`, `wechat`, `tel`, `date_activated`, `date_verified`, `last_login_time`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'13866604066','','1234','',NULL,31,'耳鼻喉科','陈玉赞','1',1,'精通本专业的常规诊疗技术，擅长耳鼻咽喉科鼻内镜手术、各种肿瘤的手术治疗、耳显微手术、声显微手术、侧颅底手术、疑难气道异物的诊治、复杂颈外伤及顽固鼻出血的救治、耳源性颅内并发症的诊治。','','','2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(2,'13013167101','','1234','',NULL,31,'泌尿外科','陈志洁','1',1,'体外碎石、输尿管镜经皮肾镜钬激光碎石、前列腺等离子电切术、后腹腔镜下肾切除术、肾癌根治术、半尿路切除术、肾上腺肿瘤切除术、腹腔镜下全膀胱切除-原位新膀胱术、前列腺癌根治术。','','','2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(3,'13966608499','','1234','',NULL,32,'呼吸科','丁国正','2',1,'支气管哮喘，慢阻肺、呼吸衰竭、肺癌等疾病的诊治。','','','2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(4,'13605562857',NULL,'','',NULL,31,'心内科','朱宜春','1',2,'心脏、外周血管、术中超声、胎儿系统超声检查及胎儿心脏、面部、四肢等专项',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(5,'13905565136',NULL,'','',NULL,31,'儿科','何宏勋','1',1,'儿科呼吸、哮喘、长期咳嗽、肺炎、支气管炎、呼吸道感染和消化系统、营养代谢、先天性甲状腺机能低下、矮小症、癫痫等疾病的诊治；对儿童危重症、疑难杂症的诊治',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(6,'13855662829',NULL,'','',NULL,31,'妇产科','朱慧芬','1',2,'擅长妇科肿瘤的手术和化疗、妇科微创手术：阴式子宫切除术、阴式卵巢良性肿瘤切除术、宫腔镜手术、腹腔镜手术及阴道成形术、尿瘘修补术',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(7,'15922331162',NULL,'','',NULL,31,'呼吸内科','施炜','1',1,'熟练诊治呼吸系统的常见病、多发病、少见病及疑难病，能独立完成专科重大会诊及抢救。在抢救危重症呼吸衰竭、肺心病等病人方面积累丰富的临床经验',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(8,'13955668399',NULL,'','',NULL,32,'肾内科','韩久怀','1',1,'肾脏内科疾病诊治，血液净化技术：包括血液 透析、腹膜透析、CRRT、血液灌流等，血管通路建立，包括长期导管置入。',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(9,'13865156928',NULL,'','',NULL,31,'肾内科','柳昔敖','1',1,'擅长肾脏内科疾病的诊治，尤其对急慢性肾小球肾炎、肾病综合征、急慢性肾功能衰竭、狼疮性肾炎、紫癜性肾炎、ZgA肾病、痛风性肾病、糖尿病肾病和缺血性肾病、风湿性疾病相关性肾损害、尿路感染等疾病有系统的诊治经验。对 尿彩中西结合的治疗方法有独特的疗效。对血液透析、血液灌流、 血液灌流滤过腹膜透析等治疗技术有较深的研究。熟练掌握，肾内科各科穿刺性操作技术。',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(10,'13083165588',NULL,'','',NULL,31,'眼科','郝玉萍','1',2,'擅长于各种类型白内障、青光眼、角膜病、泪道病、眼底病、复杂性眼外伤的手术治疗',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(11,'18207712962','chenhong939@163.com','','',NULL,29,'中医科','陈红','2',2,'中医民族医药配合腹针 壮医 刺血疗法 治疗 失眠症 热毒症 小儿咳嗽 小儿瘫痪 ',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(12,'13977166051','1317562313@qq.com','','',NULL,29,'心电科','何涛','2',1,'广西医科大学第一附属医院心电诊断科科主任，广西医学会心电学专科分会副主任委员。作为课题负责人承担广西自然科学基金课题及广西卫生厅自筹课题；曾获广西科技进步三等奖1项；曾被评为“2011-2012学年度广西医科大学最受欢迎的老师”。',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(13,'13978851922','182362875@qq.com','','',NULL,29,'男科','梁季鸿','1',1,'男性学专家，教授，硕士研究生导师，医学博士，男性学科主任，广西青年科技奖获得者，入选广西\"新世纪十百千人才工程\"。广西男性学科的带头人和广西男科学会主要创始人，在国内外男性学科领域有一定学术影响。获广西科技进步二等奖，获4项国家专利，在国内外专业杂志发表论文20多篇，多篇被SCI收录。是广西医科大学男性科的学科带头人和创始人之一。',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(14,'13077767662','425741128@qq.com','','',NULL,29,'中医科','梁永秀','2',2,'精通中医外治调理，擅长针灸、雷火灸、穴位注射、埋线、放血治疗、松筋术，善用中医经方治疗咳嗽、哮喘、慢性鼻炎、胃肠病、肾结石、小儿杂症、女性月经不调、更年期综合症、体虚性肥胖、慢性疲劳综合症等',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(15,'13877185359','gong_j59515@163.com','','',NULL,30,'急诊科','龚坚','2',1,'急诊科治疗',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(16,'13907710126',NULL,'','',NULL,30,'放射科 介入治疗科','马亦龙','1',1,'放射学诊断和介入治疗，专长放射学诊断及肺癌、肝癌、鼻咽癌、盆腔肿瘤、胃肠道肿瘤、食道癌及胆道恶性梗阻、椎间盘脱出症等的放射介入诊疗',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(17,'13607812508','cht_zuo@163.com','','',NULL,30,'呼吸科 ','左传田','1',1,'肺部良、恶性肿瘤，食管良、恶性疾病，纵隔肿瘤和胸壁肿瘤的诊治和外科治疗，以及电视胸腔镜外科技术的应用',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(20,'',NULL,'','',NULL,28,'骨科','Chew Tec Hock, Jeffrey','1',1,'骨科手术 整形外科手术等。Jeffrey医生在骨科和整形外科领域积累了超过20年的工作经验，尤其在使用Makoplasty技术做高难度膝盖骨替换，以及其他运动损伤治疗方面在业内享有盛名。',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(21,'',NULL,'','',NULL,28,'全科','Ming Tong','1',1,'脑科，眼科，临床治疗。',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(30,'13817371758','zhqiank@yeah.net','','',NULL,10,'肝脏科','张迁','2',1,'病毒性肝炎及疑难病的治疗。在国内外杂志发表论文20余篇，参与编写多部书籍，如《桑福德抗微生物治疗指南》、《内科学理论与技术新进展》、《The Sanford Guide To Antimicrobial Therapy（第33版中文版）》等。参与和具体负责多项国际、国内多中心药物治疗慢性乙型肝炎的抗病毒临床试验研究。',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(31,'13817221812','yuanzg@163.com','','',NULL,10,'肿瘤科','袁振刚','2',1,'肿瘤治疗。成功开展多项新技术、新疗法。负责多项国际多中心新药临床验证。任上海市全科医师及上海市住院医师规范化培训考核出题专家和考官，曾被评为第二军医大学校A级教员及住院医师规范化培训优秀教师，发表教改论文5篇。承担和参与国家自然科学基金、上海市卫生局和长征医院“三重三优”人才建设计划青年技术骨干基金7项。',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(32,'18918811855',NULL,'','',NULL,10,'肝胆外科   腹腔镜外科','谭蔚峰','2',1,'副主任医师，副教授，医学博士，从医18年，专业技术九级。获各类基金6项，其中2010年获得长三角联合攻关基金资助。发表论文30余篇，其中第一作者及通讯作者发表SCI论文7篇、总影响因子12.103。参编专著2部。获军队医疗成果三等奖1项，获国家专利授权5项。任中国抗癌协会胆道肿瘤专业委员会办公室秘书及青年委员，上海市政府采购评审专家。2011年入选上海市新一轮卫生系统优秀青年人才培养计划。擅长肝胆',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping events for database 'myhz'
+--
+
+--
+-- Dumping routines for database 'myhz'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-02-02 23:15:51

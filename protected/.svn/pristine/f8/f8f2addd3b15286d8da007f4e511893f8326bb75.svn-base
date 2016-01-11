@@ -1,0 +1,67 @@
+<?php
+
+class IFaculty extends EViewModel {
+
+    public $id;
+    public $name;
+    public $code;
+    public $desc;
+    public $diseases;
+    public $hospitals;  // array of IHospital.
+    public $doctors;    // array of IDoctor.
+    public $expertTeams;
+
+    public function initModel(Faculty $faculty) {
+        $this->id = $faculty->getId();
+        $this->name = $faculty->getName();
+        $this->code = $faculty->getCode();
+        $this->desc = $faculty->getDescription();
+
+        $this->diseases = $faculty->getDiseaseList();
+    }
+
+    public function addHospital($hospital) {
+        $this->hospitals[$hospital->id] = $hospital;
+    }
+
+    public function addDoctor($doctor) {
+        $this->doctors[$doctor->id] = $doctor;
+    }
+
+    public function addExpertTeam($team) {
+        $this->expertTeams[$team->teamId] = $team;
+    }
+
+    public function getHospitals() {
+        return $this->hospitals;
+    }
+
+    public function getDoctors() {
+        return $this->doctors;
+    }
+
+    public function getExpertTeams() {
+        return $this->expertTeams;
+    }
+
+    public function getDiseaseList() {
+        return $this->diseases;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getCode() {
+        return $this->code;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getDescription($ntext = false) {
+        return $this->getTextAttribute($this->desc, $ntext);
+    }
+
+}

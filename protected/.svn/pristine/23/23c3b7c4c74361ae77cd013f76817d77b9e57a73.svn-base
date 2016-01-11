@@ -1,0 +1,13 @@
+== mobile site ==
+http://m.mingyihz.com/
+http://m.mingyihz.com/huizhen/
+http://m.mingyihz.com/hospital/
+http://m.mingyihz.com/overseas/
+http://m.mingyihz.com/app/contactus/
+
+== App ==
+http://api.mingyihz.com/?agent=app&header=1&footer=0
+http://api.mingyihz.com/huizhen/?agent=app&header=1&footer=0
+http://api.mingyihz.com/hospital/?agent=app&header=1&footer=0
+http://api.mingyihz.com/overseas/?agent=app&header=1&footer=0
+http://api.mingyihz.com/app/contactus/?agent=app&header=1&footer=0

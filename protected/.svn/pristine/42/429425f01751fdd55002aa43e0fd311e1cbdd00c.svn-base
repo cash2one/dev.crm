@@ -1,0 +1,187 @@
+<?php
+
+class UserManager {
+    /*     * ****** Api 2.0 ******* */
+
+    /**
+     * 
+     * @param type $values = array('username'=>$username, 'password'=>$password, 'verify_code'=>$verify_code, 'userHostIp'=>$userHostIp);
+     * @return string
+     */
+    public function apiTokenUserRegister($values) {
+        $output = array('status' => false); // default status is false.
+        // TODO: wrap the following method. first, validates the parameters in $values.        
+        if (isset($values['username']) === false || isset($values['password']) === false || isset($values['verify_code']) === false) {
+            $output['errors']['error_code'] = 400;
+            $output['errors']['error_msg'] = 'Wrong parameters.';
+            return $output;
+        }
+        // assign parameters.
+        $mobile = $values['username'];
+        $password = $values['password'];
+        $verifyCode = $values['verify_code'];
+        $userHostIp = isset($values['userHostIp']) ? $values['userHostIp'] : null;
+        $autoLogin = false;
+        if (isset($values['autoLogin']) && $values['autoLogin'] == 1) {
+            $autoLogin = true;
+        }
+
+        // Verifies AuthSmsVerify by using $mobile & $verifyCode.        
+        $authMgr = new AuthManager();
+        $authSmsVerify = $authMgr->verifyCodeForUserRegister($mobile, $verifyCode, $userHostIp);
+        if ($authSmsVerify->isValid() === false) {
+            $output['errors']['verify_code'] = $authSmsVerify->getError('code');
+            return $output;
+        }
+        // success.
+        // Creates a new User model.
+        $user = $this->doRegisterUser($mobile, $password);
+        if ($user->hasErrors()) {
+            // error, so return errors.
+            $output['errors'] = $user->getFirstErrors();
+            return $output;
+        } else if ($autoLogin) {
+            // auto login user and return token.            
+            $output = $authMgr->doTokenUserLoginByPassword($mobile, $password, $userHostIp);
+        } else {
+            $output['status'] = true;
+        }
+        // deactive current smsverify.                
+        if (isset($authSmsVerify)) {
+            $authMgr->deActiveAuthSmsVerify($authSmsVerify);
+        }
+
+        return $output;
+    }
+
+    /**
+     * 
+     * @param type $username
+     * @param type $password
+     * @param type $terms
+     * @return User $model.
+     */
+    public function doRegisterUser($username, $password, $terms = 1, $activate = 1) {
+        // create new User model and save into db.
+        $model = new User();
+        $model->scenario = 'register';
+        $model->username = $username;
+        $model->password_raw = $password;
+        $model->terms = $terms;
+        $model->createNewModel();
+        if ($activate) {
+            $model->setActivated();
+        }
+        $model->save();
+
+        return $model;
+    }
+
+    /**
+     * Login user.
+     * @param UserLoginForm $form
+     * @return type 
+     */
+    public function doLogin(UserLoginForm $form) {
+        return ($form->validate() && $form->login());
+    }
+
+    /**
+     * Auto login user.
+     * @param type $username
+     * @param type $password
+     * @param type $rememberMe
+     * @return type 
+     */
+    public function autoLoginUser($username, $password, $rememberMe = 0) {
+        $form = new UserLoginForm();
+        $form->username = $username;
+        $form->password = $password;
+        $form->rememberMe = $rememberMe;
+        $this->doLogin($form);
+
+        return $form;
+    }
+
+    public function registerNewUser(UserRegisterForm $form, $checkVerifyCode = true) {
+        if ($form->validate()) {
+            if ($checkVerifyCode) {
+                // Verifies AuthSmsVerify by using $mobile & $verifyCode.  
+                $userIp = Yii::app()->request->getUserHostAddress();
+
+                $authMgr = new AuthManager();
+                $authSmsVerify = $authMgr->verifyCodeForUserRegister($form->getUsername(), $form->getVerifyCode(), $userIp);
+                if ($authSmsVerify->isValid() === false) {
+                    $form->addError('verify_code', $authSmsVerify->getError('code'));
+                    //$output['errors']['verifyCode'] = $authSmsVerify->getError('code');
+                    return false;
+                }
+            }
+            // create new User model and save into db.
+            $model = new User();
+            $model->username = $form->username;
+            $model->password_raw = $form->password;
+            $model->terms = $form->terms;
+            $model->createNewModel();
+            $model->setActivated();
+            if ($model->save() === false) {
+                $form->addErrors($model->getErrors());
+            } elseif (isset($authSmsVerify)) {
+                // deactive current smsverify.
+                $authMgr->deActiveAuthSmsVerify($authSmsVerify);
+            }
+        }
+        return ($form->getErrors() === false);
+    }
+
+    public function doChangePassword(UserPasswordForm $passwordForm) {
+        $user = $passwordForm->getUser();
+        if ($passwordForm->validate()) {
+            if ($user->changePassword($passwordForm->getNewPassword()) === false) {
+                $passwordForm->addErrors($user->getErrors());
+            }
+        }
+        return ($passwordForm->hasErrors() === false);
+    }
+
+    public function validateCaptchaCode(UserRegisterForm $form) {
+        $form->scenario = 'getSmsCode';
+        return $form->validate();
+    }
+
+    public function doResetPassword($user, $userAction, $newPassword) {
+        if ($user->changePassword($newPassword)) {
+            // return $userAction->deActivateRecord();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Marks url as inactive at first access.
+     * @param type $userId
+     * @param type $uid
+     * @return type boolean
+     */
+    public function validatePasswordResetAction($userId, $uid) {
+        $user = User::model()->getById($userId);
+        if (isset($user) && $user->isLocalAccount()) {
+            $userAction = UserAuthAction::model()->getByUserIdAndUIDAndActionType($userId, $uid, UserAuthAction::ACTION_PASSWORD_RESET);
+            if (isset($userAction) && $userAction->checkValidity(false)) {
+                return $userAction;
+            }
+        }
+        return null;
+    }
+
+    public function loadUser($id, $with = null) {
+        $model = User::model()->getById($id, $with);
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Not found.');
+        } else {
+            return $model;
+        }
+    }
+
+}

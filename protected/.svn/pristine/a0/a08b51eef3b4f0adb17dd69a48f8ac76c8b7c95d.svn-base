@@ -1,0 +1,160 @@
+<?php
+
+class DoctorSearch {
+
+    public $field_name = 'name';    //by similar name
+    public $field_title = 'title';  //by id
+    public $field_faculty = 'faculty';  //by id
+    public $field_category = 'category';  //by id
+    public $field_disease = 'disease';
+    public $field_hospital = 'hospital';    //by id
+    public $field_city = 'city';    //by id
+    public $field_sort = 'sort';
+    public $query_params = array();
+    protected $query_string;
+
+    public function __construct() {
+        
+    }
+
+    /**
+     * @param type $queryParams array of query variables.
+     * @param type $with array of Relational Models
+     * @return type $criteria CDbCriteria
+     */
+    public function createSearchCriteria($queryParams, $with=null) {
+        // Parse query params form querystring.
+        $this->setQueryValuesFromUrl($queryParams);
+        // Build query criteria.
+        $criteria = $this->buildQueryCriteria($with);
+
+        return $criteria;
+    }
+
+    public function buildQueryCriteria($with=null) {
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->addCondition('t.date_activated is NOT NULL');
+        $criteria->order = 't.display_order ASC';
+        //$criteria->order = $this->buildOrderString();
+
+        if (is_array($with)) {
+            $criteria->with = $with;
+        }
+        if ($this->hasQueryParams()) {
+            // city
+            if (isset($this->query_params[$this->field_city])) {
+                $hospitals = Hospital::model()->getAllByCity($this->query_params[$this->field_city]);
+                $hospitalIds = arrayExtractValue($hospitals, 'id');
+                if (is_array($hospitalIds)) {
+                    $criteria->addInCondition('t.hospital_id', $hospitalIds);
+                }
+            }
+            // title.
+            if (isset($this->query_params[$this->field_title])) {
+                $criteria->compare('t.title', $this->query_params[$this->field_title]);
+            }
+            if (isset($this->query_params[$this->field_name])) {
+                $criteria->addSearchCondition('name', $this->query_params[$this->field_name]);
+            }
+            // disease
+            if (isset($this->query_params[$this->field_disease])) {
+                $drDiseases = DoctorDisease::model()->getAllByDiseaseId($this->query_params[$this->field_disease]);
+                $doctorIds = arrayExtractValue($drDiseases, 'doctor_id');
+                if (emptyArray($doctorIds) === false) {
+                    $criteria->addInCondition('t.id', $doctorIds);
+                }
+            }
+            if (isset($this->query_params[$this->field_category])) {
+                $diseaseIds = arrayExtractValue(Disease::model()->getAllByCategoryId($this->query_params[$this->field_category]), 'id');
+
+                if (emptyArray($diseaseIds) === false) {
+                    $doctorIds = arrayExtractValue(DoctorDisease::model()->getAllInDiseaseIds($diseaseIds), 'doctor_id');
+
+                    if (emptyArray($diseaseIds) === false) {
+                        $criteria->addInCondition('t.id', $doctorIds);
+                    }
+                }
+            }
+            // hospital
+            if (isset($this->query_params[$this->field_hospital])) {
+                $criteria->compare('t.hospital_id', $this->query_params[$this->field_hospital]);
+            }
+        }
+
+        return $criteria;
+    }
+
+    public function setQueryValuesFromUrl($params) {
+        //      parse_str($querystring, $params);
+        if (isset($params[$this->field_name]) && $params[$this->field_name] != '') {
+            $this->query_params[$this->field_name] = $params[$this->field_name];
+        }
+        if (isset($params[$this->field_title]) && $params[$this->field_title] != '') {
+            $this->query_params[$this->field_title] = $params[$this->field_title];
+        }
+        if (isset($params[$this->field_category]) && $params[$this->field_category] != '') {
+            $this->query_params[$this->field_category] = $params[$this->field_category];
+        }
+        if (isset($params[$this->field_disease]) && $params[$this->field_disease] != '') {
+            $this->query_params[$this->field_disease] = $params[$this->field_disease];
+        }
+        if (isset($params[$this->field_hospital]) && $params[$this->field_hospital] != '') {
+            $this->query_params[$this->field_hospital] = $params[$this->field_hospital];
+        }
+        if (isset($params[$this->field_city]) && $params[$this->field_city] != '') {
+            $this->query_params[$this->field_city] = $params[$this->field_city];
+        }
+    }
+
+    /*
+      public function getOptionsCategory() {
+      return TripSetting::model()->getOptionsCategory();
+      }
+     */
+    /*
+      public function getOptionsSort() {
+      return array('all' => '综合排序', 'price desc' => '价格', 'price asc' => '价格');
+      }
+     * 
+     */
+    /*
+      public function getParamCategoryList() {
+      if (isset($this->query_params[$this->field_category])) {
+      $list = $this->query_params[$this->field_category];
+      if (is_array($list) === false)
+      return array($list);
+      }else
+      return array();
+      }
+     */
+    /*
+      public function getCity() {
+      return $this->location;
+      }
+     */
+
+    private function hasQueryParams() {
+        return is_array($this->query_params) && count($this->query_params) > 0;
+    }
+
+    /*
+      private function buildOrderString() {
+      $order = '';
+      if (isset($this->query_params['sort'])) {
+      $sort = $this->query_params['sort'];
+      if ($sort == 'price desc') {
+      $order .= 'price desc,';
+      } else if ($sort == 'price asc') {
+      $order.='price asc,';
+      }
+      }
+
+      $order.='t.date_created DESC';
+
+      return $order;
+      }
+     * 
+     */
+}
+

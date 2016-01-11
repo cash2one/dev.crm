@@ -1,0 +1,12 @@
+<?php
+
+class ILocationState extends EViewModel {
+
+    public function initModel($model) {
+        $this->id = $model->getId();
+        $this->name = $model->name;
+    }
+    
+    
+
+}

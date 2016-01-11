@@ -1,0 +1,39 @@
+<?php
+
+class DiseaseManager {
+
+    public function loadDiseaseById($id, $with = null) {
+        return Disease::model()->getById($id, $with);
+    }
+
+    public function loadListDisease() {
+        $output = array();
+        $dcList = DiseaseCategory::model()->getAll(array('dcDiseases'), array('order' => 't.id'));
+        if (empty($dcList)) {
+            return $output;
+        }
+        foreach ($dcList as $dc) {
+            $catName = $dc->cat_name;
+            $subCatName = $dc->sub_cat_name;
+            $diseaseList = $dc->dcDiseases;
+            $subCatDisList = array();
+            if (arrayNotEmpty($diseaseList)) {
+                foreach ($diseaseList as $disease) {
+                    $dataDisease = new stdClass();
+                    $dataDisease->id = $disease->id;
+                    $dataDisease->name = $disease->name;
+                    $subCatDisList[] = $dataDisease;
+                }
+            }
+            $output[$catName][$subCatName] = $subCatDisList;
+        }
+        return $output;
+    }
+
+    public function loadDiseaseCategoryList() {
+        $models = DiseaseCategory::model()->getAll(array('dcDiseases'));
+
+        return $models;
+    }
+
+}

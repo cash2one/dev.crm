@@ -1,0 +1,83 @@
+<?php
+
+abstract class MobileController extends Controller {
+
+    public $layout = 'layoutSinglePage';
+    public $jqPageId;   //must be unique across all pages in jquery mobile.
+    public $pageTitle = '名医会诊';
+
+    public function getHomeUrl() {
+        return $this->createUrl('app/index');
+    }
+
+    public function setPageID($pid) {
+        $this->jqPageId = $pid;
+    }
+
+    public function getPageID() {
+        return $this->jqPageId;
+    }
+
+    public function setPageTitle($title, $siteName=false) {
+        //   var_dump($this->pageTitle);
+        parent::setPageTitle($title, $siteName);
+
+        // $this->headerUTF8();
+        //  var_dump($this->pageTitle);exit;
+    }
+
+    public function getPageTitle() {
+        return $this->pageTitle;
+    }
+
+    public function showHeader() {
+        if (isset($_GET['header'])) {
+            return $_GET['header'] == 1;
+        } else if (isset($_POST['header'])) {
+            return $_POST['header'] == 1;
+        } else {
+            return $this->isAjaxRequest() === false;
+        }
+    }
+
+    public function showFooter() {
+        if ((isset($_GET['footer']) && $_GET['footer'] == 1) || (isset($_POST['footer']) && $_POST['footer']) == 1) {
+            return true;
+        } else if ($this->isAjaxRequest()) {
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    public function showActionBar() {
+        return ($this->isAgentApp() === false);
+    }
+
+    public function renderActionBar() {
+        if ($this->showActionBar()) {
+            $this->renderPartial('//layouts/actionbar');
+        }
+    }
+
+    public function createPageAttributes($returnString=true) {
+        $data = array();
+        if (isset($_GET['addBackBtn']) && $_GET['addBackBtn'] == 1) {
+            $data['data-add-back-btn'] = 'true';
+        }
+        if (isset($_GET['backBtnText'])) {
+            $data['data-back-btn-text'] = $_GET['backBtnText'];
+        }
+        if ($returnString) {
+            $ret = '';
+            foreach ($data as $key => $value) {
+                $ret.=$key . '=' . $value . ' ';
+            }
+            return $ret;
+        } else {
+            return $data;
+        }
+    }
+
+}
+

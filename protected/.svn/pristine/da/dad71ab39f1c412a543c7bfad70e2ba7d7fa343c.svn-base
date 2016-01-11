@@ -1,0 +1,64 @@
+<?php
+
+
+class ApiViewDoctorPatientList extends EApiViewService{
+    private $creatorId;  // User.id
+    private $patientMgr;
+    private $patientList;  // array
+    private $pagesize=10;
+    private $page=1;
+    
+    //初始化类的时候将参数注入
+    public function __construct($creatorId, $pagesize=10, $page=1) {
+        parent::__construct();
+        $this->creatorId = $creatorId;        
+        $this->pagesize=$pagesize;
+        $this->page=$page;
+        $this->patientMgr = new PatientManager();
+        $this->patienList=array();
+    }
+
+    protected function loadData() {
+        // load PatientBooking by creatorId.
+        $this->loadPatientList();        
+    }
+    //返回的参数
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'patientList' => $this->patientList,                
+            );
+        }
+    }
+    //调用model层方法
+    private function loadPatientList(){
+        $attributes=null;
+        $with= null;
+        $options=array('limit'=>$this->pagesize, 'offset'=>(($this->page-1)*$this->pagesize));
+        $models = $this->patientMgr->LoadPatientInfoListByCreateorId($this->creatorId, $attributes, $with, $options);
+        if(arrayNotEmpty($models)){
+            $this->setPatientList($models);
+        }
+    }
+    //查询总数
+    public function loadCount(){
+       return $this->patientMgr->loadPatientCount($this->creatorId);
+    }
+    
+    
+    //查询到的数据过滤
+    private function setPatientList(array $models){
+        foreach($models as $model){
+            $data = new stdClass();
+            $data->id = $model->getId();
+            $data->name = $model->getName();
+            $data->age = $model->getAge();
+            $data->ageMonth = $model->getAgeMonth();
+            $data->cityName = $model->getCityName();
+            $data->gender = $model->getGender();
+            $data->diseaseName = $model->getDiseaseName();
+            $this->patientList[]=$data;
+        }
+    }
+}

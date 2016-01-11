@@ -1,0 +1,1429 @@
+-- phpMyAdmin SQL Dump
+-- version 3.4.10.1deb1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Jan 29, 2015 at 07:31 PM
+-- Server version: 5.5.40
+-- PHP Version: 5.3.10-1ubuntu3.15
+
+use myhz;
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `myhz`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `common_code`
+--
+
+CREATE TABLE IF NOT EXISTS `common_code` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL,
+  `code` varchar(20) NOT NULL,
+  `display_name` varchar(45) DEFAULT NULL,
+  `display_name_cn` varchar(45) DEFAULT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code_type` (`type`,`code`),
+  KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contactus`
+--
+
+CREATE TABLE IF NOT EXISTS `contactus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `mobile` varchar(45) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `message` varchar(500) DEFAULT NULL,
+  `sent` tinyint(4) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `contactus`
+--
+
+INSERT INTO `contactus` (`id`, `name`, `mobile`, `email`, `subject`, `message`, `sent`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 'test', '878909887', 'qin560.user1@gmail.com', 'test', 'Hello\r\nThis is my test message.', 1, '2015-01-17 01:04:29', '2015-01-17 01:04:29', NULL),
+(2, '1', '123', '123@com.cn.com', '123', '123', 1, '2015-01-24 16:19:31', '2015-01-24 16:19:31', NULL),
+(3, '11', '11', '11@1.com', '啊', '啊', 1, '2015-01-24 16:22:54', '2015-01-24 16:22:54', NULL),
+(4, 'test', '123', 'qin560.user1@gmail.com', '123', '123123', 1, '2015-01-25 19:56:10', '2015-01-25 19:56:10', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `core_config`
+--
+
+CREATE TABLE IF NOT EXISTS `core_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `key` varchar(20) NOT NULL,
+  `sub_key` varchar(20) NOT NULL,
+  `value` varchar(100) NOT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `disease`
+--
+
+CREATE TABLE IF NOT EXISTS `disease` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `short_name` varchar(20) NOT NULL,
+  `show` tinyint(4) NOT NULL DEFAULT '1',
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `disease_category_idx` (`category_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=58 ;
+
+--
+-- Dumping data for table `disease`
+--
+
+INSERT INTO `disease` (`id`, `category_id`, `name`, `short_name`, `show`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 1, '肺癌', '肺癌', 1, NULL, NULL, NULL, NULL),
+(2, 1, '肝癌', '肝癌', 1, NULL, NULL, NULL, NULL),
+(3, 1, '淋巴癌', '淋巴癌', 1, NULL, NULL, NULL, NULL),
+(4, 1, '胃癌', '胃癌', 1, NULL, NULL, NULL, NULL),
+(5, 1, '乳腺癌', '乳腺癌', 1, NULL, NULL, NULL, NULL),
+(6, 1, '肾癌', '肾癌', 1, NULL, NULL, NULL, NULL),
+(7, 1, '鼻癌', '鼻癌', 1, NULL, NULL, NULL, NULL),
+(8, 1, '直肠癌', '直肠癌', 1, NULL, NULL, NULL, NULL),
+(9, 2, '脑血管病', '脑血管病', 1, NULL, NULL, NULL, NULL),
+(10, 2, '癫痫', '癫痫', 1, NULL, NULL, NULL, NULL),
+(11, 2, '帕金森', '帕金森', 1, NULL, NULL, NULL, NULL),
+(12, 2, '脑炎', '脑炎', 1, NULL, NULL, NULL, NULL),
+(13, 2, '重症肌无力', '重症肌无力', 1, NULL, NULL, NULL, NULL),
+(14, 2, '多发性硬化肌病', '多发性硬化肌病', 0, NULL, NULL, NULL, NULL),
+(15, 2, '脑膜瘤', '脑膜瘤', 1, NULL, NULL, NULL, NULL),
+(16, 2, '脑肿瘤', '脑肿瘤', 1, NULL, NULL, NULL, NULL),
+(17, 2, '垂体瘤', '垂体瘤', 1, NULL, NULL, NULL, NULL),
+(18, 2, '运动神经元病', '运动神经元病', 0, NULL, NULL, NULL, NULL),
+(19, 3, '心衰', '心衰', 1, NULL, NULL, NULL, NULL),
+(20, 3, '房间隔缺损', '房间隔缺损', 1, NULL, NULL, NULL, NULL),
+(21, 3, '先天性心脏病', '先天心脏病', 0, NULL, NULL, NULL, NULL),
+(22, 3, '心肌炎', '心肌炎', 1, NULL, NULL, NULL, NULL),
+(23, 3, '风湿性心脏病', '风心病', 1, NULL, NULL, NULL, NULL),
+(24, 3, '心肌梗死', '心肌梗死', 1, NULL, NULL, NULL, NULL),
+(25, 3, '急性感染性心内膜炎', '急性感染性心内膜炎', 0, NULL, NULL, NULL, NULL),
+(26, 3, '动脉粥样硬化', '动脉粥样硬化', 0, NULL, NULL, NULL, NULL),
+(27, 3, '三尖瓣下移畸形', '三尖瓣下移畸形', 0, NULL, NULL, NULL, NULL),
+(28, 4, '反流性食管炎', '反流性食管炎', 0, NULL, NULL, NULL, NULL),
+(29, 4, '胃炎', '胃炎', 1, NULL, NULL, NULL, NULL),
+(30, 4, '胃溃疡', '胃溃疡', 1, NULL, NULL, NULL, NULL),
+(31, 4, '肠癌', '肠癌', 1, NULL, NULL, NULL, NULL),
+(32, 4, '胰腺炎', '胰腺炎', 1, NULL, NULL, NULL, NULL),
+(33, 4, '肠炎', '肠炎', 1, NULL, NULL, NULL, NULL),
+(34, 4, '食管癌', '食管癌', 1, NULL, NULL, NULL, NULL),
+(35, 4, '胃癌', '胃癌', 1, NULL, NULL, NULL, NULL),
+(36, 4, '胰腺癌', '胰腺癌', 1, NULL, NULL, NULL, NULL),
+(37, 4, '肠梗阻', '肠梗阻', 1, NULL, NULL, NULL, NULL),
+(38, 4, '胆管癌', '胆管癌', 0, NULL, NULL, NULL, NULL),
+(39, 4, '肝癌', '肝癌', 1, NULL, NULL, NULL, NULL),
+(40, 4, '肝硬化', '肝硬化', 1, NULL, NULL, NULL, NULL),
+(41, 5, '肺炎', '肺炎', 1, NULL, NULL, NULL, NULL),
+(42, 5, '肺癌', '肺癌', 1, NULL, NULL, NULL, NULL),
+(43, 5, '肺结核', '肺结核', 1, NULL, NULL, NULL, NULL),
+(44, 5, '哮喘', '哮喘', 1, NULL, NULL, NULL, NULL),
+(45, 5, '支气管炎', '支气管炎', 1, NULL, NULL, NULL, NULL),
+(46, 5, '肾炎', '肾炎', 1, NULL, NULL, NULL, NULL),
+(47, 5, '肾结石', '肾结石', 1, NULL, NULL, NULL, NULL),
+(48, 5, '肾衰', '肾衰', 1, NULL, NULL, NULL, NULL),
+(49, 5, '肾病综合征', '肾病综合征', 0, NULL, NULL, NULL, NULL),
+(50, 6, '白血病', '白血病', 1, NULL, NULL, NULL, NULL),
+(51, 6, '淋巴瘤', '淋巴瘤', 1, NULL, NULL, NULL, NULL),
+(52, 6, '不孕不育', '不孕不育', 1, NULL, NULL, NULL, NULL),
+(53, 6, '糖尿病', '糖尿病', 1, NULL, NULL, NULL, NULL),
+(54, 6, '甲亢', '甲亢', 1, NULL, NULL, NULL, NULL),
+(55, 6, '子宫肌瘤', '子宫肌瘤', 1, NULL, NULL, NULL, NULL),
+(56, 6, '红斑狼疮', '红斑狼疮', 1, NULL, NULL, NULL, NULL),
+(57, 6, '中医科', '中医科', 1, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `disease_category`
+--
+
+CREATE TABLE IF NOT EXISTS `disease_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `disease_category`
+--
+
+INSERT INTO `disease_category` (`id`, `name`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, '肿瘤', 1, NULL, NULL, NULL),
+(2, '脑部', 2, NULL, NULL, NULL),
+(3, '心脏', 4, NULL, NULL, NULL),
+(4, '消化系统', 5, NULL, NULL, NULL),
+(5, '呼吸系统及肾病', 3, NULL, NULL, NULL),
+(6, '其他', 6, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `disease_faculty`
+--
+
+CREATE TABLE IF NOT EXISTS `disease_faculty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `faculty_id` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `show` tinyint(4) DEFAULT '1',
+  `display_order` int(11) DEFAULT '0',
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=88 ;
+
+--
+-- Dumping data for table `disease_faculty`
+--
+
+INSERT INTO `disease_faculty` (`id`, `faculty_id`, `name`, `description`, `show`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 1, '乙肝', NULL, 1, 0, NULL, NULL, NULL),
+(2, 1, '糖尿病', NULL, 1, 0, NULL, NULL, NULL),
+(3, 1, '肺炎', NULL, 1, 0, NULL, NULL, NULL),
+(4, 1, '哮喘', NULL, 1, 0, NULL, NULL, NULL),
+(5, 1, '类风湿', NULL, 1, 0, NULL, NULL, NULL),
+(6, 1, '红斑狼疮', NULL, 1, 0, NULL, NULL, NULL),
+(7, 1, '肾炎', NULL, 1, 0, NULL, NULL, NULL),
+(8, 1, '脑梗塞', NULL, 1, 0, NULL, NULL, NULL),
+(9, 2, '静脉曲张', NULL, 1, 0, NULL, NULL, NULL),
+(10, 2, '乳腺纤维瘤', NULL, 1, 0, NULL, NULL, NULL),
+(11, 2, '肾结石', NULL, 1, 0, NULL, NULL, NULL),
+(12, 2, '三叉神经痛', NULL, 1, 0, NULL, NULL, NULL),
+(13, 2, '颈椎病', NULL, 1, 0, NULL, NULL, NULL),
+(14, 2, '唇腭裂', NULL, 0, 0, NULL, NULL, NULL),
+(15, 3, '肺癌', NULL, 1, 0, NULL, NULL, NULL),
+(16, 3, '肝癌', NULL, 1, 0, NULL, NULL, NULL),
+(17, 3, '淋巴癌', NULL, 1, 0, NULL, NULL, NULL),
+(18, 3, '胃癌', NULL, 1, 0, NULL, NULL, NULL),
+(19, 3, '乳腺癌', NULL, 1, 0, NULL, NULL, NULL),
+(20, 3, '肾癌', NULL, 1, 0, NULL, NULL, NULL),
+(21, 3, '鼻癌', NULL, 1, 0, NULL, NULL, NULL),
+(22, 3, '直肠癌', NULL, 1, 0, NULL, NULL, NULL),
+(23, 3, '食道癌', NULL, 0, 0, NULL, NULL, NULL),
+(24, 4, '卵巢囊肿', NULL, 1, 0, NULL, NULL, NULL),
+(25, 4, '子宫肌瘤', NULL, 0, 0, NULL, NULL, NULL),
+(26, 4, '盆腔炎', NULL, 1, 0, NULL, NULL, NULL),
+(27, 4, '不孕不育', NULL, 1, 0, NULL, NULL, NULL),
+(28, 4, '宫颈癌', NULL, 1, 0, NULL, NULL, NULL),
+(29, 4, '卵巢癌', NULL, 1, 0, NULL, NULL, NULL),
+(48, 5, '湿疹', NULL, 1, 0, NULL, NULL, NULL),
+(49, 5, '儿童哮喘', NULL, 1, 0, NULL, NULL, NULL),
+(50, 5, '癫痫', NULL, 1, 0, NULL, NULL, NULL),
+(51, 5, '儿童肺炎', NULL, 1, 0, NULL, NULL, NULL),
+(52, 5, '白血病', NULL, 1, 0, NULL, NULL, NULL),
+(53, 5, '儿童心肌炎', NULL, 0, 0, NULL, NULL, NULL),
+(66, 6, '心衰', NULL, 1, 0, NULL, NULL, NULL),
+(67, 6, '心肌炎', NULL, 1, 0, NULL, NULL, NULL),
+(68, 6, '心绞痛', NULL, 1, 0, NULL, NULL, NULL),
+(69, 6, '风湿性心脏病', NULL, 1, 0, NULL, NULL, NULL),
+(70, 6, '心肌梗死', NULL, 1, 0, NULL, NULL, NULL),
+(71, 6, '急性心内膜炎', NULL, 0, 0, NULL, NULL, NULL),
+(83, 8, '尖锐湿疣', NULL, 1, 0, NULL, NULL, NULL),
+(84, 8, '慢阻肺', NULL, 1, 0, NULL, NULL, NULL),
+(85, 8, '骨折', NULL, 1, 0, NULL, NULL, NULL),
+(86, 8, '中毒', NULL, 1, 0, NULL, NULL, NULL),
+(87, 8, '胰腺炎', NULL, 1, 0, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctor`
+--
+
+CREATE TABLE IF NOT EXISTS `doctor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mobile` char(11) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `password` char(64) NOT NULL,
+  `salt` char(40) NOT NULL,
+  `password_raw` varchar(45) DEFAULT NULL,
+  `hospital_id` int(11) NOT NULL,
+  `faculty` varchar(45) DEFAULT NULL,
+  `fullname` varchar(45) NOT NULL,
+  `title` varchar(45) NOT NULL,
+  `gender` int(11) NOT NULL,
+  `expertise` varchar(200) NOT NULL,
+  `wechat` varchar(45) DEFAULT NULL,
+  `tel` varchar(45) DEFAULT NULL,
+  `date_activated` datetime DEFAULT NULL,
+  `date_verified` datetime DEFAULT NULL,
+  `last_login_time` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `doctor_hospital_idx` (`hospital_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=33 ;
+
+--
+-- Dumping data for table `doctor`
+--
+
+INSERT INTO `doctor` (`id`, `mobile`, `email`, `password`, `salt`, `password_raw`, `hospital_id`, `faculty`, `fullname`, `title`, `gender`, `expertise`, `wechat`, `tel`, `date_activated`, `date_verified`, `last_login_time`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, '13866604066', '', '1234', '', NULL, 31, '耳鼻喉科', '陈玉赞', '1', 1, '精通本专业的常规诊疗技术，擅长耳鼻咽喉科鼻内镜手术、各种肿瘤的手术治疗、耳显微手术、声显微手术、侧颅底手术、疑难气道异物的诊治、复杂颈外伤及顽固鼻出血的救治、耳源性颅内并发症的诊治。', '', '', '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(2, '13013167101', '', '1234', '', NULL, 31, '泌尿外科', '陈志洁', '1', 1, '体外碎石、输尿管镜经皮肾镜钬激光碎石、前列腺等离子电切术、后腹腔镜下肾切除术、肾癌根治术、半尿路切除术、肾上腺肿瘤切除术、腹腔镜下全膀胱切除-原位新膀胱术、前列腺癌根治术。', '', '', '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(3, '13966608499', '', '1234', '', NULL, 32, '呼吸科', '丁国正', '2', 1, '支气管哮喘，慢阻肺、呼吸衰竭、肺癌等疾病的诊治。', '', '', '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(4, '13605562857', NULL, '', '', NULL, 31, '心内科', '朱宜春', '1', 2, '心脏、外周血管、术中超声、胎儿系统超声检查及胎儿心脏、面部、四肢等专项', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(5, '13905565136', NULL, '', '', NULL, 31, '儿科', '何宏勋', '1', 1, '儿科呼吸、哮喘、长期咳嗽、肺炎、支气管炎、呼吸道感染和消化系统、营养代谢、先天性甲状腺机能低下、矮小症、癫痫等疾病的诊治；对儿童危重症、疑难杂症的诊治', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(6, '13855662829', NULL, '', '', NULL, 31, '妇产科', '朱慧芬', '1', 2, '擅长妇科肿瘤的手术和化疗、妇科微创手术：阴式子宫切除术、阴式卵巢良性肿瘤切除术、宫腔镜手术、腹腔镜手术及阴道成形术、尿瘘修补术', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(7, '15922331162', NULL, '', '', NULL, 31, '呼吸内科', '施炜', '1', 1, '熟练诊治呼吸系统的常见病、多发病、少见病及疑难病，能独立完成专科重大会诊及抢救。在抢救危重症呼吸衰竭、肺心病等病人方面积累丰富的临床经验', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(8, '13955668399', NULL, '', '', NULL, 32, '肾内科', '韩久怀', '1', 1, '肾脏内科疾病诊治，血液净化技术：包括血液 透析、腹膜透析、CRRT、血液灌流等，血管通路建立，包括长期导管置入。', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(9, '13865156928', NULL, '', '', NULL, 31, '肾内科', '柳昔敖', '1', 1, '擅长肾脏内科疾病的诊治，尤其对急慢性肾小球肾炎、肾病综合征、急慢性肾功能衰竭、狼疮性肾炎、紫癜性肾炎、ZgA肾病、痛风性肾病、糖尿病肾病和缺血性肾病、风湿性疾病相关性肾损害、尿路感染等疾病有系统的诊治经验。对 尿彩中西结合的治疗方法有独特的疗效。对血液透析、血液灌流、 血液灌流滤过腹膜透析等治疗技术有较深的研究。熟练掌握，肾内科各科穿刺性操作技术。', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(10, '13083165588', NULL, '', '', NULL, 31, '眼科', '郝玉萍', '1', 2, '擅长于各种类型白内障、青光眼、角膜病、泪道病、眼底病、复杂性眼外伤的手术治疗', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(11, '18207712962', 'chenhong939@163.com', '', '', NULL, 29, '中医科', '陈红', '2', 2, '中医民族医药配合腹针 壮医 刺血疗法 治疗 失眠症 热毒症 小儿咳嗽 小儿瘫痪 ', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(12, '13977166051', '1317562313@qq.com', '', '', NULL, 29, '心电科', '何涛', '2', 1, '广西医科大学第一附属医院心电诊断科科主任，广西医学会心电学专科分会副主任委员。作为课题负责人承担广西自然科学基金课题及广西卫生厅自筹课题；曾获广西科技进步三等奖1项；曾被评为“2011-2012学年度广西医科大学最受欢迎的老师”。', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(13, '13978851922', '182362875@qq.com', '', '', NULL, 29, '男科', '梁季鸿', '1', 1, '男性学专家，教授，硕士研究生导师，医学博士，男性学科主任，广西青年科技奖获得者，入选广西"新世纪十百千人才工程"。广西男性学科的带头人和广西男科学会主要创始人，在国内外男性学科领域有一定学术影响。获广西科技进步二等奖，获4项国家专利，在国内外专业杂志发表论文20多篇，多篇被SCI收录。是广西医科大学男性科的学科带头人和创始人之一。', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(14, '13077767662', '425741128@qq.com', '', '', NULL, 29, '中医科', '梁永秀', '2', 2, '精通中医外治调理，擅长针灸、雷火灸、穴位注射、埋线、放血治疗、松筋术，善用中医经方治疗咳嗽、哮喘、慢性鼻炎、胃肠病、肾结石、小儿杂症、女性月经不调、更年期综合症、体虚性肥胖、慢性疲劳综合症等', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(15, '13877185359', 'gong_j59515@163.com', '', '', NULL, 30, '急诊科', '龚坚', '2', 1, '急诊科治疗', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(16, '13907710126', NULL, '', '', NULL, 30, '放射科 介入治疗科', '马亦龙', '1', 1, '放射学诊断和介入治疗，专长放射学诊断及肺癌、肝癌、鼻咽癌、盆腔肿瘤、胃肠道肿瘤、食道癌及胆道恶性梗阻、椎间盘脱出症等的放射介入诊疗', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(17, '13607812508', 'cht_zuo@163.com', '', '', NULL, 30, '呼吸科 ', '左传田', '1', 1, '肺部良、恶性肿瘤，食管良、恶性疾病，纵隔肿瘤和胸壁肿瘤的诊治和外科治疗，以及电视胸腔镜外科技术的应用', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(20, '', NULL, '', '', NULL, 28, '骨科', 'Chew Tec Hock, Jeffrey', '1', 1, '骨科手术 整形外科手术等。Jeffrey医生在骨科和整形外科领域积累了超过20年的工作经验，尤其在使用Makoplasty技术做高难度膝盖骨替换，以及其他运动损伤治疗方面在业内享有盛名。', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(21, '', NULL, '', '', NULL, 28, '全科', 'Ming Tong', '1', 1, '脑科，眼科，临床治疗。', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(30, '13817371758', 'zhqiank@yeah.net', '', '', NULL, 10, '肝脏科', '张迁', '2', 1, '病毒性肝炎及疑难病的治疗。在国内外杂志发表论文20余篇，参与编写多部书籍，如《桑福德抗微生物治疗指南》、《内科学理论与技术新进展》、《The Sanford Guide To Antimicrobial Therapy（第33版中文版）》等。参与和具体负责多项国际、国内多中心药物治疗慢性乙型肝炎的抗病毒临床试验研究。', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(31, '13817221812', 'yuanzg@163.com', '', '', NULL, 10, '肿瘤科', '袁振刚', '2', 1, '肿瘤治疗。成功开展多项新技术、新疗法。负责多项国际多中心新药临床验证。任上海市全科医师及上海市住院医师规范化培训考核出题专家和考官，曾被评为第二军医大学校A级教员及住院医师规范化培训优秀教师，发表教改论文5篇。承担和参与国家自然科学基金、上海市卫生局和长征医院“三重三优”人才建设计划青年技术骨干基金7项。', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL),
+(32, '18918811855', NULL, '', '', NULL, 10, '肝胆外科   腹腔镜外科', '谭蔚峰', '2', 1, '副主任医师，副教授，医学博士，从医18年，专业技术九级。获各类基金6项，其中2010年获得长三角联合攻关基金资助。发表论文30余篇，其中第一作者及通讯作者发表SCI论文7篇、总影响因子12.103。参编专著2部。获军队医疗成果三等奖1项，获国家专利授权5项。任中国抗癌协会胆道肿瘤专业委员会办公室秘书及青年委员，上海市政府采购评审专家。2011年入选上海市新一轮卫生系统优秀青年人才培养计划。擅长肝胆', NULL, NULL, '2015-01-20 20:45:28', NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctor_avatar`
+--
+
+CREATE TABLE IF NOT EXISTS `doctor_avatar` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` char(40) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `file_type` varchar(10) DEFAULT NULL,
+  `file_url` varchar(255) DEFAULT NULL,
+  `thumbnail_url` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `doctor_id_UNIQUE` (`doctor_id`),
+  UNIQUE KEY `uid_UNIQUE` (`uid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+
+--
+-- Dumping data for table `doctor_avatar`
+--
+
+INSERT INTO `doctor_avatar` (`id`, `uid`, `doctor_id`, `file_type`, `file_url`, `thumbnail_url`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, '4D44AF15ABD8F6ED91C3100AF1906127534BA723', 5, 'jpg', 'upload/doctor/avatar/F96E8249F6E44AE5CCE48116DC59FE48.jpg', 'upload/doctor/avatar/F96E8249F6E44AE5CCE48116DC59FE48tn.jpg', NULL, '2015-01-23 22:56:03', '2015-01-23 22:56:03', NULL),
+(2, '32A0A64F7F8F13B8C854D565A7438C3AE53EB3CF', 6, 'jpg', 'upload/doctor/avatar/2833E0D1E8B5F5DA055A0886D4CA00B2.jpg', 'upload/doctor/avatar/2833E0D1E8B5F5DA055A0886D4CA00B2tn.jpg', NULL, '2015-01-23 22:58:12', '2015-01-23 22:58:12', NULL),
+(3, 'FA2DA8417142C4D6967011F97AA493CB7D288A59', 8, 'jpg', 'upload/doctor/avatar/88C13D363F6637D2E9238B3FC746E039.jpg', 'upload/doctor/avatar/88C13D363F6637D2E9238B3FC746E039tn.jpg', NULL, '2015-01-23 22:59:48', '2015-01-23 22:59:48', NULL),
+(4, 'F8AF8F1511A5C6F586F041D2B67AB41FDDA445C6', 9, 'jpg', 'upload/doctor/avatar/09D49CC5C4DD802C1E8B5E50BE8F9D47.jpg', 'upload/doctor/avatar/09D49CC5C4DD802C1E8B5E50BE8F9D47tn.jpg', NULL, '2015-01-23 23:01:04', '2015-01-23 23:01:04', NULL),
+(5, '432BA886DBD6D5860ED43E5188BB2A0ED19374BE', 10, 'jpg', 'upload/doctor/avatar/12539115FFAE172E7585560E9091805E.jpg', 'upload/doctor/avatar/12539115FFAE172E7585560E9091805Etn.jpg', NULL, '2015-01-23 23:02:27', '2015-01-23 23:02:27', NULL),
+(7, '271AC7E77149CE2BD3997386FB7A72F37A7265FF', 12, 'jpg', 'upload/doctor/avatar/BDA7DBB2869DB0BB1C9CE50367BAE78A.jpg', 'upload/doctor/avatar/BDA7DBB2869DB0BB1C9CE50367BAE78Atn.jpg', NULL, '2015-01-23 23:03:20', '2015-01-23 23:03:20', NULL),
+(8, 'FCC0E8B66811E1906F169E3F1D0F30AD50B5D86A', 13, 'jpg', 'upload/doctor/avatar/AD675A98A3395C62A67C856BE2BCCBCA.jpg', 'upload/doctor/avatar/AD675A98A3395C62A67C856BE2BCCBCAtn.jpg', NULL, '2015-01-23 23:04:56', '2015-01-23 23:04:56', NULL),
+(9, '72B95B65E0243058175AAB3E8520EC9565924566', 14, 'jpg', 'upload/doctor/avatar/9B9EED94000997387B723ED4948FA7E3.jpg', 'upload/doctor/avatar/9B9EED94000997387B723ED4948FA7E3tn.jpg', NULL, '2015-01-23 23:05:55', '2015-01-23 23:05:55', NULL),
+(10, '0AF9B76853F7631DDA0ABE8E415528101389DED8', 16, 'jpg', 'upload/doctor/avatar/2B571F7705EC15CDA860DF20EC1710D2.jpg', 'upload/doctor/avatar/2B571F7705EC15CDA860DF20EC1710D2tn.jpg', NULL, '2015-01-23 23:06:24', '2015-01-23 23:06:24', NULL),
+(11, '020B22E87C97B1D9DCCD0C8C5454017559DA6804', 17, 'jpg', 'upload/doctor/avatar/27A46BA88293A909C81D1B9AFC4D39F6.jpg', 'upload/doctor/avatar/27A46BA88293A909C81D1B9AFC4D39F6tn.jpg', NULL, '2015-01-23 23:06:46', '2015-01-23 23:06:46', NULL),
+(12, '7E00AC0AF1C5ABA5605A1954624BBDFF5D0AD37F', 20, 'jpg', 'upload/doctor/avatar/C78AA755C637F29D7BF5E2A00AE0E973.jpg', 'upload/doctor/avatar/C78AA755C637F29D7BF5E2A00AE0E973tn.jpg', NULL, '2015-01-23 23:07:08', '2015-01-23 23:07:08', NULL),
+(13, '86634FC79F11E00A457C70ABE74A0C1757833B77', 7, 'jpg', 'upload/doctor/avatar/612AF6C84375B85161E3C02000EDAAA6.jpg', 'upload/doctor/avatar/612AF6C84375B85161E3C02000EDAAA6tn.jpg', 0, '2015-01-25 02:20:41', '2015-01-25 02:20:41', NULL),
+(14, '08177E4A11E4FE5FD473E475D29836187A4BE753', 32, 'jpg', 'upload/doctor/avatar/93FEFF167A6A37B4186D4D1354808530.jpg', 'upload/doctor/avatar/93FEFF167A6A37B4186D4D1354808530tn.jpg', 0, '2015-01-25 02:26:31', '2015-01-25 02:26:31', NULL),
+(15, 'ED00FA4B9611AA38A6F83525FE613C13FB8ECC0A', 30, 'jpg', 'upload/doctor/avatar/CD49BA91B5C9E5CE592F10285C53AA32.jpg', 'upload/doctor/avatar/CD49BA91B5C9E5CE592F10285C53AA32tn.jpg', 0, '2015-01-25 02:28:26', '2015-01-25 02:28:26', NULL),
+(17, '3BBC06CC766842D096B16FBA1561C80B726688C3', 31, 'jpg', 'upload/doctor/avatar/195DC5B1329A9FFA3DB91ED1484FB2E6.jpg', 'upload/doctor/avatar/195DC5B1329A9FFA3DB91ED1484FB2E6tn.jpg', 0, '2015-01-25 02:30:37', '2015-01-25 02:30:37', NULL),
+(18, '5CDE7E6DEAF0723864BCCBBD084DB71DEC1BEE66', 3, 'jpg', 'upload/doctor/avatar/68C55882E5C5C64D7E7D28DC14DE7703.jpg', 'upload/doctor/avatar/68C55882E5C5C64D7E7D28DC14DE7703tn.jpg', 0, '2015-01-25 22:17:53', '2015-01-25 22:17:53', NULL),
+(19, '26FDB305AE4AD1A8F45E17AA0340D63A84EEEA8E', 4, 'jpg', 'upload/doctor/avatar/DB23FB26AA52A812758FF32F3C5C5F05.jpg', 'upload/doctor/avatar/DB23FB26AA52A812758FF32F3C5C5F05tn.jpg', 0, '2015-01-25 22:20:21', '2015-01-25 22:20:21', NULL),
+(20, '5226CB5EAD5450CC6DD98DB6BCBA20B22551D528', 1, 'jpg', 'upload/doctor/avatar/396BE696FD748E7CFE8B1786DC35F230.jpg', 'upload/doctor/avatar/396BE696FD748E7CFE8B1786DC35F230tn.jpg', 0, '2015-01-25 22:21:56', '2015-01-25 22:21:56', NULL),
+(21, '8FEB550746CF1DA5A380E5A45EAB893BBBE2E092', 2, 'jpg', 'upload/doctor/avatar/CFF4BF82A36E3C173F57D7127F5A27D0.jpg', 'upload/doctor/avatar/CFF4BF82A36E3C173F57D7127F5A27D0tn.jpg', 0, '2015-01-25 22:23:59', '2015-01-25 22:23:59', NULL),
+(22, '649CEC33F3CF524D5796C6F42F19EA7B71B5E5E4', 15, 'jpg', 'upload/doctor/avatar/49432B824CDB0DFC6397E7C5CBC079F8.jpg', 'upload/doctor/avatar/49432B824CDB0DFC6397E7C5CBC079F8tn.jpg', 0, '2015-01-25 22:28:43', '2015-01-25 22:28:43', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctor_disease`
+--
+
+CREATE TABLE IF NOT EXISTS `doctor_disease` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `disease_id` int(11) NOT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `doctor_disease_idx` (`doctor_id`),
+  KEY `disease_disease_idx` (`disease_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `doctor_disease`
+--
+
+INSERT INTO `doctor_disease` (`id`, `doctor_id`, `disease_id`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 1, 1, NULL, NULL, NULL),
+(2, 1, 2, NULL, NULL, NULL),
+(3, 1, 3, NULL, NULL, NULL),
+(4, 2, 1, NULL, NULL, NULL),
+(5, 2, 2, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctor_profile`
+--
+
+CREATE TABLE IF NOT EXISTS `doctor_profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `qualification` int(11) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `education` varchar(200) DEFAULT NULL,
+  `work_experience` varchar(200) DEFAULT NULL,
+  `work_start_year` int(11) DEFAULT NULL,
+  `lang` varchar(45) DEFAULT NULL,
+  `award` varchar(100) DEFAULT NULL,
+  `publication` varchar(100) DEFAULT NULL,
+  `website_url` varchar(100) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `doctor_id_UNIQUE` (`doctor_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
+
+--
+-- Dumping data for table `doctor_profile`
+--
+
+INSERT INTO `doctor_profile` (`id`, `doctor_id`, `qualification`, `description`, `education`, `work_experience`, `work_start_year`, `lang`, `award`, `publication`, `website_url`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 1, 0, '主任医师、科主任、安徽医科大学教授、中华医学会安徽省耳鼻咽喉头颈外科专业委员会常委、安徽省康复医学会耳鼻咽喉科专业委员会常委、安庆市耳鼻咽喉科分会主任委员、安庆市中西医结合耳鼻咽喉科协会副理事长兼秘书长、泛太平洋地区整形外科协会会员、《中国中西医结合耳鼻咽喉科杂志》编委', NULL, NULL, 1992, NULL, '安庆市率先开展了鼓室成形+听小骨植入手术、耳硬化症的手术、鼻内镜下垂体瘤切除术、喉部激光手术、下咽癌切除+胸大肌皮瓣修复术、颈部气管造口成形术等特大、新手术，居省内先进水平。在国家级刊物上发表了论文十', '于1999年参加首届全国大型医疗器械上岗考试并获得CDFI上岗证书。从事超声工作十多年，在《中国超声诊断杂志》、《皖南医学院学报》等国家级核心刊物上发表学术论文17篇。', NULL, NULL, NULL, NULL),
+(2, 2, 0, NULL, NULL, NULL, 1995, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 3, 0, NULL, NULL, NULL, 2000, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 4, 0, NULL, NULL, NULL, 1988, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 5, 0, NULL, NULL, NULL, 1992, NULL, '发表论文30余篇，先后获得安徽省优秀科技论文一等奖1篇、安庆市优秀科技论文一等奖1篇，二等奖2篇，三等奖1篇。获得安庆市科学技术二等奖2项，三等奖1项，领衔中华预防医学会安庆片区科研项目1项。先后入编', NULL, NULL, NULL, NULL, NULL),
+(6, 6, 0, '1996年率先开展妇癌的手术和化疗及更年期妇女激素替代治疗；1999年参加安徽省卫生厅援外专家医疗队，赴也门工作两年并受该国省卫生厅的表彰；2006年率先开展晚期卵巢癌卷地毯式子宫切除+卵巢肿瘤切除+盆腹腔淋巴结清扫术；2007年成功治疗一例五胞胎孕妇', NULL, NULL, 1984, NULL, '在CN杂志上发表论文10余篇，获安庆市科技进步二等奖一项、三等奖一项', NULL, NULL, NULL, NULL, NULL),
+(7, 7, 0, '主任医师,中国医师协会呼吸医师分会全国基层委员会委员，中华医学会安徽省呼吸内科分会常务委员、安徽省结核病学分会委员、安徽省抗癌协会肺癌专业委员会皖西南分会主任委员', '1984年毕业于安徽医学院医学系', '长期从事临床工作，能熟练诊治呼吸系统的常见病、多发病、少见病及疑难病，能独立完成专科重大会诊及抢救。在抢救危重症呼吸衰竭、肺心病等病人方面积累丰富的临床经验，并率先在我市开展有创、无创序贯呼吸支持抢救危重症呼吸衰竭，先后主持开展胸膜穿刺活检、经皮肺穿刺活检、透视下支气管镜肺活检、支气管镜下肺泡灌洗、支气管镜下气道内球囊扩张、气道内支架置入、气道内氩气刀治疗等呼吸介入技术。', 1994, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 8, 0, '中国医师协会肾脏病分会委员，中华医学会安徽省肾脏病分会常务委员，安徽省医院协会血液净化管理专业委员会常务委员，安徽医科大学兼职副教授，安庆市内科学会委员', '1989年毕业于皖南医学院医疗系临床医学专业', '从事内科、肾内科临床工作20年，具有丰富的临床理论与实践知识，主治各种原发性和继发性肾小球疾病、肾间质及肾血管疾病，在本地区率先开展腹膜透析、肾穿刺、颈内静脉永久性置管技术，获安庆市科技进步奖一项（B超定位下单人操作肾活检技术），擅长各种血液净化技术及临时性和永久性血管通路的建立及制作，其中钛轮钉制作动静脉内瘘技术处省内领先地位；先后荣获医院2009年度、2012年度优秀科主任称号', 1988, NULL, '安庆市科技进步三等奖一项', '学术论文10余篇', NULL, NULL, NULL, NULL),
+(9, 9, 0, '肾内科主任医师、科副主任、安医大兼职教授', '1973年毕业于安徽医科大学医疗系', ' 长期从事内科临床工作30余年，有着丰富的临床理论知识与实践经验。', 1983, NULL, '获市政府科学技术进步奖一项', '发表医学论文11篇，其中国家级论文5篇，省级刊物论文6篇', NULL, NULL, NULL, NULL),
+(10, 10, 0, NULL, '徐州医学院、安徽省立医院和天津眼科医院进修学习', '专业从事眼前节疾病的Y-G激光治疗和儿童斜、弱视的诊治.', 1990, NULL, NULL, '在各级医刊上发表论文15篇', NULL, NULL, NULL, NULL),
+(11, 11, 0, NULL, NULL, NULL, 1992, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(12, 12, 0, '副教授，硕士生导师。广西医科大学第一附属医院心电诊断科科主任，广西医学会心电学专科分会副主任委员', '1986年9月至1992年7月在华西医科大学攻读六年制本科临床医学专业，获医学学士学位；2004年9月至2007年7月在广西医科大学就读全日制硕士研究生内科学专业，获医学硕士学位。', '1992年8月大学本科毕业至今一直在广西医科大学第一附属医院心电诊断科从事临床、教学及科研工作。', 1992, NULL, '曾获广西科技进步三等奖1项；曾被评为“2011-2012学年度广西医科大学最受欢迎的老师”。', NULL, NULL, NULL, NULL, NULL),
+(13, 13, 0, '广西医科大学一附院男性学科（男科和性学科）主任，教授，主任医师，广西医科大学内科学教授、硕士生导师。中华医学会男科学分会全国委员，广西男科学会主任委员，中华医学会广西分会理事，广西性学会副会长，大学生性健康教育中心首席顾问。广西青年科技奖获得者，广西“新世纪十百千人才工程”入选人物', '1979-1984 广州中山医科大学医学系（大学本科），1998-2001 日本国立东京大学农学和生命科学研究生院攻读博士学位', '广西医科大学第一附院内分泌科、内科教研室，广西医科大学第一附院', 1984, NULL, '科研获广西科技进步二等奖和广西医药科技进步二等奖。是广西男性学科的带头人和广西男科学会主要创始人，在国内外男性学科领域有一定学术影响', NULL, NULL, NULL, NULL, NULL),
+(14, 14, 0, NULL, NULL, NULL, 1992, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(15, 15, 0, NULL, NULL, NULL, 1992, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(16, 16, 0, '介入治疗科主任、放射科主任、教授、主任医师、硕士生导师。肿瘤介入治疗专家，影像学专家，放射学诊断和介入治疗的学科带头人。广西政协委员，广西抗癌协会常务理事、中国抗癌协会肿瘤介入诊疗专业委员会广西区委员、介入诊疗专业委员会主任委员。《中国介入影像与治疗学》杂志编委。肿瘤医学院诊断学教研室主任。', NULL, NULL, 1992, NULL, '主持和主要参加6项科研课题的研究，获2000年广西医药卫生科技进步二等奖一项及2001年广西科技进步三等奖一项。共撰写专业论文20篇，2篇获广西自然科学学术论文二等奖。', NULL, NULL, NULL, NULL, NULL),
+(17, 17, 0, '胸瘤外科副主任、副教授、副主任医师、硕士生导师，胸外科专家', '1984年毕业于广西医科大学医疗系本科        2000年赴德国进修留学一年 ', '毕业后一直在附属肿瘤医院从事肿瘤胸外科工作。1990年晋升为主治医师，1996年晋升为副主任医师。2002年4月起任肿瘤胸外科副主任。', 1984, NULL, '曾留学德国，主攻肺癌基因方面的研究，发明国家专利两项。承担自治区科技厅自然基金科研项目一项，卫生厅自筹资金科研项目一项。参加科研项目二项。获国家专利二项（本专业）。', '发表“组胺及其受体与原发性肺癌”，“VATS在肺癌肺叶切除中的应用”，“VATS下食管癌切除二例报道”，“保留迷走神经干的贲门食管癌根治术”，“肺癌的基因治疗”等相关学术论文十余篇。', NULL, NULL, NULL, NULL),
+(18, 20, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(19, 21, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(20, 30, 0, NULL, '1982~1987 江苏徐州医学院1993~1996 第二军医大学 硕士2010~2012 第二军医大学 博士', '病毒性肝炎及疑难病的治疗', 1993, NULL, NULL, '在国内外杂志发表论文20余篇，参与编写多部书籍，如《桑福德抗微生物治疗指南》、《内科学理论与技术新进展》、《The Sanford Guide To Antimicrobial Therapy（第33', NULL, NULL, NULL, NULL),
+(21, 31, 0, '成功开展多项新技术、新疗法。负责多项国际多中心新药临床验证。任上海市全科医师及上海市住院医师规范化培训考核出题专家和考官，曾被评为第二军医大学校A级教员及住院医师规范化培训优秀教师', '1990~1995 第二军医大学 本科1998~2001 第二军医大学 硕士2003年 德国弗莱格 实体肿瘤的细胞免疫治疗2004~2007 第二军医大学 博士', '1995~2012年 上海长征医院 内科   2013~至今 上海东方肝胆外科医院 生物治疗科', 1995, NULL, '以第1完成人获军队医疗成果奖三等奖1项，第2完成人获上海市科技进步二等奖和军队医疗成果奖二等奖各1项，其他还获得海市科技进步一等奖、中华医学科技奖二等奖、上海医学科技二等奖各1项。', '共发表学术论文60多篇，其中第1作者发表SCI论文4篇，参与13部专著编写', NULL, NULL, NULL, NULL),
+(22, 32, 0, '', '1996~2003 第二军医大学7年制本硕连读学员2008~2011 第二军医大学，博士生', '2003~2005 东方肝胆外科医院 住院医师2005~2013 东方肝胆外科医院 主治医师2013~至今 东方肝胆外科医院 副主任医师', 2007, NULL, '获军队医疗成果三等奖1项，获国家专利授权5项', '获各类基金6项，其中2010年获得长三角联合攻关基金资助。发表论文30余篇，其中第一作者及通讯作者发表SCI论文7篇、总影响因子12.103。参编专著2部', NULL, NULL, NULL, NULL),
+(23, 0, 0, NULL, NULL, NULL, NULL, NULL, '', '', NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctor_specialty`
+--
+
+CREATE TABLE IF NOT EXISTS `doctor_specialty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `faculty_id` int(11) NOT NULL,
+  `disease_id` int(11) NOT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='each doctor has many disease' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_template`
+--
+
+CREATE TABLE IF NOT EXISTS `email_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `view` varchar(45) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `sender` varchar(255) NOT NULL,
+  `sender_name` varchar(45) DEFAULT NULL,
+  `to_email` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `faculty`
+--
+
+CREATE TABLE IF NOT EXISTS `faculty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `descrption` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `faculty`
+--
+
+INSERT INTO `faculty` (`id`, `name`, `descrption`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, '内科', NULL, NULL, NULL, NULL),
+(2, '外科', NULL, NULL, NULL, NULL),
+(3, '肿瘤', NULL, NULL, NULL, NULL),
+(4, '妇科', NULL, NULL, NULL, NULL),
+(5, '儿科', NULL, NULL, NULL, NULL),
+(6, '心脏', NULL, NULL, NULL, NULL),
+(7, '生殖科', '', NULL, NULL, NULL),
+(8, '其他', NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospital`
+--
+
+CREATE TABLE IF NOT EXISTS `hospital` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_id` int(11) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `city_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `short_name` varchar(45) DEFAULT NULL,
+  `address` varchar(100) NOT NULL,
+  `phone` varchar(45) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=33 ;
+
+--
+-- Dumping data for table `hospital`
+--
+
+INSERT INTO `hospital` (`id`, `country_id`, `state_id`, `city_id`, `name`, `short_name`, `address`, `phone`, `description`, `website`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 1, 9, 73, '上海瑞金医院', '瑞金医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 1, 9, 73, '长征医院', '长征医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 1, 9, 73, '红房子医院', '红房子医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 1, 9, 73, '长海医院', '长海医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 1, 9, 73, '沃德医疗中心', '沃德医疗中心', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 1, 9, 73, '东方医院', '东方医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 1, 9, 73, '龙华医院', '龙华医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 1, 9, 73, '上海肿瘤医院', '肿瘤医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 1, 9, 73, '上海周浦医院', '周浦医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 1, 9, 73, '上海的东方肝胆外科医院', '东方肝胆外科医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 1, 1, 1, '协和医院', '协和医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(12, 1, 1, 1, '301医院', '301医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 1, 1, 1, '北医三院', '北医三院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(14, 1, 1, 1, '同仁医院', '同仁医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(15, 1, 1, 1, '人民医院', '人民医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(16, 1, 1, 1, '北大医院', '北大医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(17, 1, 1, 1, '北大肿瘤', '北大肿瘤', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(18, 1, 1, 1, '北京中医院', '北京中医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(19, 1, 19, 200, '广东省中医院', '中医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(20, 1, 19, 200, '广东省人民医院', '人民医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(21, 1, 19, 200, '中山二元', '中山二元', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(22, 1, 19, 200, '军区总医院', '军区总医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(23, 1, 19, 200, '广州妇儿中心', '广州妇儿中心', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(24, 1, 19, 202, '深圳北大医院', '北大医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(25, 1, 19, 202, '深圳仁爱医院', '仁爱医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(26, 1, 19, 202, '深圳儿童医院', '儿童医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(28, 2, 35, 389, '伊丽莎白医院', '伊丽莎白医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(29, 1, 20, 222, '广西中医药大学第一附属医院', '中医药大学第一附属医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(30, 1, 20, 222, '广西医科大学第一附属医院', '医科大学第一附属医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(31, 1, 20, 222, '广西医科大学附属肿瘤医院', '医科大学附属肿瘤医院', '', NULL, NULL, NULL, NULL, NULL, NULL),
+(32, 1, 12, 105, '安徽省安庆市立医院', '安庆市立医院', '', NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospital_faculty`
+--
+
+CREATE TABLE IF NOT EXISTS `hospital_faculty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hospital_id` int(11) NOT NULL,
+  `faculty_id` int(11) NOT NULL,
+  `display_order` int(11) DEFAULT '0',
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='each hospital has many faculty.' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `medical_record`
+--
+
+CREATE TABLE IF NOT EXISTS `medical_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_id` int(11) NOT NULL,
+  `title` varchar(45) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `fullname` varchar(45) DEFAULT NULL,
+  `gender` int(11) NOT NULL,
+  `dob` datetime NOT NULL,
+  `mobile` varchar(45) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `city_id` int(11) DEFAULT NULL,
+  `remark` varchar(500) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `medicalrecord_patient_idx` (`patient_id`),
+  KEY `medicalrecord_city_idx` (`city_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `medical_record`
+--
+
+INSERT INTO `medical_record` (`id`, `patient_id`, `title`, `status`, `fullname`, `gender`, `dob`, `mobile`, `email`, `city_id`, `remark`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 18, '1', 1, '1', 1, '2010-04-04 00:00:00', '1', '11@com.cn', 202, '', '2015-01-27 11:00:14', '2015-01-27 11:00:14', NULL),
+(2, 18, '11', 1, '11', 1, '2001-02-13 00:00:00', '11', '11@qq.com', 5, '', '2015-01-27 13:02:28', '2015-01-27 13:02:28', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `medical_record_assignment`
+--
+
+CREATE TABLE IF NOT EXISTS `medical_record_assignment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `record_id` int(11) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `is_accepted` tinyint(4) NOT NULL DEFAULT '0',
+  `remark` varchar(200) DEFAULT NULL,
+  `cancel_by_user` int(11) DEFAULT NULL,
+  `cancel_by_doctor` int(11) DEFAULT NULL,
+  `date_cancel` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `medicalRecord_assignment_idx` (`record_id`),
+  KEY `medicalRecord_doctor_idx` (`doctor_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='each case can be assigned to many doctors.' AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `medical_record_assignment`
+--
+
+INSERT INTO `medical_record_assignment` (`id`, `record_id`, `doctor_id`, `is_accepted`, `remark`, `cancel_by_user`, `cancel_by_doctor`, `date_cancel`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(4, 1, 1, 0, NULL, NULL, NULL, NULL, '2015-01-27 11:00:14', '2015-01-27 11:00:14', NULL),
+(5, 2, 5, 0, NULL, NULL, NULL, NULL, '2015-01-27 13:02:28', '2015-01-27 13:02:28', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `medical_record_file`
+--
+
+CREATE TABLE IF NOT EXISTS `medical_record_file` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` char(40) NOT NULL,
+  `record_id` int(11) NOT NULL,
+  `doc_type` int(11) NOT NULL,
+  `file_type` varchar(10) DEFAULT NULL,
+  `file_url` varchar(255) NOT NULL,
+  `thumbnail_url` varchar(255) DEFAULT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `medicalRecord_file_idx` (`record_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='each case has many files' AUTO_INCREMENT=96 ;
+
+--
+-- Dumping data for table `medical_record_file`
+--
+
+INSERT INTO `medical_record_file` (`id`, `uid`, `record_id`, `doc_type`, `file_type`, `file_url`, `thumbnail_url`, `remark`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(86, '1E6C3C9AC23A563543209541CFC4C5B64D129E08', 1, 1, 'jpg', 'upload/mr///154c6ff61d6faf1e8990.jpg', 'upload/mr///154c6ff61d6faf1e8990tn.jpg', NULL, 0, '2015-01-27 11:00:49', '2015-01-27 11:00:49', NULL),
+(87, '2501A5B59E98D0798EB695427AC660FCA119B929', 1, 1, 'jpg', 'upload/mr///154c6ff6171eca184080.jpg', 'upload/mr///154c6ff6171eca184080tn.jpg', NULL, 0, '2015-01-27 11:00:49', '2015-01-27 11:00:49', NULL),
+(88, '0E7276747B4DBC6E8D08F96CFD5BDE2B7FBF1824', 1, 1, 'jpg', 'upload/mr///154c6ff62cd5b4fb2400.jpg', 'upload/mr///154c6ff62cd5b4fb2400tn.jpg', NULL, 0, '2015-01-27 11:00:50', '2015-01-27 11:00:50', NULL),
+(89, '8D966FA003BBE9718F2C50F65700A0ACC095B1F5', 1, 4, 'jpg', 'upload/mr///154c6ff67c85855d7cb0.jpg', 'upload/mr///154c6ff67c85855d7cb0tn.jpg', NULL, 0, '2015-01-27 11:00:55', '2015-01-27 11:00:55', NULL),
+(90, '0ACD7FB0B0087C88F0F17447FD96DED332D9E2AA', 1, 4, 'jpg', 'upload/mr///154c6ff68a0c58413e30.jpg', 'upload/mr///154c6ff68a0c58413e30tn.jpg', NULL, 0, '2015-01-27 11:00:56', '2015-01-27 11:00:56', NULL),
+(91, '4767CA23A6792C3390B04988BB4405A4C5171382', 1, 4, 'jpg', 'upload/mr///154c6ff685a8c96550b0.jpg', 'upload/mr///154c6ff685a8c96550b0tn.jpg', NULL, 0, '2015-01-27 11:00:56', '2015-01-27 11:00:56', NULL),
+(92, '91132BB1FAA4A6DB0A03B9777DDCFB18A79CA22F', 1, 7, 'jpg', 'upload/mr///154c6ff6df0ad75df780.jpg', 'upload/mr///154c6ff6df0ad75df780tn.jpg', NULL, 0, '2015-01-27 11:01:01', '2015-01-27 11:01:01', NULL),
+(93, '26B1387A17B9ACAD24CFCE9AB8F695E251DCFEF7', 2, 1, 'jpg', 'upload/mr///254c71da8608ae019f60.jpg', 'upload/mr///254c71da8608ae019f60tn.jpg', NULL, 0, '2015-01-27 13:10:00', '2015-01-27 13:10:00', NULL),
+(94, '7DD4C4B25BE1D2AE3874CD870461EAC9ABF9C9FC', 2, 1, 'jpg', 'upload/mr///254c71da8efe072eb9c0.jpg', 'upload/mr///254c71da8efe072eb9c0tn.jpg', NULL, 0, '2015-01-27 13:10:00', '2015-01-27 13:10:00', NULL),
+(95, 'A94970216360715AD638A431EBF50614AD42C90B', 2, 2, 'jpg', 'upload/mr///254c71db6223df309bd0.jpg', 'upload/mr///254c71db6223df309bd0tn.jpg', NULL, 0, '2015-01-27 13:10:14', '2015-01-27 13:10:14', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message_queue`
+--
+
+CREATE TABLE IF NOT EXISTS `message_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `from_name` varchar(45) NOT NULL,
+  `from_email` varchar(128) NOT NULL,
+  `to_email` varchar(128) NOT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `message` text,
+  `max_attempts` tinyint(3) DEFAULT NULL,
+  `attempts` tinyint(1) DEFAULT '0',
+  `success` tinyint(1) DEFAULT '0',
+  `last_attempt` datetime DEFAULT NULL,
+  `date_sent` datetime DEFAULT NULL,
+  `date_read` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `region_city`
+--
+
+CREATE TABLE IF NOT EXISTS `region_city` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_name` varchar(45) DEFAULT NULL,
+  `country_code` char(3) DEFAULT NULL,
+  `state_name` varchar(45) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `name_cn` varchar(45) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `tn_url` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `country_city` (`code`,`country_code`),
+  KEY `country_code_idx` (`country_code`),
+  KEY `cityState_idx` (`state_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=390 ;
+
+--
+-- Dumping data for table `region_city`
+--
+
+INSERT INTO `region_city` (`id`, `country_name`, `country_code`, `state_name`, `state_id`, `code`, `name`, `name_cn`, `description`, `display_order`, `image_url`, `tn_url`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, '中国', 'CHN', '北京', 1, NULL, '北京', '北京', NULL, 1, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(2, '中国', 'CHN', '天津', 2, NULL, '天津', '天津', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(3, '中国', 'CHN', '河北', 3, NULL, '石家庄', '石家庄', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(4, '中国', 'CHN', '河北', 3, NULL, '唐山', '唐山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(5, '中国', 'CHN', '河北', 3, NULL, '秦皇岛', '秦皇岛', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(6, '中国', 'CHN', '河北', 3, NULL, '邯郸', '邯郸', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(7, '中国', 'CHN', '河北', 3, NULL, '邢台', '邢台', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(8, '中国', 'CHN', '河北', 3, NULL, '保定', '保定', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(9, '中国', 'CHN', '河北', 3, NULL, '张家口', '张家口', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(10, '中国', 'CHN', '河北', 3, NULL, '承德', '承德', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(11, '中国', 'CHN', '河北', 3, NULL, '沧州', '沧州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(12, '中国', 'CHN', '河北', 3, NULL, '廊坊', '廊坊', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(13, '中国', 'CHN', '河北', 3, NULL, '衡水', '衡水', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(14, '中国', 'CHN', '山西', 4, NULL, '太原', '太原', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(15, '中国', 'CHN', '山西', 4, NULL, '大同', '大同', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(16, '中国', 'CHN', '山西', 4, NULL, '阳泉', '阳泉', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(17, '中国', 'CHN', '山西', 4, NULL, '长治', '长治', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(18, '中国', 'CHN', '山西', 4, NULL, '晋城', '晋城', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(19, '中国', 'CHN', '山西', 4, NULL, '朔州', '朔州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(20, '中国', 'CHN', '山西', 4, NULL, '晋中', '晋中', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(21, '中国', 'CHN', '山西', 4, NULL, '运城', '运城', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(22, '中国', 'CHN', '山西', 4, NULL, '忻州', '忻州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(23, '中国', 'CHN', '山西', 4, NULL, '临汾', '临汾', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(24, '中国', 'CHN', '山西', 4, NULL, '吕梁', '吕梁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(25, '中国', 'CHN', '内蒙古', 5, NULL, '呼和浩特', '呼和浩特', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(26, '中国', 'CHN', '内蒙古', 5, NULL, '包头', '包头', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(27, '中国', 'CHN', '内蒙古', 5, NULL, '乌海', '乌海', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(28, '中国', 'CHN', '内蒙古', 5, NULL, '赤峰', '赤峰', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(29, '中国', 'CHN', '内蒙古', 5, NULL, '通辽', '通辽', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(30, '中国', 'CHN', '内蒙古', 5, NULL, '鄂尔多斯', '鄂尔多斯', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(31, '中国', 'CHN', '内蒙古', 5, NULL, '呼伦贝尔', '呼伦贝尔', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(32, '中国', 'CHN', '内蒙古', 5, NULL, '巴彦淖尔', '巴彦淖尔', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(33, '中国', 'CHN', '内蒙古', 5, NULL, '乌兰察布', '乌兰察布', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(34, '中国', 'CHN', '内蒙古', 5, NULL, '兴安', '兴安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(35, '中国', 'CHN', '内蒙古', 5, NULL, '锡林郭勒', '锡林郭勒', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(36, '中国', 'CHN', '内蒙古', 5, NULL, '阿拉善', '阿拉善', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(37, '中国', 'CHN', '辽宁', 6, NULL, '沈阳', '沈阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(38, '中国', 'CHN', '辽宁', 6, NULL, '大连', '大连', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(39, '中国', 'CHN', '辽宁', 6, NULL, '鞍山', '鞍山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(40, '中国', 'CHN', '辽宁', 6, NULL, '抚顺', '抚顺', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(41, '中国', 'CHN', '辽宁', 6, NULL, '本溪', '本溪', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(42, '中国', 'CHN', '辽宁', 6, NULL, '丹东', '丹东', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(43, '中国', 'CHN', '辽宁', 6, NULL, '锦州', '锦州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(44, '中国', 'CHN', '辽宁', 6, NULL, '营口', '营口', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(45, '中国', 'CHN', '辽宁', 6, NULL, '阜新', '阜新', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(46, '中国', 'CHN', '辽宁', 6, NULL, '辽阳', '辽阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(47, '中国', 'CHN', '辽宁', 6, NULL, '盘锦', '盘锦', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(48, '中国', 'CHN', '辽宁', 6, NULL, '铁岭', '铁岭', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(49, '中国', 'CHN', '辽宁', 6, NULL, '朝阳', '朝阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(50, '中国', 'CHN', '辽宁', 6, NULL, '葫芦岛', '葫芦岛', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(51, '中国', 'CHN', '吉林', 7, NULL, '长春', '长春', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(52, '中国', 'CHN', '吉林', 7, NULL, '吉林', '吉林', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(53, '中国', 'CHN', '吉林', 7, NULL, '四平', '四平', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(54, '中国', 'CHN', '吉林', 7, NULL, '辽源', '辽源', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(55, '中国', 'CHN', '吉林', 7, NULL, '通化', '通化', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(56, '中国', 'CHN', '吉林', 7, NULL, '白山', '白山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(57, '中国', 'CHN', '吉林', 7, NULL, '松原', '松原', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(58, '中国', 'CHN', '吉林', 7, NULL, '白城', '白城', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(59, '中国', 'CHN', '吉林', 7, NULL, '延边', '延边', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(60, '中国', 'CHN', '黑龙江', 8, NULL, '哈尔滨', '哈尔滨', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(61, '中国', 'CHN', '黑龙江', 8, NULL, '齐齐哈尔', '齐齐哈尔', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(62, '中国', 'CHN', '黑龙江', 8, NULL, '鸡西', '鸡西', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(63, '中国', 'CHN', '黑龙江', 8, NULL, '鹤岗', '鹤岗', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(64, '中国', 'CHN', '黑龙江', 8, NULL, '双鸭山', '双鸭山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(65, '中国', 'CHN', '黑龙江', 8, NULL, '大庆', '大庆', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(66, '中国', 'CHN', '黑龙江', 8, NULL, '伊春', '伊春', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(67, '中国', 'CHN', '黑龙江', 8, NULL, '佳木斯', '佳木斯', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(68, '中国', 'CHN', '黑龙江', 8, NULL, '七台河', '七台河', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(69, '中国', 'CHN', '黑龙江', 8, NULL, '牡丹江', '牡丹江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(70, '中国', 'CHN', '黑龙江', 8, NULL, '黑河', '黑河', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(71, '中国', 'CHN', '黑龙江', 8, NULL, '绥化', '绥化', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(72, '中国', 'CHN', '黑龙江', 8, NULL, '大兴安岭', '大兴安岭', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(73, '中国', 'CHN', '上海', 9, NULL, '上海', '上海', NULL, 2, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(74, '中国', 'CHN', '江苏', 10, NULL, '南京', '南京', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(75, '中国', 'CHN', '江苏', 10, NULL, '无锡', '无锡', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(76, '中国', 'CHN', '江苏', 10, NULL, '徐州', '徐州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(77, '中国', 'CHN', '江苏', 10, NULL, '常州', '常州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(78, '中国', 'CHN', '江苏', 10, NULL, '苏州', '苏州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(79, '中国', 'CHN', '江苏', 10, NULL, '南通', '南通', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(80, '中国', 'CHN', '江苏', 10, NULL, '连云港', '连云港', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(81, '中国', 'CHN', '江苏', 10, NULL, '淮安', '淮安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(82, '中国', 'CHN', '江苏', 10, NULL, '盐城', '盐城', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(83, '中国', 'CHN', '江苏', 10, NULL, '扬州', '扬州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(84, '中国', 'CHN', '江苏', 10, NULL, '镇江', '镇江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(85, '中国', 'CHN', '江苏', 10, NULL, '泰州', '泰州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(86, '中国', 'CHN', '江苏', 10, NULL, '宿迁', '宿迁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(87, '中国', 'CHN', '浙江', 11, NULL, '杭州', '杭州', NULL, 3, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(88, '中国', 'CHN', '浙江', 11, NULL, '宁波', '宁波', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(89, '中国', 'CHN', '浙江', 11, NULL, '温州', '温州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(90, '中国', 'CHN', '浙江', 11, NULL, '嘉兴', '嘉兴', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(91, '中国', 'CHN', '浙江', 11, NULL, '湖州', '湖州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(92, '中国', 'CHN', '浙江', 11, NULL, '绍兴', '绍兴', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(93, '中国', 'CHN', '浙江', 11, NULL, '金华', '金华', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(94, '中国', 'CHN', '浙江', 11, NULL, '衢州', '衢州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(95, '中国', 'CHN', '浙江', 11, NULL, '舟山', '舟山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(96, '中国', 'CHN', '浙江', 11, NULL, '台州', '台州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(97, '中国', 'CHN', '浙江', 11, NULL, '丽水', '丽水', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(98, '中国', 'CHN', '安徽', 12, NULL, '合肥', '合肥', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(99, '中国', 'CHN', '安徽', 12, NULL, '芜湖', '芜湖', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(100, '中国', 'CHN', '安徽', 12, NULL, '蚌埠', '蚌埠', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(101, '中国', 'CHN', '安徽', 12, NULL, '淮南', '淮南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(102, '中国', 'CHN', '安徽', 12, NULL, '马鞍山', '马鞍山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(103, '中国', 'CHN', '安徽', 12, NULL, '淮北', '淮北', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(104, '中国', 'CHN', '安徽', 12, NULL, '铜陵', '铜陵', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(105, '中国', 'CHN', '安徽', 12, NULL, '安庆', '安庆', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(106, '中国', 'CHN', '安徽', 12, NULL, '黄山', '黄山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(107, '中国', 'CHN', '安徽', 12, NULL, '滁州', '滁州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(108, '中国', 'CHN', '安徽', 12, NULL, '阜阳', '阜阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(109, '中国', 'CHN', '安徽', 12, NULL, '宿州', '宿州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(110, '中国', 'CHN', '安徽', 12, NULL, '六安', '六安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(111, '中国', 'CHN', '安徽', 12, NULL, '亳州', '亳州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(112, '中国', 'CHN', '安徽', 12, NULL, '池州', '池州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(113, '中国', 'CHN', '安徽', 12, NULL, '宣城', '宣城', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(114, '中国', 'CHN', '福建', 13, NULL, '福州', '福州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(115, '中国', 'CHN', '福建', 13, NULL, '厦门', '厦门', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(116, '中国', 'CHN', '福建', 13, NULL, '莆田', '莆田', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(117, '中国', 'CHN', '福建', 13, NULL, '三明', '三明', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(118, '中国', 'CHN', '福建', 13, NULL, '泉州', '泉州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(119, '中国', 'CHN', '福建', 13, NULL, '漳州', '漳州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(120, '中国', 'CHN', '福建', 13, NULL, '南平', '南平', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(121, '中国', 'CHN', '福建', 13, NULL, '龙岩', '龙岩', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(122, '中国', 'CHN', '福建', 13, NULL, '宁德', '宁德', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(123, '中国', 'CHN', '江西', 14, NULL, '南昌', '南昌', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(124, '中国', 'CHN', '江西', 14, NULL, '景德镇', '景德镇', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(125, '中国', 'CHN', '江西', 14, NULL, '萍乡', '萍乡', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(126, '中国', 'CHN', '江西', 14, NULL, '九江', '九江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(127, '中国', 'CHN', '江西', 14, NULL, '新余', '新余', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(128, '中国', 'CHN', '江西', 14, NULL, '鹰潭', '鹰潭', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(129, '中国', 'CHN', '江西', 14, NULL, '赣州', '赣州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(130, '中国', 'CHN', '江西', 14, NULL, '吉安', '吉安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(131, '中国', 'CHN', '江西', 14, NULL, '宜春', '宜春', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(132, '中国', 'CHN', '江西', 14, NULL, '抚州', '抚州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(133, '中国', 'CHN', '江西', 14, NULL, '上饶', '上饶', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(134, '中国', 'CHN', '山东', 15, NULL, '济南', '济南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(135, '中国', 'CHN', '山东', 15, NULL, '青岛', '青岛', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(136, '中国', 'CHN', '山东', 15, NULL, '淄博', '淄博', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(137, '中国', 'CHN', '山东', 15, NULL, '枣庄', '枣庄', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(138, '中国', 'CHN', '山东', 15, NULL, '东营', '东营', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(139, '中国', 'CHN', '山东', 15, NULL, '烟台', '烟台', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(140, '中国', 'CHN', '山东', 15, NULL, '潍坊', '潍坊', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(141, '中国', 'CHN', '山东', 15, NULL, '济宁', '济宁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(142, '中国', 'CHN', '山东', 15, NULL, '泰安', '泰安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(143, '中国', 'CHN', '山东', 15, NULL, '威海', '威海', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(144, '中国', 'CHN', '山东', 15, NULL, '日照', '日照', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(145, '中国', 'CHN', '山东', 15, NULL, '莱芜', '莱芜', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(146, '中国', 'CHN', '山东', 15, NULL, '临沂', '临沂', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(147, '中国', 'CHN', '山东', 15, NULL, '德州', '德州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(148, '中国', 'CHN', '山东', 15, NULL, '聊城', '聊城', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(149, '中国', 'CHN', '山东', 15, NULL, '滨州', '滨州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(150, '中国', 'CHN', '山东', 15, NULL, '菏泽', '菏泽', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(151, '中国', 'CHN', '河南', 16, NULL, '郑州', '郑州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(152, '中国', 'CHN', '河南', 16, NULL, '开封', '开封', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(153, '中国', 'CHN', '河南', 16, NULL, '洛阳', '洛阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(154, '中国', 'CHN', '河南', 16, NULL, '平顶山', '平顶山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(155, '中国', 'CHN', '河南', 16, NULL, '安阳', '安阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(156, '中国', 'CHN', '河南', 16, NULL, '鹤壁', '鹤壁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(157, '中国', 'CHN', '河南', 16, NULL, '新乡', '新乡', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(158, '中国', 'CHN', '河南', 16, NULL, '焦作', '焦作', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(159, '中国', 'CHN', '河南', 16, NULL, '濮阳', '濮阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(160, '中国', 'CHN', '河南', 16, NULL, '许昌', '许昌', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(161, '中国', 'CHN', '河南', 16, NULL, '漯河', '漯河', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(162, '中国', 'CHN', '河南', 16, NULL, '三门峡', '三门峡', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(163, '中国', 'CHN', '河南', 16, NULL, '南阳', '南阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(164, '中国', 'CHN', '河南', 16, NULL, '商丘', '商丘', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:03', NULL),
+(165, '中国', 'CHN', '河南', 16, NULL, '信阳', '信阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(166, '中国', 'CHN', '河南', 16, NULL, '周口', '周口', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(167, '中国', 'CHN', '河南', 16, NULL, '驻马店', '驻马店', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(168, '中国', 'CHN', '河南', 16, NULL, '济源', '济源', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(169, '中国', 'CHN', '湖北', 17, NULL, '武汉', '武汉', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(170, '中国', 'CHN', '湖北', 17, NULL, '黄石', '黄石', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(171, '中国', 'CHN', '湖北', 17, NULL, '十堰', '十堰', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(172, '中国', 'CHN', '湖北', 17, NULL, '宜昌', '宜昌', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(173, '中国', 'CHN', '湖北', 17, NULL, '襄阳', '襄阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(174, '中国', 'CHN', '湖北', 17, NULL, '鄂州', '鄂州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(175, '中国', 'CHN', '湖北', 17, NULL, '荆门', '荆门', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(176, '中国', 'CHN', '湖北', 17, NULL, '孝感', '孝感', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(177, '中国', 'CHN', '湖北', 17, NULL, '荆州', '荆州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(178, '中国', 'CHN', '湖北', 17, NULL, '黄冈', '黄冈', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(179, '中国', 'CHN', '湖北', 17, NULL, '咸宁', '咸宁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(180, '中国', 'CHN', '湖北', 17, NULL, '随州', '随州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(181, '中国', 'CHN', '湖北', 17, NULL, '恩施', '恩施', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(182, '中国', 'CHN', '湖北', 17, NULL, '仙桃', '仙桃', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(183, '中国', 'CHN', '湖北', 17, NULL, '潜江', '潜江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(184, '中国', 'CHN', '湖北', 17, NULL, '天门', '天门', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(185, '中国', 'CHN', '湖北', 17, NULL, '神农架', '神农架', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(186, '中国', 'CHN', '湖南', 18, NULL, '长沙', '长沙', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(187, '中国', 'CHN', '湖南', 18, NULL, '株洲', '株洲', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(188, '中国', 'CHN', '湖南', 18, NULL, '湘潭', '湘潭', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(189, '中国', 'CHN', '湖南', 18, NULL, '衡阳', '衡阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(190, '中国', 'CHN', '湖南', 18, NULL, '邵阳', '邵阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(191, '中国', 'CHN', '湖南', 18, NULL, '岳阳', '岳阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(192, '中国', 'CHN', '湖南', 18, NULL, '常德', '常德', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(193, '中国', 'CHN', '湖南', 18, NULL, '张家界', '张家界', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(194, '中国', 'CHN', '湖南', 18, NULL, '益阳', '益阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(195, '中国', 'CHN', '湖南', 18, NULL, '郴州', '郴州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(196, '中国', 'CHN', '湖南', 18, NULL, '永州', '永州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(197, '中国', 'CHN', '湖南', 18, NULL, '怀化', '怀化', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(198, '中国', 'CHN', '湖南', 18, NULL, '娄底', '娄底', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(199, '中国', 'CHN', '湖南', 18, NULL, '湘西', '湘西', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(200, '中国', 'CHN', '广东', 19, NULL, '广州', '广州', NULL, 5, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(201, '中国', 'CHN', '广东', 19, NULL, '韶关', '韶关', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(202, '中国', 'CHN', '广东', 19, NULL, '深圳', '深圳', NULL, 4, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(203, '中国', 'CHN', '广东', 19, NULL, '珠海', '珠海', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(204, '中国', 'CHN', '广东', 19, NULL, '汕头', '汕头', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(205, '中国', 'CHN', '广东', 19, NULL, '佛山', '佛山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(206, '中国', 'CHN', '广东', 19, NULL, '江门', '江门', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(207, '中国', 'CHN', '广东', 19, NULL, '湛江', '湛江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(208, '中国', 'CHN', '广东', 19, NULL, '茂名', '茂名', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(209, '中国', 'CHN', '广东', 19, NULL, '肇庆', '肇庆', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(210, '中国', 'CHN', '广东', 19, NULL, '惠州', '惠州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(211, '中国', 'CHN', '广东', 19, NULL, '梅州', '梅州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(212, '中国', 'CHN', '广东', 19, NULL, '汕尾', '汕尾', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(213, '中国', 'CHN', '广东', 19, NULL, '河源', '河源', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(214, '中国', 'CHN', '广东', 19, NULL, '阳江', '阳江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(215, '中国', 'CHN', '广东', 19, NULL, '清远', '清远', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(216, '中国', 'CHN', '广东', 19, NULL, '东莞', '东莞', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(217, '中国', 'CHN', '广东', 19, NULL, '中山', '中山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(218, '中国', 'CHN', '广东', 19, NULL, '潮州', '潮州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(219, '中国', 'CHN', '广东', 19, NULL, '揭阳', '揭阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(220, '中国', 'CHN', '广东', 19, NULL, '云浮', '云浮', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(221, '中国', 'CHN', '广西', 20, NULL, '南宁', '南宁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(222, '中国', 'CHN', '广西', 20, NULL, '柳州', '柳州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(223, '中国', 'CHN', '广西', 20, NULL, '桂林', '桂林', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(224, '中国', 'CHN', '广西', 20, NULL, '梧州', '梧州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(225, '中国', 'CHN', '广西', 20, NULL, '北海', '北海', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(226, '中国', 'CHN', '广西', 20, NULL, '防城港', '防城港', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(227, '中国', 'CHN', '广西', 20, NULL, '钦州', '钦州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(228, '中国', 'CHN', '广西', 20, NULL, '贵港', '贵港', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(229, '中国', 'CHN', '广西', 20, NULL, '玉林', '玉林', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(230, '中国', 'CHN', '广西', 20, NULL, '百色', '百色', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(231, '中国', 'CHN', '广西', 20, NULL, '贺州', '贺州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(232, '中国', 'CHN', '广西', 20, NULL, '河池', '河池', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(233, '中国', 'CHN', '广西', 20, NULL, '来宾', '来宾', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(234, '中国', 'CHN', '广西', 20, NULL, '崇左', '崇左', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(235, '中国', 'CHN', '海南', 21, NULL, '海口', '海口', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(236, '中国', 'CHN', '海南', 21, NULL, '三亚', '三亚', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(237, '中国', 'CHN', '海南', 21, NULL, '三沙', '三沙', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(238, '中国', 'CHN', '海南', 21, NULL, '五指山', '五指山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(239, '中国', 'CHN', '海南', 21, NULL, '琼海', '琼海', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(240, '中国', 'CHN', '海南', 21, NULL, '儋州', '儋州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(241, '中国', 'CHN', '海南', 21, NULL, '文昌', '文昌', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(242, '中国', 'CHN', '海南', 21, NULL, '万宁', '万宁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(243, '中国', 'CHN', '海南', 21, NULL, '东方', '东方', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(244, '中国', 'CHN', '海南', 21, NULL, '定安', '定安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(245, '中国', 'CHN', '海南', 21, NULL, '屯昌', '屯昌', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(246, '中国', 'CHN', '海南', 21, NULL, '澄迈', '澄迈', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(247, '中国', 'CHN', '海南', 21, NULL, '临高', '临高', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(248, '中国', 'CHN', '海南', 21, NULL, '白沙', '白沙', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(249, '中国', 'CHN', '海南', 21, NULL, '昌江', '昌江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(250, '中国', 'CHN', '海南', 21, NULL, '乐东', '乐东', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(251, '中国', 'CHN', '海南', 21, NULL, '陵水', '陵水', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(252, '中国', 'CHN', '海南', 21, NULL, '保亭', '保亭', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(253, '中国', 'CHN', '海南', 21, NULL, '琼中', '琼中', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(254, '中国', 'CHN', '重庆', 22, NULL, '万州', '万州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(255, '中国', 'CHN', '四川', 23, NULL, '成都', '成都', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(256, '中国', 'CHN', '四川', 23, NULL, '自贡', '自贡', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(257, '中国', 'CHN', '四川', 23, NULL, '攀枝花', '攀枝花', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(258, '中国', 'CHN', '四川', 23, NULL, '泸州', '泸州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(259, '中国', 'CHN', '四川', 23, NULL, '德阳', '德阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(260, '中国', 'CHN', '四川', 23, NULL, '绵阳', '绵阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(261, '中国', 'CHN', '四川', 23, NULL, '广元', '广元', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(262, '中国', 'CHN', '四川', 23, NULL, '遂宁', '遂宁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(263, '中国', 'CHN', '四川', 23, NULL, '内江', '内江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(264, '中国', 'CHN', '四川', 23, NULL, '乐山', '乐山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(265, '中国', 'CHN', '四川', 23, NULL, '南充', '南充', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(266, '中国', 'CHN', '四川', 23, NULL, '眉山', '眉山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(267, '中国', 'CHN', '四川', 23, NULL, '宜宾', '宜宾', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(268, '中国', 'CHN', '四川', 23, NULL, '广安', '广安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(269, '中国', 'CHN', '四川', 23, NULL, '达州', '达州', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(270, '中国', 'CHN', '四川', 23, NULL, '雅安', '雅安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(271, '中国', 'CHN', '四川', 23, NULL, '巴中', '巴中', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(272, '中国', 'CHN', '四川', 23, NULL, '资阳', '资阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(273, '中国', 'CHN', '四川', 23, NULL, '阿坝', '阿坝', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(274, '中国', 'CHN', '四川', 23, NULL, '甘孜', '甘孜', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(275, '中国', 'CHN', '四川', 23, NULL, '凉山', '凉山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(276, '中国', 'CHN', '贵州', 24, NULL, '贵阳', '贵阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(277, '中国', 'CHN', '贵州', 24, NULL, '六盘水', '六盘水', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(278, '中国', 'CHN', '贵州', 24, NULL, '遵义', '遵义', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(279, '中国', 'CHN', '贵州', 24, NULL, '安顺', '安顺', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(280, '中国', 'CHN', '贵州', 24, NULL, '铜仁', '铜仁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(281, '中国', 'CHN', '贵州', 24, NULL, '黔西南', '黔西南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(282, '中国', 'CHN', '贵州', 24, NULL, '毕节', '毕节', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(283, '中国', 'CHN', '贵州', 24, NULL, '黔东南', '黔东南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(284, '中国', 'CHN', '贵州', 24, NULL, '黔南', '黔南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(285, '中国', 'CHN', '云南', 25, NULL, '昆明', '昆明', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(286, '中国', 'CHN', '云南', 25, NULL, '曲靖', '曲靖', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(287, '中国', 'CHN', '云南', 25, NULL, '玉溪', '玉溪', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(288, '中国', 'CHN', '云南', 25, NULL, '保山', '保山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(289, '中国', 'CHN', '云南', 25, NULL, '昭通', '昭通', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(290, '中国', 'CHN', '云南', 25, NULL, '丽江', '丽江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(291, '中国', 'CHN', '云南', 25, NULL, '普洱', '普洱', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(292, '中国', 'CHN', '云南', 25, NULL, '临沧', '临沧', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(293, '中国', 'CHN', '云南', 25, NULL, '楚雄', '楚雄', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(294, '中国', 'CHN', '云南', 25, NULL, '红河', '红河', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(295, '中国', 'CHN', '云南', 25, NULL, '文山', '文山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(296, '中国', 'CHN', '云南', 25, NULL, '西双版纳', '西双版纳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(297, '中国', 'CHN', '云南', 25, NULL, '大理', '大理', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(298, '中国', 'CHN', '云南', 25, NULL, '德宏', '德宏', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(299, '中国', 'CHN', '云南', 25, NULL, '怒江', '怒江', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(300, '中国', 'CHN', '云南', 25, NULL, '迪庆', '迪庆', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(301, '中国', 'CHN', '西藏', 26, NULL, '拉萨', '拉萨', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(302, '中国', 'CHN', '西藏', 26, NULL, '昌都', '昌都', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(303, '中国', 'CHN', '西藏', 26, NULL, '山南', '山南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(304, '中国', 'CHN', '西藏', 26, NULL, '日喀则', '日喀则', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(305, '中国', 'CHN', '西藏', 26, NULL, '那曲', '那曲', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(306, '中国', 'CHN', '西藏', 26, NULL, '阿里', '阿里', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(307, '中国', 'CHN', '西藏', 26, NULL, '林芝', '林芝', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(308, '中国', 'CHN', '陕西', 27, NULL, '西安', '西安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(309, '中国', 'CHN', '陕西', 27, NULL, '铜川', '铜川', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(310, '中国', 'CHN', '陕西', 27, NULL, '宝鸡', '宝鸡', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(311, '中国', 'CHN', '陕西', 27, NULL, '咸阳', '咸阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(312, '中国', 'CHN', '陕西', 27, NULL, '渭南', '渭南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(313, '中国', 'CHN', '陕西', 27, NULL, '延安', '延安', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(314, '中国', 'CHN', '陕西', 27, NULL, '汉中', '汉中', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(315, '中国', 'CHN', '陕西', 27, NULL, '榆林', '榆林', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(316, '中国', 'CHN', '陕西', 27, NULL, '安康', '安康', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(317, '中国', 'CHN', '陕西', 27, NULL, '商洛', '商洛', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(318, '中国', 'CHN', '甘肃', 28, NULL, '兰州市', '兰州市', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(319, '中国', 'CHN', '甘肃', 28, NULL, '嘉峪关', '嘉峪关', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(320, '中国', 'CHN', '甘肃', 28, NULL, '金昌', '金昌', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(321, '中国', 'CHN', '甘肃', 28, NULL, '白银', '白银', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(322, '中国', 'CHN', '甘肃', 28, NULL, '天水', '天水', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(323, '中国', 'CHN', '甘肃', 28, NULL, '武威', '武威', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(324, '中国', 'CHN', '甘肃', 28, NULL, '张掖', '张掖', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(325, '中国', 'CHN', '甘肃', 28, NULL, '平凉', '平凉', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(326, '中国', 'CHN', '甘肃', 28, NULL, '酒泉', '酒泉', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(327, '中国', 'CHN', '甘肃', 28, NULL, '庆阳', '庆阳', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(328, '中国', 'CHN', '甘肃', 28, NULL, '定西', '定西', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(329, '中国', 'CHN', '甘肃', 28, NULL, '陇南', '陇南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(330, '中国', 'CHN', '甘肃', 28, NULL, '临夏', '临夏', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(331, '中国', 'CHN', '甘肃', 28, NULL, '甘南', '甘南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(332, '中国', 'CHN', '青海', 29, NULL, '西宁', '西宁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(333, '中国', 'CHN', '青海', 29, NULL, '海东', '海东', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(334, '中国', 'CHN', '青海', 29, NULL, '海北', '海北', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(335, '中国', 'CHN', '青海', 29, NULL, '黄南', '黄南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(336, '中国', 'CHN', '青海', 29, NULL, '海南', '海南', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(337, '中国', 'CHN', '青海', 29, NULL, '果洛', '果洛', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(338, '中国', 'CHN', '青海', 29, NULL, '玉树', '玉树', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(339, '中国', 'CHN', '青海', 29, NULL, '海西', '海西', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(340, '中国', 'CHN', '宁夏', 30, NULL, '银川', '银川', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(341, '中国', 'CHN', '宁夏', 30, NULL, '石嘴山', '石嘴山', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(342, '中国', 'CHN', '宁夏', 30, NULL, '吴忠', '吴忠', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(343, '中国', 'CHN', '宁夏', 30, NULL, '固原', '固原', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(344, '中国', 'CHN', '宁夏', 30, NULL, '中卫', '中卫', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(345, '中国', 'CHN', '新疆', 31, NULL, '乌鲁木齐', '乌鲁木齐', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(346, '中国', 'CHN', '新疆', 31, NULL, '克拉玛依', '克拉玛依', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(347, '中国', 'CHN', '新疆', 31, NULL, '吐鲁番', '吐鲁番', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(348, '中国', 'CHN', '新疆', 31, NULL, '哈密', '哈密', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(349, '中国', 'CHN', '新疆', 31, NULL, '昌吉', '昌吉', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:04', NULL),
+(350, '中国', 'CHN', '新疆', 31, NULL, '博尔塔拉', '博尔塔拉', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(351, '中国', 'CHN', '新疆', 31, NULL, '巴音郭楞', '巴音郭楞', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(352, '中国', 'CHN', '新疆', 31, NULL, '阿克苏', '阿克苏', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(353, '中国', 'CHN', '新疆', 31, NULL, '克孜勒苏', '克孜勒苏', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(354, '中国', 'CHN', '新疆', 31, NULL, '喀什', '喀什', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(355, '中国', 'CHN', '新疆', 31, NULL, '和田', '和田', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(356, '中国', 'CHN', '新疆', 31, NULL, '伊犁', '伊犁', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(357, '中国', 'CHN', '新疆', 31, NULL, '塔城', '塔城', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(358, '中国', 'CHN', '新疆', 31, NULL, '阿勒泰', '阿勒泰', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(359, '中国', 'CHN', '新疆', 31, NULL, '石河子', '石河子', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(360, '中国', 'CHN', '新疆', 31, NULL, '阿拉尔', '阿拉尔', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(361, '中国', 'CHN', '新疆', 31, NULL, '图木舒克', '图木舒克', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(362, '中国', 'CHN', '新疆', 31, NULL, '五家渠', '五家渠', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(363, '中国', 'CHN', '新疆', 31, NULL, '北屯', '北屯', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(387, '中国', 'CHN', '香港', 33, NULL, '香港', '香港', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(388, '中国', 'CHN', '澳门', 34, NULL, '澳门', '澳门', NULL, 9999, NULL, NULL, NULL, '2014-09-15 22:29:05', NULL),
+(389, '新加坡', 'SGP', '新加坡', 35, NULL, '新加坡', '新加坡', NULL, 1, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `region_country`
+--
+
+CREATE TABLE IF NOT EXISTS `region_country` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` char(3) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `name_cn` varchar(45) DEFAULT NULL,
+  `alias` varchar(20) DEFAULT NULL,
+  `nest_level` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `phone_code` varchar(5) DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `tn_url` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code_UNIQUE` (`code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `region_country`
+--
+
+INSERT INTO `region_country` (`id`, `code`, `name`, `name_cn`, `alias`, `nest_level`, `description`, `display_order`, `phone_code`, `image_url`, `tn_url`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 'CHN', 'China', '中国', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'SGP', 'Singapore', '新加坡', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `region_state`
+--
+
+CREATE TABLE IF NOT EXISTS `region_state` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_name` varchar(45) DEFAULT NULL,
+  `country_code` char(3) DEFAULT NULL,
+  `code` varchar(45) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `name_cn` varchar(45) DEFAULT NULL,
+  `nest_level` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `stateCountry_idx` (`country_code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=36 ;
+
+--
+-- Dumping data for table `region_state`
+--
+
+INSERT INTO `region_state` (`id`, `country_name`, `country_code`, `code`, `name`, `name_cn`, `nest_level`, `description`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, '中国', 'CHN', NULL, '北京', '北京', 2, NULL, 999, NULL, NULL, NULL),
+(2, '中国', 'CHN', NULL, '天津', '天津', 2, NULL, 999, NULL, NULL, NULL),
+(3, '中国', 'CHN', NULL, '河北', '河北', 2, NULL, 999, NULL, NULL, NULL),
+(4, '中国', 'CHN', NULL, '山西', '山西', 2, NULL, 999, NULL, NULL, NULL),
+(5, '中国', 'CHN', NULL, '内蒙古', '内蒙古', 2, NULL, 999, NULL, NULL, NULL),
+(6, '中国', 'CHN', NULL, '辽宁', '辽宁', 2, NULL, 999, NULL, NULL, NULL),
+(7, '中国', 'CHN', NULL, '吉林', '吉林', 2, NULL, 999, NULL, NULL, NULL),
+(8, '中国', 'CHN', NULL, '黑龙江', '黑龙江', 2, NULL, 999, NULL, NULL, NULL),
+(9, '中国', 'CHN', NULL, '上海', '上海', 2, NULL, 999, NULL, NULL, NULL),
+(10, '中国', 'CHN', NULL, '江苏', '江苏', 2, NULL, 999, NULL, NULL, NULL),
+(11, '中国', 'CHN', NULL, '浙江', '浙江', 2, NULL, 999, NULL, NULL, NULL),
+(12, '中国', 'CHN', NULL, '安徽', '安徽', 2, NULL, 999, NULL, NULL, NULL),
+(13, '中国', 'CHN', NULL, '福建', '福建', 2, NULL, 999, NULL, NULL, NULL),
+(14, '中国', 'CHN', NULL, '江西', '江西', 2, NULL, 999, NULL, NULL, NULL),
+(15, '中国', 'CHN', NULL, '山东', '山东', 2, NULL, 999, NULL, NULL, NULL),
+(16, '中国', 'CHN', NULL, '河南', '河南', 2, NULL, 999, NULL, NULL, NULL),
+(17, '中国', 'CHN', NULL, '湖北', '湖北', 2, NULL, 999, NULL, NULL, NULL),
+(18, '中国', 'CHN', NULL, '湖南', '湖南', 2, NULL, 999, NULL, NULL, NULL),
+(19, '中国', 'CHN', NULL, '广东', '广东', 2, NULL, 999, NULL, NULL, NULL),
+(20, '中国', 'CHN', NULL, '广西', '广西', 2, NULL, 999, NULL, NULL, NULL),
+(21, '中国', 'CHN', NULL, '海南', '海南', 2, NULL, 999, NULL, NULL, NULL),
+(22, '中国', 'CHN', NULL, '重庆', '重庆', 2, NULL, 999, NULL, NULL, NULL),
+(23, '中国', 'CHN', NULL, '四川', '四川', 2, NULL, 999, NULL, NULL, NULL),
+(24, '中国', 'CHN', NULL, '贵州', '贵州', 2, NULL, 999, NULL, NULL, NULL),
+(25, '中国', 'CHN', NULL, '云南', '云南', 2, NULL, 999, NULL, NULL, NULL),
+(26, '中国', 'CHN', NULL, '西藏', '西藏', 2, NULL, 999, NULL, NULL, NULL),
+(27, '中国', 'CHN', NULL, '陕西', '陕西', 2, NULL, 999, NULL, NULL, NULL),
+(28, '中国', 'CHN', NULL, '甘肃', '甘肃', 2, NULL, 999, NULL, NULL, NULL),
+(29, '中国', 'CHN', NULL, '青海', '青海', 2, NULL, 999, NULL, NULL, NULL),
+(30, '中国', 'CHN', NULL, '宁夏', '宁夏', 2, NULL, 999, NULL, NULL, NULL),
+(31, '中国', 'CHN', NULL, '新疆', '新疆', 2, NULL, 999, NULL, NULL, NULL),
+(32, '中国', 'CHN', NULL, '台湾', '台湾', 2, NULL, 999, NULL, NULL, NULL),
+(33, '中国', 'CHN', NULL, '香港', '香港', 2, NULL, 999, NULL, NULL, NULL),
+(34, '中国', 'CHN', NULL, '澳门', '澳门', 2, NULL, 999, NULL, NULL, NULL),
+(35, '新加坡', 'SGP', NULL, '新加坡', '新加坡', 1, NULL, 1, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `translate_message`
+--
+
+CREATE TABLE IF NOT EXISTS `translate_message` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `language` varchar(16) NOT NULL DEFAULT '',
+  `translation` text,
+  PRIMARY KEY (`id`,`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `translate_source_message`
+--
+
+CREATE TABLE IF NOT EXISTS `translate_source_message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(32) DEFAULT NULL,
+  `message` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mobile` varchar(11) NOT NULL,
+  `nickname` varchar(20) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `qq` varchar(45) NOT NULL,
+  `wechat` varchar(45) NOT NULL,
+  `weibo` varchar(45) NOT NULL,
+  `password` char(64) NOT NULL,
+  `salt` char(40) NOT NULL,
+  `password_raw` varchar(40) DEFAULT NULL,
+  `is_activated` tinyint(4) DEFAULT '0',
+  `date_activated` datetime DEFAULT NULL,
+  `last_login_time` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_acct_type` (`mobile`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `mobile`, `nickname`, `email`, `qq`, `wechat`, `weibo`, `password`, `salt`, `password_raw`, `is_activated`, `date_activated`, `last_login_time`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(11, '91466636', NULL, 'qin560.user1@gmail.com', '', '', '', 'c9e67a044d4d1031cf1c14f855346de0a9adfd771316b31349d3429d6b0c4687', 'PFKV5w0y6lX7bUOYrxLSkgjmiG2h8BvTzHdWQEuC', '1234', 1, '2015-01-17 17:26:56', '2015-01-29 19:11:18', '2015-01-17 17:26:56', '2015-01-29 19:11:18', NULL),
+(12, '87890998', NULL, NULL, '', '', '', '2d66789daf04f30b92fda7fbf06bf1924791fcaeb9cfd028007ce115a3ff5fbe', '4bdGIST0yg1pLm27RtH3onvWafEZlU56FAijCcze', '1234', 1, NULL, NULL, '2015-01-21 09:33:24', '2015-01-21 09:33:24', NULL),
+(13, '17782513775', NULL, NULL, '', '', '', '8bc1ab728b71d0d39311a80df3cfa9b18822f18d00a77375a4a657f7d8e62170', 'iw2rFaQsIRUuXmhK5S6byLVkTWoeGJc3OpDdf0jC', '1211619', 1, NULL, '2015-01-24 12:59:18', '2015-01-21 16:13:09', '2015-01-24 12:59:18', NULL),
+(14, '15922421491', NULL, '2824192898@qq.com', '', '', '', 'f30f96a71f2fd24ae9abe36ed7fbb33aea2b3e428b223ba1fdef3309523b9f16', 'W8wbm9vpU2PxC1QVLKJFjMES7DqhIglfNReH0syc', 'sx890515', 1, NULL, '2015-01-22 00:41:45', '2015-01-21 16:28:42', '2015-01-21 17:41:45', NULL),
+(15, '13417329217', NULL, '2649593074@qq.com', '', '', '', 'd57485dcbeefa5a5fe56d8c897cf1b5852f6f5172e57f4d944af331ccc055bc0', 'mQO4yoNEGg0FacdiYlVRBeIJ7Mhv2Hq9f3bxAUCk', 'hy8826', 1, NULL, '2015-01-25 20:50:54', '2015-01-21 18:50:29', '2015-01-25 20:50:54', NULL),
+(16, '18221102108', NULL, NULL, '', '', '', '71e49325be087622157176f25a2bfeedc024152bcd1145d5449a7199cd377f03', 'ap3cjLSYAqh6PZvJsC7VIkXE4O9GDeWHUBMixrwm', 'SS10040750212', 1, NULL, '2015-01-24 15:01:04', '2015-01-24 14:58:16', '2015-01-24 15:01:04', NULL),
+(17, '13855662829', NULL, NULL, '', '', '', '1bba9855b1f8cdd6d4a22946f23a899a6c277329cb2976f216a42ae1b92ca2ec', 'cN5VvZGDlLKu32Xdrt6UFHgOT9bReakfI8mjCx7A', '888888', 1, NULL, '2015-01-24 15:05:52', '2015-01-24 15:04:54', '2015-01-24 15:05:52', NULL),
+(18, '13062660225', NULL, 'esfd@g.com', '', '', '', '30d724d77dae5bc9d901f9f93193a3b89cb2c543d7d9ad3eddacdd063694fef0', 'iTeN7V8vBsLgEUJtSPK0QO4p6wHrmzb1oMx3j95n', '123456', 1, NULL, '2015-01-27 12:49:41', '2015-01-24 15:43:03', '2015-01-27 12:49:42', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_auth_action`
+--
+
+CREATE TABLE IF NOT EXISTS `user_auth_action` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `uid` char(40) NOT NULL,
+  `action_type` int(11) NOT NULL,
+  `is_active` tinyint(4) DEFAULT NULL,
+  `date_expiry` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_uid` (`user_id`,`uid`,`action_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_profile`
+--
+
+CREATE TABLE IF NOT EXISTS `user_profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `dob` datetime DEFAULT NULL,
+  `gender` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `city_id` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id_UNIQUE` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `user_profile`
+--
+
+INSERT INTO `user_profile` (`id`, `user_id`, `fullname`, `firstname`, `lastname`, `dob`, `gender`, `description`, `state_id`, `city_id`, `date_created`, `date_updated`, `date_deleted`) VALUES
+(1, 11, NULL, NULL, NULL, '1980-05-19 00:00:00', 1, NULL, NULL, 4, '2015-01-18 03:06:54', '2015-01-21 16:25:40', NULL),
+(2, 14, NULL, NULL, NULL, '1987-04-12 00:00:00', 1, NULL, NULL, 98, '2015-01-21 16:30:33', '2015-01-21 16:30:33', NULL),
+(3, 15, NULL, NULL, NULL, '1989-08-14 00:00:00', 1, NULL, NULL, 202, '2015-01-21 18:51:46', '2015-01-21 18:51:46', NULL),
+(4, 18, NULL, NULL, NULL, '2011-01-01 00:00:00', 1, NULL, NULL, 1, '2015-01-24 15:44:03', '2015-01-25 00:14:51', NULL);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `disease`
+--
+ALTER TABLE `disease`
+  ADD CONSTRAINT `disease_category` FOREIGN KEY (`category_id`) REFERENCES `disease_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `doctor`
+--
+ALTER TABLE `doctor`
+  ADD CONSTRAINT `doctor_hospital` FOREIGN KEY (`hospital_id`) REFERENCES `hospital` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `doctor_avatar`
+--
+ALTER TABLE `doctor_avatar`
+  ADD CONSTRAINT `doctorAvatar` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `doctor_disease`
+--
+ALTER TABLE `doctor_disease`
+  ADD CONSTRAINT `disease_disease` FOREIGN KEY (`disease_id`) REFERENCES `disease` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `doctor_disease` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `medical_record`
+--
+ALTER TABLE `medical_record`
+  ADD CONSTRAINT `medicalrecord_city` FOREIGN KEY (`city_id`) REFERENCES `region_city` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `medicalrecord_patient` FOREIGN KEY (`patient_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `medical_record_assignment`
+--
+ALTER TABLE `medical_record_assignment`
+  ADD CONSTRAINT `medicalRecord_assignment` FOREIGN KEY (`record_id`) REFERENCES `medical_record` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `medicalRecord_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `medical_record_file`
+--
+ALTER TABLE `medical_record_file`
+  ADD CONSTRAINT `medicalRecord_file` FOREIGN KEY (`record_id`) REFERENCES `medical_record` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `region_city`
+--
+ALTER TABLE `region_city`
+  ADD CONSTRAINT `cityState` FOREIGN KEY (`state_id`) REFERENCES `region_state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `region_state`
+--
+ALTER TABLE `region_state`
+  ADD CONSTRAINT `stateCountry` FOREIGN KEY (`country_code`) REFERENCES `region_country` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `translate_message`
+--
+ALTER TABLE `translate_message`
+  ADD CONSTRAINT `FK_TMessage_TSourceMessage` FOREIGN KEY (`id`) REFERENCES `translate_source_message` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `user_profile`
+--
+ALTER TABLE `user_profile`
+  ADD CONSTRAINT `userId` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

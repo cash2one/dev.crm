@@ -1,0 +1,180 @@
+<?php
+
+class OrderController extends AdminController {
+
+    private $model;
+    private $booking;
+    private $patientBooking;
+
+    public function filterSalesOrderContext($filterChain) {
+        $id = null;
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+        } else if (isset($_POST['order']['id'])) {
+            $id = $_POST['order']['id'];
+        }
+
+        $this->loadModelById($id);
+
+        //complete the running of other filters and execute the requested action.
+        $filterChain->run();
+    }
+
+    public function filterBkContext($filterChain) {
+        $bookingId = null;
+        if (isset($_GET['bid'])) {
+            $bookingId = $_GET['bid'];
+        } else if (isset($_POST['order']['bk_id'])) {
+            $bookingId = $_POST['order']['bk_id'];
+        }
+        $this->loadBookingById($bookingId);
+
+        //complete the running of other filters and execute the requested action.
+        $filterChain->run();
+    }
+    
+    public function filterPbContext($filterChain) {
+        $bookingId = null;
+        if (isset($_GET['bid'])) {
+            $bookingId = $_GET['bid'];
+        } else if (isset($_POST['order']['bk_id'])) {
+            $bookingId = $_POST['order']['bk_id'];
+        }
+        $this->loadPatientBookingById($bookingId);
+
+        //complete the running of other filters and execute the requested action.
+        $filterChain->run();
+    }
+
+    /**
+     * @return array action filters
+     */
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+            'postOnly + delete', // we only allow deletion via POST request
+            'salesOrderContext + view',
+            'bkContext + createBKOrder',
+            'pbContext + createPBOrder'
+        );
+    }
+
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules() {
+        return array(
+            array('allow', // allow all users to perform 'index' and 'view' actions
+                'actions' => array(''),
+                'users' => array('*'),
+            ),
+            /*
+              array('allow', // allow authenticated user to perform 'create' and 'update' actions
+              'actions' => array('create', 'update'),
+              'users' => array('@'),
+              ),
+             */
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('createBKOrder', 'createPBOrder', 'view'),
+                'users' => array('superbeta'),
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    public function actionView($id) {
+        $model = $this->model;
+        //$model = $this->loadModelById($id);
+        $this->render('view', array('model' => $model));
+    }
+
+    public function actionCreateBKOrder($bid) {
+        //  $booking = Booking::model()->getById($bid);
+        $booking = $this->booking;
+        $order = new SalesOrder();
+        $order->bk_id = $booking->getId();
+        $order->bk_type = StatCode::TRANS_TYPE_BK;
+        $order->bk_ref_no = $booking->getRefNo();
+        $order->user_id = $booking->getUserId();
+        //$this->performAjaxValidation($order);
+
+        if (isset($_POST['order'])) {
+            $values = $_POST['order'];
+
+            $order->setAmount($values['final_amount']);
+            $order->setSubject($values['subject']);
+            $order->setDescription($values['description']);
+            $order->setIsPaid(0);
+            $order->setDateOpen(new CDbExpression('NOW()'));
+            $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_BK);
+            //$order->validate();
+            if ($order->save()) {
+                $this->redirect(array('view', 'id' => $order->id));
+            }
+        }
+
+        $this->render('createBKOrder', array(
+            'model' => $order
+        ));
+    }
+
+    public function actionCreatePBOrder($bid) {
+        //  $booking = Booking::model()->getById($bid);
+        $booking = $this->patientBooking;
+        $order = new SalesOrder();
+        $order->bk_id = $booking->getId();
+        $order->bk_type = StatCode::TRANS_TYPE_PB;
+        $order->bk_ref_no = $booking->getRefNo();
+        $order->user_id = $booking->getPatientId();
+        //$this->performAjaxValidation($order);
+
+        if (isset($_POST['order'])) {
+            $values = $_POST['order'];
+            $order->setAmount($values['final_amount']);
+            $order->setSubject($values['subject']);
+            $order->setDescription($values['description']);
+            $order->setIsPaid(0);
+            $order->setDateOpen(new CDbExpression('NOW()'));
+            $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_PB);
+            if ($order->save()) {
+                $this->redirect(array('view', 'id' => $order->id));
+            }
+        }
+
+        $this->render('createPBOrder', array(
+            'model' => $order
+        ));
+    }
+
+    public function loadModelById($id, $with = null) {
+        if (is_null($this->model)) {
+            $this->model = SalesOrder::model()->getById($id, $with);
+            if (is_null($this->model)) {
+                throw new CHttpException(404, 'The requested page does not exists.');
+            }
+        }
+    }
+
+    public function loadBookingById($id, $with = null) {
+        if (is_null($this->booking)) {
+            $this->booking = Booking::model()->getById($id, $with);
+            if (is_null($this->booking)) {
+                throw new CHttpException(404, 'The requested page does not exists.');
+            }
+        }
+    }
+    
+    public function loadPatientBookingById($id, $with = null) {
+        if (is_null($this->patientBooking)) {
+            $this->patientBooking = PatientBooking::model()->getById($id, $with);
+            if (is_null($this->patientBooking)) {
+                throw new CHttpException(404, 'The requested page does not exists.');
+            }
+        }
+    }
+
+}

@@ -1,0 +1,54 @@
+<?php
+
+abstract class EApiService {
+
+    const RESPONSE_NO = 'no';
+    const RESPONSE_OK = 'ok';   //200
+    const RESPONSE_NO_DATA = 'No data'; //400
+    const RESPONSE_NOT_FOUND = 'Not found'; //404
+    const RESPONSE_VALIDATION_ERRORS = 'Validation errors'; //400
+
+    public $output; // used for output data.
+
+    public function __construct() {
+        
+    }
+
+    protected function getTextAttribute($value, $ntext = true) {
+        if ($ntext) {
+            return Yii::app()->format->formatNtext($value);
+        } else {
+            return $value;
+        }
+    }
+
+    public function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK
+            );
+        }
+    }
+
+    public function createErrorOutput($errorMsg = "", $errorCode = 400) {
+        $this->output = array(
+            'status' => self::RESPONSE_NO,
+            'errorCode' => $errorCode,
+            'errorMsg' => $errorMsg
+        );
+    }
+
+    /*
+      protected function respond($httpCode, $status, $data = array()) {
+      $response['status'] = $status;
+      $response['data'] = $data;
+      echo CJSON::encode($response);
+      Yii::app()->end($httpCode, true);
+      }
+     */
+
+    protected function throwNoDataException($msg = self::RESPONSE_NO_DATA) {
+        throw new CException($msg);
+    }
+
+}

@@ -1,0 +1,17 @@
+<?php
+
+class ServiceController extends Controller {
+
+    public function actionIndex() {
+        $this->redirect('domestic');
+    }
+
+    public function actionDomestic() {
+        $this->render('domestic');
+    }
+
+    public function actionOverseas() {
+        $this->render('overseas');
+    }
+
+}

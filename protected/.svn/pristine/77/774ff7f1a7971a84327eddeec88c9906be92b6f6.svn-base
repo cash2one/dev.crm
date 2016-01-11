@@ -1,0 +1,73 @@
+<?php
+
+class UserController extends MobileController {
+
+    //进入患者注册页面
+    public function actionRegister() {
+        $userRole = StatCode::USER_ROLE_PATIENT;
+        $form = new UserRegisterForm();
+        $form->role = $userRole;
+        $form->terms = 1;
+
+        $this->performAjaxValidation($form);
+        $this->render('register', array(
+            'model' => $form,
+        ));
+    }
+
+    //无刷新注册
+    public function actionAjaxRegister() {
+        $output = array('status' => 'no');
+        $userRole = StatCode::USER_ROLE_PATIENT;
+        $form = new UserRegisterForm();
+        $form->role = $userRole;
+        $form->terms = 1;
+        $this->performAjaxValidation($form);
+        if (isset($_POST['UserRegisterForm'])) {
+            $values = $_POST['UserRegisterForm'];
+            $form->setAttributes($values, true);
+            $userMgr = new UserManager();
+            $userMgr->registerNewUser($form);
+            if ($form->hasErrors() === false) {
+                // success                
+                $loginForm = $userMgr->autoLoginUser($form->username, $form->password, $userRole, 1);
+                $output['status'] = 'ok';
+            }
+            $output['error'] = $form->getErrors();
+        }
+        $this->renderJsonOutput($output);
+    }
+
+    //登陆
+    public function actionLogin() {
+        $user = $this->getCurrentUser();
+        //用户已登陆 直接进入个人中心
+        if (isset($user)) {
+            $this->render('view', array('user' => $user));
+        }
+        $form = new UserLoginForm();
+        $form->role = StatCode::USER_ROLE_PATIENT;
+        $form->rememberMe = 1;
+        if (isset($_POST['UserLoginForm'])) {
+            $values = $_POST['UserLoginForm'];
+            $form->setAttributes($values, true);
+            $userMgr = new UserManager();
+            $userMgr->doLogin($form);
+            if ($form->hasErrors() === false) {
+                //登陆成功进入个人中心
+                $user = $this->getCurrentUser();
+                $this->render('view', array('user' => $user));
+            }
+        }
+
+        $this->render("login", array(
+            'model' => $form
+        ));
+    }
+
+    public function actionLogout() {
+        Yii::app()->user->logout();
+        $this->redirect($this->getReturnUrl());
+    }
+
+}

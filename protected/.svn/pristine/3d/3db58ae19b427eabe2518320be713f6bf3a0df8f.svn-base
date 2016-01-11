@@ -1,0 +1,17 @@
+<?php
+
+class IDoctorCert extends EViewModel{
+      public function initModel(DoctorCert $model) {
+        $this->id = $model->getId();
+        $this->doctorId = $model->getDoctorId();        
+      //  $this->uid = $model->getUID();
+        $this->url = $model->getAbsFileUrl();
+        $this->urlTN = $model->getAbsThumbnailUrl();
+        $this->size = $model->getFileSize();
+        $this->createDate = $model->getDateCreated();
+      //  $this->fileName = $model->getFileName();
+      //  $this->fileExt = $model->getFileExtension();
+      //  $this->mimeType = $model->getMimeType();
+        
+    }
+}

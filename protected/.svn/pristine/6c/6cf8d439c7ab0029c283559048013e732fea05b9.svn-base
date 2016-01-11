@@ -1,0 +1,35 @@
+<?php
+
+class IHospitalDepartment extends EViewModel {
+    public $id;
+    public $hid;    //hospitalDepartment.hospital_id
+    public $group;
+    public $name;
+    
+    public function initModel(HospitalDepartment $model) {
+        $this->id = $model->getId();
+        $this->group = $model->getGroup();
+        $this->name = $model->getName();
+        $this->hid = $model->getHospitalId();
+        
+        // $this->urlThumbnail=$this->urlImage;
+    }
+    
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getGroup() {
+        return $this->group;
+    }
+
+    public function getHid() {
+        return $this->hid;
+    }
+    
+}
+

@@ -1,0 +1,109 @@
+<?php
+
+class ApiViewHospitalSearch extends EApiService {
+
+    private $hospitals;
+    private $locations;
+    private $querystring;
+
+    public function __construct($querystring) {
+        parent::__construct();
+        $this->querystring = $querystring;
+    }
+
+    protected function loadData() {
+        // load Hospitals.
+        $this->loadHospitals();
+        // load Location Navigation.
+        $this->loadLocations();
+    }
+
+    /*
+      public function loadData($querystring) {
+      try {
+      // load Hospitals.
+      $this->loadHospitals($querystring);
+      // load Location Navigation.
+      $this->loadLocations();
+      // create output.
+      $this->createOutput();
+      }
+      catch(CDbException $dbex){
+      $this->output=array('status'=>self::RESPONSE_NO, 'error'=>'数据错误');
+      }
+      catch (CException $ex) {
+      $this->output = array('status' => self::RESPONSE_NO, 'error' => $ex->getMessage());
+      }
+      return $this->output;
+      }
+     * 
+     */
+
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'locations' => $this->locations,
+                'hospitals' => $this->hospitals,
+            );
+        }
+    }
+
+    private function loadHospitals() {
+        if (is_null($this->hospitals)) {
+            $this->hospitals = array();
+            $hospitalSearch = new HospitalSearch();
+            $hospitals = $hospitalSearch->search($this->querystring);
+            if (arrayNotEmpty($hospitals)) {
+                $this->setHospitals($hospitals);
+            }
+        }
+    }
+
+    private function loadLocations() {
+        if (is_null($this->locations)) {
+            $this->locations = array();
+            $data = array(
+                array(
+                    'id' => 1, 'name' => '北京',
+                ),
+                array(
+                    'id' => 73, 'name' => '上海',
+                ),
+                array(
+                    'id' => 74, 'name' => '南京',
+                ),
+                array(
+                    'id' => 87, 'name' => '杭州',
+                ),
+            );
+            $this->setCityList($data);
+        }
+    }
+
+    private function setHospitals(array $models) {
+//        if (is_null($this->hospitals)) {
+//            $this->hospitals = array();
+        foreach ($models as $model) {
+            $data = new stdClass();
+            $data->id = $model->getId();
+            $data->name = $model->getName();
+            $data->imageUrl = $model->getAbsUrlAvatar(false);
+            $data->hpClass = $model->getClass();
+            $data->hpType = $model->getType();
+            $data->phone = $model->getPhone();
+            $this->hospitals[] = $data;
+        }
+//        }
+    }
+
+    private function setCityList(array $list) {
+        foreach ($list as $city) {
+            $data = new stdClass();
+            $data->id = $city['id'];
+            $data->name = $city['name'];
+            $this->locations[] = $data;
+        }
+    }
+
+}

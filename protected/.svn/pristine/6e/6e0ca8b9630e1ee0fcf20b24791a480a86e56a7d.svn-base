@@ -1,0 +1,85 @@
+<?php
+
+class ApiViewOpenCity extends EApiViewService {
+
+    public function __construct() {
+        parent::__construct();
+        $this->results = new stdClass();
+    }
+
+    protected function loadData() {
+
+        $this->loadCity();
+    }
+
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'errorCode' => 0,
+                'errorMsg' => 'success',
+                'results' => $this->results,
+            );
+        }
+    }
+    public function loadCity(){
+        $data = array();
+        $hotList = array();
+        $cityList=array();
+        $cities = CityListDoctor::model()->getAllCity();
+        foreach($cities as $city){
+            if($city->is_hot){
+                $hotList[]=array('id'=>$city->city_id, 'city'=>$city->city_name);
+            }else{
+                $cityList[]=$city;
+            }
+        }
+        $data[] = array('id'=>1, 'state'=>'热门城市', 'subCity'=>$hotList);
+        foreach($cityList as $city)
+        {
+            $isExist = 1;
+            foreach($data as $k=>$v){
+                if(isset($v['id']) && $v['id'] == $city->state_id){
+                    $data[$k]['subCity'][]  = array('id'=>$city->city_id, 'city'=>$city->city_name);
+                    $isExist = 0;
+                }
+            }
+            if($isExist){
+                $data[] = array('id'=>$city->state_id, 'state'=>$city->state_name);
+            }
+        }
+        $this->setCity($data);
+    }
+
+
+//    public function loadCity()
+//    {
+//        $data = array(
+//                array(
+//                    'id' => 1,
+//                    'state' => '热门城市',
+//                    'subCity' => array(
+//                        array(
+//                            'id' => 1,
+//                            'city' => '北京',
+//                        ),
+//                        array(
+//                            'id' => 73,
+//                            'city' => '上海',
+//                        ),
+//                        array(
+//                            'id' => 200,
+//                            'city' => '广州',
+//                        ),
+//                    ),
+//                ),
+//
+//        );
+//        $this->setCity($data);
+//    }
+    private function setCity($data){
+        $this->results = $data;
+    }
+
+
+}

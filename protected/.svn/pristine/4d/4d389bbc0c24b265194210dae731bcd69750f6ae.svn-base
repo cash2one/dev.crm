@@ -1,0 +1,11 @@
+<?php
+
+class TestController extends Controller{
+    
+    public function actionUserlogin(){
+        $url = $this->createAbsoluteUrl('api/create',array('model'=>'userlogin'));
+        var_dump($url);
+        
+        $this->render('userlogin');
+    }
+}

@@ -1,0 +1,294 @@
+<?php
+
+class PatientController extends MobiledoctorController {
+
+    private $patient;
+
+    public function filterPatientContext($filterChain) {
+        $patientId = null;
+        if (isset($_GET['id'])) {
+            $patientId = $_GET['id'];
+        } else if (isset($_POST['patient']['id'])) {
+            $patientId = $_POST['patient']['id'];
+        }
+
+        $this->loadPatientInfoById($patientId);
+
+        //complete the running of other filters and execute the requested action.
+        $filterChain->run();
+    }
+
+    /**
+     * @NOTE call this method after filterUserDoctorContext.
+     * @param type $filterChain
+     */
+    public function filterPatientCreatorContext($filterChain) {
+        $patientId = null;
+        if (isset($_GET['pid'])) {
+            $patientId = $_GET['pid'];
+        } elseif (isset($_GET['id'])) {
+            $patientId = $_GET['id'];
+        } else if (isset($_POST['patient']['id'])) {
+            $patientId = $_POST['patient']['id'];
+        }
+        $creator = $this->loadUser();
+
+        $this->loadPatientInfoByIdAndCreatorId($patientId, $creator->getId());
+        $filterChain->run();
+    }
+
+    /**
+     * @return array action filters
+     */
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+            'postOnly + delete', // we only allow deletion via POST request
+            'userDoctorContext + create ajaxCreate createPatientMR ajaxCreatePatientMR',
+            'patientContext + createPatientMR updatePatientMR',
+        );
+    }
+
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules() {
+        return array(
+            array('allow', // allow all users to perform 'index' and 'view' actions
+                'actions' => array('register', 'login'),
+                'users' => array('*'),
+            ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('create', 'view', 'createPatientMR', 'updatePatientMR', 'createBooking', 'ajaxCreate', 'ajaxCreate', 'ajaxCreatePatientMR', 'ajaxUploadMRFile', 'delectPatientMRFile', 'patientMRFiles', 'list'),
+                'users' => array('@'),
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    public function actionAjaxCreate() {
+        $output = array('status' => 'no');
+        if (isset($_POST['patient'])) {
+            $values = $_POST['patient'];
+            //@TODO needs to verify if user_id == Doctor.user_id.
+            //    $doctorMgr = new DoctorManager();
+            $user = $this->loadUser();
+            $userId = $user->getId();
+            $form = new PatientInfoForm();
+            $form->setAttributes($values, true);
+            $form->creator_id = $userId;
+            $form->country_id = 1;  // default country is China.
+            if ($form->validate()) {
+                $patient = new PatientInfo();
+                $patient->setAttributes($form->attributes, true);
+                $patient->setBirthYear($form->age);
+                if ($patient->save()) {
+                    $output['status'] = 'ok';
+                    $output['patient']['id'] = $patient->getId();
+                } else {
+                    $output['errors'] = $patient->getErrors();
+                }
+            } else {
+                $output['errors'] = $form->getErrors();
+            }
+        }
+        $this->renderJsonOutput($output);
+    }
+
+    public function actionCreate() {
+        //    $doctorId = $this->getCurrentUserId();
+        $form = new PatientInfoForm();
+        $form->initModel();
+        $this->render("createPatient", array(
+            'model' => $form
+        ));
+    }
+
+    //病人疾病信息创建
+    public function actionCreatePatientMR($id) {
+        $patient = $this->loadPatientInfoById($id);
+        $patientMR = $patient->getMR();
+        $form = new PatientMRForm();
+        $form->initModel($patientMR);
+        $form->setPatientInfo($patient);
+        $this->render('createPatientMR', array(
+            'model' => $form
+        ));
+    }
+
+    //病人疾病信息更新
+    public function actionUpdatePatientMR($id) {
+        $patient = $this->loadPatientInfoById($id);
+        $patientMR = $patient->getMR();
+        $form = new PatientMRForm();
+        $form->initModel($patientMR);
+        $form->setPatientInfo($patient);
+        $this->render('updatePatientMR', array(
+            'model' => $form
+        ));
+    }
+
+    //保存病人疾病信息
+    public function actionAjaxCreatePatientMR() {
+        $output = array('status' => 'no');
+        if (isset($_POST['patient'])) {
+            $values = $_POST['patient'];
+            $patientId = isset($values['id']) ? $values['id'] : null;
+            $doctor = $this->loadUser();
+            //    $patientMgr = new PatientManager();
+            $pmrForm = new PatientMRForm();
+            $pmrForm->setAttributes($values, true);
+            $pmrForm->setPatientId($patientId);
+            $pmrForm->setCreatorId($doctor->getId());
+            // mrid
+            $mrid = isset($values['mrid']) ? $values['mrid'] : null;
+            if (strIsEmpty($mrid) === false) {
+                $pmrForm->setId($mrid);
+            }
+
+            if ($pmrForm->validate()) {
+                $patientMgr = new PatientManager();
+                $patientMR = null;
+                if (isset($pmrForm->id)) {
+                    $patientMR = $patientMgr->loadPatientMRById($pmrForm->id);
+                }
+                if (isset($patientMR) === false) {
+                    $patientMR = new PatientMR();
+                }
+                $patientMR->setAttributes($pmrForm->attributes, true);
+
+                if ($patientMR->save()) {
+                    $output['status'] = 'ok';
+                    $output['patient']['id'] = $patientMR->getPatientId();
+                    $output['patient']['mrid'] = $patientMR->getId();
+                } else {
+                    $output['errors'] = $patientMR->getErrors();
+                }
+            } else {
+                $output['errors'] = $pmrForm->getErrors();
+            }
+        }
+        $this->renderJsonOutput($output);
+    }
+    
+
+
+    public function actionAjaxUploadMRFile() {
+        $output = array('status' => 'no');
+        if (isset($_POST['patient'])) {
+            $values = $_POST['patient'];
+            $patientMgr = new PatientManager();
+            if (isset($values['mrid']) === false) {
+                // ['patient']['mrid'] is missing.
+                $output['status'] = 'no';
+                $output['error'] = 'invalid parameters';
+                $this->renderJsonOutput($output);
+            }
+            $mrid = $values['mrid'];
+            $patientMR = $patientMgr->loadPatientMRById($mrid);
+            if (isset($patientMR) === false) {
+                // PatientInfo record is not found in db.
+                $output['status'] = 'no';
+                $output['errors'] = 'invalid mrid';
+                $this->renderJsonOutput($output);
+            } else {
+                $output['patientId'] = $patientMR->getPatientId();
+                $ret = $patientMgr->createPatientMRFile($patientMR);
+                if (isset($ret['error'])) {
+                    $output['status'] = 'no';
+                    $output['error'] = $ret['error'];
+                    $output['file'] = '';
+                } else {
+                    // create file output.
+                    $fileModel = $ret['filemodel'];
+                    $data = new stdClass();
+                    $data->id = $fileModel->getId();
+                    $data->patientId = $fileModel->getPatientId();
+                    $data->fileUrl = $fileModel->getAbsFileUrl();
+                    $data->tnUrl = $fileModel->getAbsThumbnailUrl();
+                    $data->deleteUrl = $this->createUrl('patient/deleteMRFile', array('id' => $fileModel->getId()));
+
+                    $output['status'] = 'ok';
+                    $output['file'] = $data;
+                    //$output['redirectUrl'] = $this->createUrl("home/index");
+                }
+            }
+        }
+        $this->renderJsonOutput($output);
+    }
+
+    private function loadPatientInfoById($id) {
+        if ($this->patient === null) {
+            $this->patient = PatientInfo::model()->getById($id);
+            if ($this->patient === null)
+                throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        return $this->patient;
+    }
+
+    private function loadPatientInfoByIdAndCreatorId($id, $creatorId) {
+        if (is_null($this->patient)) {
+            $this->patient = PatientInfo::model()->getByIdAndCreatorId($id, $creatorId);
+            if (is_null($this->patient)) {
+                throw new CHttpException(404, 'The requested page does not exist.');
+            }
+        }
+        return $this->patient;
+    }
+
+    //异步删除患者病历图片
+    public function actionDelectPatientMRFile($id) {
+        $userId = $this->getCurrentUserId();
+        $userMgr = new UserManager();
+        $output = $userMgr->delectPatientMRFileByIdAndCreatorId($id, $userId);
+        $this->renderJsonOutput($output);
+    }
+
+    //异步加载病人病历图片
+    public function actionPatientMRFiles($mrId) {
+        //是否手机
+        $json = true;
+        $userId = $this->getCurrentUserId();
+        //$mrId = Yii::app()->request->getQuery('mrId');
+        $apisvc = new ApiViewFilesOfPatient($mrId, $userId);
+        $output = $apisvc->loadApiViewData();
+        if ($json) {
+            $this->renderJsonOutput($output);
+        } else {
+            $this->render('patientMRFiles', array(
+                'data' => $output
+            ));
+        }
+    }
+
+    //我的患者列表信息查询
+    public function actionList($page = 1) {
+        $userId = $this->getCurrentUserId();
+        $pagesize = 100;
+        //service层
+        $apisvc = new ApiViewDoctorPatientList($userId, $pagesize, $page);
+        //调用父类方法将数据返回
+        $output = $apisvc->loadApiViewData();
+        $dataCount = $apisvc->loadCount();
+        $this->render('doctorPatientList', array(
+            'data' => $output,'dataCount'=>$dataCount
+        ));
+    }
+
+    //我的患者详情
+    public function actionView($id) {
+        $userId = $this->getCurrentUserId();
+        //service层
+        $apisvc = new ApiViewDoctorPatientInfo($id, $userId);
+        //调用父类方法将数据返回
+        $output = $apisvc->loadApiViewData();
+        $this->render('doctorPatientInfo', array(
+            'data' => $output
+        ));
+    }
+
+}

@@ -1,0 +1,9 @@
+<?php
+
+class DiseaseManager {
+
+    public function loadDiseaseById($id, $with = null) {
+        return Disease::model()->getById($id, $with);
+    }
+
+}

@@ -1,0 +1,61 @@
+<?php
+
+class ApiViewDoctorPatientInfo extends EApiViewService {
+
+    private $id;
+    private $creatorId;  // User.id
+    private $patientMgr;
+    private $patientInfo;  // array
+
+    //初始化类的时候将参数注入
+
+    public function __construct($id, $creatorId) {
+        parent::__construct();
+        $this->creatorId = $creatorId;
+        $this->id = $id;
+        $this->patientMgr = new PatientManager();
+    }
+
+    protected function loadData() {
+        // load PatientBooking by creatorId.
+        $this->loadPatienInfo();
+    }
+
+    //返回的参数
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'patientInfo' => $this->patientInfo,
+            );
+        }
+    }
+
+    //调用model层方法
+    private function loadPatienInfo() {
+        $attributes = null;
+        $with = null;
+        $options = null;
+        $model = $this->patientMgr->LoadPatientInfoByIdAndCreateorId($this->id, $this->creatorId, $attributes, $with, $options);
+        $count = $this->patientMgr->loadPatientBookingByPatinetIdCount($this->id);
+        if (isset($model)) {
+            $this->setPatientInfo($model,$count);
+        }
+    }
+
+    //查询到的数据过滤
+    private function setPatientInfo(PatientInfo $model,$count) {
+        $data = new stdClass();
+        $data->id = $model->getId();
+        $data->name = $model->getName();
+        $data->age = $model->getAge();
+        $data->ageMonth = $model->getAgeMonth();
+        $data->cityName = $model->getCityName();
+        $data->gender = $model->getGender();
+        $data->diseaseName = $model->getDiseaseName();
+        $data->diseaseDetail = $model->getDiseaseDetail();
+        $data->patientBooking = $count;
+        $this->patientInfo = $data;
+    }
+
+}

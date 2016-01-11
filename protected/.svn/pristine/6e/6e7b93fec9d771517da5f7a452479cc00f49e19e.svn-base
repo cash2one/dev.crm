@@ -1,0 +1,121 @@
+<?php
+
+class ApiViewAppNav1V2 extends EApiService {
+
+    private $expertteams;
+    private $banners;   // clickable slide show
+    private $hospitalLocations; // search hospital by city    
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function loadData() {
+        try {
+            // load ExpertTeams.
+            $this->loadExpertTeams();
+            // load slideshow banners.
+            $this->loadBanners();
+            // load Hospitals.
+            $this->loadHospitalLocations();
+            // create output.
+            $this->createOutput();
+        } catch (CException $ex) {
+            $this->output = array('status' => self::RESPONSE_NO, 'error' => $ex->getMessage());
+        }
+
+        return $this->output;
+    }
+
+    public function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'expertteams' => $this->expertteams,
+                'banners' => $this->banners,
+                'locations' => $this->hospitalLocations
+            );
+        }
+    }
+
+    public function loadExpertTeams() {
+        if (is_null($this->expertteams)) {
+            $this->expertteams = array();
+            $teamMgr = new ExpertTeamManager();
+            $expteams = $teamMgr->loadAllExpertTeams();
+            if (arrayNotEmpty($expteams)) {
+                $this->setExpertTeams($expteams);
+            }
+        }
+    }
+
+    public function loadBanners() {
+        if (is_null($this->banners)) {
+            $this->setBanners();
+        }
+    }
+
+    public function loadHospitalLocations() {
+        if (is_null($this->hospitalLocations)) {
+            $this->hospitalLocations = array();
+            $cityList = array(
+                array(
+                    'id' => 1,
+                    'name' => "北京",
+                    'imageUrl' => ''),
+                array(
+                    'id' => 73,
+                    'name' => "上海",
+                    'imageUrl' => ''),
+                array(
+                    'id' => 74,
+                    'name' => "南京",
+                    'imageUrl' => ''),
+                array(
+                    'id' => 87,
+                    'name' => "杭州",
+                    'imageUrl' => '')
+            );
+            $this->setHospitalLocations($cityList);
+        }
+    }
+
+    /**
+     * 
+     * @param array $models array of ExpertTeam models.
+     */
+    public function setExpertTeams(array $models) {
+        foreach ($models as $model) {
+            $data = new stdClass();
+            $data->id = $model->getId();
+            $data->name = $model->getName();
+            $data->hpDept = $model->getHpDeptName();
+            $data->imageUrl = $model->getAppImageUrl();
+            $data->actionUrl = Yii::app()->createAbsoluteUrl('/api/view', array('model' => 'expertteam', 'id' => $model->getId()));
+            $this->expertteams[] = $data;
+        }
+    }
+
+    public function setBanners() {
+        $data = new stdClass();
+        $data->actionUrl = '';
+        $data->imageUrl = '';
+        $this->banners[] = $data;
+    }
+
+    /**
+     * 
+     * @param array $cityList
+     */
+    public function setHospitalLocations(array $cityList) {
+        foreach ($cityList as $city) {
+            $data = new stdClass();
+            $data->id = $city['id'];
+            $data->name = $city['name'];
+            $data->imageUrl = $city['imageUrl'];
+            $data->actionUrl = Yii::app()->createAbsoluteUrl("/api/list", array('model' => 'hospital', 'city' => $data->id));
+            $this->hospitalLocations[] = $data;
+        }
+    }
+
+}

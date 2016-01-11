@@ -1,0 +1,109 @@
+<?php
+
+class ExpertTeamManager {
+    
+    public function testLoad($id,$with=null){
+        $model = ExpertTeam::model()->getById($id, $with);
+    }
+
+    public function loadIExpertTeamJson($id) {
+        $output = $this->loadIExpertTeamById($id);
+        if (is_null($output)) {
+            return null;
+        } else {
+            return array('expertTeam' => $output);
+        }
+    }
+
+    public function loadIExpertTeamById($id, $with = null) {
+        if (is_null($with)) {
+            $with = array('expteamHospital', 'expteamLeader','expteamFaculty','expteamHpDept');
+        }
+        $model = $this->loadExpertTeamById($id, $with);
+        if(isset($model)){
+            $iteam = new IExpertTeam();
+            $iteam->initModel($model);
+            return $iteam;
+        }else {
+            return null;
+        }
+    }
+    
+    public function loadExpertTeamById($id, $with = null) {
+        $model = ExpertTeam::model()->getById($id, $with);
+        $model->getExpteamMembers();
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Record is not found.');
+        }
+        return $model;
+    }
+    
+    public function loadTeamById($id) {
+        $teamList = $this->loadTeamData();
+        if (is_array($teamList) && empty($teamList) === false) {
+            foreach ($teamList as $team) {
+                if ($team->teamId == $id) {
+                    return $team;
+                }
+            }
+        }
+        return null;
+    }
+
+    public function loadTeamByCode($code) {
+        $teamList = $this->loadTeamData();
+        if (is_array($teamList) && empty($teamList) === false) {
+            foreach ($teamList as $team) {
+                if ($team->teamCode == $code) {
+                    return $team;
+                }
+            }
+        }
+        return null;
+    }
+
+    // loads all teams belonging to given faculty.
+    public function loadTeamsByFacultyId($fid) {
+
+        $output = array();
+        $teamList = $this->loadTeamData();
+        if (is_array($teamList) && empty($teamList) === false) {
+            foreach ($teamList as $team) {
+                if ($team->facultyCode == $fid) {
+                    $output[] = $team;
+                }
+            }
+        }
+        return $output;
+    }
+
+    // loads only ONE team belonging to given faculty.
+    public function loadTeamByFacultyId($fid) {
+        $teamList = $this->loadTeamData();
+        if (is_array($teamList) && empty($teamList) === false) {
+            foreach ($teamList as $team) {
+                if ($team->facultyCode == $fid) {
+                    return $team;
+                }
+            }
+        }
+        return null;
+    }
+
+    public function loadTeamData() {
+        $teamData = new ExpertTeamData();
+        $teamList = $teamData->expertTeams;
+        foreach ($teamList as $team) {
+            // api url for viewing each team.
+            $team->teamUrl = Yii::app()->createAbsoluteUrl('api/view', array('model' => 'expertteam', 'id' => $team->teamId));
+            if ((isset($team->imageUrl) === false || $team->imageUrl == "") && isset($team->teamLeader)) {
+                $team->imageUrl = $team->teamLeader->imageUrl;
+            }
+            unset($team->surgeries);
+            unset($team->superiors);
+        }
+
+        return $teamList;
+    }
+
+}

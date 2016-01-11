@@ -1,0 +1,21 @@
+<?php
+
+class IBookingFile extends IFile {
+
+    public $bid;    // Booking.id
+    public $userId; // User.i
+
+    public function initModel(BookingFile $model) {
+        $this->id = $model->getId();
+        $this->userId = $model->getUserId();
+        $this->uid = $model->getUID();
+        $this->url = $model->getAbsFileUrl();
+        $this->urlTN = $model->getAbsThumbnailUrl();
+        $this->size = $model->getFileSize();
+        $this->fileName = $model->getFileName();
+        $this->fileExt = $model->getFileExtension();
+        $this->mimeType = $model->getMimeType();
+        $this->createDate = $model->getDateCreated();
+    }
+
+}

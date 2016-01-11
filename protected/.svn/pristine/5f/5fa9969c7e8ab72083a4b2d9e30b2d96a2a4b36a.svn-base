@@ -1,0 +1,143 @@
+<?php
+
+class BookingManager {
+
+    public function apiCreateBooking($values, $checkVerifyCode = true, $sendEmail = true) {
+        $output = array('status' => false);
+        $form = new BookingForm();
+        $form->setAttributes($values);
+        $form->status = Booking::STATUS_NEW;
+
+        $this->createBooking($form, $checkVerifyCode, $sendEmail);
+        if ($form->hasErrors()) {
+            $output['errors'] = $form->getFirstErrors();
+        } else {
+            $output['status'] = true;
+            $output['msg'] = '预约成功';
+        }
+
+        return $output;
+    }
+
+    public function createBooking(BookingForm $form, $checkVerifyCode = true, $sendEmail = true) {
+        if ($form->validate()) {
+            if ($checkVerifyCode) {
+                // Verifies AuthSmsVerify by using $mobile & $verifyCode.        
+                $userHostIp = Yii::app()->request->getUserHostAddress();
+                $authMgr = new AuthManager();
+                $authSmsVerify = $authMgr->verifyCodeForBooking($form->getMobile(), $form->getVerifyCode(), $userHostIp);
+                if ($authSmsVerify->isValid() === false) {
+                    $form->addError('verify_code', $authSmsVerify->getError('code'));
+                    return false;
+                }
+            }
+            // create new Booking model and save into db.
+            $model = new Booking();
+            $model->setAttributes($form->getSafeAttributes());
+
+            if ($model->save() === false) {
+                $form->addErrors($model->getErrors());
+            } else {
+                // deactive current smsverify.                
+                if (isset($authSmsVerify)) {
+                    $authMgr->deActiveAuthSmsVerify($authSmsVerify);
+                }
+                // Create BookingFile from $_FILES.
+                // saves uploaded files into filesystem and db.
+                $form->id = $model->getId();
+                $this->createBookingFiles($model->getId(), $model->getUserId());
+            }
+
+            if ($sendEmail) {
+                // Send email to inform admin.
+                $ibooking = $this->loadIBooking($form->id);
+                if (isset($ibooking)) {
+                    $emailMgr = new EmailManager();
+                    $emailMgr->sendEmailQuickBooking($ibooking);
+                }
+            }
+        }
+        return ($form->hasErrors() === false);
+    }
+
+    public function createBookingFiles($bookingId, $userId) {
+        $uploadField = BookingFile::model()->file_upload_field;
+        $files = EUploadedFile::getInstancesByName($uploadField);
+
+        $output = array();
+        if (arrayNotEmpty($files)) {
+            foreach ($files as $file) {
+                $output[] = $this->saveBookingFile($file, $bookingId, $userId);
+            }
+        }
+        return $output;
+    }
+
+    /**
+     * Get EUploadedFile from $_FILE. Create BookingFile model. Save file in filesystem. Save model in db.
+     * @param EUploadedFile $file EUploadedFile::getInstances()
+     * @param integer $bookingId Booking.id     
+     * @return BookingFile 
+     */
+    private function saveBookingFile($file, $bookingId, $userid) {
+        $bFile = new BookingFile();
+        $bFile->initModel($bookingId, $userid, $file);
+        $bFile->saveModel();
+
+        return $bFile;
+    }
+
+    public function loadIBooking($id, $with = null) {
+        if (is_null($with)) {
+            $with = array('owner', 'facultyBooked', 'doctorBooked', 'hospitalBooked', 'hospitalDeptBooked','bookingFiles');
+        }
+        $model = $this->loadBookingById($id, $with);
+        if (isset($model)) {
+            $ibooking = new IBooking();
+            $ibooking->initModel($model);
+            // BookingFiles.
+            if (in_array('bookingFiles', $with)) {
+                $bookingFiles = $model->getBookingFiles();
+                $ibooking->addFiles($bookingFiles);
+//                $ibooking->setFilesCount(count($bookingFiles)); // count no. of BookingFiles.
+            }
+//            if (in_array('countFiles', $with) && is_null($ibooking->getFilesCount())) {
+//                $countFiles = $model->getCountFiles();
+//                $ibooking->setFilesCount($countFiles);
+//            }
+            return $ibooking;
+        } else {
+            return null;
+        }
+    }
+
+    public function loadBookingById($id, $with = null) {
+        $model = Booking::model()->getById($id, $with);
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Record is not found.');
+        }
+        return $model;
+    }
+
+    public function loadBookingByRefNo($refno) {
+        $model = MedicalRecordBooking::model()->getByRefNo($refno);
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Record is not found.');
+        }
+        return $model;
+    }
+
+    /**
+     * 
+     * @param type $mobile
+     * @param type $code
+     * @param type $userIp
+     * @return type AuthSmsVerify
+     */
+    private function checkVerifyCode($mobile, $code, $userIp = null) {
+        $authMgr = new AuthManager();
+        $actionType = AuthSmsVerify::ACTION_BOOKING;
+        return $authMgr->verifyAuthSmsCode($mobile, $code, $actionType, $userIp);
+    }
+
+}

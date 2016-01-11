@@ -1,0 +1,34 @@
+==== Api 2.0 ====
+
+== 远程登录 ==
+url: http://192.168.31.240/MYZD/api/userlogin
+type: post
+params:
+	{userLogin:{username:"", password:""}}
+	
+== 远程注册 ==
+url: http://192.168.31.240/MYZD/api/userregister
+type: post
+params:
+	{userRegister:{username:"", password:"", verifyCode="", autoLogin:"1"}}
+
+autoLogin:1 - 注册用户成功之后系统自动登录并返回token。
+autoLogin:0 - 注册用户成功之后系统只返回status:true。
+
+
+== mobile site ==
+http://m.mingyihz.com/
+http://m.mingyihz.com/huizhen/
+http://m.mingyihz.com/hospital/
+http://m.mingyihz.com/overseas/
+http://m.mingyihz.com/app/contactus/
+
+== App ==
+http://api.mingyihz.com/?agent=app&header=1&footer=0
+http://api.mingyihz.com/huizhen/?agent=app&header=1&footer=0
+http://api.mingyihz.com/hospital/?agent=app&header=1&footer=0
+http://api.mingyihz.com/overseas/?agent=app&header=1&footer=0
+http://api.mingyihz.com/app/contactus/?agent=app&header=1&footer=0
+
+
+

@@ -1,0 +1,381 @@
+<?php
+
+class UserManager {
+
+    /**
+     * Login user.
+     * @param UserLoginForm $form
+     * @return type 
+     */
+    public function doLogin(UserLoginForm $form) {
+        return ($form->validate() && $form->login());
+    }
+
+    /**
+     * Auto login user.
+     * @param type $username
+     * @param type $password
+     * @param type $rememberMe
+     * @return type 
+     */
+    public function autoLoginUser($username, $password, $rememberMe = 0) {
+        $form = new UserLoginForm();
+        $form->username = $username;
+        $form->password = $password;
+        $form->rememberMe = $rememberMe;
+        $this->doLogin($form);
+
+        return $form;
+    }
+
+    public function registerNewUser(UserRegisterForm $form, $checkVerifyCode = true) {
+        if ($form->validate()) {
+            if ($checkVerifyCode) {
+                // check sms verify code.
+                $userIp = Yii::app()->request->getUserHostAddress();
+                $smsVerify = $this->checkVerifyCode($form->getUsername(), $form->getVerifyCode(), $userIp);
+
+                if (is_null($smsVerify)) {
+                    $form->addError('verify_code', AuthSmsVerify::getErrorMessage(AuthSmsVerify::ERROR_NOT_FOUND));
+                    return false;
+                } else if ($smsVerify->isValid() === false) {
+                    $form->addError('verify_code', $smsVerify->getError('code'));
+                    return false;
+                }
+            }
+            // create new User model and save into db.
+            $model = new User();
+            $model->username = $form->username;
+            $model->password_raw = $form->password;
+            $model->terms = $form->terms;
+            $model->createNewModel();
+            $model->setActivated();
+            if ($model->save() === false) {
+                $form->addErrors($model->getErrors());
+            } else {
+                // deactive current smsverify.
+                if (isset($smsVerify)) {
+                    $smsVerify->deActivateAllRecords();
+                }
+            }
+        }
+        return ($form->getErrors() === false);
+    }
+
+    public function doChangePassword(UserPasswordForm $passwordForm) {
+        $user = $passwordForm->getUser();
+        if ($passwordForm->validate()) {
+            if ($user->changePassword($passwordForm->getNewPassword()) === false) {
+                $passwordForm->addErrors($user->getErrors());
+            }
+        }
+        return ($passwordForm->hasErrors() === false);
+    }
+
+    public function validateCaptchaCode(UserRegisterForm $form) {
+        $form->scenario = 'getSmsCode';
+        return $form->validate();
+    }
+
+    /*
+      public function createUserSmsVerify($mobile, $actionType, $userIp=null) {
+      $userSmsVerify = new AuthSmsVerify();
+      //  $userSmsVerify->createSmsVerifyRegister($mobile);return $userSmsVerify;
+      if ($userSmsVerify->isActionValid($actionType)) {
+      $success = false;
+      if ($actionType == AuthSmsVerify::ACTION_REGISTER) {
+      $success = $userSmsVerify->createSmsVerifyRegister($mobile, $userIp);
+      } else if ($actionType == AuthSmsVerify::ACTION_PASSWORD_RESET) {
+      $success = $userSmsVerify->createSmsVerifyPasswordReset($mobile,$userIp);
+      } else {
+      //not implemented.
+      }
+      } else {
+      $userSmsVerify->addError('action_type', 'Invalid action type');
+      }
+
+      return $userSmsVerify;
+      }
+     */
+    /*     * ****** Old, Not used ******* */
+    /*
+      public function createUserFromRegister(RegisterForm $registerForm) {
+      if ($registerForm->validate()) {
+      $user = new User();
+      $user->scenario = $registerForm->scenario;
+      $user->mobile = $registerForm->username;
+      $user->password_raw = $registerForm->password;
+
+      $user->createNewModel();
+
+      $user->setAsActivated();
+
+      if ($user->save() === false) {
+      $registerForm->addErrors($user->getErrors());
+      }
+      }
+
+      return ($registerForm->hasErrors() === false);
+      }
+     * 
+     */
+
+    /**
+     * create a new local user and the user profile if info provided
+     * @param type $acctType User::ACCT_TYPE
+     * @param type $username email used to login
+     * @param type $password
+     * @return user name or email id 
+     */
+    public function createUser($username, $password, $acctType = User::ACCOUNT_LOCAL, $role = User::ROLE_USER, $userProfile = null, $validate = true) {
+        $user = new User();
+        $user->initModel($username, $password, null, $acctType, $role);
+        if ($user->save($validate) === false) {
+            return $user;
+        }
+        // create new user profile
+        if (isset($userProfile)) {
+            $user->setUserProfile($userProfile);
+            UserProfile::createUserProfile($acctType, $userProfile, $user->getId());
+        }
+        return $user;
+    }
+
+    /*
+      public function createUserActionActivate($userId) {
+      $userAction = new UserAuthAction();
+      $userAction->createActionActivate($userId);
+
+      return $userAction;
+      }
+
+      public function createUserActionPasswordReset($userId) {
+      $userAction = new UserAuthAction();
+      $userAction->createActionPasswordReset($userId);
+      return $userAction;
+      }
+     */
+
+    public function userExists($acctType, $username) {
+        return User::model()->exists('account_type=:acctType AND username=:username', array(':acctType' => $acctType, ':username' => $username));
+    }
+
+    /**
+     *
+     * @param type $userId
+     * @param type $uid
+     * @return type return 1 on success.
+     */
+    public function doActivateUser($userId, $uid) {
+        $user = User::model()->getById($userId);
+        if (isset($user) === false)
+            return 'Invalid request link.';
+        else if ($user->isActivated())
+            return 'The account is already activated.';
+        else {
+            $userAction = UserAuthAction::model()->getByUserIdAndUIDAndActionType($userId, $uid, UserAuthAction::ACTION_ACTIVATE);
+            if (isset($userAction) === false) {
+                return 'Invalid request link.';
+            }
+            //Check expiry.
+            if ($userAction->checkValidity() === false) {
+                return 'Your activation link is expired, please request for a new activation link.';
+            } else {
+                //Mark user as 'activated'.
+                $user->doActivate();
+                return 1;
+            }
+        }
+    }
+
+    public function doResetPassword($user, $userAction, $newPassword) {
+        if ($user->changePassword($newPassword)) {
+            // return $userAction->deActivateRecord();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Marks url as inactive at first access.
+     * @param type $userId
+     * @param type $uid
+     * @return type boolean
+     */
+    public function validatePasswordResetAction($userId, $uid) {
+        $user = User::model()->getById($userId);
+        if (isset($user) && $user->isLocalAccount()) {
+            $userAction = UserAuthAction::model()->getByUserIdAndUIDAndActionType($userId, $uid, UserAuthAction::ACTION_PASSWORD_RESET);
+            if (isset($userAction) && $userAction->checkValidity(false)) {
+                return $userAction;
+            }
+        }
+        return null;
+    }
+
+    public function loadUser($id, $with = null) {
+        $model = User::model()->getById($id, $with);
+        if (is_null($model)) {
+            throw new CHttpException(404, 'Not found.');
+        } else {
+            return $model;
+        }
+    }
+
+    public function updateUserProfile(UserProfileForm $profileForm) {
+        if ($profileForm->validate()) {
+            $profileForm->updateDOB();
+            $userId = $profileForm->getUserId();
+            $user = $this->loadInterfaceModel($userId, array('userProfile'));
+            if (isset($user)) {
+                $profile = $user->getUserProfile();
+                if (isset($profile) === false) {
+                    $profile = new UserProfile();
+                    $profile->setUserId($userId);
+                    $profile->dob = null;
+                    // $profile->setIsVerified(false);
+                }
+                $profile->attributes = $profileForm->attributes;
+                $profile->normalizeModel();
+
+                if ($profile->save() === false) {
+                    $profileForm->addErrors($profile->getErrors());
+                }
+            }
+            if ($profileForm->hasErrors() === false) {
+                //save email to user.
+                $user->email = $profileForm->email;
+                if ($user->save() === false) {
+                    $profileForm->addErrors($user->getErrors());
+                }
+            }
+        }
+        return ($profileForm->hasErrors() === false);
+    }
+
+    /**
+     * 
+     * @param type $mobile
+     * @param type $code
+     * @param type $userIp
+     * @return type AuthSmsVerify
+     */
+    private function checkVerifyCode($mobile, $code, $userIp = null) {
+        $authMgr = new AuthManager();
+        $actionType = AuthSmsVerify::ACTION_USER_REGISTER;
+        return $authMgr->verifyAuthSmsCode($mobile, $code, $actionType, $userIp);
+    }
+
+    /*
+      public function updateUserDisplayPhoto($userId) {
+      $user = User::model()->getById($userId, array('userDisplayPhoto'));
+      if (isset($user) === false)
+      return false;
+      else if (isset($user->userDisplayPhoto)) {
+      $dp = $user->userDisplayPhoto;
+      $dp->deleteModel(true);
+      }
+      //create new UserProfileImage.
+      $profileImage = new UserProfileImage();
+      $profileImage->setUserId($user->getId());
+      return $profileImage->saveImages($userId);
+      }
+     * 
+     */
+    /*
+      public function updateUserIdentityDocument($userId, $values) {
+
+      $user = User::model()->getById($userId, array('userIdentityDocument'));
+      if (isset($user) === false) {
+      //   return false;
+      }
+      $doc = new UserIdentityDocument();
+      if ($user->getUserIdentityDocument() === null) {
+      $doc->attributes = $values;
+      $doc->user_id = $userId;
+      $doc->approval_status = ApprovalStatusModel::APPROVAL_STATUS_PENDING;
+      } else {
+      $doc = $user->getUserIdentityDocument();
+      $doc->attributes = $values;
+      $doc->approval_status = ApprovalStatusModel::APPROVAL_STATUS_PENDING;
+      }
+
+
+      $doc->getUploadedImage();
+
+      $doc->save();
+
+      return $doc;
+      }
+     * 
+     */
+    /*
+      public function loadInterfaceModel($id, $with=null) {
+      // $iuser = User::model()->getById($id, $with);
+      $iuser = IUser::model()->getById($id, $with);
+      if ($iuser === null) {
+      throw new CHttpException(404, 'The requested page does not exist.');
+      }
+      $iuser->initModel();
+
+      return $iuser;
+      }
+     */
+
+    /**
+     * loads all types of notifications (booking, order).
+     * @param type $userId integer.
+     * @return $notify UserNotify.
+     */
+    /*
+      public function loadUserNotify(User $user) {
+      //$options = Booking::model()->getOptionsStatus();
+      $notify = new UserNotify();
+      if ($user->isTourGuide()) {
+      $orderCounts = Booking::model()->getAllNotifyCountByTourGuide($user->getId());
+      $notify->initOrderCount($orderCounts);
+      }
+      $bookCounts = Booking::model()->getAllNotifyCountByOwner($user->getId());
+      $notify->initBookingCount($bookCounts);
+
+      return $notify;
+      }
+     * 
+     */
+
+    /*     * ****** User Rating ******* */
+    /*
+      public function addUserRating($targetId, $creatorId, $score) {
+      $userRating = UserRating::model()->getByUserIdAndCreatorId($targetId, $creatorId);
+
+      if ($userRating === null) {
+      $userRating = new UserRating();
+      $userRating->user_id = $targetId;
+      $userRating->creator_id = $creatorId;
+      $userRating->score = $score;
+      $userRating->save();
+      } else {
+      $userRating->score = $score;
+      $userRating->save(true, array('score', 'date_updated'));
+      }
+      return $userRating->getErrors();
+      }
+
+      public function loadUserAvgRatingScore($userId, $currentUserId=null) {
+      $data = UserRating::model()->getAvgScoreByUserId($userId);
+      $data['id'] = $data['user_id'];
+      unset($data['user_id']);
+      $data['score'] = roundToNearestN($data['score'], 0.5);
+      $data['my_score'] = null;
+      if ($currentUserId !== null) {
+      $userRating = UserRating::model()->getByUserIdAndCreatorId($userId, $currentUserId);
+      if ($userRating !== null) {
+      $data['my_score'] = $userRating->getScore();
+      }
+      }
+      return $data;
+      }
+     * 
+     */
+}

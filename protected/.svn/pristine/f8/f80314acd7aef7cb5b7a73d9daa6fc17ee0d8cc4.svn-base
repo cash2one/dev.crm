@@ -1,0 +1,85 @@
+<?php
+
+class ApiViewBookingListV4 extends EApiViewService{
+    private $user;
+    
+    //初始化类的时候将参数注入
+    public function __construct($user) {
+        parent::__construct();
+        $this->results = new stdClass();
+        $this->user = $user;
+//        $this->bookingMgr = new BookingManager();
+//        $this->Bookings=array();
+    }
+
+    protected function loadData() {
+        // load PatientBooking by creatorId.
+        $this->loadBookings();        
+    }
+
+
+    //返回的参数
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'errorCode' => 0,
+                'errorMsg' => 'success',
+                'results' => $this->results->booking,
+            );
+        }
+    }
+    
+    //加载booking的数据
+    private function loadBookings(){
+        $models = Booking::model()->getAllByUserIdOrMobile($this->user->getId(), $this->user->getMobile());
+        $this->setBookings($models);
+    }
+    
+    private function setBookings($models){
+        foreach($models as $model){
+            $data = new stdClass();
+            $data->id = $model->getId();
+            $data->refNo = $model->getrefNo();
+//            $data->UserId = $model->getUserId();
+//            $data->mobile = $model->getMobile();
+//            $data->contactName = $model->getContactName();
+//            $data->contactEmail = $model->getContactEmail();
+//            $data->bkStatus = $model->getBkStatus();
+//            $data->bkType = $model->getBktype();
+//            $data->doctorId = $model->getDoctorId();
+            $data->doctorName = $model->getDoctorName();
+//            $data->expteamId = $model->getExpteamId();
+//            $data->expteamName = $model->getExpteamName();
+//            $data->cityId = $model->getCityId();
+//            $data->hospitalId = $model->getHospitalId();
+            $data->hpName = $model->gethospitalName();
+//            $data->expteamName = $model->getExpteamName();
+//            $data->hpDeptId = $model->getHpDeptId();
+            $data->hpDeptName = $model->gethpDeptName();
+//            $data->diseaseName = $model->getDiseaseName();
+//            $data->diseaseDtail = $model->getDiseaseDtail();
+            $data->dateStart = $model->getDateStart();
+            $data->dateEnd = $model->getDateEnd();
+            $data->actionUrl = Yii::app()->createAbsoluteUrl('/api/userbooking/'.$data->id);
+//            $data->apptDate = $model->getApptDate();
+//            $data->remark = $model->getRemark();
+            
+            $bookingFiles = $model->getBkFiles();
+            
+            if(arrayNotEmpty($bookingFiles)){
+                foreach ($bookingFiles as $bookingFile){
+                    $files = new stdClass();
+                    $files->id = $bookingFile->getId();
+                    $files->absFileUrl = $bookingFile->getAbsFileUrl();
+                    $files->absThumbnailUrl = $bookingFile->getAbsThumbnailUrl();
+                    $data->files[] = $files;
+                }
+            }else{
+                 $data->files[] = NULL;
+            }
+//
+            $this->results->booking[] = $data;
+        }
+    }
+}

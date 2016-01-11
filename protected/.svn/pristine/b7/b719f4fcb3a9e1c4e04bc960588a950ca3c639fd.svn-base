@@ -1,0 +1,110 @@
+<?php
+
+class ApiViewSalesOrder extends EApiViewService {
+
+    private $refNo;
+    private $salesOrder;
+    private $bkId;
+    private $bkType;
+    private $booking;
+
+    //初始化类的时候将参数注入
+    public function __construct($refNo) {
+        parent::__construct();
+        $this->refNo = $refNo;
+        $this->results = new stdClass();
+    }
+
+    protected function loadData() {
+        // load PatientBooking by creatorId.
+        $this->loadSalesOrder();
+        $this->loadBooking();
+    }
+
+    //返回的参数
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'errorCode' => 0,
+                'errorMsg' => 'success',
+                'results' => $this->results,
+            );
+        }
+    }
+
+    private function loadSalesOrder() {
+        $model = SalesOrder::model()->getByRefNo($this->refNo);
+        if (isset($model)) {
+            $this->setSalesOrder($model);
+        }else{
+            $this->results->salesOrder=null;
+        }
+    }
+
+    private function setSalesOrder(SalesOrder $model) {
+        $data = new stdClass();
+        $data->id = $model->getId();
+        $data->refNo = $model->ref_no;
+        $data->subject = $model->getSubject();
+        $data->description = $model->getDescription();
+        $data->finalAmount = $model->getFinalAmount();
+        $data->isPaid = $model->getIsPaid(false);
+        $data->isPaidText = $model->getIsPaid();
+        $data->orderType = $model->getOrderType();
+        $data->dateClose = $model->getDateClose();
+        //判断值
+        $this->bkId = $model->getBkId();
+        $this->bkType = $model->getBkType();
+        $this->salesOrder = $data;
+        $this->results->salesOrder = $this->salesOrder;
+    }
+
+    //加载booking数据
+    private function loadBooking() {
+        $model = null;
+        if ($this->bkType == StatCode::TRANS_TYPE_BK) {
+            $model = Booking::model()->getById($this->bkId);
+        } elseif ($this->bkType == StatCode::TRANS_TYPE_PB) {
+            $model = PatientBooking::model()->getById($this->bkId, array('pbDoctor'=>array('userDoctorProfile'), 'pbPatient', 'pbCreator'=>array('userDoctorProfile')));
+        }
+        if (isset($model)) {
+            $this->setBooking($model);
+        } else {
+            $this->results->booking = null;
+        }
+    }
+
+    private function setBooking($model) {
+        $data = new stdClass();
+        if ($model instanceof Booking) {
+            $data->patientName = $model->getContactName();
+            $data->mobile = $model->getMobile();
+            $data->expertBooked = $model->getExpertNameBooked();
+            $data->diseaseName = $model->getDiseaseName();
+            $data->diseaesDetail = $model->getDiseaseDetail();
+            $data->dataCreated = $model->getDateCreated('Y-m-d H:i:s');
+        } elseif ($model instanceof PatientBooking) {
+            $data->expertBooked = ''; // join patient_booking.doctor_id;
+            $data->mobile = '';
+            $data->patientName = '';
+            $doctor = $model->getDoctor();
+            if (isset($doctor) === false) {
+                $doctor = $model->getCreator();
+            }
+            $udp = $doctor->userDoctorProfile;
+            $data->expertBooked = $udp->getName();
+            $data->mobile = $doctor->getMobile();
+            $patient = $model->getPatient();
+            if (isset($patient)) {
+                $data->patientName = $patient->getName();
+            }
+            $data->diseaseName = '';
+            $data->diseaesDetail = $model->getDetail();
+            $data->dataCreated = $model->getDateCreated('Y-m-d H:i:s');
+        }
+        $this->booking = $data;
+        $this->results->booking = $this->booking;
+    }
+
+}

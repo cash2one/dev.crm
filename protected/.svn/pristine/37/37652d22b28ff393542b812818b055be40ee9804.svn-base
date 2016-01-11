@@ -1,0 +1,14 @@
+<?php
+
+abstract class IFile extends EViewModel {
+
+    public $uid;
+    public $url;
+    public $urlTN;
+    public $size;
+    public $fileName;
+    public $fileExt;
+    public $mimeType;
+    public $createDate;
+
+}

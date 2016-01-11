@@ -1,0 +1,214 @@
+<?php
+
+class AuthManager {
+
+    const ERROR_TOKEN_FAILED_CREATE = 101;
+
+    /*     * ****** AuthSmsVerify ******* */
+
+    public function apiSendAuthSmsVerifyCode($values) {
+        $output = array('status' => false);
+        if (isset($values['mobile']) == false || isset($values['actionType']) == false) {
+            $output['errors']['errorCode'] = 400;
+            $output['errors']['errorMsg'] = 'Wrong parameters.';
+            return $output;
+        }
+        $mobile = $values['mobile'];
+        $actionType = $values['actionType'];
+        $userHostIp = isset($values['userHostIp']) ? $values['userHostIp'] : null;
+
+        $errors = $this->sendAuthSmsVerifyCode($mobile, $actionType, $userHostIp);
+        if (empty($errors)) {
+            $output['status'] = true;
+        } else {
+            $output['errors'] = $errors;
+        }
+        return $output;
+    }
+
+    public function sendAuthSmsVerifyCode($mobile, $actionType, $userHostIp) {
+        $errors = array();
+        // create AuthSmsVerify record in db.
+        $smsVerify = $this->createAuthSmsVerify($mobile, $actionType, $userHostIp);
+
+        if (isset($smsVerify) === false) {
+            $errors[] = 'null model';
+            return $errors;
+        }
+        if ($smsVerify->hasErrors()) {
+            $errors = $smsVerify->getErrors();
+            return $errors;
+        }
+
+        // send sms verify code.
+        $smsMgr = new SmsManager();
+        $errors = $smsMgr->sendVerifyUserRegisterSms($smsVerify->getMobile(), $smsVerify->getCode(), $smsVerify->getExpiryDuration());
+
+        return $errors;
+    }
+
+    /**
+     * returns AuthSmsVerify regardless of failure.
+     * @param type $mobile
+     * @param type $code
+     * @param type $actionType
+     * @param type $userIp
+     * @return AuthSmsVerify
+     */
+    public function verifyAuthSmsCode($mobile, $code, $actionType, $userIp) {
+        // $userIp is not used.
+        $smsVerify = AuthSmsVerify::model()->getByMobileAndCodeAndActionType($mobile, $code, $actionType);
+        if (is_null($smsVerify)) {
+            $smsVerify = new AuthSmsVerify();
+            $smsVerify->addError('code', AuthSmsVerify::getErrorMessage(AuthSmsVerify::ERROR_NOT_FOUND));
+        } else {
+            $smsVerify->checkValidity();
+        }
+
+        return $smsVerify;
+    }
+
+    // verify code for user register.
+    public function verifyCodeForUserRegister($mobile, $code, $userIp) {
+        return $this->verifyAuthSmsCode($mobile, $code, AuthSmsVerify::ACTION_USER_REGISTER, $userIp);
+    }
+
+    /**
+     * 
+     * @param string $mobile
+     * @param integer $actionType
+     * @param string $userIp
+     * @return AuthSmsVerify
+     */
+    public function createAuthSmsVerify($mobile, $actionType, $userIp = null) {
+        $smsVerify = new AuthSmsVerify();
+        //  $userSmsVerify->createSmsVerifyRegister($mobile);return $userSmsVerify;
+
+        $success = false;
+        switch ($actionType) {
+            case AuthSmsVerify::ACTION_USER_REGISTER:
+                $success = $smsVerify->createSmsVerifyRegister($mobile, $userIp);
+                break;
+            case AuthSmsVerify::ACTION_USER_PASSWORD_RESET:
+                $success = $smsVerify->createSmsVerifyPasswordReset($mobile, $userIp);
+                break;
+            case AuthSmsVerify::ACTION_BOOKING:
+                $success = $smsVerify->createSmsVerifyBooking($mobile, $userIp);
+                break;
+            default:
+                $smsVerify->addError('action_type', 'Invalid action type');
+                break;
+        }
+
+        return $smsVerify;
+    }
+
+    public function deActiveAuthSmsVerify(AuthSmsVerify $smsVerify) {
+        if ($smsVerify->isActive()) {
+            $smsVerify->deActivateRecord();
+        }
+        // TODO: log error.
+
+        return $smsVerify;
+    }
+
+    public function deActivateAllAuthSmsVerify(AuthSmsVerify $smsVerify) {
+        $smsVerify->deActivateAllRecords();
+        //TODO: log error.
+
+        return $smsVerify;
+    }
+
+    /*     * ****** AuthTokenUser ******* */
+
+    /**
+     * 
+     * @param type $values = array('username'=>$username, 'password'=>$password, 'userHostIp'=>$userHostIp);
+     * @return string
+     */
+    public function apiTokenUserLogin($values) {
+        $output = array('status' => false);
+        // TODO: wrap the following method. first, validates the parameters in $values.        
+        if (isset($values['username']) == false || isset($values['password']) == false) {
+            $output['errorCode'] = 400;
+            $output['errorMsg'] = 'Wrong parameters.';
+            return $output;
+        }
+        $username = $values['username'];
+        $password = $values['password'];
+        $userHostIp = isset($values['userHostIp']) ? $values['userHostIp'] : null;
+
+        $output = $this->doTokenUserLogin($username, $password, $userHostIp);
+
+        return $output;
+    }
+
+    /**
+     * authenticates user with $username & $password. if true, creates a new AuthTokenUser and returns the token.
+     * @param string $username  username used for login
+     * @param string $password  password used for login.
+     * @param string $userHostIp    user's ip address.
+     * @return string AuthTokenUser.token.
+     */
+    public function doTokenUserLogin($username, $password, $userHostIp = null) {
+        $output = array('status' => false); // default status is false.
+        $authUserIdentity = $this->authenticateUserPassword($username, $password);
+        if ($authUserIdentity->isAuthenticated) {
+            // username and password are correct. continue to create AuthTokenUser.
+            $user = $authUserIdentity->getUser();
+            $tokenUser = $this->createTokenUser($user->getId(), $userHostIp, null);
+            if (isset($tokenUser)) {
+                $output['status'] = true;
+                $output['token'] = $tokenUser->getToken();
+                // TODO: log.
+            } else {
+                $output['errors']['errorCode'] = self::ERROR_TOKEN_FAILED_CREATE;
+                $output['errors']['errorMsg'] = '生成token失败!';
+                // TODO: log.
+            }
+        } else {
+            $output['errors']['errorCode'] = $authUserIdentity->errorCode;
+            $output['errors']['errorMsg'] = '用户名或密码不正确';
+        }
+        return $output;
+    }
+
+    public function authenticateUserPassword($username, $password) {
+        $authUserIdentity = new AuthUserIdentity($username, $password, AuthUserIdentity::AUTH_TYPE_PASSWORD);
+        $authUserIdentity->authenticate();
+
+        return $authUserIdentity;
+    }
+
+    public function authenticateUserToken($username, $token) {
+        $authUserIdentity = new AuthUserIdentity($username, $password, AuthUserIdentity::AUTH_TYPE_TOKEN);
+        $authUserIdentity->authenticate();
+
+        return $authUserIdentity;
+    }
+
+    public function createTokenUser($userId, $userHostIp, $userMacAddress = null, $deActivateFlag = true) {
+
+        $tokenUser = new AuthTokenUser();
+        $tokenUser->initModel($userId, $userHostIp, $userMacAddress);
+        if ($deActivateFlag) {
+            // deActivate all this user's tokens before creating a new one.
+            $tokenUser->deActivateAllOldTokens($userId);
+        }
+        $tokenUser->save();
+        return $tokenUser;
+    }
+
+    public function verifyTokenUser($token, $username) {
+        
+    }
+
+    /**
+     * TODO: delete this.
+     * @return string
+     */
+    public function getUsersWithAdminAccess() {
+        return 'admin';
+    }
+
+}

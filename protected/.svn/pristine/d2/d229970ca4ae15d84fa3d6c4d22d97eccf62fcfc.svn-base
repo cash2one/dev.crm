@@ -1,0 +1,938 @@
+CREATE DATABASE  IF NOT EXISTS `myzd` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `myzd`;
+-- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
+--
+-- Host: 127.0.0.1    Database: myzd
+-- ------------------------------------------------------
+-- Server version	5.5.24-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `doctor_specialty`
+--
+
+DROP TABLE IF EXISTS `doctor_specialty`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor_specialty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `faculty_id` int(11) NOT NULL,
+  `disease_id` int(11) NOT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='each doctor has many disease';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor_specialty`
+--
+
+LOCK TABLES `doctor_specialty` WRITE;
+/*!40000 ALTER TABLE `doctor_specialty` DISABLE KEYS */;
+/*!40000 ALTER TABLE `doctor_specialty` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `disease_faculty`
+--
+
+DROP TABLE IF EXISTS `disease_faculty`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `disease_faculty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `faculty_id` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `show` tinyint(4) DEFAULT '1',
+  `display_order` int(11) DEFAULT '0',
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `disease_faculty`
+--
+
+LOCK TABLES `disease_faculty` WRITE;
+/*!40000 ALTER TABLE `disease_faculty` DISABLE KEYS */;
+INSERT INTO `disease_faculty` (`id`, `faculty_id`, `name`, `description`, `show`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,1,'乙肝',NULL,1,0,NULL,NULL,NULL),(2,1,'糖尿病',NULL,1,0,NULL,NULL,NULL),(3,1,'肺炎',NULL,1,0,NULL,NULL,NULL),(4,1,'哮喘',NULL,1,0,NULL,NULL,NULL),(5,1,'类风湿',NULL,1,0,NULL,NULL,NULL),(6,1,'红斑狼疮',NULL,1,0,NULL,NULL,NULL),(7,1,'肾炎',NULL,1,0,NULL,NULL,NULL),(8,1,'脑梗塞',NULL,1,0,NULL,NULL,NULL),(9,2,'静脉曲张',NULL,1,0,NULL,NULL,NULL),(10,2,'乳腺纤维瘤',NULL,1,0,NULL,NULL,NULL),(11,2,'肾结石',NULL,1,0,NULL,NULL,NULL),(12,2,'三叉神经痛',NULL,1,0,NULL,NULL,NULL),(13,2,'颈椎病',NULL,1,0,NULL,NULL,NULL),(14,2,'唇腭裂',NULL,0,0,NULL,NULL,NULL),(15,3,'肺癌',NULL,1,0,NULL,NULL,NULL),(16,3,'肝癌',NULL,1,0,NULL,NULL,NULL),(17,3,'淋巴癌',NULL,1,0,NULL,NULL,NULL),(18,3,'胃癌',NULL,1,0,NULL,NULL,NULL),(19,3,'乳腺癌',NULL,1,0,NULL,NULL,NULL),(20,3,'肾癌',NULL,1,0,NULL,NULL,NULL),(21,3,'鼻癌',NULL,1,0,NULL,NULL,NULL),(22,3,'直肠癌',NULL,1,0,NULL,NULL,NULL),(23,3,'食道癌',NULL,0,0,NULL,NULL,NULL),(24,4,'卵巢囊肿',NULL,1,0,NULL,NULL,NULL),(25,4,'子宫肌瘤',NULL,0,0,NULL,NULL,NULL),(26,4,'盆腔炎',NULL,1,0,NULL,NULL,NULL),(27,4,'不孕不育',NULL,1,0,NULL,NULL,NULL),(28,4,'宫颈癌',NULL,1,0,NULL,NULL,NULL),(29,4,'卵巢癌',NULL,1,0,NULL,NULL,NULL),(48,5,'湿疹',NULL,1,0,NULL,NULL,NULL),(49,5,'儿童哮喘',NULL,1,0,NULL,NULL,NULL),(50,5,'癫痫',NULL,1,0,NULL,NULL,NULL),(51,5,'儿童肺炎',NULL,1,0,NULL,NULL,NULL),(52,5,'白血病',NULL,1,0,NULL,NULL,NULL),(53,5,'儿童心肌炎',NULL,0,0,NULL,NULL,NULL),(66,6,'心衰',NULL,1,0,NULL,NULL,NULL),(67,6,'心肌炎',NULL,1,0,NULL,NULL,NULL),(68,6,'心绞痛',NULL,1,0,NULL,NULL,NULL),(69,6,'风湿性心脏病',NULL,1,0,NULL,NULL,NULL),(70,6,'心肌梗死',NULL,1,0,NULL,NULL,NULL),(71,6,'急性心内膜炎',NULL,0,0,NULL,NULL,NULL),(83,8,'尖锐湿疣',NULL,1,0,NULL,NULL,NULL),(84,8,'慢阻肺',NULL,1,0,NULL,NULL,NULL),(85,8,'骨折',NULL,1,0,NULL,NULL,NULL),(86,8,'中毒',NULL,1,0,NULL,NULL,NULL),(87,8,'胰腺炎',NULL,1,0,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `disease_faculty` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `translate_source_message`
+--
+
+DROP TABLE IF EXISTS `translate_source_message`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `translate_source_message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(32) DEFAULT NULL,
+  `message` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `translate_source_message`
+--
+
+LOCK TABLES `translate_source_message` WRITE;
+/*!40000 ALTER TABLE `translate_source_message` DISABLE KEYS */;
+/*!40000 ALTER TABLE `translate_source_message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_profile`
+--
+
+DROP TABLE IF EXISTS `user_profile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `dob` datetime DEFAULT NULL,
+  `gender` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `city_id` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id_UNIQUE` (`user_id`),
+  CONSTRAINT `userId` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_profile`
+--
+
+LOCK TABLES `user_profile` WRITE;
+/*!40000 ALTER TABLE `user_profile` DISABLE KEYS */;
+INSERT INTO `user_profile` (`id`, `user_id`, `fullname`, `firstname`, `lastname`, `dob`, `gender`, `description`, `state_id`, `city_id`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,11,NULL,NULL,NULL,'1980-07-19 00:00:00',1,NULL,NULL,4,'2015-01-18 03:06:54','2015-01-25 00:14:46',NULL);
+/*!40000 ALTER TABLE `user_profile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `doctor_disease`
+--
+
+DROP TABLE IF EXISTS `doctor_disease`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor_disease` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `disease_id` int(11) NOT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `doctor_disease_idx` (`doctor_id`),
+  KEY `disease_disease_idx` (`disease_id`),
+  CONSTRAINT `disease_disease` FOREIGN KEY (`disease_id`) REFERENCES `disease` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `doctor_disease` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor_disease`
+--
+
+LOCK TABLES `doctor_disease` WRITE;
+/*!40000 ALTER TABLE `doctor_disease` DISABLE KEYS */;
+INSERT INTO `doctor_disease` (`id`, `doctor_id`, `disease_id`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,1,2,'2015-01-25 01:07:02','2015-01-25 01:07:02',NULL),(2,1,7,'2015-01-25 01:07:02','2015-01-25 01:07:02',NULL),(3,1,11,'2015-01-25 01:07:02','2015-01-25 01:07:02',NULL),(4,1,17,'2015-01-25 01:07:02','2015-01-25 01:07:02',NULL);
+/*!40000 ALTER TABLE `doctor_disease` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_auth_action`
+--
+
+DROP TABLE IF EXISTS `user_auth_action`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_auth_action` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `uid` char(40) NOT NULL,
+  `action_type` int(11) NOT NULL,
+  `is_active` tinyint(4) DEFAULT NULL,
+  `date_expiry` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_uid` (`user_id`,`uid`,`action_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_auth_action`
+--
+
+LOCK TABLES `user_auth_action` WRITE;
+/*!40000 ALTER TABLE `user_auth_action` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_auth_action` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mobile` varchar(11) NOT NULL,
+  `nickname` varchar(20) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `qq` varchar(45) NOT NULL,
+  `wechat` varchar(45) NOT NULL,
+  `weibo` varchar(45) NOT NULL,
+  `password` char(64) NOT NULL,
+  `salt` char(40) NOT NULL,
+  `password_raw` varchar(40) DEFAULT NULL,
+  `is_activated` tinyint(4) DEFAULT '0',
+  `date_activated` datetime DEFAULT NULL,
+  `last_login_time` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_acct_type` (`mobile`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` (`id`, `mobile`, `nickname`, `email`, `qq`, `wechat`, `weibo`, `password`, `salt`, `password_raw`, `is_activated`, `date_activated`, `last_login_time`, `date_created`, `date_updated`, `date_deleted`) VALUES (11,'91466636',NULL,'qin560.user1@gmail.com','','','','c9e67a044d4d1031cf1c14f855346de0a9adfd771316b31349d3429d6b0c4687','PFKV5w0y6lX7bUOYrxLSkgjmiG2h8BvTzHdWQEuC','1234',1,'2015-01-17 17:26:56','2015-01-24 16:14:41','2015-01-17 17:26:56','2015-01-25 00:14:46',NULL);
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `faculty`
+--
+
+DROP TABLE IF EXISTS `faculty`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `faculty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `descrption` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `faculty`
+--
+
+LOCK TABLES `faculty` WRITE;
+/*!40000 ALTER TABLE `faculty` DISABLE KEYS */;
+INSERT INTO `faculty` (`id`, `name`, `descrption`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'内科',NULL,NULL,NULL,NULL),(2,'外科',NULL,NULL,NULL,NULL),(3,'肿瘤',NULL,NULL,NULL,NULL),(4,'妇科',NULL,NULL,NULL,NULL),(5,'儿科',NULL,NULL,NULL,NULL),(6,'心脏',NULL,NULL,NULL,NULL),(7,'生殖科','',NULL,NULL,NULL),(8,'其他',NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `faculty` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `region_country`
+--
+
+DROP TABLE IF EXISTS `region_country`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `region_country` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` char(3) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `name_cn` varchar(45) DEFAULT NULL,
+  `alias` varchar(20) DEFAULT NULL,
+  `nest_level` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `phone_code` varchar(5) DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `tn_url` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code_UNIQUE` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `region_country`
+--
+
+LOCK TABLES `region_country` WRITE;
+/*!40000 ALTER TABLE `region_country` DISABLE KEYS */;
+INSERT INTO `region_country` (`id`, `code`, `name`, `name_cn`, `alias`, `nest_level`, `description`, `display_order`, `phone_code`, `image_url`, `tn_url`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'CHN','China','中国',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'SGP','Singapore','新加坡',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `region_country` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `common_code`
+--
+
+DROP TABLE IF EXISTS `common_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `common_code` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL,
+  `code` varchar(20) NOT NULL,
+  `display_name` varchar(45) DEFAULT NULL,
+  `display_name_cn` varchar(45) DEFAULT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code_type` (`type`,`code`),
+  KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `common_code`
+--
+
+LOCK TABLES `common_code` WRITE;
+/*!40000 ALTER TABLE `common_code` DISABLE KEYS */;
+/*!40000 ALTER TABLE `common_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `message_queue`
+--
+
+DROP TABLE IF EXISTS `message_queue`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `message_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `from_name` varchar(45) NOT NULL,
+  `from_email` varchar(128) NOT NULL,
+  `to_email` varchar(128) NOT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `message` text,
+  `max_attempts` tinyint(3) DEFAULT NULL,
+  `attempts` tinyint(1) DEFAULT '0',
+  `success` tinyint(1) DEFAULT '0',
+  `last_attempt` datetime DEFAULT NULL,
+  `date_sent` datetime DEFAULT NULL,
+  `date_read` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `message_queue`
+--
+
+LOCK TABLES `message_queue` WRITE;
+/*!40000 ALTER TABLE `message_queue` DISABLE KEYS */;
+/*!40000 ALTER TABLE `message_queue` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `hospital_faculty`
+--
+
+DROP TABLE IF EXISTS `hospital_faculty`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hospital_faculty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hospital_id` int(11) NOT NULL,
+  `faculty_id` int(11) NOT NULL,
+  `display_order` int(11) DEFAULT '0',
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='each hospital has many faculty.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `hospital_faculty`
+--
+
+LOCK TABLES `hospital_faculty` WRITE;
+/*!40000 ALTER TABLE `hospital_faculty` DISABLE KEYS */;
+/*!40000 ALTER TABLE `hospital_faculty` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contactus`
+--
+
+DROP TABLE IF EXISTS `contactus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contactus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `mobile` varchar(45) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `message` varchar(500) DEFAULT NULL,
+  `sent` tinyint(4) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contactus`
+--
+
+LOCK TABLES `contactus` WRITE;
+/*!40000 ALTER TABLE `contactus` DISABLE KEYS */;
+INSERT INTO `contactus` (`id`, `name`, `mobile`, `email`, `subject`, `message`, `sent`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'test','878909887','qin560.user1@gmail.com','test','Hello\r\nThis is my test message.',1,'2015-01-17 01:04:29','2015-01-17 01:04:29',NULL);
+/*!40000 ALTER TABLE `contactus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `doctor`
+--
+
+DROP TABLE IF EXISTS `doctor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mobile` char(11) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `password` char(64) NOT NULL,
+  `salt` char(40) NOT NULL,
+  `password_raw` varchar(45) DEFAULT NULL,
+  `hospital_id` int(11) NOT NULL,
+  `faculty` varchar(45) DEFAULT NULL,
+  `fullname` varchar(45) NOT NULL,
+  `title` varchar(45) NOT NULL,
+  `gender` int(11) NOT NULL,
+  `expertise` varchar(200) NOT NULL,
+  `wechat` varchar(45) DEFAULT NULL,
+  `tel` varchar(45) DEFAULT NULL,
+  `date_activated` datetime DEFAULT NULL,
+  `date_verified` datetime DEFAULT NULL,
+  `last_login_time` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `doctor_hospital_idx` (`hospital_id`),
+  CONSTRAINT `doctor_hospital` FOREIGN KEY (`hospital_id`) REFERENCES `hospital` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor`
+--
+
+LOCK TABLES `doctor` WRITE;
+/*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
+INSERT INTO `doctor` (`id`, `mobile`, `email`, `password`, `salt`, `password_raw`, `hospital_id`, `faculty`, `fullname`, `title`, `gender`, `expertise`, `wechat`, `tel`, `date_activated`, `date_verified`, `last_login_time`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'13866604066','','1234','',NULL,32,'耳鼻喉科','陈玉赞','1',1,'精通本专业的常规诊疗技术，擅长耳鼻咽喉科鼻内镜手术、各种肿瘤的手术治疗、耳显微手术、声显微手术、侧颅底手术、疑难气道异物的诊治、复杂颈外伤及顽固鼻出血的救治、耳源性颅内并发症的诊治。','','','2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(2,'13013167101','','1234','',NULL,32,'泌尿外科','陈志洁','1',1,'体外碎石、输尿管镜经皮肾镜钬激光碎石、前列腺等离子电切术、后腹腔镜下肾切除术、肾癌根治术、半尿路切除术、肾上腺肿瘤切除术、腹腔镜下全膀胱切除-原位新膀胱术、前列腺癌根治术。','','','2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(3,'13966608499','','1234','',NULL,32,'呼吸科','丁国正','2',0,'支气管哮喘，慢阻肺、呼吸衰竭、肺癌等疾病的诊治。','','','2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(4,'',NULL,'','',NULL,32,NULL,'朱宜春','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(5,'',NULL,'','',NULL,32,NULL,'何宏勋','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(6,'',NULL,'','',NULL,32,NULL,'朱慧芬','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(7,'',NULL,'','',NULL,32,NULL,'施炜','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(8,'',NULL,'','',NULL,32,NULL,'韩久怀','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(9,'',NULL,'','',NULL,32,NULL,'柳昔敖','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(10,'',NULL,'','',NULL,32,NULL,'郝玉萍','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(11,'',NULL,'','',NULL,29,NULL,'陈红','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(12,'',NULL,'','',NULL,30,NULL,'何涛','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(13,'',NULL,'','',NULL,30,NULL,'梁季鸿','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(14,'',NULL,'','',NULL,30,NULL,'梁永秀','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(15,'',NULL,'','',NULL,31,'急诊科','龚坚','2',0,'急诊科治疗',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(16,'',NULL,'','',NULL,31,'放射科 介入治疗科','马亦龙','1',1,'放射学诊断和介入治疗，专长放射学诊断及肺癌、肝癌、鼻咽癌、盆腔肿瘤、胃肠道肿瘤、食道癌及胆道恶性梗阻、椎间盘脱出症等的放射介入诊疗',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(17,'',NULL,'','',NULL,31,NULL,'左传田','',0,'',NULL,NULL,'2015-01-20 20:45:28',NULL,NULL,NULL,NULL,NULL),(20,'',NULL,'','',NULL,28,NULL,'Chew Tec Hock, Jeffrey','',0,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,'',NULL,'','',NULL,28,NULL,'Ming Tong','',0,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `core_session`
+--
+
+DROP TABLE IF EXISTS `core_session`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `core_session` (
+  `id` char(32) NOT NULL,
+  `expire` int(11) DEFAULT NULL,
+  `data` longblob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `core_session`
+--
+
+LOCK TABLES `core_session` WRITE;
+/*!40000 ALTER TABLE `core_session` DISABLE KEYS */;
+INSERT INTO `core_session` (`id`, `expire`, `data`) VALUES ('07sh7mivgaulaumksl45e3c3l4',1422169159,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:18:\"/myzd/user/account\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421522498;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";gii__returnUrl|s:9:\"/myzd/gii\";gii__id|s:5:\"yiier\";gii__name|s:5:\"yiier\";gii__states|a:0:{}'),('3365git4vb52fjlbidtmtqoqa3',1422384303,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:27:\"/myzd/medicalrecord/create2\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421754132;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('3kc3oatuf9va1bnvsic30i4hq1',1422128300,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:18:\"/myzd/user/account\";'),('4j9f0opdm9kfbl5rupfd2dn3j4',1422704506,'gii__returnUrl|s:23:\"/myzd/gii/default/index\";gii__id|s:5:\"yiier\";gii__name|s:5:\"yiier\";gii__states|a:0:{}1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:18:\"/myzd/user/account\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1422020549;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('6p2v4egte5qocjofo4iqvtopi3',1422443621,'gii__returnUrl|s:9:\"/myzd/gii\";gii__id|s:5:\"yiier\";gii__name|s:5:\"yiier\";gii__states|a:0:{}'),('87vun7gsl8qkk8jl1qlt7gi5b6',1422296878,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:26:\"/myzd/medicalrecord/create\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421676679;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('9849v6kp7qt4lcv24mnkbhn4e0',1422634407,''),('a6k3hammk5tevuk5ts5qsugks3',1422357351,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:27:\"/myzd/medicalrecord/create2\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421730444;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('bsodtos0mg3ebuqc62m8ng0t30',1422520223,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:32:\"/myzd/medicalRecord/create/did/3\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421853925;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('ci935p3htu1ltq3d5cgrir19r6',1422435648,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:18:\"/myzd/user/account\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421760644;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('fgknrvddsha7norib40995lg27',1422471200,'gii__returnUrl|s:9:\"/myzd/gii\";gii__id|s:5:\"yiier\";gii__name|s:5:\"yiier\";gii__states|a:0:{}1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:26:\"/myzd/medicalrecord/create\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421819836;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('fh5ps1lh7cgcmaglo1e41ekmm6',1422726209,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:18:\"/myzd/user/account\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1422092826;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('j73991mtcfjmkcsh08iqtcjm10',1422357635,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:27:\"/myzd/medicalrecord/create2\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421684860;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('jbaago5q0g89lqjong2ev32b82',1422362728,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:27:\"/myzd/medicalrecord/create2\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421752524;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('qke43d4tn3ijvbfo3eovupvch2',1422636459,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:27:\"/myzd/medicalrecord/create2\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421912566;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";gii__returnUrl|s:9:\"/myzd/gii\";gii__id|s:5:\"yiier\";gii__name|s:5:\"yiier\";gii__states|a:0:{}'),('rcimpdp9s0lf0uku5cv29qtt75',1422209801,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:19:\"/myzd/medicalRecord\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421587898;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";gii__returnUrl|s:9:\"/myzd/gii\";gii__id|s:5:\"yiier\";gii__name|s:5:\"yiier\";gii__states|a:0:{}'),('t5r506s5k1tdkcc62hpet1e4g4',1422287689,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:18:\"/myzd/user/account\";1d75d9c326100f10c8c0f189e9bbaf68__id|s:2:\"11\";1d75d9c326100f10c8c0f189e9bbaf68__name|s:8:\"91466636\";1d75d9c326100f10c8c0f189e9bbaf68lastLoginTime|i:1421602546;1d75d9c326100f10c8c0f189e9bbaf68__states|a:1:{s:13:\"lastLoginTime\";b:1;}1d75d9c326100f10c8c0f189e9bbaf68role|s:1:\"1\";'),('tfr4kebl02mvfg4fr8v5g69cj0',1422600629,''),('ut1u6qmk1e54tn1g8giav8tm82',1422160355,''),('v16j36lqjslgj0n3ud0v2nd7a1',1422267523,''),('v55jqjmrdce89srak05iqc1en6',1422721957,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:18:\"/myzd/user/account\";'),('vbqfsbkh7akjd8mjja1pgjpcc2',1422423744,'1d75d9c326100f10c8c0f189e9bbaf68__returnUrl|s:18:\"/myzd/user/account\";'),('vsfd1s4c5ndqsdtt58r999te57',1422278993,'');
+/*!40000 ALTER TABLE `core_session` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `region_city`
+--
+
+DROP TABLE IF EXISTS `region_city`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `region_city` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_name` varchar(45) DEFAULT NULL,
+  `country_code` char(3) DEFAULT NULL,
+  `state_name` varchar(45) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `name_cn` varchar(45) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `tn_url` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `country_city` (`code`,`country_code`),
+  KEY `country_code_idx` (`country_code`),
+  KEY `cityState_idx` (`state_id`),
+  CONSTRAINT `cityState` FOREIGN KEY (`state_id`) REFERENCES `region_state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=390 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `region_city`
+--
+
+LOCK TABLES `region_city` WRITE;
+/*!40000 ALTER TABLE `region_city` DISABLE KEYS */;
+INSERT INTO `region_city` (`id`, `country_name`, `country_code`, `state_name`, `state_id`, `code`, `name`, `name_cn`, `description`, `display_order`, `image_url`, `tn_url`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'中国','CHN','北京',1,NULL,'北京','北京',NULL,1,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(2,'中国','CHN','天津',2,NULL,'天津','天津',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(3,'中国','CHN','河北',3,NULL,'石家庄','石家庄',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(4,'中国','CHN','河北',3,NULL,'唐山','唐山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(5,'中国','CHN','河北',3,NULL,'秦皇岛','秦皇岛',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(6,'中国','CHN','河北',3,NULL,'邯郸','邯郸',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(7,'中国','CHN','河北',3,NULL,'邢台','邢台',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(8,'中国','CHN','河北',3,NULL,'保定','保定',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(9,'中国','CHN','河北',3,NULL,'张家口','张家口',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(10,'中国','CHN','河北',3,NULL,'承德','承德',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(11,'中国','CHN','河北',3,NULL,'沧州','沧州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(12,'中国','CHN','河北',3,NULL,'廊坊','廊坊',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(13,'中国','CHN','河北',3,NULL,'衡水','衡水',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(14,'中国','CHN','山西',4,NULL,'太原','太原',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(15,'中国','CHN','山西',4,NULL,'大同','大同',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(16,'中国','CHN','山西',4,NULL,'阳泉','阳泉',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(17,'中国','CHN','山西',4,NULL,'长治','长治',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(18,'中国','CHN','山西',4,NULL,'晋城','晋城',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(19,'中国','CHN','山西',4,NULL,'朔州','朔州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(20,'中国','CHN','山西',4,NULL,'晋中','晋中',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(21,'中国','CHN','山西',4,NULL,'运城','运城',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(22,'中国','CHN','山西',4,NULL,'忻州','忻州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(23,'中国','CHN','山西',4,NULL,'临汾','临汾',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(24,'中国','CHN','山西',4,NULL,'吕梁','吕梁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(25,'中国','CHN','内蒙古',5,NULL,'呼和浩特','呼和浩特',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(26,'中国','CHN','内蒙古',5,NULL,'包头','包头',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(27,'中国','CHN','内蒙古',5,NULL,'乌海','乌海',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(28,'中国','CHN','内蒙古',5,NULL,'赤峰','赤峰',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(29,'中国','CHN','内蒙古',5,NULL,'通辽','通辽',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(30,'中国','CHN','内蒙古',5,NULL,'鄂尔多斯','鄂尔多斯',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(31,'中国','CHN','内蒙古',5,NULL,'呼伦贝尔','呼伦贝尔',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(32,'中国','CHN','内蒙古',5,NULL,'巴彦淖尔','巴彦淖尔',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(33,'中国','CHN','内蒙古',5,NULL,'乌兰察布','乌兰察布',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(34,'中国','CHN','内蒙古',5,NULL,'兴安','兴安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(35,'中国','CHN','内蒙古',5,NULL,'锡林郭勒','锡林郭勒',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(36,'中国','CHN','内蒙古',5,NULL,'阿拉善','阿拉善',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(37,'中国','CHN','辽宁',6,NULL,'沈阳','沈阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(38,'中国','CHN','辽宁',6,NULL,'大连','大连',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(39,'中国','CHN','辽宁',6,NULL,'鞍山','鞍山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(40,'中国','CHN','辽宁',6,NULL,'抚顺','抚顺',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(41,'中国','CHN','辽宁',6,NULL,'本溪','本溪',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(42,'中国','CHN','辽宁',6,NULL,'丹东','丹东',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(43,'中国','CHN','辽宁',6,NULL,'锦州','锦州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(44,'中国','CHN','辽宁',6,NULL,'营口','营口',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(45,'中国','CHN','辽宁',6,NULL,'阜新','阜新',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(46,'中国','CHN','辽宁',6,NULL,'辽阳','辽阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(47,'中国','CHN','辽宁',6,NULL,'盘锦','盘锦',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(48,'中国','CHN','辽宁',6,NULL,'铁岭','铁岭',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(49,'中国','CHN','辽宁',6,NULL,'朝阳','朝阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(50,'中国','CHN','辽宁',6,NULL,'葫芦岛','葫芦岛',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(51,'中国','CHN','吉林',7,NULL,'长春','长春',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(52,'中国','CHN','吉林',7,NULL,'吉林','吉林',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(53,'中国','CHN','吉林',7,NULL,'四平','四平',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(54,'中国','CHN','吉林',7,NULL,'辽源','辽源',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(55,'中国','CHN','吉林',7,NULL,'通化','通化',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(56,'中国','CHN','吉林',7,NULL,'白山','白山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(57,'中国','CHN','吉林',7,NULL,'松原','松原',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(58,'中国','CHN','吉林',7,NULL,'白城','白城',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(59,'中国','CHN','吉林',7,NULL,'延边','延边',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(60,'中国','CHN','黑龙江',8,NULL,'哈尔滨','哈尔滨',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(61,'中国','CHN','黑龙江',8,NULL,'齐齐哈尔','齐齐哈尔',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(62,'中国','CHN','黑龙江',8,NULL,'鸡西','鸡西',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(63,'中国','CHN','黑龙江',8,NULL,'鹤岗','鹤岗',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(64,'中国','CHN','黑龙江',8,NULL,'双鸭山','双鸭山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(65,'中国','CHN','黑龙江',8,NULL,'大庆','大庆',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(66,'中国','CHN','黑龙江',8,NULL,'伊春','伊春',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(67,'中国','CHN','黑龙江',8,NULL,'佳木斯','佳木斯',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(68,'中国','CHN','黑龙江',8,NULL,'七台河','七台河',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(69,'中国','CHN','黑龙江',8,NULL,'牡丹江','牡丹江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(70,'中国','CHN','黑龙江',8,NULL,'黑河','黑河',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(71,'中国','CHN','黑龙江',8,NULL,'绥化','绥化',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(72,'中国','CHN','黑龙江',8,NULL,'大兴安岭','大兴安岭',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(73,'中国','CHN','上海',9,NULL,'上海','上海',NULL,2,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(74,'中国','CHN','江苏',10,NULL,'南京','南京',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(75,'中国','CHN','江苏',10,NULL,'无锡','无锡',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(76,'中国','CHN','江苏',10,NULL,'徐州','徐州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(77,'中国','CHN','江苏',10,NULL,'常州','常州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(78,'中国','CHN','江苏',10,NULL,'苏州','苏州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(79,'中国','CHN','江苏',10,NULL,'南通','南通',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(80,'中国','CHN','江苏',10,NULL,'连云港','连云港',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(81,'中国','CHN','江苏',10,NULL,'淮安','淮安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(82,'中国','CHN','江苏',10,NULL,'盐城','盐城',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(83,'中国','CHN','江苏',10,NULL,'扬州','扬州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(84,'中国','CHN','江苏',10,NULL,'镇江','镇江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(85,'中国','CHN','江苏',10,NULL,'泰州','泰州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(86,'中国','CHN','江苏',10,NULL,'宿迁','宿迁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(87,'中国','CHN','浙江',11,NULL,'杭州','杭州',NULL,3,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(88,'中国','CHN','浙江',11,NULL,'宁波','宁波',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(89,'中国','CHN','浙江',11,NULL,'温州','温州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(90,'中国','CHN','浙江',11,NULL,'嘉兴','嘉兴',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(91,'中国','CHN','浙江',11,NULL,'湖州','湖州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(92,'中国','CHN','浙江',11,NULL,'绍兴','绍兴',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(93,'中国','CHN','浙江',11,NULL,'金华','金华',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(94,'中国','CHN','浙江',11,NULL,'衢州','衢州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(95,'中国','CHN','浙江',11,NULL,'舟山','舟山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(96,'中国','CHN','浙江',11,NULL,'台州','台州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(97,'中国','CHN','浙江',11,NULL,'丽水','丽水',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(98,'中国','CHN','安徽',12,NULL,'合肥','合肥',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(99,'中国','CHN','安徽',12,NULL,'芜湖','芜湖',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(100,'中国','CHN','安徽',12,NULL,'蚌埠','蚌埠',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(101,'中国','CHN','安徽',12,NULL,'淮南','淮南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(102,'中国','CHN','安徽',12,NULL,'马鞍山','马鞍山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(103,'中国','CHN','安徽',12,NULL,'淮北','淮北',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(104,'中国','CHN','安徽',12,NULL,'铜陵','铜陵',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(105,'中国','CHN','安徽',12,NULL,'安庆','安庆',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(106,'中国','CHN','安徽',12,NULL,'黄山','黄山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(107,'中国','CHN','安徽',12,NULL,'滁州','滁州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(108,'中国','CHN','安徽',12,NULL,'阜阳','阜阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(109,'中国','CHN','安徽',12,NULL,'宿州','宿州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(110,'中国','CHN','安徽',12,NULL,'六安','六安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(111,'中国','CHN','安徽',12,NULL,'亳州','亳州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(112,'中国','CHN','安徽',12,NULL,'池州','池州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(113,'中国','CHN','安徽',12,NULL,'宣城','宣城',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(114,'中国','CHN','福建',13,NULL,'福州','福州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(115,'中国','CHN','福建',13,NULL,'厦门','厦门',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(116,'中国','CHN','福建',13,NULL,'莆田','莆田',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(117,'中国','CHN','福建',13,NULL,'三明','三明',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(118,'中国','CHN','福建',13,NULL,'泉州','泉州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(119,'中国','CHN','福建',13,NULL,'漳州','漳州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(120,'中国','CHN','福建',13,NULL,'南平','南平',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(121,'中国','CHN','福建',13,NULL,'龙岩','龙岩',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(122,'中国','CHN','福建',13,NULL,'宁德','宁德',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(123,'中国','CHN','江西',14,NULL,'南昌','南昌',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(124,'中国','CHN','江西',14,NULL,'景德镇','景德镇',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(125,'中国','CHN','江西',14,NULL,'萍乡','萍乡',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(126,'中国','CHN','江西',14,NULL,'九江','九江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(127,'中国','CHN','江西',14,NULL,'新余','新余',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(128,'中国','CHN','江西',14,NULL,'鹰潭','鹰潭',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(129,'中国','CHN','江西',14,NULL,'赣州','赣州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(130,'中国','CHN','江西',14,NULL,'吉安','吉安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(131,'中国','CHN','江西',14,NULL,'宜春','宜春',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(132,'中国','CHN','江西',14,NULL,'抚州','抚州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(133,'中国','CHN','江西',14,NULL,'上饶','上饶',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(134,'中国','CHN','山东',15,NULL,'济南','济南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(135,'中国','CHN','山东',15,NULL,'青岛','青岛',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(136,'中国','CHN','山东',15,NULL,'淄博','淄博',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(137,'中国','CHN','山东',15,NULL,'枣庄','枣庄',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(138,'中国','CHN','山东',15,NULL,'东营','东营',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(139,'中国','CHN','山东',15,NULL,'烟台','烟台',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(140,'中国','CHN','山东',15,NULL,'潍坊','潍坊',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(141,'中国','CHN','山东',15,NULL,'济宁','济宁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(142,'中国','CHN','山东',15,NULL,'泰安','泰安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(143,'中国','CHN','山东',15,NULL,'威海','威海',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(144,'中国','CHN','山东',15,NULL,'日照','日照',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(145,'中国','CHN','山东',15,NULL,'莱芜','莱芜',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(146,'中国','CHN','山东',15,NULL,'临沂','临沂',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(147,'中国','CHN','山东',15,NULL,'德州','德州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(148,'中国','CHN','山东',15,NULL,'聊城','聊城',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(149,'中国','CHN','山东',15,NULL,'滨州','滨州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(150,'中国','CHN','山东',15,NULL,'菏泽','菏泽',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(151,'中国','CHN','河南',16,NULL,'郑州','郑州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(152,'中国','CHN','河南',16,NULL,'开封','开封',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(153,'中国','CHN','河南',16,NULL,'洛阳','洛阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(154,'中国','CHN','河南',16,NULL,'平顶山','平顶山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(155,'中国','CHN','河南',16,NULL,'安阳','安阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(156,'中国','CHN','河南',16,NULL,'鹤壁','鹤壁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(157,'中国','CHN','河南',16,NULL,'新乡','新乡',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(158,'中国','CHN','河南',16,NULL,'焦作','焦作',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(159,'中国','CHN','河南',16,NULL,'濮阳','濮阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(160,'中国','CHN','河南',16,NULL,'许昌','许昌',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(161,'中国','CHN','河南',16,NULL,'漯河','漯河',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(162,'中国','CHN','河南',16,NULL,'三门峡','三门峡',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(163,'中国','CHN','河南',16,NULL,'南阳','南阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(164,'中国','CHN','河南',16,NULL,'商丘','商丘',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:03',NULL),(165,'中国','CHN','河南',16,NULL,'信阳','信阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(166,'中国','CHN','河南',16,NULL,'周口','周口',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(167,'中国','CHN','河南',16,NULL,'驻马店','驻马店',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(168,'中国','CHN','河南',16,NULL,'济源','济源',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(169,'中国','CHN','湖北',17,NULL,'武汉','武汉',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(170,'中国','CHN','湖北',17,NULL,'黄石','黄石',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(171,'中国','CHN','湖北',17,NULL,'十堰','十堰',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(172,'中国','CHN','湖北',17,NULL,'宜昌','宜昌',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(173,'中国','CHN','湖北',17,NULL,'襄阳','襄阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(174,'中国','CHN','湖北',17,NULL,'鄂州','鄂州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(175,'中国','CHN','湖北',17,NULL,'荆门','荆门',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(176,'中国','CHN','湖北',17,NULL,'孝感','孝感',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(177,'中国','CHN','湖北',17,NULL,'荆州','荆州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(178,'中国','CHN','湖北',17,NULL,'黄冈','黄冈',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(179,'中国','CHN','湖北',17,NULL,'咸宁','咸宁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(180,'中国','CHN','湖北',17,NULL,'随州','随州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(181,'中国','CHN','湖北',17,NULL,'恩施','恩施',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(182,'中国','CHN','湖北',17,NULL,'仙桃','仙桃',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(183,'中国','CHN','湖北',17,NULL,'潜江','潜江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(184,'中国','CHN','湖北',17,NULL,'天门','天门',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(185,'中国','CHN','湖北',17,NULL,'神农架','神农架',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(186,'中国','CHN','湖南',18,NULL,'长沙','长沙',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(187,'中国','CHN','湖南',18,NULL,'株洲','株洲',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(188,'中国','CHN','湖南',18,NULL,'湘潭','湘潭',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(189,'中国','CHN','湖南',18,NULL,'衡阳','衡阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(190,'中国','CHN','湖南',18,NULL,'邵阳','邵阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(191,'中国','CHN','湖南',18,NULL,'岳阳','岳阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(192,'中国','CHN','湖南',18,NULL,'常德','常德',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(193,'中国','CHN','湖南',18,NULL,'张家界','张家界',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(194,'中国','CHN','湖南',18,NULL,'益阳','益阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(195,'中国','CHN','湖南',18,NULL,'郴州','郴州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(196,'中国','CHN','湖南',18,NULL,'永州','永州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(197,'中国','CHN','湖南',18,NULL,'怀化','怀化',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(198,'中国','CHN','湖南',18,NULL,'娄底','娄底',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(199,'中国','CHN','湖南',18,NULL,'湘西','湘西',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(200,'中国','CHN','广东',19,NULL,'广州','广州',NULL,5,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(201,'中国','CHN','广东',19,NULL,'韶关','韶关',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(202,'中国','CHN','广东',19,NULL,'深圳','深圳',NULL,4,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(203,'中国','CHN','广东',19,NULL,'珠海','珠海',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(204,'中国','CHN','广东',19,NULL,'汕头','汕头',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(205,'中国','CHN','广东',19,NULL,'佛山','佛山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(206,'中国','CHN','广东',19,NULL,'江门','江门',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(207,'中国','CHN','广东',19,NULL,'湛江','湛江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(208,'中国','CHN','广东',19,NULL,'茂名','茂名',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(209,'中国','CHN','广东',19,NULL,'肇庆','肇庆',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(210,'中国','CHN','广东',19,NULL,'惠州','惠州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(211,'中国','CHN','广东',19,NULL,'梅州','梅州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(212,'中国','CHN','广东',19,NULL,'汕尾','汕尾',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(213,'中国','CHN','广东',19,NULL,'河源','河源',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(214,'中国','CHN','广东',19,NULL,'阳江','阳江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(215,'中国','CHN','广东',19,NULL,'清远','清远',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(216,'中国','CHN','广东',19,NULL,'东莞','东莞',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(217,'中国','CHN','广东',19,NULL,'中山','中山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(218,'中国','CHN','广东',19,NULL,'潮州','潮州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(219,'中国','CHN','广东',19,NULL,'揭阳','揭阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(220,'中国','CHN','广东',19,NULL,'云浮','云浮',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(221,'中国','CHN','广西',20,NULL,'南宁','南宁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(222,'中国','CHN','广西',20,NULL,'柳州','柳州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(223,'中国','CHN','广西',20,NULL,'桂林','桂林',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(224,'中国','CHN','广西',20,NULL,'梧州','梧州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(225,'中国','CHN','广西',20,NULL,'北海','北海',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(226,'中国','CHN','广西',20,NULL,'防城港','防城港',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(227,'中国','CHN','广西',20,NULL,'钦州','钦州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(228,'中国','CHN','广西',20,NULL,'贵港','贵港',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(229,'中国','CHN','广西',20,NULL,'玉林','玉林',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(230,'中国','CHN','广西',20,NULL,'百色','百色',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(231,'中国','CHN','广西',20,NULL,'贺州','贺州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(232,'中国','CHN','广西',20,NULL,'河池','河池',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(233,'中国','CHN','广西',20,NULL,'来宾','来宾',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(234,'中国','CHN','广西',20,NULL,'崇左','崇左',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(235,'中国','CHN','海南',21,NULL,'海口','海口',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(236,'中国','CHN','海南',21,NULL,'三亚','三亚',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(237,'中国','CHN','海南',21,NULL,'三沙','三沙',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(238,'中国','CHN','海南',21,NULL,'五指山','五指山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(239,'中国','CHN','海南',21,NULL,'琼海','琼海',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(240,'中国','CHN','海南',21,NULL,'儋州','儋州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(241,'中国','CHN','海南',21,NULL,'文昌','文昌',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(242,'中国','CHN','海南',21,NULL,'万宁','万宁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(243,'中国','CHN','海南',21,NULL,'东方','东方',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(244,'中国','CHN','海南',21,NULL,'定安','定安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(245,'中国','CHN','海南',21,NULL,'屯昌','屯昌',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(246,'中国','CHN','海南',21,NULL,'澄迈','澄迈',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(247,'中国','CHN','海南',21,NULL,'临高','临高',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(248,'中国','CHN','海南',21,NULL,'白沙','白沙',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(249,'中国','CHN','海南',21,NULL,'昌江','昌江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(250,'中国','CHN','海南',21,NULL,'乐东','乐东',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(251,'中国','CHN','海南',21,NULL,'陵水','陵水',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(252,'中国','CHN','海南',21,NULL,'保亭','保亭',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(253,'中国','CHN','海南',21,NULL,'琼中','琼中',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(254,'中国','CHN','重庆',22,NULL,'万州','万州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(255,'中国','CHN','四川',23,NULL,'成都','成都',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(256,'中国','CHN','四川',23,NULL,'自贡','自贡',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(257,'中国','CHN','四川',23,NULL,'攀枝花','攀枝花',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(258,'中国','CHN','四川',23,NULL,'泸州','泸州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(259,'中国','CHN','四川',23,NULL,'德阳','德阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(260,'中国','CHN','四川',23,NULL,'绵阳','绵阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(261,'中国','CHN','四川',23,NULL,'广元','广元',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(262,'中国','CHN','四川',23,NULL,'遂宁','遂宁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(263,'中国','CHN','四川',23,NULL,'内江','内江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(264,'中国','CHN','四川',23,NULL,'乐山','乐山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(265,'中国','CHN','四川',23,NULL,'南充','南充',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(266,'中国','CHN','四川',23,NULL,'眉山','眉山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(267,'中国','CHN','四川',23,NULL,'宜宾','宜宾',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(268,'中国','CHN','四川',23,NULL,'广安','广安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(269,'中国','CHN','四川',23,NULL,'达州','达州',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(270,'中国','CHN','四川',23,NULL,'雅安','雅安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(271,'中国','CHN','四川',23,NULL,'巴中','巴中',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(272,'中国','CHN','四川',23,NULL,'资阳','资阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(273,'中国','CHN','四川',23,NULL,'阿坝','阿坝',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(274,'中国','CHN','四川',23,NULL,'甘孜','甘孜',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(275,'中国','CHN','四川',23,NULL,'凉山','凉山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(276,'中国','CHN','贵州',24,NULL,'贵阳','贵阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(277,'中国','CHN','贵州',24,NULL,'六盘水','六盘水',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(278,'中国','CHN','贵州',24,NULL,'遵义','遵义',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(279,'中国','CHN','贵州',24,NULL,'安顺','安顺',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(280,'中国','CHN','贵州',24,NULL,'铜仁','铜仁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(281,'中国','CHN','贵州',24,NULL,'黔西南','黔西南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(282,'中国','CHN','贵州',24,NULL,'毕节','毕节',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(283,'中国','CHN','贵州',24,NULL,'黔东南','黔东南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(284,'中国','CHN','贵州',24,NULL,'黔南','黔南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(285,'中国','CHN','云南',25,NULL,'昆明','昆明',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(286,'中国','CHN','云南',25,NULL,'曲靖','曲靖',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(287,'中国','CHN','云南',25,NULL,'玉溪','玉溪',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(288,'中国','CHN','云南',25,NULL,'保山','保山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(289,'中国','CHN','云南',25,NULL,'昭通','昭通',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(290,'中国','CHN','云南',25,NULL,'丽江','丽江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(291,'中国','CHN','云南',25,NULL,'普洱','普洱',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(292,'中国','CHN','云南',25,NULL,'临沧','临沧',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(293,'中国','CHN','云南',25,NULL,'楚雄','楚雄',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(294,'中国','CHN','云南',25,NULL,'红河','红河',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(295,'中国','CHN','云南',25,NULL,'文山','文山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(296,'中国','CHN','云南',25,NULL,'西双版纳','西双版纳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(297,'中国','CHN','云南',25,NULL,'大理','大理',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(298,'中国','CHN','云南',25,NULL,'德宏','德宏',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(299,'中国','CHN','云南',25,NULL,'怒江','怒江',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(300,'中国','CHN','云南',25,NULL,'迪庆','迪庆',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(301,'中国','CHN','西藏',26,NULL,'拉萨','拉萨',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(302,'中国','CHN','西藏',26,NULL,'昌都','昌都',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(303,'中国','CHN','西藏',26,NULL,'山南','山南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(304,'中国','CHN','西藏',26,NULL,'日喀则','日喀则',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(305,'中国','CHN','西藏',26,NULL,'那曲','那曲',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(306,'中国','CHN','西藏',26,NULL,'阿里','阿里',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(307,'中国','CHN','西藏',26,NULL,'林芝','林芝',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(308,'中国','CHN','陕西',27,NULL,'西安','西安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(309,'中国','CHN','陕西',27,NULL,'铜川','铜川',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(310,'中国','CHN','陕西',27,NULL,'宝鸡','宝鸡',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(311,'中国','CHN','陕西',27,NULL,'咸阳','咸阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(312,'中国','CHN','陕西',27,NULL,'渭南','渭南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(313,'中国','CHN','陕西',27,NULL,'延安','延安',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(314,'中国','CHN','陕西',27,NULL,'汉中','汉中',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(315,'中国','CHN','陕西',27,NULL,'榆林','榆林',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(316,'中国','CHN','陕西',27,NULL,'安康','安康',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(317,'中国','CHN','陕西',27,NULL,'商洛','商洛',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(318,'中国','CHN','甘肃',28,NULL,'兰州市','兰州市',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(319,'中国','CHN','甘肃',28,NULL,'嘉峪关','嘉峪关',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(320,'中国','CHN','甘肃',28,NULL,'金昌','金昌',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(321,'中国','CHN','甘肃',28,NULL,'白银','白银',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(322,'中国','CHN','甘肃',28,NULL,'天水','天水',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(323,'中国','CHN','甘肃',28,NULL,'武威','武威',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(324,'中国','CHN','甘肃',28,NULL,'张掖','张掖',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(325,'中国','CHN','甘肃',28,NULL,'平凉','平凉',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(326,'中国','CHN','甘肃',28,NULL,'酒泉','酒泉',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(327,'中国','CHN','甘肃',28,NULL,'庆阳','庆阳',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(328,'中国','CHN','甘肃',28,NULL,'定西','定西',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(329,'中国','CHN','甘肃',28,NULL,'陇南','陇南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(330,'中国','CHN','甘肃',28,NULL,'临夏','临夏',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(331,'中国','CHN','甘肃',28,NULL,'甘南','甘南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(332,'中国','CHN','青海',29,NULL,'西宁','西宁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(333,'中国','CHN','青海',29,NULL,'海东','海东',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(334,'中国','CHN','青海',29,NULL,'海北','海北',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(335,'中国','CHN','青海',29,NULL,'黄南','黄南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(336,'中国','CHN','青海',29,NULL,'海南','海南',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(337,'中国','CHN','青海',29,NULL,'果洛','果洛',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(338,'中国','CHN','青海',29,NULL,'玉树','玉树',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(339,'中国','CHN','青海',29,NULL,'海西','海西',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(340,'中国','CHN','宁夏',30,NULL,'银川','银川',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(341,'中国','CHN','宁夏',30,NULL,'石嘴山','石嘴山',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(342,'中国','CHN','宁夏',30,NULL,'吴忠','吴忠',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(343,'中国','CHN','宁夏',30,NULL,'固原','固原',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(344,'中国','CHN','宁夏',30,NULL,'中卫','中卫',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(345,'中国','CHN','新疆',31,NULL,'乌鲁木齐','乌鲁木齐',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(346,'中国','CHN','新疆',31,NULL,'克拉玛依','克拉玛依',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(347,'中国','CHN','新疆',31,NULL,'吐鲁番','吐鲁番',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(348,'中国','CHN','新疆',31,NULL,'哈密','哈密',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(349,'中国','CHN','新疆',31,NULL,'昌吉','昌吉',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:04',NULL),(350,'中国','CHN','新疆',31,NULL,'博尔塔拉','博尔塔拉',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(351,'中国','CHN','新疆',31,NULL,'巴音郭楞','巴音郭楞',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(352,'中国','CHN','新疆',31,NULL,'阿克苏','阿克苏',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(353,'中国','CHN','新疆',31,NULL,'克孜勒苏','克孜勒苏',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(354,'中国','CHN','新疆',31,NULL,'喀什','喀什',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(355,'中国','CHN','新疆',31,NULL,'和田','和田',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(356,'中国','CHN','新疆',31,NULL,'伊犁','伊犁',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(357,'中国','CHN','新疆',31,NULL,'塔城','塔城',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(358,'中国','CHN','新疆',31,NULL,'阿勒泰','阿勒泰',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(359,'中国','CHN','新疆',31,NULL,'石河子','石河子',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(360,'中国','CHN','新疆',31,NULL,'阿拉尔','阿拉尔',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(361,'中国','CHN','新疆',31,NULL,'图木舒克','图木舒克',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(362,'中国','CHN','新疆',31,NULL,'五家渠','五家渠',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(363,'中国','CHN','新疆',31,NULL,'北屯','北屯',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(387,'中国','CHN','香港',33,NULL,'香港','香港',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(388,'中国','CHN','澳门',34,NULL,'澳门','澳门',NULL,9999,NULL,NULL,NULL,'2014-09-15 22:29:05',NULL),(389,'新加坡','SGP','新加坡',35,NULL,'新加坡','新加坡',NULL,1,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `region_city` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `hospital`
+--
+
+DROP TABLE IF EXISTS `hospital`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hospital` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_id` int(11) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `city_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `short_name` varchar(45) DEFAULT NULL,
+  `address` varchar(100) NOT NULL,
+  `phone` varchar(45) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `hospital`
+--
+
+LOCK TABLES `hospital` WRITE;
+/*!40000 ALTER TABLE `hospital` DISABLE KEYS */;
+INSERT INTO `hospital` (`id`, `country_id`, `state_id`, `city_id`, `name`, `short_name`, `address`, `phone`, `description`, `website`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,1,9,73,'上海瑞金医院','瑞金医院','',NULL,NULL,NULL,NULL,NULL,NULL),(2,1,9,73,'长征医院','长征医院','',NULL,NULL,NULL,NULL,NULL,NULL),(3,1,9,73,'红房子医院','红房子医院','',NULL,NULL,NULL,NULL,NULL,NULL),(4,1,9,73,'长海医院','长海医院','',NULL,NULL,NULL,NULL,NULL,NULL),(5,1,9,73,'沃德医疗中心','沃德医疗中心','',NULL,NULL,NULL,NULL,NULL,NULL),(6,1,9,73,'东方医院','东方医院','',NULL,NULL,NULL,NULL,NULL,NULL),(7,1,9,73,'龙华医院','龙华医院','',NULL,NULL,NULL,NULL,NULL,NULL),(8,1,9,73,'上海肿瘤医院','肿瘤医院','',NULL,NULL,NULL,NULL,NULL,NULL),(9,1,9,73,'上海周浦医院','周浦医院','',NULL,NULL,NULL,NULL,NULL,NULL),(10,1,9,73,'上海的东方肝胆外科医院','东方肝胆外科医院','',NULL,NULL,NULL,NULL,NULL,NULL),(11,1,1,1,'协和医院','协和医院','',NULL,NULL,NULL,NULL,NULL,NULL),(12,1,1,1,'301医院','301医院','',NULL,NULL,NULL,NULL,NULL,NULL),(13,1,1,1,'北医三院','北医三院','',NULL,NULL,NULL,NULL,NULL,NULL),(14,1,1,1,'同仁医院','同仁医院','',NULL,NULL,NULL,NULL,NULL,NULL),(15,1,1,1,'人民医院','人民医院','',NULL,NULL,NULL,NULL,NULL,NULL),(16,1,1,1,'北大医院','北大医院','',NULL,NULL,NULL,NULL,NULL,NULL),(17,1,1,1,'北大肿瘤','北大肿瘤','',NULL,NULL,NULL,NULL,NULL,NULL),(18,1,1,1,'北京中医院','北京中医院','',NULL,NULL,NULL,NULL,NULL,NULL),(19,1,19,200,'广东省中医院','中医院','',NULL,NULL,NULL,NULL,NULL,NULL),(20,1,19,200,'广东省人民医院','人民医院','',NULL,NULL,NULL,NULL,NULL,NULL),(21,1,19,200,'中山二元','中山二元','',NULL,NULL,NULL,NULL,NULL,NULL),(22,1,19,200,'军区总医院','军区总医院','',NULL,NULL,NULL,NULL,NULL,NULL),(23,1,19,200,'广州妇儿中心','广州妇儿中心','',NULL,NULL,NULL,NULL,NULL,NULL),(24,1,19,202,'深圳北大医院','北大医院','',NULL,NULL,NULL,NULL,NULL,NULL),(25,1,19,202,'深圳仁爱医院','仁爱医院','',NULL,NULL,NULL,NULL,NULL,NULL),(26,1,19,202,'深圳儿童医院','儿童医院','',NULL,NULL,NULL,NULL,NULL,NULL),(28,2,35,389,'伊丽莎白医院','伊丽莎白医院','',NULL,NULL,NULL,NULL,NULL,NULL),(29,1,20,222,'广西中医药大学第一附属医院','中医药大学第一附属医院','',NULL,NULL,NULL,NULL,NULL,NULL),(30,1,20,222,'广西医科大学第一附属医院','医科大学第一附属医院','',NULL,NULL,NULL,NULL,NULL,NULL),(31,1,20,222,'广西医科大学附属肿瘤医院','医科大学附属肿瘤医院','',NULL,NULL,NULL,NULL,NULL,NULL),(32,1,12,105,'安徽省安庆市立医院','安庆市立医院','',NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `hospital` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `email_template`
+--
+
+DROP TABLE IF EXISTS `email_template`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `view` varchar(45) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `sender` varchar(255) NOT NULL,
+  `sender_name` varchar(45) DEFAULT NULL,
+  `to_email` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email_template`
+--
+
+LOCK TABLES `email_template` WRITE;
+/*!40000 ALTER TABLE `email_template` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_template` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `disease`
+--
+
+DROP TABLE IF EXISTS `disease`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `disease` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `show` tinyint(4) NOT NULL DEFAULT '1',
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `disease_category_idx` (`category_id`),
+  CONSTRAINT `disease_category` FOREIGN KEY (`category_id`) REFERENCES `disease_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `disease`
+--
+
+LOCK TABLES `disease` WRITE;
+/*!40000 ALTER TABLE `disease` DISABLE KEYS */;
+INSERT INTO `disease` (`id`, `category_id`, `name`, `show`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,1,'肺癌',1,NULL,NULL,NULL,NULL),(2,1,'肝癌',1,NULL,NULL,NULL,NULL),(3,1,'淋巴癌',1,NULL,NULL,NULL,NULL),(4,1,'胃癌',1,NULL,NULL,NULL,NULL),(5,1,'乳腺癌',1,NULL,NULL,NULL,NULL),(6,1,'肾癌',1,NULL,NULL,NULL,NULL),(7,1,'鼻癌',1,NULL,NULL,NULL,NULL),(8,1,'直肠癌',1,NULL,NULL,NULL,NULL),(9,2,'脑血管病',1,NULL,NULL,NULL,NULL),(10,2,'癫痫',1,NULL,NULL,NULL,NULL),(11,2,'帕金森',1,NULL,NULL,NULL,NULL),(12,2,'脑炎',1,NULL,NULL,NULL,NULL),(13,2,'重症肌无力',1,NULL,NULL,NULL,NULL),(14,2,'多发性硬化肌病',1,NULL,NULL,NULL,NULL),(15,2,'脑膜瘤',1,NULL,NULL,NULL,NULL),(16,2,'脑肿瘤',1,NULL,NULL,NULL,NULL),(17,2,'垂体瘤',1,NULL,NULL,NULL,NULL),(18,2,'运动神经元病',1,NULL,NULL,NULL,NULL),(19,3,'心衰',1,NULL,NULL,NULL,NULL),(20,3,'房间隔缺损',1,NULL,NULL,NULL,NULL),(21,3,'先天性心脏病',1,NULL,NULL,NULL,NULL),(22,3,'心肌炎',1,NULL,NULL,NULL,NULL),(23,3,'风湿性心脏病',1,NULL,NULL,NULL,NULL),(24,3,'心肌梗死',1,NULL,NULL,NULL,NULL),(25,3,'急性感染性心内膜炎',1,NULL,NULL,NULL,NULL),(26,3,'动脉粥样硬化',1,NULL,NULL,NULL,NULL),(27,3,'三尖瓣下移畸形',1,NULL,NULL,NULL,NULL),(28,4,'反流性食管炎',1,NULL,NULL,NULL,NULL),(29,4,'胃炎',1,NULL,NULL,NULL,NULL),(30,4,'胃溃疡',1,NULL,NULL,NULL,NULL),(31,4,'肠癌',1,NULL,NULL,NULL,NULL),(32,4,'胰腺炎',1,NULL,NULL,NULL,NULL),(33,4,'肠炎',1,NULL,NULL,NULL,NULL),(34,4,'食管癌',1,NULL,NULL,NULL,NULL),(35,4,'胃癌',1,NULL,NULL,NULL,NULL),(36,4,'胰腺癌',1,NULL,NULL,NULL,NULL),(37,4,'肠梗阻',1,NULL,NULL,NULL,NULL),(38,4,'胆管癌',1,NULL,NULL,NULL,NULL),(39,4,'肝癌',1,NULL,NULL,NULL,NULL),(40,4,'肝硬化',1,NULL,NULL,NULL,NULL),(41,5,'肺炎',1,NULL,NULL,NULL,NULL),(42,5,'肺癌',1,NULL,NULL,NULL,NULL),(43,5,'肺结核',1,NULL,NULL,NULL,NULL),(44,5,'哮喘',1,NULL,NULL,NULL,NULL),(45,5,'支气管炎',1,NULL,NULL,NULL,NULL),(46,5,'肾炎',1,NULL,NULL,NULL,NULL),(47,5,'肾结石',1,NULL,NULL,NULL,NULL),(48,5,'肾衰',1,NULL,NULL,NULL,NULL),(49,5,'肾病综合征',1,NULL,NULL,NULL,NULL),(50,6,'白血病',1,NULL,NULL,NULL,NULL),(51,6,'淋巴瘤',1,NULL,NULL,NULL,NULL),(52,6,'不孕不育',1,NULL,NULL,NULL,NULL),(53,6,'糖尿病',1,NULL,NULL,NULL,NULL),(54,6,'甲亢',1,NULL,NULL,NULL,NULL),(55,6,'子宫肌瘤',1,NULL,NULL,NULL,NULL),(56,6,'红斑狼疮',1,NULL,NULL,NULL,NULL),(57,6,'中医科',1,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `disease` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `medical_record`
+--
+
+DROP TABLE IF EXISTS `medical_record`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `medical_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_id` int(11) NOT NULL,
+  `title` varchar(45) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `fullname` varchar(45) DEFAULT NULL,
+  `gender` int(11) NOT NULL,
+  `dob` datetime NOT NULL,
+  `mobile` varchar(45) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `city_id` int(11) DEFAULT NULL,
+  `remark` varchar(500) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `medicalrecord_patient_idx` (`patient_id`),
+  KEY `medicalrecord_city_idx` (`city_id`),
+  CONSTRAINT `medicalrecord_city` FOREIGN KEY (`city_id`) REFERENCES `region_city` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `medicalrecord_patient` FOREIGN KEY (`patient_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `medical_record`
+--
+
+LOCK TABLES `medical_record` WRITE;
+/*!40000 ALTER TABLE `medical_record` DISABLE KEYS */;
+INSERT INTO `medical_record` (`id`, `patient_id`, `title`, `status`, `fullname`, `gender`, `dob`, `mobile`, `email`, `city_id`, `remark`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,11,'肺癌病历一号',1,'王小明',1,'1974-09-24 00:00:00','91466636','qin560.user1@gmail.com',1,'天天咳嗽不停','2015-01-18 23:27:05','2015-01-18 23:27:05',NULL),(3,11,'肺癌病历二号',2,'王小明',2,'1970-07-13 00:00:00','91466636','qin560.user1@gmail.com',87,'没事','2015-01-18 23:42:50','2015-01-18 23:42:50',NULL),(5,11,'肺癌病历三号',1,'王小明',2,'1973-09-17 00:00:00','91466636','qin560.user1@gmail.com',200,'全身不舒服','2015-01-21 23:30:10','2015-01-21 23:30:10',NULL),(6,11,'肺癌病历三号',1,'王小明',2,'1973-09-17 00:00:00','91466636','qin560.user1@gmail.com',200,'全身不舒服','2015-01-21 23:31:47','2015-01-21 23:31:47',NULL),(7,11,'肺癌病历一号',1,'王小明',2,'2001-09-15 00:00:00','91466636','qin560.user1@gmail.com',4,'','2015-01-21 23:37:17','2015-01-21 23:37:17',NULL);
+/*!40000 ALTER TABLE `medical_record` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `doctor_avatar`
+--
+
+DROP TABLE IF EXISTS `doctor_avatar`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor_avatar` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` char(40) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `file_type` varchar(10) DEFAULT NULL,
+  `file_url` varchar(255) DEFAULT NULL,
+  `thumbnail_url` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `doctor_id_UNIQUE` (`doctor_id`),
+  UNIQUE KEY `uid_UNIQUE` (`uid`),
+  CONSTRAINT `doctorAvatar` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor_avatar`
+--
+
+LOCK TABLES `doctor_avatar` WRITE;
+/*!40000 ALTER TABLE `doctor_avatar` DISABLE KEYS */;
+INSERT INTO `doctor_avatar` (`id`, `uid`, `doctor_id`, `file_type`, `file_url`, `thumbnail_url`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'4D44AF15ABD8F6ED91C3100AF1906127534BA723',5,'jpg','upload/doctor/avatar/F96E8249F6E44AE5CCE48116DC59FE48.jpg','upload/doctor/avatar/F96E8249F6E44AE5CCE48116DC59FE48tn.jpg',NULL,'2015-01-23 22:56:03','2015-01-23 22:56:03',NULL),(2,'32A0A64F7F8F13B8C854D565A7438C3AE53EB3CF',6,'jpg','upload/doctor/avatar/2833E0D1E8B5F5DA055A0886D4CA00B2.jpg','upload/doctor/avatar/2833E0D1E8B5F5DA055A0886D4CA00B2tn.jpg',NULL,'2015-01-23 22:58:12','2015-01-23 22:58:12',NULL),(3,'FA2DA8417142C4D6967011F97AA493CB7D288A59',8,'jpg','upload/doctor/avatar/88C13D363F6637D2E9238B3FC746E039.jpg','upload/doctor/avatar/88C13D363F6637D2E9238B3FC746E039tn.jpg',NULL,'2015-01-23 22:59:48','2015-01-23 22:59:48',NULL),(4,'F8AF8F1511A5C6F586F041D2B67AB41FDDA445C6',9,'jpg','upload/doctor/avatar/09D49CC5C4DD802C1E8B5E50BE8F9D47.jpg','upload/doctor/avatar/09D49CC5C4DD802C1E8B5E50BE8F9D47tn.jpg',NULL,'2015-01-23 23:01:04','2015-01-23 23:01:04',NULL),(5,'432BA886DBD6D5860ED43E5188BB2A0ED19374BE',10,'jpg','upload/doctor/avatar/12539115FFAE172E7585560E9091805E.jpg','upload/doctor/avatar/12539115FFAE172E7585560E9091805Etn.jpg',NULL,'2015-01-23 23:02:27','2015-01-23 23:02:27',NULL),(7,'271AC7E77149CE2BD3997386FB7A72F37A7265FF',12,'jpg','upload/doctor/avatar/BDA7DBB2869DB0BB1C9CE50367BAE78A.jpg','upload/doctor/avatar/BDA7DBB2869DB0BB1C9CE50367BAE78Atn.jpg',NULL,'2015-01-23 23:03:20','2015-01-23 23:03:20',NULL),(8,'FCC0E8B66811E1906F169E3F1D0F30AD50B5D86A',13,'jpg','upload/doctor/avatar/AD675A98A3395C62A67C856BE2BCCBCA.jpg','upload/doctor/avatar/AD675A98A3395C62A67C856BE2BCCBCAtn.jpg',NULL,'2015-01-23 23:04:56','2015-01-23 23:04:56',NULL),(9,'72B95B65E0243058175AAB3E8520EC9565924566',14,'jpg','upload/doctor/avatar/9B9EED94000997387B723ED4948FA7E3.jpg','upload/doctor/avatar/9B9EED94000997387B723ED4948FA7E3tn.jpg',NULL,'2015-01-23 23:05:55','2015-01-23 23:05:55',NULL),(10,'0AF9B76853F7631DDA0ABE8E415528101389DED8',16,'jpg','upload/doctor/avatar/2B571F7705EC15CDA860DF20EC1710D2.jpg','upload/doctor/avatar/2B571F7705EC15CDA860DF20EC1710D2tn.jpg',NULL,'2015-01-23 23:06:24','2015-01-23 23:06:24',NULL),(11,'020B22E87C97B1D9DCCD0C8C5454017559DA6804',17,'jpg','upload/doctor/avatar/27A46BA88293A909C81D1B9AFC4D39F6.jpg','upload/doctor/avatar/27A46BA88293A909C81D1B9AFC4D39F6tn.jpg',NULL,'2015-01-23 23:06:46','2015-01-23 23:06:46',NULL),(12,'7E00AC0AF1C5ABA5605A1954624BBDFF5D0AD37F',20,'jpg','upload/doctor/avatar/C78AA755C637F29D7BF5E2A00AE0E973.jpg','upload/doctor/avatar/C78AA755C637F29D7BF5E2A00AE0E973tn.jpg',NULL,'2015-01-23 23:07:08','2015-01-23 23:07:08',NULL);
+/*!40000 ALTER TABLE `doctor_avatar` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `medical_record_file`
+--
+
+DROP TABLE IF EXISTS `medical_record_file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `medical_record_file` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` char(40) NOT NULL,
+  `record_id` int(11) NOT NULL,
+  `doc_type` int(11) NOT NULL,
+  `file_type` varchar(10) DEFAULT NULL,
+  `file_url` varchar(255) NOT NULL,
+  `thumbnail_url` varchar(255) DEFAULT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `medicalRecord_file_idx` (`record_id`),
+  CONSTRAINT `medicalRecord_file` FOREIGN KEY (`record_id`) REFERENCES `medical_record` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8 COMMENT='each case has many files';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `medical_record_file`
+--
+
+LOCK TABLES `medical_record_file` WRITE;
+/*!40000 ALTER TABLE `medical_record_file` DISABLE KEYS */;
+INSERT INTO `medical_record_file` (`id`, `uid`, `record_id`, `doc_type`, `file_type`, `file_url`, `thumbnail_url`, `remark`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES (25,'239E9FBE2499F102F4E3360472BB82BA6623C81E',1,1,'jpg','upload/mr/154be4de7d5d54231880.jpg','upload/mr/154be4de7d5d54231880tn.jpg',NULL,0,'2015-01-20 20:45:28','2015-01-20 20:45:28',NULL),(26,'4F665EC6356042A840E2CB038BB664A19A7978BF',1,1,'jpg','upload/mr/154be4de693ff2d0d960.jpg','upload/mr/154be4de693ff2d0d960tn.jpg',NULL,0,'2015-01-20 20:45:28','2015-01-20 20:45:28',NULL),(39,'125F02E422DF81E1BA229DD83AC61ADE1FA9E086',1,2,'jpg','upload/mr/154be6a2508767545bf0.jpg','upload/mr/154be6a2508767545bf0tn.jpg',NULL,0,'2015-01-20 22:45:58','2015-01-20 22:45:58',NULL),(41,'12F7687F39EB19382BE4E3B429A8ABB8C2DF542A',1,2,'jpg','upload/mr/154be6a55d0b4c7ceb80.jpg','upload/mr/154be6a55d0b4c7ceb80tn.jpg',NULL,0,'2015-01-20 22:46:46','2015-01-20 22:46:46',NULL),(58,'1D2507D7ED9350C848747ECC69C583B524CAC58E',1,4,'jpg','upload/mr/154bea21d859c3c3c3a0.jpg','upload/mr/154bea21d859c3c3c3a0tn.jpg',NULL,0,'2015-01-21 02:44:49','2015-01-21 02:44:49',NULL),(59,'A9F11CD86A6B10E14104B7C6D6ACBED2A4FDCA8C',1,4,'jpg','upload/mr/154bea221402ce422290.jpg','upload/mr/154bea221402ce422290tn.jpg',NULL,0,'2015-01-21 02:44:54','2015-01-21 02:44:54',NULL),(60,'73A92735D7943FDB8B3FE26F92FD034EB4ABB8B6',1,4,'jpg','upload/mr/154bea222bebdf953010.jpg','upload/mr/154bea222bebdf953010tn.jpg',NULL,0,'2015-01-21 02:44:57','2015-01-21 02:44:57',NULL),(61,'EDA817C999A42F8FD8D86558C021F78EE551AB51',1,4,'jpg','upload/mr/154bea22643cc08f3c20.jpg','upload/mr/154bea22643cc08f3c20tn.jpg',NULL,0,'2015-01-21 02:44:58','2015-01-21 02:44:58',NULL),(62,'616247B904E4EEBC3529158908871FAE275EC815',1,4,'jpg','upload/mr/154bea227ce96f16c520.jpg','upload/mr/154bea227ce96f16c520tn.jpg',NULL,0,'2015-01-21 02:44:59','2015-01-21 02:44:59',NULL),(63,'7EB2190B3959FBBEE9A9F6008E988F56534F7F90',1,4,'jpg','upload/mr/154bea228d023efb4b00.jpg','upload/mr/154bea228d023efb4b00tn.jpg',NULL,0,'2015-01-21 02:44:59','2015-01-21 02:44:59',NULL),(64,'EE334122A6222345CE8A6D5F4B56A338B7B3D21C',1,5,'jpg','upload/mr/154bf5e025e9a801e250.jpg','upload/mr/154bf5e025e9a801e250tn.jpg',NULL,0,'2015-01-21 16:06:28','2015-01-21 16:06:28',NULL),(65,'D90592D71054D0E8C1ADBD9E06F211F763EAD64A',6,1,'jpg','upload/mr/654bfc6d89ca99428830.jpg','upload/mr/654bfc6d89ca99428830tn.jpg',NULL,0,'2015-01-21 23:33:45','2015-01-21 23:33:45',NULL),(66,'EC81D1E7BFF894E366B5684BFA110C6A94321AB5',6,2,'jpg','upload/mr/654bfc6da6cd24ac0af0.jpg','upload/mr/654bfc6da6cd24ac0af0tn.jpg',NULL,0,'2015-01-21 23:33:48','2015-01-21 23:33:48',NULL),(67,'5A3C31F0AF3787FD65982595442E1E5E32A342A7',6,4,'jpg','upload/mr/654bfc6e503c61daf2a0.jpg','upload/mr/654bfc6e503c61daf2a0tn.jpg',NULL,0,'2015-01-21 23:34:03','2015-01-21 23:34:03',NULL),(68,'CA019E4B7340D23C1F3FB96A0C8A510E907E7980',6,4,'jpg','upload/mr/654bfc6eb994d4c12310.jpg','upload/mr/654bfc6eb994d4c12310tn.jpg',NULL,0,'2015-01-21 23:34:08','2015-01-21 23:34:08',NULL),(69,'A299DEE426202A757A62250DE8F7BA096497091E',6,4,'jpg','upload/mr/654bfc6ebc008639ffa0.jpg','upload/mr/654bfc6ebc008639ffa0tn.jpg',NULL,0,'2015-01-21 23:34:09','2015-01-21 23:34:09',NULL),(70,'A03DA8BACD9F618AD5C9A134024EF4A291B9D51C',7,1,'jpg','upload/mr/754bfc7b34711f2bb780.jpg','upload/mr/754bfc7b34711f2bb780tn.jpg',NULL,0,'2015-01-21 23:37:25','2015-01-21 23:37:25',NULL),(71,'84E2558ED6431D992691331F73BBBF5440139339',7,1,'jpg','upload/mr/754bfc7b332d29606b40.jpg','upload/mr/754bfc7b332d29606b40tn.jpg',NULL,0,'2015-01-21 23:37:25','2015-01-21 23:37:25',NULL),(72,'D9C9DB1D3921F93BEFF3F86A3BF5171C9081F417',7,2,'jpg','upload/mr/754bfc7b6e83c5915880.jpg','upload/mr/754bfc7b6e83c5915880tn.jpg',NULL,0,'2015-01-21 23:37:28','2015-01-21 23:37:28',NULL),(73,'FC626F34977B7BFEA10BA06B90935A198BBC7803',7,4,'jpg','upload/mr/754bfc7bdd0d6d75e050.jpg','upload/mr/754bfc7bdd0d6d75e050tn.jpg',NULL,0,'2015-01-21 23:37:39','2015-01-21 23:37:39',NULL),(74,'CD947C90FEB48AAC21ABDAF3D9B82D2E1FE7CE58',7,4,'jpg','upload/mr/754bfc7bf9e96d1bf850.jpg','upload/mr/754bfc7bf9e96d1bf850tn.jpg',NULL,0,'2015-01-21 23:37:41','2015-01-21 23:37:41',NULL),(75,'79C154FEC2557ACDB33A4669998EF00B24C22C20',7,4,'jpg','upload/mr/754bfc7be8e2804eaaa0.jpg','upload/mr/754bfc7be8e2804eaaa0tn.jpg',NULL,0,'2015-01-21 23:37:42','2015-01-21 23:37:42',NULL),(76,'DFEDD2A7B07D8402FF04751DB46E9F2043ABCA56',7,4,'jpg','upload/mr/754bfc7c33e655660e70.jpg','upload/mr/754bfc7c33e655660e70tn.jpg',NULL,0,'2015-01-21 23:37:44','2015-01-21 23:37:44',NULL),(77,'B9BD3C4B338A72D87D466997A21DABE3A5A4B128',7,4,'jpg','upload/mr/754bfc7c310641b79420.jpg','upload/mr/754bfc7c310641b79420tn.jpg',NULL,0,'2015-01-21 23:37:44','2015-01-21 23:37:44',NULL),(83,'FA5FF755F865BF8892BA7721C8519E53EEA54A24',1,3,'jpg','upload/mr\\/154c25b08c4344b8afb0.jpg','upload/mr\\/154c25b08c4344b8afb0tn.jpg',NULL,0,'2015-01-23 22:30:33','2015-01-23 22:30:33',NULL),(84,'B5ADF1D9EE7252FFADBA64047B297314F79F07EF',1,3,'jpg','upload/mr\\/154c25b33c55c18e8320.jpg','upload/mr\\/154c25b33c55c18e8320tn.jpg',NULL,0,'2015-01-23 22:31:16','2015-01-23 22:31:16',NULL),(85,'762DFFB6A499F4763F04F15C3C602E2E273DE350',1,2,'jpg','upload/mr\\/154c25b82624967b5170.jpg','upload/mr\\/154c25b82624967b5170tn.jpg',NULL,0,'2015-01-23 22:32:36','2015-01-23 22:32:36',NULL);
+/*!40000 ALTER TABLE `medical_record_file` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `translate_message`
+--
+
+DROP TABLE IF EXISTS `translate_message`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `translate_message` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `language` varchar(16) NOT NULL DEFAULT '',
+  `translation` text,
+  PRIMARY KEY (`id`,`language`),
+  CONSTRAINT `FK_TMessage_TSourceMessage` FOREIGN KEY (`id`) REFERENCES `translate_source_message` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `translate_message`
+--
+
+LOCK TABLES `translate_message` WRITE;
+/*!40000 ALTER TABLE `translate_message` DISABLE KEYS */;
+/*!40000 ALTER TABLE `translate_message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `medical_record_assignment`
+--
+
+DROP TABLE IF EXISTS `medical_record_assignment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `medical_record_assignment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `record_id` int(11) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `is_accepted` tinyint(4) NOT NULL DEFAULT '0',
+  `remark` varchar(200) DEFAULT NULL,
+  `cancel_by_user` int(11) DEFAULT NULL,
+  `cancel_by_doctor` int(11) DEFAULT NULL,
+  `date_cancel` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `medicalRecord_assignment_idx` (`record_id`),
+  KEY `medicalRecord_doctor_idx` (`doctor_id`),
+  CONSTRAINT `medicalRecord_assignment` FOREIGN KEY (`record_id`) REFERENCES `medical_record` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `medicalRecord_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='each case can be assigned to many doctors.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `medical_record_assignment`
+--
+
+LOCK TABLES `medical_record_assignment` WRITE;
+/*!40000 ALTER TABLE `medical_record_assignment` DISABLE KEYS */;
+INSERT INTO `medical_record_assignment` (`id`, `record_id`, `doctor_id`, `is_accepted`, `remark`, `cancel_by_user`, `cancel_by_doctor`, `date_cancel`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,5,3,0,NULL,NULL,NULL,NULL,'2015-01-21 23:30:10','2015-01-21 23:30:10',NULL),(2,6,3,0,NULL,NULL,NULL,NULL,'2015-01-21 23:31:47','2015-01-21 23:31:47',NULL),(3,7,5,0,NULL,NULL,NULL,NULL,'2015-01-21 23:37:17','2015-01-21 23:37:17',NULL);
+/*!40000 ALTER TABLE `medical_record_assignment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `region_state`
+--
+
+DROP TABLE IF EXISTS `region_state`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `region_state` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_name` varchar(45) DEFAULT NULL,
+  `country_code` char(3) DEFAULT NULL,
+  `code` varchar(45) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `name_cn` varchar(45) DEFAULT NULL,
+  `nest_level` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `stateCountry_idx` (`country_code`),
+  CONSTRAINT `stateCountry` FOREIGN KEY (`country_code`) REFERENCES `region_country` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `region_state`
+--
+
+LOCK TABLES `region_state` WRITE;
+/*!40000 ALTER TABLE `region_state` DISABLE KEYS */;
+INSERT INTO `region_state` (`id`, `country_name`, `country_code`, `code`, `name`, `name_cn`, `nest_level`, `description`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'中国','CHN',NULL,'北京','北京',2,NULL,999,NULL,NULL,NULL),(2,'中国','CHN',NULL,'天津','天津',2,NULL,999,NULL,NULL,NULL),(3,'中国','CHN',NULL,'河北','河北',2,NULL,999,NULL,NULL,NULL),(4,'中国','CHN',NULL,'山西','山西',2,NULL,999,NULL,NULL,NULL),(5,'中国','CHN',NULL,'内蒙古','内蒙古',2,NULL,999,NULL,NULL,NULL),(6,'中国','CHN',NULL,'辽宁','辽宁',2,NULL,999,NULL,NULL,NULL),(7,'中国','CHN',NULL,'吉林','吉林',2,NULL,999,NULL,NULL,NULL),(8,'中国','CHN',NULL,'黑龙江','黑龙江',2,NULL,999,NULL,NULL,NULL),(9,'中国','CHN',NULL,'上海','上海',2,NULL,999,NULL,NULL,NULL),(10,'中国','CHN',NULL,'江苏','江苏',2,NULL,999,NULL,NULL,NULL),(11,'中国','CHN',NULL,'浙江','浙江',2,NULL,999,NULL,NULL,NULL),(12,'中国','CHN',NULL,'安徽','安徽',2,NULL,999,NULL,NULL,NULL),(13,'中国','CHN',NULL,'福建','福建',2,NULL,999,NULL,NULL,NULL),(14,'中国','CHN',NULL,'江西','江西',2,NULL,999,NULL,NULL,NULL),(15,'中国','CHN',NULL,'山东','山东',2,NULL,999,NULL,NULL,NULL),(16,'中国','CHN',NULL,'河南','河南',2,NULL,999,NULL,NULL,NULL),(17,'中国','CHN',NULL,'湖北','湖北',2,NULL,999,NULL,NULL,NULL),(18,'中国','CHN',NULL,'湖南','湖南',2,NULL,999,NULL,NULL,NULL),(19,'中国','CHN',NULL,'广东','广东',2,NULL,999,NULL,NULL,NULL),(20,'中国','CHN',NULL,'广西','广西',2,NULL,999,NULL,NULL,NULL),(21,'中国','CHN',NULL,'海南','海南',2,NULL,999,NULL,NULL,NULL),(22,'中国','CHN',NULL,'重庆','重庆',2,NULL,999,NULL,NULL,NULL),(23,'中国','CHN',NULL,'四川','四川',2,NULL,999,NULL,NULL,NULL),(24,'中国','CHN',NULL,'贵州','贵州',2,NULL,999,NULL,NULL,NULL),(25,'中国','CHN',NULL,'云南','云南',2,NULL,999,NULL,NULL,NULL),(26,'中国','CHN',NULL,'西藏','西藏',2,NULL,999,NULL,NULL,NULL),(27,'中国','CHN',NULL,'陕西','陕西',2,NULL,999,NULL,NULL,NULL),(28,'中国','CHN',NULL,'甘肃','甘肃',2,NULL,999,NULL,NULL,NULL),(29,'中国','CHN',NULL,'青海','青海',2,NULL,999,NULL,NULL,NULL),(30,'中国','CHN',NULL,'宁夏','宁夏',2,NULL,999,NULL,NULL,NULL),(31,'中国','CHN',NULL,'新疆','新疆',2,NULL,999,NULL,NULL,NULL),(32,'中国','CHN',NULL,'台湾','台湾',2,NULL,999,NULL,NULL,NULL),(33,'中国','CHN',NULL,'香港','香港',2,NULL,999,NULL,NULL,NULL),(34,'中国','CHN',NULL,'澳门','澳门',2,NULL,999,NULL,NULL,NULL),(35,'新加坡','SGP',NULL,'新加坡','新加坡',1,NULL,1,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `region_state` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `disease_category`
+--
+
+DROP TABLE IF EXISTS `disease_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `disease_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `disease_category`
+--
+
+LOCK TABLES `disease_category` WRITE;
+/*!40000 ALTER TABLE `disease_category` DISABLE KEYS */;
+INSERT INTO `disease_category` (`id`, `name`, `display_order`, `date_created`, `date_updated`, `date_deleted`) VALUES (1,'肿瘤',1,NULL,NULL,NULL),(2,'脑部',2,NULL,NULL,NULL),(3,'心脏',3,NULL,NULL,NULL),(4,'消化系统',4,NULL,NULL,NULL),(5,'呼吸系统及肾病',5,NULL,NULL,NULL),(6,'其他',6,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `disease_category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `doctor_profile`
+--
+
+DROP TABLE IF EXISTS `doctor_profile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `doctor_profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor_id` int(11) NOT NULL,
+  `qualification` int(11) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `education` varchar(200) DEFAULT NULL,
+  `work_experience` varchar(200) DEFAULT NULL,
+  `work_start_year` int(11) DEFAULT NULL,
+  `lang` varchar(45) DEFAULT NULL,
+  `award` varchar(100) DEFAULT NULL,
+  `publication` varchar(100) DEFAULT NULL,
+  `website_url` varchar(100) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `doctor_id_UNIQUE` (`doctor_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `doctor_profile`
+--
+
+LOCK TABLES `doctor_profile` WRITE;
+/*!40000 ALTER TABLE `doctor_profile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `doctor_profile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping events for database 'myzd'
+--
+
+--
+-- Dumping routines for database 'myzd'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-01-25  1:45:11

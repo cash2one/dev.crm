@@ -1,0 +1,26 @@
+<?php
+
+abstract class EViewModel {
+
+    public $id;    
+
+    /*
+      public function __construct(array $attributes = null) {
+      if (is_array($attributes)) {
+      foreach ($attributes as $attr => $value) {
+      $this->{$attr} = $value;
+      }
+      }
+      }
+     * 
+     */
+
+    protected function getTextAttribute($value, $ntext = true) {
+        if ($ntext) {
+            return Yii::app()->format->formatNtext($value);
+        } else {
+            return $value;
+        }
+    }
+
+}

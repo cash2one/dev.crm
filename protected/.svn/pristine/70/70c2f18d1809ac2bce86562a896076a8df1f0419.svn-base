@@ -1,0 +1,14 @@
+<?php
+
+class ExpertteamController extends MobileController {
+
+    public function actionIndex() {
+        $this->render("index");
+    }
+
+    public function actionView() {
+
+        $this->render('view');
+    }
+
+}

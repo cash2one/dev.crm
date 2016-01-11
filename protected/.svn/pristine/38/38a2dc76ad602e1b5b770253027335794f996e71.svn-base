@@ -1,0 +1,70 @@
+<?php
+
+class ApiViewDoctorOneBooking extends EApiViewService {
+
+    private $creatorId;  // User.id
+    private $Id;
+    private $patientMgr;
+    private $patientBookings;  // array
+
+    //初始化类的时候将参数注入
+
+    public function __construct($Id, $creatorId) {
+        parent::__construct();
+        $this->Id = $Id;
+        $this->creatorId = $creatorId;
+        $this->patientMgr = new PatientManager();
+    }
+
+    protected function loadData() {
+        // load PatientBooking by creatorId.
+        $this->loadOnePatientBooking();
+    }
+
+    //返回的参数
+    protected function createOutput() {
+        if (is_null($this->output)) {
+            $this->output = array(
+                'status' => self::RESPONSE_OK,
+                'booking' => $this->patientBookings,
+            );
+        }
+    }
+
+    //调用model层方法
+    private function loadOnePatientBooking() {
+        $attributes = null;
+        $with = array('pbPatient', 'pbPatient' => array('with' => array('patientMR')));
+        $options = null;
+        $model = $this->patientMgr->loadPatientBookingByIdAndCreatorId($this->Id, $this->creatorId, $attributes, $with, $options);
+        if (isset($model)) {
+            $this->setOnePatientBooking($model);
+        }
+    }
+
+    //查询到的数据过滤
+    private function setOnePatientBooking(PatientBooking $model) {
+        $data = new stdClass();
+        $data->id = $model->getId();
+        $data->dateStart = $model->getDateStart('Y年-m月-d日');
+        $data->dateEnd = $model->getDateEnd('Y年-m月-d日');
+        $data->detail = $model->getDetail();
+        $data->travelType = $model->getTravelType();
+        $data->status = $model->getBkStatus();
+        $patientInfo = $model->getPatient();
+        if (isset($patientInfo)) {
+            $data->name = $patientInfo->getName();
+            $data->age = $patientInfo->getAge();
+            $data->cityName = $patientInfo->getCityName();
+            $data->gender = $patientInfo->getGender();
+            $patientMR = $patientInfo->getPatientMr();
+            if (isset($patientMR)) {
+                $data->mrid = $patientMR->getId();
+                $data->diseaseName = $patientMR->getDiseaseName();
+                $data->diseaseDetail = $patientMR->getDiseaseDetail();
+            }
+        }
+        $this->patientBookings = $data;
+    }
+
+}

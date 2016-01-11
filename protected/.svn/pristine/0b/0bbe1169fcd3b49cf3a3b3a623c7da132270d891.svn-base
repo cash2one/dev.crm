@@ -1,0 +1,17 @@
+<?php
+
+abstract class EApiService {
+
+    public function __construct() {
+        
+    }
+
+    protected function getTextAttribute($value, $ntext = true) {
+        if ($ntext) {
+            return Yii::app()->format->formatNtext($value);
+        } else {
+            return $value;
+        }
+    }
+
+}

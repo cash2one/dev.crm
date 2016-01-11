@@ -1,0 +1,13 @@
+<?php
+
+class OrderController extends MobiledoctorController {
+
+    public function actionView($id) {
+        $apiSvc = new ApiViewBookingOrder($id);
+        $output = $apiSvc->loadApiViewData();
+        $this->render('View', array(
+            'data' => $output
+        ));
+    }
+
+}

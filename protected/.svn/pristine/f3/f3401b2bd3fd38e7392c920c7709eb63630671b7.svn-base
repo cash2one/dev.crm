@@ -1,0 +1,204 @@
+<?php
+
+class IBooking extends EViewModel {
+
+    public $id;
+    public $refNo;
+    public $userId;
+    public $mobile;
+    public $bookingType;
+    public $bookingTypeCode;
+    public $contactName;
+    public $facultyId;
+    public $doctorId;
+    public $expteamId;
+    public $hospitalId;
+    public $hpDeptId;
+    public $status;
+    public $statusCode;
+    public $apptDate;
+    public $apptDateStr;
+    public $patientCondition;
+    public $createDate;
+    // public $cEmail;
+    // public $cWeixin;
+    public $owner;
+    public $faculty;    // model IFaculty.
+    public $doctor;     // model IDoctor.
+    public $expertTeam;     // model IExpertTeam.
+    public $hospital;   // model IHospital.
+    public $dept; // model IHospitalDepartment.
+    public $files;  // model IFile.
+    public $countFiles; // count number of BookingFiles.
+
+    public function initModel(Booking $model) {
+        $this->id = $model->id;
+        $this->refNo = $model->getRefNumber();
+        $this->userId = $model->getUserId();
+        $this->mobile = $model->getMobile();
+        $this->bookingType = $model->getBookingTypeText();
+        $this->bookingTypeCode = $model->getBookingType();
+        $this->contactName = $model->getContactName();
+        $this->status = $model->getStatusText();
+        $this->statusCode = $model->getStatus();
+        $this->apptDate = $model->getApptDate();
+        $this->apptDateStr = $model->getApptDateStr();
+        $this->patientCondition = $model->getPatientCondition();
+        $this->createDate = $model->getDateCreated();
+        $this->facultyId = $model->getFacultyId();
+        $this->doctorId = $model->getDoctorId();
+        $this->expteamId = $model->getExpertTeamId();
+        $this->hospitalId = $model->getHospitalId();
+        $this->hpDeptId = $model->getHospitalDeptId();
+
+        $owner = $model->getOwner();
+        if (isset($owner)) {
+            $iuser = new IUser();
+            $iuser->initModel($owner);
+            $this->owner = $iuser;
+        }
+
+        // 科室
+        $faculty = $model->getFacultyBooked();
+        if (isset($faculty)) {
+            $ifaculty = new IFaculty();
+            $ifaculty->initModel($faculty);
+            $this->faculty = $ifaculty;
+        }
+        // 医生
+        $doctor = $model->getDoctorBooked();
+        if (isset($doctor)) {
+            $idoctor = new IDoctor();
+            $idoctor->initModel($doctor);
+            $this->doctor = $idoctor;
+        }
+        //专家团队
+        if (isset($this->teamId)) {
+            $teamMgr = new ExpertTeamManager();
+            $this->expertTeam = $teamMgr->loadIExpertTeamById($this->teamId);
+        }
+        // 医院
+        $hospital = $model->getHospitalBooked();
+        if (isset($hospital)) {
+            $ihospital = new IHospital();
+            $ihospital->initModel($hospital);
+            $this->hospital = $ihospital;
+        }
+        // 医院科室
+        $dept = $model->getHospitalDeptBooked();
+        if (isset($dept)) {
+            $idept = new IHospitalDepartment();
+            $idept->initModel($dept);
+            $this->dept = $idept;
+        }
+    }
+
+    /**
+     * 
+     * @param array $bookingFiles BookingFile.
+     */
+    public function addFiles($bookingFiles) {
+        if (arrayNotEmpty($bookingFiles)) {
+            foreach ($bookingFiles as $bFile) {
+                $ibookingFile = new IBookingFile();
+                $ibookingFile->initModel($bFile);
+                $this->addFile($ibookingFile);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param IBookingFile $ibookingFile
+     */
+    public function addFile(IBookingFile $ibookingFile) {
+        $this->files[] = $ibookingFile;
+    }
+
+    /*     * ****** Accessors ******* */
+
+    public function getFiles() {
+        return $this->files;
+    }
+
+    public function getFacultyName() {
+        if (isset($this->faculty)) {
+            return $this->faculty->getName();
+        } else {
+            return "";
+        }
+    }
+
+    public function getDoctorName() {
+        if (isset($this->doctor)) {
+            return $this->doctor->getName();
+        } else {
+            return "";
+        }
+    }
+
+    public function getExpertTeamName() {
+        if (isset($this->expertTeam)) {
+            return $this->expertTeam->teamName;
+        } else {
+            return "";
+        }
+    }
+
+    public function getHospitalName() {
+        if (isset($this->hospital)) {
+            return $this->hospital->getName();
+        } else {
+            return "";
+        }
+    }
+
+    public function getDeptName() {
+        if (isset($this->dept)) {
+            return $this->dept->getName();
+        } else {
+            return "";
+        }
+    }
+
+    public function getFilesCount() {
+        return $this->countFiles;
+    }
+
+    public function setCountFiles($v) {
+        $this->countFiles = $v;
+    }
+
+    public function getRefNumber() {
+        return $this->refNo;
+    }
+
+    public function getContactName() {
+        return $this->contactName;
+    }
+
+    public function getMobile() {
+        return $this->mobile;
+    }
+
+    public function getPatientCondition() {
+        return $this->patientCondition;
+    }
+
+    public function getApptDate() {
+        return $this->createDate;
+    }
+
+    public function getBookingType() {
+        return $this->bookingType;
+    }
+
+    public function getBookingTypeCode() {
+        return $this->bookingTypeCode;
+    }
+
+    public function getCreateDate() {
+        return $this->createDate;
+    }
+
+}

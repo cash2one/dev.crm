@@ -1,0 +1,26 @@
+<?php
+
+class TestController extends Controller{
+    
+    public function actionUserlogin(){
+        $url = $this->createAbsoluteUrl('api/create',array('model'=>'userlogin'));
+        var_dump($url);
+        
+        $this->render('userlogin');
+    }
+    
+    public function actionRegister(){
+        //$url = $this->createAbsoluteUrl('api/create',array('model'=>'userregister'));
+        
+        $this->render('userRegister');
+    }
+    
+    public function actionGetSmsCode($mobile){
+        $authMgr = new AuthManager();
+        $smsVerify = $authMgr->createAuthSmsVerify($mobile, AuthSmsVerify::ACTION_USER_REGISTER);
+        var_dump($smsVerify->attributes);
+    }
+    public function actionSendSmsCode(){
+        $this->render("sendSmsCode");
+    }
+}

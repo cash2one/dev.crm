@@ -1,0 +1,152 @@
+<?php
+
+class PatientManager {
+
+    public function loadPatientInfoById($id, $attributes = null, $with = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        $criteria = new CDbCriteria();
+        $criteria->select = $attributes;
+        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('t.id', $id);
+        if (is_array($with)) {
+            $criteria->with = $with;
+        }
+        return PatientInfo::model()->find($criteria);
+    }
+
+    public function loadPatientMRById($id, $attributes = '*', $with = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        $criteria = new CDbCriteria();
+        $criteria->select = $attributes;
+        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('t.id', $id);
+        if (is_array($with)) {
+            $criteria->with = $with;
+        }
+        return PatientMR::model()->find($criteria);
+    }
+
+    //查询所有患者信息总数
+    public function loadPatientCount($creator_id) {
+        $criteria = new CDbCriteria();
+        $criteria->compare('t.creator_id', $creator_id);
+        $criteria->addCondition('t.date_deleted is NULL');
+        return PatientInfo::model()->count($criteria);
+        ;
+    }
+
+    //查询所有预约患者的总数
+    public function loadPatientBookingCount($creator_id) {
+        $criteria = new CDbCriteria();
+        $criteria->compare('t.creator_id', $creator_id);
+        $criteria->addCondition('t.date_deleted is NULL');
+        return PatientBooking::model()->count($criteria);
+        ;
+    }
+
+    //加载mr信息
+    public function loadPatientMRByPatientId($patientId, $attributes = null, $with = null) {
+        return PatientMR::model()->getByPatientId($patientId, $attributes, $with);
+    }
+
+    //加载病人文件信息
+    public function loadPatientMRFilesByPatientId($patientId, $attributes = null, $with = null) {
+        return PatientMRFile::model()->getAllByPatientId($patientId, $attributes, $with);
+    }
+
+    public function loadPatientBookingById($bookingId, $attributes = null, $with = null) {
+        return PatientBooking::model()->getById($bookingId, $with);
+    }
+
+    public function createPatientMRFile(PatientInfo $patientInfo, $type) {
+        $patientId = $patientInfo->getId();
+        $creatorId = $patientInfo->getCreatorId();
+        $uploadField = PatientMRFile::model()->file_upload_field;
+        if ($type === 'android') {
+            $files = EUploadedFile::getInstancesByName($uploadField);
+            if (isset($files)) {
+                //文件储存
+                $data = array();
+                foreach ($files as $file) {
+                    $data[] = $this->savePatientMRFile($patientId, $creatorId, $file);
+                }
+                $output['filemodel'] = $data;
+               // var_dump($data);                exit();
+            } else {
+                $output['error'] = 'missing uploaded file in - ' . $uploadField;
+            }
+        } else {
+            $file = EUploadedFile::getInstanceByName($uploadField);
+            if (isset($file)) {
+                //文件储存
+                $output['filemodel'] = $this->savePatientMRFile($patientId, $creatorId, $file);
+            } else {
+                $output['error'] = 'missing uploaded file in - ' . $uploadField;
+            }
+        }
+        return $output;
+    }
+
+    //查询医生旗下签约的患者列表
+    public function loadAllPatientBookingByCreatorId($creatorId, $attributes = null, $with = null, $options = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        return PatientBooking::model()->getAllByCreatorId($creatorId, $attributes, $with, $options);
+    }
+
+    //查询医生旗下签约的患者详细情况
+    public function loadPatientBookingByIdAndCreatorId($id, $creatorId, $attributes = null, $with = null, $options = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        return PatientBooking::model()->getByIdAndCreatorId($id, $creatorId, $with);
+    }
+
+    //查询患者的病历
+    public function LoadFilesOfPatientByPatientIdAndCreaterId($patientId, $creatorId, $attributes = null, $with = null, $options = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        return PatientMRFile::model()->getFilesOfPatientByPatientIdAndCreaterId($patientId, $creatorId, $attributes, $with);
+    }
+
+    //查询患者列表
+    public function LoadPatientInfoListByCreateorId($creatorId, $attributes, $with = null, $options = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        return PatientInfo::model()->getAllByCreateorId($creatorId, $attributes, $with, $options);
+    }
+
+    //患者详情查询
+    public function LoadPatientInfoByIdAndCreateorId($id, $creatorId, $attributes, $with = null, $options = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+        return PatientInfo::model()->getByIdAndCreatorId($id, $creatorId, $attributes, $with, $options);
+    }
+
+    /**
+     * Get EUploadedFile from $_FILE. 
+     * Create DoctorCert model. 
+     * Save file in filesystem. 
+     * Save model in db.
+     * @param EUploadedFile $file EUploadedFile::getInstances()
+     * @param integer $doctorId Doctor.id     
+     * @return DoctorCert 
+     */
+    private function savePatientMRFile($patientId, $creatorId, $file) {
+        $pFile = new PatientMRFile();
+        $pFile->initModel($patientId, $creatorId, $file);
+        //文件保存于本地返回model存于数据库
+        $pFile->saveModel();
+
+        return $pFile;
+    }
+
+}

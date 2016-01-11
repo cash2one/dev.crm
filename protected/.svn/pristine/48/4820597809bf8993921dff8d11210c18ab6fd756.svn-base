@@ -1,0 +1,24 @@
+<?php
+
+class HospitalController extends Controller {
+
+    public function actionIndex($city=null){
+        $this->render("index");
+    }
+    
+    public function actionView($id) {
+
+        //$ifaculty = $this->loadIFaculty($id);
+        $hospitalMgr = new HospitalManager();
+        $ihospital = $hospitalMgr->loadIHospital($id);
+
+        if (is_null($ihospital)) {
+            $this->throwPageNotFoundException();
+        }
+
+        $this->render('view', array(
+            'model' => $ihospital,
+        ));
+    }
+
+}
