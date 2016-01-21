@@ -113,7 +113,7 @@
 
 
     <div class="row buttons">
-        <?php echo CHtml::submitButton('Search', array('class'=>'btn btn-primary')); ?>
+        <?php echo CHtml::submitButton('搜索', array('class'=>'btn btn-primary')); ?>
     </div>
 
     <?php $this->endWidget(); ?>

@@ -4,7 +4,7 @@
 /* @var $fhJoin FacultyHospitalJoin */
 
 $this->breadcrumbs = array(
-    'Hospitals' => array('index'),
+    'Hospitals' => array('admin'),
     $model->name,
 );
 

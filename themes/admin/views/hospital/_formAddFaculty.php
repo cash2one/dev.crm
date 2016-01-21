@@ -24,7 +24,7 @@
 
     <?php echo $form->hiddenField($model, 'id'); ?>
 
-    <div class="row form-group">        
+    <div class="form-group">        
         <?php echo $form->labelEx($model, 'faculty_id'); ?>
         <?php echo $form->error($model, 'faculty_id'); ?>
         <div>
@@ -41,8 +41,8 @@
 
 
     <br />
-    <div class="row buttons">
-        <?php echo CHtml::submitButton('Add'); ?>
+     <div class="form-group">
+        <button type="submit" class="btn btn-primary">添加</button>
     </div>
 
     <?php $this->endWidget(); ?>

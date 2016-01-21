@@ -5,7 +5,7 @@ $booking = $data->booking;
 //$expertBooked = $data['expertBooked'];
 $files = $data->files;
 $this->breadcrumbs = array(
-    '预约列表' => array('list'),
+    '预约列表' => array('admin'),
     $booking->id,
 );
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
@@ -18,7 +18,7 @@ $this->menu = array(
     array('label' => '生成订单', 'url' => array('order/createBKOrder', 'bid' => $booking->id))
 );
 ?>
-
+<a href="<?php echo $this->createUrl('order/createBKOrder', array('bid' =>  $booking->id))?>" class="btn btn-primary">生成订单</a>
 <h1>预约详情 #<?php echo $booking->refNo; ?></h1>
 
 <table class="detail-view" id="yw0">

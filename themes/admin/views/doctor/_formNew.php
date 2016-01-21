@@ -28,89 +28,84 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
     ));
     ?>
     <p class="note">Fields with <span class="required">*</span> are required.</p>
-
     <?php echo $form->errorSummary($model); ?>
-
-    <div class="row">
-        <?php echo $form->labelEx($model, 'fullname', array('size' => 45, 'maxlength' => 45)); ?>
-        <div class="">
-            <?php echo $form->textField($model, 'fullname', array('class' => '', 'placeholder' => '此姓名仅供记录用途')); ?>                    
-            <?php echo $form->error($model, 'fullname'); ?>
+    <div class="form-horizontal">
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($model, 'fullname', array('size' => 45, 'maxlength' => 45)); ?></label>
+            <div>
+                <?php echo $form->textField($model, 'fullname', array('class' => 'form-control', 'placeholder' => '此姓名仅供记录用途')); ?>                
+                <div class="text-danger "> <?php echo $form->error($model, 'fullname'); ?></div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <?php echo $form->labelEx($model, 'hospital_id', array('class' => ' ')); ?>
-        <div class="">
-            <div class="styled-select">
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($model, 'hospital_id', array('class' => '')); ?></label>
+            <div>
                 <?php
                 echo $form->dropDownList($model, 'hospital_id', $model->loadOptionsHospital(), array(
                     'prompt' => '-- 无 --',
-                    'class' => 'sel ',
+                    'class' => 'sel form-control',
                     'id' => 'hospital'
                 ));
-                ?>
-            </div>  
-            <?php echo $form->error($model, 'hospital_id'); ?>
-        </div>
-        <div class="clearfix"></div>
-    </div>
+                ?>           
 
-    <div class="row">
-        <?php echo $form->labelEx($model, 'hp_dept_id', array('class' => ' ')); ?>
-        <div class="">
-            <div class="styled-select">
+            </div>
+            <div class="text-danger"><?php echo $form->error($model, 'hospital_id'); ?></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group col-sm-7">
+            <label ><?php echo $form->labelEx($model, 'hp_dept_id', array('class' => '1')); ?></label>
+            <div>
                 <?php
                 echo $form->dropDownList($model, 'hp_dept_id', array(
                     'prompt' => '-- 无 --',
-                    'class' => 'sel ',
+                    'class' => 'sel form-control',
                     'id' => 'dept'
                 ));
-                ?>
-            </div>  
-            <?php echo $form->error($model, 'hp_dept_id'); ?>
-        </div>
-        <div class="clearfix"></div>
-    </div>
+                ?>           
 
-    <div class="row">
-        <?php echo $form->labelEx($model, 'medical_title', array('class' => ' ')); ?>
-        <div class="">
-            <div class="styled-select">
+            </div>
+            <div class="text-danger"><?php echo $form->error($model, 'hp_dept_id'); ?></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group col-sm-7">
+            <label ><?php echo $form->labelEx($model, 'medical_title', array('class' => '')); ?></label>
+            <div>
                 <?php
                 echo $form->dropDownList($model, 'medical_title', $model->loadOptionsMedicalTitle(), array(
                     'prompt' => '-- 无 --',
-                    'class' => 'sel ',
+                    'class' => 'sel form-control ',
                 ));
-                ?>
-            </div>
-            <?php echo $form->error($model, 'medical_title'); ?>
-        </div>
-        <div class="clearfix"></div>
-    </div>
+                ?>            
 
-    <div class="row">
-        <?php echo $form->labelEx($model, 'academic_title', array('class' => ' ')); ?>
-        <div class="">
-            <div class="styled-select">
+            </div>
+            <div class="text-danger "><?php echo $form->error($model, 'medical_title'); ?></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group col-sm-7">
+            <label ><?php echo $form->labelEx($model, 'academic_title', array('class' => '')); ?></label>
+            <div>
                 <?php
                 echo $form->dropDownList($model, 'academic_title', $model->loadOptionsAcademicTitle(), array(
                     'prompt' => '-- 无 --',
-                    'class' => 'sel ',
+                    'class' => 'sel form-control ',
                 ));
-                ?>
-            </div>
-            <?php echo $form->error($model, 'academic_title'); ?>
-        </div>
-        <div class="clearfix"></div>
-    </div>
+                ?>           
 
-    <div class="row">
-        <?php echo $form->labelEx($model, 'description'); ?>
-        <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200)); ?>
-        <?php echo $form->error($model, 'description'); ?>
-    </div>
-    <div class="row">        
-        <button type="submit" class="btn btn-success">保存</button>
+            </div>
+            <div class="text-danger "><?php echo $form->error($model, 'academic_title'); ?></div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($model, 'description'); ?></label>
+            <div>
+                <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200,'class'=>'form-control')); ?>            
+                <div class="text-danger "> <?php echo $form->error($model, 'description'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
     </div>
     <?php $this->endWidget(); ?>
 </div>

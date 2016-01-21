@@ -3,7 +3,7 @@
 /* @var $model HospitalForm */
 
 $this->breadcrumbs=array(
-	'Hospitals'=>array('index'),
+	'Hospitals'=>array('admin'),
 	'Create',
 );
 

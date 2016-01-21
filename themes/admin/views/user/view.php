@@ -3,7 +3,7 @@
 /* @var $model User */
 
 $this->breadcrumbs = array(
-    '用户列表' => array('listdoctors'),
+    '用户列表' => array('admin'),
     $model->name,
 );
 

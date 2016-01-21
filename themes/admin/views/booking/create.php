@@ -3,7 +3,7 @@
 /* @var $model Booking */
 
 $this->breadcrumbs=array(
-	'Bookings'=>array('list'),
+	'Bookings'=>array('admin'),
 	'Create',
 );
 

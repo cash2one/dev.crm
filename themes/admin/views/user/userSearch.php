@@ -4,7 +4,7 @@
 /* @var $model User */
 
 $this->breadcrumbs = array(
-    'Users' => array('index'),
+    'Users' => array('admin'),
     'Manage',
 );
 
@@ -110,39 +110,39 @@ echo '<br>----------------------------------------------------查询结果------
             });
             window.location.href = searchUrl;
             console.log(searchUrl);
-            //return false;
-//            $.ajax({
-//                type: 'get',
-//                dataType: "json",
-//                url: searchUrl,
-//                // jsonp: "$callback",
-//
-//                success: function (data) {
-//                    console.log(data);
-//                    var results = data['results'];
-//                    console.log(results);
-//                    var item;
-//                    var domUserSearchResultTable = $('#userSearchResultTable');
-//                    domUserSearchResultTable.empty();
-//                    var resultHtml = "<tr><td>编号</td><td>姓名</td><td>手机</td><td>医院</td><td>科室</td><td>临床职称</td><td>学术职称</td><td>操作</td></tr>";
-//                    for (var i = 0, l = results.length; i < l; i++) {
-//                        var user = results[i];
-//                        item = "<tr><td>" + results[i].id
-//                                + "</td><td>" + results[i].name
-//                                + "</td><td>" + results[i].mobile
-//                                + "</td><td>" + results[i].hpName
-//                                + "</td><td>" + results[i].hpDeptName
-//                                + "</td><td>" + results[i].cTitle
-//                                + "</td><td>" + results[i].aTitle
-//                                + "</td><td><a href='" + userViewUrl + "?id=" + user.id + "' target='_blank'>查看<a/></td></tr>";
-//                        resultHtml += item;
-//                    }
-//                    domUserSearchResultTable.html(resultHtml);
-//                },
-//                error: function (data) {
-//                    alert('查询失败,请刷新页面后重新查询');
-//                }
-//            });
+            return false;
+            $.ajax({
+                type: 'get',
+                dataType: "json",
+                url: searchUrl,
+                // jsonp: "$callback",
+
+                success: function (data) {
+                    console.log(data);
+                    var results = data['results'];
+                    console.log(results);
+                    var item;
+                    var domUserSearchResultTable = $('#userSearchResultTable');
+                    domUserSearchResultTable.empty();
+                    var resultHtml = "<tr><td>编号</td><td>姓名</td><td>手机</td><td>医院</td><td>科室</td><td>临床职称</td><td>学术职称</td><td>操作</td></tr>";
+                    for (var i = 0, l = results.length; i < l; i++) {
+                        var user = results[i];
+                        item = "<tr><td>" + results[i].id
+                                + "</td><td>" + results[i].name
+                                + "</td><td>" + results[i].mobile
+                                + "</td><td>" + results[i].hpName
+                                + "</td><td>" + results[i].hpDeptName
+                                + "</td><td>" + results[i].cTitle
+                                + "</td><td>" + results[i].aTitle
+                                + "</td><td><a href='" + userViewUrl + "?id=" + user.id + "' target='_blank'>查看<a/></td></tr>";
+                        resultHtml += item;
+                    }
+                    domUserSearchResultTable.html(resultHtml);
+                },
+                error: function (data) {
+                    alert('查询失败,请刷新页面后重新查询');
+                }
+            });
         });
     });
 </script>

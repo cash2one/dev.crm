@@ -3,7 +3,7 @@
 /* @var $model PatientBooking */
 
 $this->breadcrumbs=array(
-	'Patient Bookings'=>array('list'),
+	'Patient Bookings'=>array('admin'),
 	'Create',
 );
 

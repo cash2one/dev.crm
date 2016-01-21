@@ -1,4 +1,4 @@
-<table>
+<table class="table table-hover custom-table">
     <thead>
     <tr>
         <th>ID</th>
@@ -10,6 +10,7 @@
         <th>学术职称</th>
         <th>认证状态</th>
         <th>签约状态</th>
+        <th></th>
     </tr>
 </thead>
 

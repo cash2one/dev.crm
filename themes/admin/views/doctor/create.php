@@ -3,7 +3,7 @@
 /* @var $model Doctor */
 
 $this->breadcrumbs=array(
-	'Doctors'=>array('index'),
+	'Doctors'=>array('admin'),
 	'Create',
 );
 

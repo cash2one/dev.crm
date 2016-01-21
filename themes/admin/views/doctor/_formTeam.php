@@ -29,30 +29,34 @@ $urlSubmit = $this->createUrl('doctor/createExpertTeam', array('id' => $model->g
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
     <?php echo $form->errorSummary($model); ?>
+    <div class="form-horizontal">
 
-    <div class="row">
-        <?php echo '医生: ' . $model->getName() ?>                
+        <div>
+            <?php echo '医生: ' . $model->getName() ?>                
+        </div>
+        <div>
+            <?php echo '医院: ' . $model->getHospitalName() ?>                
+        </div>
+        <div>
+            <?php echo '科室: ' . $model->getHpDeptName() ?>                
+        </div>
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($teamForm, 'dis_tags'); ?></label>
+            <div>
+                <?php echo $form->textarea($teamForm, 'dis_tags', array('rows' => 2, 'cols' => 80, 'maxlength' => 1000, 'class' => 'form-control')); ?>              
+                <div class="text-danger "> <?php echo $form->error($model, 'dis_tags'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($teamForm, 'description'); ?></label>
+            <div>
+                <?php echo $form->textarea($teamForm, 'description', array('rows' => 4, 'cols' => 80, 'maxlength' => 1000, 'class' => 'form-control')); ?>              
+                <div class="text-danger "> <?php echo $form->error($model, 'description'); ?></div>
+            </div>
+        </div>
+        <div class="row col-sm-7">        
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+        <?php $this->endWidget(); ?>
     </div>
-    <div class="row">
-        <?php echo '医院: ' . $model->getHospitalName() ?>                
-    </div>
-    <div class="row">
-        <?php echo '科室: ' . $model->getHpDeptName() ?>                
-    </div>
-    <div class="row">
-        <?php echo $form->labelEx($teamForm, 'dis_tags'); ?>
-        <?php echo $form->textarea($teamForm, 'dis_tags', array('rows' => 2, 'cols' => 80, 'maxlength' => 1000)); ?>
-        <?php echo $form->error($teamForm, 'dis_tags'); ?>
-    </div>
-    <div class="row">
-        <?php echo $form->labelEx($teamForm, 'description'); ?>
-        <?php echo $form->textarea($teamForm, 'description', array('rows' => 4, 'cols' => 80, 'maxlength' => 1000)); ?>
-        <?php echo $form->error($teamForm, 'description'); ?>
-    </div>
-
-
-    <div class="row">        
-        <button type="submit" class="btn btn-success">保存</button>
-    </div>
-    <?php $this->endWidget(); ?>
 </div>

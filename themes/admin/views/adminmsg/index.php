@@ -6,10 +6,10 @@ $this->breadcrumbs=array(
 	'Admin Msgs',
 );
 
-$this->menu=array(
-	array('label'=>'Create AdminMsg', 'url'=>array('create')),
-	array('label'=>'Manage AdminMsg', 'url'=>array('admin')),
-);
+//$this->menu=array(
+//	array('label'=>'Create AdminMsg', 'url'=>array('create')),
+//	array('label'=>'Manage AdminMsg', 'url'=>array('admin')),
+//);
 ?>
 
 <h1>Admin Msgs</h1>

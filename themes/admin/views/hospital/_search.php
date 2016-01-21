@@ -4,68 +4,72 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="wide form">
+<div class="row form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'action'=>Yii::app()->createUrl($this->route),
-	'method'=>'get',
-)); ?>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'action' => Yii::app()->createUrl($this->route),
+        'method' => 'get',
+    ));
+    ?>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'id'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'id', array('class' => 'form-control')); ?>
+        </div>
+    </div>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'name'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+        </div>
+    </div>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'short_name'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'short_name', array('class' => 'form-control', 'size' => 45, 'maxlength' => 45)); ?>
+        </div>
+    </div>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'country_id'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'country_id', array('class' => 'form-control')); ?>
+        </div>
+    </div>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'state_id'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'state_id', array('class' => 'form-control')); ?>
+        </div>
+    </div>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'city_id'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'city_id', array('class' => 'form-control')); ?>
+        </div>
+    </div>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'address'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'address', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+        </div>
+    </div>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'phone'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'phone', array('class' => 'form-control', 'size' => 45, 'maxlength' => 45)); ?>
+        </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->label($model,'id'); ?>
-		<?php echo $form->textField($model,'id'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'name'); ?>
-		<?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>100)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'short_name'); ?>
-		<?php echo $form->textField($model,'short_name',array('size'=>45,'maxlength'=>45)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'country_id'); ?>
-		<?php echo $form->textField($model,'country_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'state_id'); ?>
-		<?php echo $form->textField($model,'state_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'city_id'); ?>
-		<?php echo $form->textField($model,'city_id'); ?>
-	</div>
-
-
-	<div class="row">
-		<?php echo $form->label($model,'address'); ?>
-		<?php echo $form->textField($model,'address',array('size'=>60,'maxlength'=>100)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'phone'); ?>
-		<?php echo $form->textField($model,'phone',array('size'=>45,'maxlength'=>45)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'description'); ?>
-		<?php echo $form->textField($model,'description',array('size'=>60,'maxlength'=>500)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'website'); ?>
-		<?php echo $form->textField($model,'website',array('size'=>60,'maxlength'=>100)); ?>
-	</div>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Search'); ?>
-	</div>
-
-<?php $this->endWidget(); ?>
+    <div class="form-group  col-sm-3">
+        <label ><?php echo $form->label($model, 'website'); ?></label>
+        <div>
+            <?php echo $form->textField($model, 'website', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+        </div>
+    </div>
+    <div class="form-group col-sm-3 mt30">
+        <button type="submit" class="btn btn-primary">搜索</button>
+    </div> 
+    <?php $this->endWidget(); ?>
 
 </div><!-- search-form -->

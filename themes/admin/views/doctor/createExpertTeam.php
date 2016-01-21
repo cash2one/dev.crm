@@ -4,7 +4,7 @@
 
 
 $this->breadcrumbs = array(
-    'Doctors' => array('index'),
+    'Doctors' => array('admin'),
     $model->getName(),
 );
 

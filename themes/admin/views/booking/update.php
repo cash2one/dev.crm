@@ -3,7 +3,7 @@
 /* @var $model Booking */
 
 $this->breadcrumbs = array(
-    '预约列表' => array('list'),
+    '预约列表' => array('admin'),
     $model->id => array('view', 'id' => $model->id),
     '修改预约',
 );

@@ -11,7 +11,7 @@ $urlDoctor = $this->createAbsoluteUrl('user/view', array('id' => $creator->id));
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
 
 $this->breadcrumbs = array(
-    '预约列表' => array('list'),
+    '预约列表' => array('admin'),
     $booking->id,
 );
 
@@ -28,7 +28,8 @@ $this->menu = array(
 $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array('id' => $booking->id, 'code' => ''));
 ?>
 
-
+<a href="<?php echo $this->createUrl('order/createPBOrder', array('bid' =>  $booking->id))?>" class="btn btn-primary">生成订单</a>
+<a href="<?php echo $this->createUrl('relateDoctor', array('bid' =>  $booking->id))?>" class="btn btn-primary">关联医生</a>
 <h1>预约详情 - 医生端 #<?php echo $booking->refNo; ?></h1>
 
 <table class="detail-view" id="yw0">

@@ -3,7 +3,7 @@
 /* @var $model SalesOrder */
 
 $this->breadcrumbs = array(
-    'Sales Orders' => array('index'),
+    'Sales Orders' => array('admin'),
     $model->id,
 );
 
@@ -51,6 +51,6 @@ $this->widget('zii.widgets.CDetailView', array(
 //$url = $this->createAbsoluteUrl('/order/view', array('refno' => $model->ref_no));
 $url = 'http://mingyizhudao.com/order/view?refno='.$model->ref_no;
 //var_dump($url);
-echo '<h5>支付链接: </h5> ' . '<a href="' . $url . '" target="_blank">' . $url . '</a>';
+echo '<h5>支付链接: </h5> ' . '<a class="color-blue" href="' . $url . '" target="_blank">' . $url . '</a>';
 ?>
 

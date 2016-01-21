@@ -4,12 +4,12 @@
 /* @var $model User */
 
 $this->breadcrumbs = array(
-    'Users' => array('index'),
+    'Users' => array('admin'),
     'Manage',
 );
 
 $this->menu = array(
-    array('label' => 'List User', 'url' => array('index')),
+    array('label' => 'List User', 'url' => array('admin')),
 );
 ?>
 
@@ -20,66 +20,88 @@ $urlSearch = $this->createUrl('user/searchResult');
 $urlUserView = $this->createAbsoluteUrl('user/view');
 ?>
 
-<table id='searchForm'>
-    <tr>
-        <td>姓名：</td>
-        <td><input name='name' value=''></td>
-        <td>手机：</td>
-        <td><input name='mobile' value=''></td>
-    </tr>
-    <tr>
-        <td>医院：</td>
-        <td><input name='hpName' value=''></td>
-        <td>科室：</td>
-        <td><input name='hpDeptName' value=''></td>
-    </tr>
-    <tr>
-        <td>临床职称</td>
-        <td><select name='cTitle'>
+<div id='searchForm'>
+    <div class="form-group col-sm-3">
+        <label >姓名</label>
+        <div>
+            <input class="form-control" name = 'name' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >手机</label>
+        <div>
+            <input class="form-control" name = 'mobile' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >医院</label>
+        <div>
+            <input class="form-control" name = 'hpName' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >科室</label>
+        <div>
+            <input class="form-control" name = 'hpDeptName' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >临床职称</label>
+        <div>
+            <select name='cTitle' class="form-control">
                 <option value=''>全部</option>
                 <option value='1'>主任医师</option>
                 <option value='2'>副主任医师</option>
                 <option value='3'>主治医师</option>
                 <option value='4'>住院医师</option>
-            </select></td>
-        <td>学术职称</td>
-        <td><select name='aTitle'>
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >学术职称</label>
+        <div>
+            <select name='aTitle' class="form-control">
                 <option value=''>全部</option>
                 <option value='1'>教授</option>
                 <option value='2'>副教授</option>
                 <option value='9'>无</option>
-            </select></td>
-    </tr>
-    <tr>
-        <td>是否认证</td>
-        <td><select name='isVerified'>
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >是否认证</label>
+        <div>
+            <select name='isVerified' class="form-control">
                 <option value=''>全部</option>
                 <option value='1'>是</option>
                 <option value='0'>否</option>
-            </select></td>
-        <td>是否签约</td>
-        <td><select name='isContracted'>
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >是否签约</label>
+        <div>
+            <select name='isContracted' class="form-control">
                 <option value=''>全部</option>
                 <option value='1'>是</option>
                 <option value='0'>否</option>
-            </select></td>
-    </tr>
-</table>
-<button id='btnSearch' type='button'>搜索</button>
-<?php
-echo '<br>----------------------------------------------------查询结果-------------------------------------------------------------------------<br>';
-?>
+            </select>
+        </div>
+    </div>
 
+    <div class="form-group col-sm-3">
+        <button id = 'btnSearch' type="button" class="btn btn-primary">搜索</button>
+    </div> 
+    <div class="clearfix"></div>
+</div>
 <div id="searchResult">   
 </div>
-
-
 <script>
     $(document).ready(function () {
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
         var requestUrl = "<?php echo $urlSearch; ?>";
-
+loadUserSearchResult(requestUrl+ '?role=2', selectorSearchResult);
 
         $("#btnSearch").click(function () {
             var searchUrl = requestUrl + '?role=2';
@@ -106,5 +128,4 @@ echo '<br>----------------------------------------------------查询结果------
             }
         });
     }
-
 </script>

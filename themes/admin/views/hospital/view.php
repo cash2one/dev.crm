@@ -3,7 +3,7 @@
 /* @var $model Hospital */
 
 $this->breadcrumbs = array(
-    'Hospitals' => array('index'),
+    'Hospitals' => array('admin'),
     $model->name,
 );
 
@@ -16,6 +16,7 @@ $this->menu = array(
     array('label' => 'Manage Hospital', 'url' => array('admin')),
 );
 ?>
+<a href="<?php echo $this->createUrl('addDepartment', array('id' =>  $model->id))?>" class="btn btn-primary">添加科室</a>
 
 <h1><?php echo $model->name; ?></h1>
 <div><?php echo CHtml::Image($model->getAbsUrlAvatar(false), $model->name, array('title' => $model->name)); ?></div>

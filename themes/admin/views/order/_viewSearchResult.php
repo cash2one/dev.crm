@@ -1,5 +1,5 @@
 <tr>
-    <td><?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id' => $data->id), array('target' => '_blank')); ?></td>
+    <td><?php echo $data->id; ?></td>
     <td><?php echo $data->getRefNo(); ?></td>
     <td><?php echo $data->getPingId(); ?></td>
     <td><?php echo $data->getDateClosed(); ?></td>
@@ -17,4 +17,6 @@
         }
         ?>
     </td>
+    <td rowspan="1"><a target="_blank" href="<?php echo $this->createUrl('view', array('id' => $data->id)) ?>" ><img src="/myzd/assets/9f55b493/gridview/view.png" alt="查看"></a></td>
+
 </tr>

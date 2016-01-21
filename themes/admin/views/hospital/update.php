@@ -3,7 +3,7 @@
 /* @var $model Hospital */
 
 $this->breadcrumbs=array(
-	'Hospitals'=>array('index'),
+	'Hospitals'=>array('admin'),
 	$model->name=>array('view','id'=>$model->id),
 	'Update',
 );

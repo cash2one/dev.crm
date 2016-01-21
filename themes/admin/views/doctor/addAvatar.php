@@ -5,7 +5,7 @@
 /* @var $form CActiveForm */
 
 $this->breadcrumbs = array(
-    'Doctors' => array('index'),
+    'Doctors' => array('admin'),
     $doctor->getName() => array('view', 'id' => $doctor->getId()),
 );
 
@@ -53,8 +53,8 @@ $this->menu = array(
 
     <?php echo $form->errorSummary($doctor); ?>
     <br/>
-    <div class="row buttons">
-        <?php echo CHtml::submitButton('Save'); ?>
+    <div class="buttons">
+       <button type="submit" class="btn btn-primary">保存</button>
     </div>
 
     <?php $this->endWidget(); ?>

@@ -18,80 +18,116 @@ $this->menu = array(
 $urlSearch = $this->createUrl('order/searchResult');
 $urlPatientBookingView = $this->createAbsoluteUrl('patientBooking/view');
 $urlBookingView = $this->createAbsoluteUrl('booking/view');
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datepicker.css");
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js', CClientScript::POS_END);
 ?>
 
-<table id = 'searchForm'>
-    <tr>
-        <td>支付单号:</td>
-        <td><input name = 'refNo' value = ''></td>
-        <td>费用种类:</td>
-        <td><select name = 'orderType'>
+<div id = 'searchForm'>
+    <div class="form-group col-sm-3">
+        <label >支付单号</label>
+        <div>
+            <input class="form-control" name = 'refNo' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >费用种类</label>
+        <div>
+            <select name = 'orderType' class="form-control">
                 <option value = ''>全部</option>
                 <option value = 'deposit'>订金</option>
                 <option value = 'service'>服务费</option>
                 <option value = 'surgery'>手术费</option>
                 <option value = 'consultation'>会诊费</option>
-            </select></td>
-    </tr>
-    <tr>
-        <td>Ping++ ID:</td>
-        <td><input name = 'pingId' value = ''></td>
-        <td>预约类型:</td>
-        <td>
-            <select name = 'bkType'>
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >Ping++ ID</label>
+        <div>
+            <input class="form-control" name = 'pingId' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >预约类型</label>
+        <div>
+            <select name = 'bkType' class="form-control">
                 <option value = ''>全部</option>
                 <option value = '1'>患者</option>
                 <option value = '2'>手术直通车</option>
             </select>
-        </td>
-    </tr>
-
-    <tr>
-        <td>支付金额:</td>
-        <td><input name = 'finalAmount' value = '' placeholder="如：100.00"></td>
-        <td>支付状态:</td>
-        <td> 
-            <select name = 'isPaid'>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >支付金额</label>
+        <div>
+            <input class="form-control" name = 'finalAmount' value = '' placeholder="如：100.00">
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >支付状态</label>
+        <div>
+            <select name = 'isPaid' class="form-control">
                 <option value = ''>全部</option>
                 <option value = '9'>未支付</option>
                 <option value = '1'>已支付</option>
             </select>
-        </td>
-    </tr>
-    <tr>
-        <td>建单时间:</td>
-        <td>
-            <input name = 'dateOpen' value = '' placeholder="yyyy-MM-dd HH:mm:ss">
-        </td>
-        <td>支付时间:</td>
-        <td>
-            <input name = 'dateClosed' value = '' placeholder="yyyy-MM-dd HH:mm:ss">
-        </td>
-    </tr>
-    <tr>
-        <td>地区:</td>
-        <td>
-            <input name = 'bdCode' value = '' placeholder="请填写地区名">
-        </td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
-<button id = 'btnSearch' type = 'button'>搜索</button>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >建单时间</label>
+        <div>
+            <input class="form-control dateOpen" name = 'dateOpen' value = '' placeholder="yyyy-MM-dd">
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >支付时间</label>
+        <div>
+            <input class="form-control dateClosed" name = 'dateClosed' value = '' placeholder="yyyy-MM-dd">
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >地区</label>
+        <div>
+            <input class="form-control" name = 'bdCode' value = '' placeholder="请填写地区名">
+        </div>
+    </div>
 
-<?php
-echo '<br>----------------------------------------------------查询结果-------------------------------------------------------------------------<br>';
-?>
+    <div class="form-group col-sm-3 mt25">
+        <button id = 'btnSearch' type="submit" class="btn btn-primary">搜索</button>
+    </div>
+</div>
+<div class="clearfix"></div>
 <div id="searchResult">   
 </div>
 
 
 <script>
     $(document).ready(function () {
+         $(".dateOpen").datepicker({            
+            //startDate: "+1d",
+            //todayBtn: true,
+            autoclose: true,
+            maxView: 2,
+            //todayHighlight: true,
+            pickerPosition: "bottom-left",
+            format: "yyyy-mm-dd",
+            language: "zh-CN"
+        });
+          $(".dateClosed").datepicker({            
+            //startDate: "+1d",
+            //todayBtn: true,
+            autoclose: true,
+            maxView: 2,
+            //todayHighlight: true,
+            pickerPosition: "bottom-left",
+            format: "yyyy-mm-dd",
+            language: "zh-CN"
+        });
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
         var requestUrl = "<?php echo $urlSearch; ?>";
-
+        loadUserSearchResult(requestUrl+ '?he=2', selectorSearchResult);
 
         $("#btnSearch").click(function () {
             var searchUrl = requestUrl + '?he=2';

@@ -3,7 +3,7 @@
 /* @var $model PatientBooking */
 
 $this->breadcrumbs = array(
-    '预约列表' => array('list'),
+    '预约列表' => array('admin'),
     '搜索',
 );
 
@@ -18,33 +18,52 @@ $this->menu = array(
 <?php
 $urlSearch = $this->createUrl('patientBooking/searchResult');
 $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datepicker.css");
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js', CClientScript::POS_END);
 ?>
 
-<table id = 'searchForm'>
-    <tr>
-        <td>预约单号：</td>
-        <td><input name = 'bookingRefNo' value = ''></td>
-        <td>患者姓名：</td>
-        <td><input name = 'patientName' value = ''></td>
-    </tr>
-    <tr>
-        <td>创建人姓名：</td>
-        <td><input name = 'creatorName' value = ''></td>
-        <td>预约医生姓名：</td>
-        <td><input name = 'doctorName' value = ''></td>
-    </tr>
-    <tr>
-        <td>就诊方式：</td>
-        <td>
-            <select name = 'travelType'>
+
+
+<div id = 'searchForm'>
+  <div class="form-group col-sm-3">
+        <label >预约单号</label>
+        <div>
+            <input class="form-control col-sm-3" name = 'bookingRefNo' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >患者姓名</label>
+        <div>
+            <input class="form-control col-sm-3" name = 'patientName' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >创建人姓名</label>
+        <div>
+            <input class="form-control col-sm-3" name = 'creatorName' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >预约医生姓名</label>
+        <div>
+            <input class="form-control col-sm-3" name = 'doctorName' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >就诊方式</label>
+        <div>
+            <select name = 'travelType' class="form-control">
                 <option value = ''>全部</option>
                 <option value = '1'>邀请医生过来</option>
                 <option value = '2'>希望转诊治疗</option>
             </select>
-        </td>
-        <td>处理状态：</td>
-        <td>
-            <select name = 'status'>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >处理状态</label>
+        <div>
+            <select name = 'status' class="form-control">
                 <option value = ''>全部</option>
                 <option value = '1'>待处理</option>
                 <option value = '2'>处理中</option>
@@ -53,48 +72,59 @@ $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
                 <option value = '9'>已收到出院小结</option>
                 <option value = '99'>已取消</option>
             </select>
-        </td>
-    </tr>
-    <tr>
-        <td>支付单号</td>
-        <td><input name = 'orderRefNo' value = ''></td>
-        <td>支付状态：</td>
-        <td> 
-            <select name = 'isDepositPaid'>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >支付单号</label>
+        <div>
+            <input name = 'orderRefNo' class="form-control" value = ''>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >支付状态</label>
+        <div>
+            <select name = 'isDepositPaid' class="form-control">
                 <option value = ''>全部</option>
                 <option value = '0'>未支付</option>
                 <option value = '1'>已支付</option>
                 <option value = '2'>支付失败</option>
             </select>
-        </td>
-    </tr>
-    <tr>
-        <td>支付金额</td>
-        <td><input name = 'finalAmount' value = ''></td>
-        <td>费用种类</td>
-        <td><select name = 'orderType'>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >支付金额</label>
+        <div>
+            <input name = 'finalAmount' class="form-control" value = ''>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >费用种类</label>
+        <div>
+            <select name = 'orderType' class="form-control">
                 <option value = ''>全部</option>
                 <option value = 'deposit'>订金</option>
                 <option value = 'service'>服务费</option>
                 <option value = 'surgery'>手术费</option>
                 <option value = 'consultation'>会诊费</option>
             </select>
-        </td>
-    </tr>
-    <tr>
-        <td>支付开始时间</td>
-        <td>
-            <input name = 'dateOpen' value = ''>
-        </td>
-        <td>支付结束时间</td>
-        <td>
-            <input name = 'dateClosed' value = ''>
-        </td>
-    </tr>
-    <tr>
-        <td>患者来源</td>
-        <td>
-            <select name = 'userAgent'>
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >建单时间</label>
+        <div>
+            <input name = 'dateOpen' class="form-control dateOpen" data-format="yyyy-mm-dd" value = '' placeholder="请输入日期">
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >支付时间</label>
+        <div>
+            <input name = 'dateClosed' class="form-control dateClosed" data-format="yyyy-mm-dd" value = '' placeholder="请输入日期">
+        </div>
+    </div>
+    <div class="form-group col-sm-3">
+        <label >患者来源</label>
+        <div>
+            <select name = 'userAgent' class="form-control">
                 <option value = ''>全部</option>
                 <option value = 'website'>网站</option>
                 <option value = 'wap'>手机网站</option>
@@ -102,24 +132,43 @@ $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
                 <option value = 'ios'>iOS APP</option>
                 <option value = 'android'>Android APP</option>
             </select>
-        </td>
-    </tr>
-</table>
-<button id = 'btnSearch' type = 'button'>搜索</button>
-
-<?php
-echo '<br>----------------------------------------------------查询结果-------------------------------------------------------------------------<br>';
-?>
+        </div>
+    </div>
+    
+    <div class="form-group col-sm-3 mt25">
+        <button id = 'btnSearch' type="submit" class="btn btn-primary">搜索</button>
+    </div> 
+    <div class="clearfix"></div>
+</div>
 <div id="searchResult">   
 </div>
-
-
 <script>
     $(document).ready(function () {
+        //开始日期
+        $(".dateClosed").datepicker({            
+            //startDate: "+1d",
+            //todayBtn: true,
+            autoclose: true,
+            maxView: 2,
+            //todayHighlight: true,
+            pickerPosition: "bottom-left",
+            format: "yyyy-mm-dd",
+            language: "zh-CN"
+        });
+         $(".dateOpen").datepicker({            
+            //startDate: "+1d",
+            //todayBtn: true,
+            autoclose: true,
+            maxView: 2,
+            //todayHighlight: true,
+            pickerPosition: "bottom-left",
+            format: "yyyy-mm-dd",
+            language: "zh-CN"
+        });
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
         var requestUrl = "<?php echo $urlSearch; ?>";
-
+loadUserSearchResult(requestUrl+ '?bkType=2', selectorSearchResult);
 
         $("#btnSearch").click(function () {
             var searchUrl = requestUrl + '?bkType=2';

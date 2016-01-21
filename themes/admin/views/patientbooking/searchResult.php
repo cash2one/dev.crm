@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-hover custom-table">
     <thead>
         <tr>
             <th>预约ID</th>
@@ -13,6 +13,7 @@
             <th>费用类型</th>
             <th>支付金额</th>
             <th>支付状态</th>
+            <th></th>
         </tr>
     </thead>
 

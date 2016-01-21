@@ -1,5 +1,4 @@
 <?php
-Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/web/js/bootstrap.min.js', CClientScript::POS_HEAD);
 $urlSubmit = $this->createUrl('doctor/updateDisease');
 $docId = Yii::app()->request->getQuery('id');
 $diseaseIds = CJSON::encode($data->diseaseIds);
@@ -12,7 +11,8 @@ $diseaseIds = CJSON::encode($data->diseaseIds);
 <form action="<?php echo $urlSubmit ?>" method="post">
     <input type="hidden" name='DoctorDiseaseJoinForm[id]' value="<?php echo $docId; ?>"/>
     <div>
-        <ul class="nav nav-tabs" role="tablist">
+        <style>ul>li{clear:none;}</style>
+        <ul class="nav nav-tabs " role="tablist">
             <li role="presentation" class="active"><a href="#waike" aria-controls="waike" role="tab" data-toggle="tab">外科</a></li>
             <li role="presentation"><a href="#guke" aria-controls="guke" role="tab" data-toggle="tab">骨科</a></li>
             <li role="presentation"><a href="#fuchanke" aria-controls="fuchanke" role="tab" data-toggle="tab">妇产科</a></li>
@@ -263,7 +263,7 @@ $diseaseIds = CJSON::encode($data->diseaseIds);
         </div>
     </div>
     <div class="mt20">
-        <button id="btnSubmit" type="submit" class="btn btn-success">保存</button>
+        <button id="btnSubmit" type="submit" class="btn btn-primary">保存</button>
     </div>
 </form>
 <br/>

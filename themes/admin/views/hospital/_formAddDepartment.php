@@ -18,11 +18,10 @@
         'enableAjaxValidation' => true,
     ));
     ?>
-    <?php echo $form->errorSummary($model); ?>
+    <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
     <?php echo $form->hiddenField($model, 'hospital_id'); ?>
-    <div class="row form-group">        
+    <div class="form-group">        
         <?php echo $form->labelEx($model, 'group'); ?>
-        <?php echo $form->error($model, 'group'); ?>
         <div>
             <?php
             echo $form->dropDownList($model, 'group', $model->loadOptionsDeptGroup(), array(
@@ -30,23 +29,23 @@
                 'class' => 'sel form-control',
             ));
             ?>
-
+             <div class="text-danger"><?php echo $form->error($model, 'group'); ?></div>
         </div>
         <div class="clearfix"></div>
     </div>
-    <div class="row form-group">        
+    <div class="form-group">        
         <?php echo $form->labelEx($model, 'name'); ?>
         <div>
             <?php
             echo $form->textfield($model, 'name', array('class' => 'form-control'));
             ?>
         </div>
-        <?php echo $form->error($model, 'name'); ?>
+        <div class="text-danger"><?php echo $form->error($model, 'name'); ?></div>
         <div class="clearfix"></div>
     </div>
     <br />
-    <div class="row buttons">
-        <?php echo CHtml::submitButton('Add'); ?>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">添加</button>
     </div>
 
     <?php $this->endWidget(); ?>

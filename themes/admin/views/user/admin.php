@@ -4,7 +4,7 @@
 /* @var $model User */
 
 $this->breadcrumbs = array(
-    'Users' => array('index'),
+    'Users' => array('admin'),
     'Manage',
 );
 
@@ -34,7 +34,7 @@ $('.search-form form').submit(function(){
 </p>
 
 <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button')); ?>
-<div class="search-form" style="display:none">
+<div class="search-form">
     <?php
     $this->renderPartial('_search', array(
         'model' => $model,
