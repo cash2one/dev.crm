@@ -321,6 +321,44 @@ class DoctorManager {
         return ($form->hasErrors() === false);
     }
 
+    /*     * ** 修改医生信息 *** */
+
+    public function updateAdminDoctor(DoctorFormAdmin $form) {
+        if ($form->validate()) {
+            $model = $this->loadDoctorById($form->id);
+            $deptId = $model->hp_dept_id;
+            //给省市id 医院 科室名称赋值
+            if ($form->hospital_id != $model->hospital_id) {
+                $hospital = Hospital::model()->getById($form->hospital_id);
+                $form->state_id = $hospital->state_id;
+                $form->city_id = $hospital->city_id;
+                $form->country_id = $hospital->country_id;
+                $form->hospital_name = $hospital->getName();
+            }
+            if ($form->hp_dept_id != $model->hp_dept_id) {
+                $dept = HospitalDepartment::model()->getById($form->hp_dept_id);
+                $form->hp_dept_name = $dept->getName();
+            }
+            $model->setAttributes($form->attributes);
+            $model->honour = explode('#', $form->honour);
+            if ($model->save()) {
+                //保存成功 保存关联表
+                $join = HospitalDeptDoctorJoin::model()->getByDoctorIdAndDeptId($model->getId(), $deptId);
+                if (is_null($join)) {
+                    $join = new HospitalDeptDoctorJoin();
+                }
+                $join->hp_dept_id = $model->hp_dept_id;
+                $join->doctor_id = $model->getId();
+                if ($join->save() == false) {
+                    $form->addErrors($join->getErrors());
+                }
+            } else {
+                var_dump($doctor);
+                exit;
+            }
+        }
+    }
+
     public function deleteDoctor(Doctor $model) {
         // DoctorFacultyJoin.
         FacultyDoctorJoin::model()->deleteAllByAttributes(array('doctor_id' => $model->id));

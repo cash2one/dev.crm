@@ -86,3 +86,4 @@ body {color: #333;letter-spacing: 1px;line-height: 1.5;font-size: 14px;font-fami
 .border-bottom{border-bottom: 1px solid #e4e4e4;}
 
 ul,ol{list-style:none;}
+.errorMessage{color: #f00;}

@@ -117,4 +117,9 @@ class HospitalDeptDoctorJoin extends EActiveRecord
 	{
 		return parent::model($className);
 	}
+        
+        /**** 根据医生id和科室id查询关联表信息 ****/
+        public function getByDoctorIdAndDeptId($doctorId, $deptId){
+            return $this->getByAttributes(array('doctor_id'=>$doctorId,'hp_dept_id'=>$deptId));
+        }
 }

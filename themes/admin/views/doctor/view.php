@@ -24,6 +24,7 @@ $this->menu = array(
 //$urlAvatar = $model->getAbsUrlAvatar(true);
 $urlAvatar = $model->base_url . $model->avatar_url;
 ?>
+<a href="<?php echo $this->createUrl('update', array('id' =>  $model->id))?>" class="btn btn-primary">修改信息</a>
 <a href="<?php echo $this->createUrl('addDisease', array('id' =>  $model->id))?>" class="btn btn-primary">关联疾病</a>
 <a href="<?php echo $this->createUrl('addAvatar', array('id' =>  $model->id))?>" class="btn btn-primary">设置头像</a>
 <a href="<?php echo $this->createUrl('createExpertTeam', array('id' =>  $model->id))?>" class="btn btn-primary">生成团队</a>

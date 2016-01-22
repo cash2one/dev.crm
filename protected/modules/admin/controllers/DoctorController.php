@@ -138,6 +138,8 @@ class DoctorController extends AdminController {
             $form->hp_dept_name = $dept->getName();
             $doctor = new Doctor();
             $doctor->setAttributes($form->attributes);
+
+            $doctor->honour = explode('#', $form->honour);
             $doctor->is_contracted = 1; //签约医生
             if ($doctor->save()) {
                 //保存成功 保存关联表
@@ -146,7 +148,7 @@ class DoctorController extends AdminController {
                 $join->doctor_id = $doctor->getId();
                 if ($join->save()) {
                     $this->redirect(array('view', 'id' => $doctor->getId()));
-                };
+                }
             }
         }
         $this->render('create', array(
@@ -227,26 +229,52 @@ class DoctorController extends AdminController {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id) {
+//    public function actionUpdate($id) {
+//
+//        $model = $this->loadModel($id);
+//        $form = new DoctorForm();
+//        $form->initModel($model);
+//        //   var_dump($model->attributes);
+//        //   var_dump($form->attributes);
+//        // Uncomment the following line if AJAX validation is needed
+//        $this->performAjaxValidation($form);
+//
+//        if (isset($_POST['DoctorForm'])) {
+//            $form->attributes = $_POST['DoctorForm'];
+//
+//            $doctorMgr = new DoctorManager();
+//            $doctorMgr->updateDoctor($form);
+//            if ($form->hasErrors() === false) {
+//                $this->redirect(array('view', 'id' => $model->getId()));
+//            }
+//        }
+//
+//        $this->render('update', array(
+//            'model' => $form,
+//        ));
+//    }
 
+    public function actionUpdate($id) {
+        $form = new DoctorFormAdmin();
         $model = $this->loadModel($id);
-        $form = new DoctorForm();
         $form->initModel($model);
-        //   var_dump($model->attributes);
-        //   var_dump($form->attributes);
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($form);
-
-        if (isset($_POST['DoctorForm'])) {
-            $form->attributes = $_POST['DoctorForm'];
-
+        if (isset($_POST['DoctorFormAdmin'])) {
+            $form->attributes = $_POST['DoctorFormAdmin'];
             $doctorMgr = new DoctorManager();
-            $doctorMgr->updateDoctor($form);
+            $doctorMgr->updateAdminDoctor($form);
             if ($form->hasErrors() === false) {
                 $this->redirect(array('view', 'id' => $model->getId()));
             }
         }
-
+        if (!isset($_POST['DoctorFormAdmin']) && is_null($form->honour) == false) {
+            $honour = '';
+            foreach ($form->honour as $v) {
+                $honour.=$v . '#';
+            }
+            $form->honour = substr($honour, 0, strlen($honour) - 1);
+        }
         $this->render('update', array(
             'model' => $form,
         ));

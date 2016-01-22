@@ -24,12 +24,15 @@ class DoctorFormAdmin extends EFormModel {
     public $options_a_title;
     public $options_state;
     public $options_city;
+    //new
+    public $honour;
+    public $career_exp;
 
     public function rules() {
         return array(
-            array('name, fullname, state_id, city_id, hospital_id, hp_dept_id, medical_title, academic_title', 'required', 'message' => '请输入{attribute}'),
+            array('name, fullname, state_id, city_id, hospital_id, hp_dept_id, medical_title, academic_title, career_exp', 'required', 'message' => '请输入{attribute}'),
             array('description', 'length', 'max' => 200),
-            array('hp_dept_name, hospital_name','safe'),
+            array('id, hp_dept_name, hospital_name, honour','safe'),
             array("hospital_name", "validateHospitalName"),
         );
     }
@@ -56,6 +59,8 @@ class DoctorFormAdmin extends EFormModel {
             'medical_title' => '临床职称',
             'academic_title' => '学术职称',
             'description' => '描述',
+            'career_exp' => '职业经历',
+            'honour' => '荣誉(每条荣誉以#号隔开)',
         );
     }
 

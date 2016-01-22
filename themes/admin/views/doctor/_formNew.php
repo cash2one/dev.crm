@@ -56,13 +56,15 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
             <label ><?php echo $form->labelEx($model, 'hp_dept_id', array('class' => '1')); ?></label>
             <div>
                 <?php
-                echo $form->dropDownList($model, 'hp_dept_id', array(
-                    'prompt' => '-- 无 --',
-                    'class' => 'sel form-control',
-                    'id' => 'dept'
-                ));
+//                echo $form->dropDownList($model, 'hp_dept_id', array(
+//                    'prompt' => '-- 无 --',
+//                    'class' => 'sel form-control',
+//                    'id' => 'dept'
+//                ));
                 ?>           
-
+                <select class="sel form-control " name="DoctorFormAdmin[hp_dept_id]" id="DoctorFormAdmin_hp_dept_id">
+                    <option value="">-- 无 --</option>
+                </select>
             </div>
             <div class="text-danger"><?php echo $form->error($model, 'hp_dept_id'); ?></div>
             <div class="clearfix"></div>
@@ -95,11 +97,24 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
             <div class="text-danger "><?php echo $form->error($model, 'academic_title'); ?></div>
             <div class="clearfix"></div>
         </div>
-
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($model, 'career_exp'); ?></label>
+            <div>
+                <?php echo $form->textarea($model, 'career_exp', array('rows' => 4, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
+                <div class="text-danger "> <?php echo $form->error($model, 'career_exp'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($model, 'honour'); ?></label>
+            <div>
+                <?php echo $form->textarea($model, 'honour', array('rows' => 4, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
+                <div class="text-danger "> <?php echo $form->error($model, 'honour'); ?></div>
+            </div>
+        </div>
         <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'description'); ?></label>
             <div>
-                <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200,'class'=>'form-control')); ?>            
+                <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
                 <div class="text-danger "> <?php echo $form->error($model, 'description'); ?></div>
             </div>
         </div>

@@ -95,7 +95,7 @@
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
 
                                             <li><a href="<?php echo $this->createUrl('doctor/admin') ?>">搜索</a></li>
-                                            <li ><a href="<?php echo $this->createUrl('doctor/create') ?>">创建医生</a></li>
+                                            <li ><a href="<?php echo $this->createUrl('doctor/createDoctor') ?>">创建医生</a></li>
                                         </ul>
                                     </div>
 
