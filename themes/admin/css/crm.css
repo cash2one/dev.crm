@@ -265,6 +265,7 @@ thead tr th{text-align:center;color:#fff;}
 .button-column .update{display:none;}
 .button-column .delete{display:none;}
 .items .filters{display:none;}
+.mt24{margin-top:24px;}
 .mt25{margin-top:25px;}
 .odd,.even{background-color:#fff!important;}
 .grid-view table.items tbody tr:hover{background-color: #f5f5f5!important;}
@@ -288,3 +289,5 @@ ul.yiiPager a:link:hover, ul.yiiPager a:visited:hover{border:solid 1px #0e509e;}
 /*#searchResult .list-view{text-align: right;width:300px;}*/
 .datepicker.dropdown-menu{width:190px;}
 .datepicker thead tr:first-child th:hover, .datepicker tfoot tr th:hover{background:#65a5cc; }
+#content{padding-top:0!important;}
+h1{margin-top:0;margin-bottom:0!important;}

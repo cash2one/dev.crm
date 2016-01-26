@@ -21,31 +21,31 @@ $urlUserView = $this->createAbsoluteUrl('user/view');
 ?>
 
 <div id='searchForm'>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >姓名</label>
         <div>
             <input class="form-control" name = 'name' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >手机</label>
         <div>
             <input class="form-control" name = 'mobile' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >医院</label>
         <div>
             <input class="form-control" name = 'hpName' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >科室</label>
         <div>
             <input class="form-control" name = 'hpDeptName' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >临床职称</label>
         <div>
             <select name='cTitle' class="form-control">
@@ -57,7 +57,7 @@ $urlUserView = $this->createAbsoluteUrl('user/view');
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >学术职称</label>
         <div>
             <select name='aTitle' class="form-control">
@@ -68,7 +68,7 @@ $urlUserView = $this->createAbsoluteUrl('user/view');
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >是否认证</label>
         <div>
             <select name='isVerified' class="form-control">
@@ -78,7 +78,7 @@ $urlUserView = $this->createAbsoluteUrl('user/view');
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >是否签约</label>
         <div>
             <select name='isContracted' class="form-control">
@@ -89,7 +89,7 @@ $urlUserView = $this->createAbsoluteUrl('user/view');
         </div>
     </div>
 
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2 mt24">
         <button id = 'btnSearch' type="button" class="btn btn-primary">搜索</button>
     </div> 
     <div class="clearfix"></div>
