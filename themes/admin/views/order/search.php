@@ -24,13 +24,13 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
 ?>
 
 <div id = 'searchForm'>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付单号</label>
         <div>
             <input class="form-control" name = 'refNo' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >费用种类</label>
         <div>
             <select name = 'orderType' class="form-control">
@@ -42,13 +42,13 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >Ping++ ID</label>
         <div>
             <input class="form-control" name = 'pingId' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >预约类型</label>
         <div>
             <select name = 'bkType' class="form-control">
@@ -58,13 +58,13 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付金额</label>
         <div>
             <input class="form-control" name = 'finalAmount' value = '' placeholder="如：100.00">
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付状态</label>
         <div>
             <select name = 'isPaid' class="form-control">
@@ -74,26 +74,26 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >建单时间</label>
         <div>
             <input class="form-control dateOpen" name = 'dateOpen' value = '' placeholder="yyyy-MM-dd">
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付时间</label>
         <div>
             <input class="form-control dateClosed" name = 'dateClosed' value = '' placeholder="yyyy-MM-dd">
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >地区</label>
         <div>
             <input class="form-control" name = 'bdCode' value = '' placeholder="请填写地区名">
         </div>
     </div>
 
-    <div class="form-group col-sm-3 mt25">
+    <div class="form-group col-sm-2 mt24">
         <button id = 'btnSearch' type="submit" class="btn btn-primary">搜索</button>
     </div>
 </div>

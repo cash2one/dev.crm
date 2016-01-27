@@ -24,16 +24,16 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
 ?>
 
 <div id = 'searchForm'>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >预约单号</label>
         <div>
-            <input class="form-control col-sm-3" name = 'bookingRefNo' value = '' >
+            <input class="form-control" name = 'bookingRefNo' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >预约类型</label>
         <div>
-            <select name = 'bkType' class="form-control col-sm-3">
+            <select name = 'bkType' class="form-control col-sm-2">
                 <option value = ''>全部</option>
                 <option value = '1'>医生</option>
                 <option value = '2'>专家团队</option>
@@ -41,25 +41,25 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="form-group  col-sm-3 ">
+    <div class="form-group  col-sm-2 ">
         <label >患者姓名</label>
         <div>
-            <input class="form-control col-sm-3" name = 'contactName' value = ''>
+            <input class="form-control" name = 'contactName' value = ''>
         </div>
     </div>
-    <div class="form-group  col-sm-3">
+    <div class="form-group  col-sm-2">
         <label >疾病名称</label>
         <div>
             <input class="form-control" name = 'diseaseName' value = ''>
         </div>
     </div>
-    <div class="form-group  col-sm-3">
+    <div class="form-group  col-sm-2">
         <label >患者来源</label>
         <div>
             <input class="form-control" name = 'userAgent' value = ''>
         </div>
     </div>
-    <div class="form-group  col-sm-3">
+    <div class="form-group  col-sm-2">
         <label >处理状态</label>
         <div>
             <select name = 'bkStatus' class="form-control">
@@ -73,13 +73,13 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="form-group  col-sm-3">
+    <div class="form-group  col-sm-2">
         <label >支付单号</label>
         <div>
             <input class="form-control" name = 'orderRefNo' value = ''>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付状态</label>
         <div>
             <select name = 'isDepositPaid' class="form-control">
@@ -90,13 +90,13 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="form-group  col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付金额</label>
         <div>
             <input class="form-control" name = 'finalAmount' value = ''>
         </div>
     </div>
-    <div class="form-group  col-sm-3">
+    <div class="form-group col-sm-2">
         <label >费用种类</label>
         <div>
             <select name = 'orderType' class="form-control">
@@ -108,20 +108,20 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="form-group  col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付开始时间</label>
         <div>
             <input class="form-control dateOpen" name = 'dateOpen' value = ''>
         </div>
     </div> 
-    <div class="form-group  col-sm-3">
+    <div class="form-group  col-sm-2">
         <label >支付结束时间</label>
         <div>
             <input class="form-control dateClosed" name = 'dateClosed' value = ''>
         </div>
     </div> 
 
-    <div class="form-group col-sm-3 mt30">
+    <div class="form-group col-sm-2">
         <button id = 'btnSearch' type="submit" class="btn btn-primary">搜索</button>
     </div> 
     <div class="clearfix"></div>

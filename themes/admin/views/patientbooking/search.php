@@ -21,31 +21,31 @@ $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
 ?>
 
 <div id = 'searchForm'>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >预约单号</label>
         <div>
-            <input class="form-control col-sm-3" name = 'bookingRefNo' value = '' >
+            <input class="form-control" name = 'bookingRefNo' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >患者姓名</label>
         <div>
-            <input class="form-control col-sm-3" name = 'patientName' value = '' >
+            <input class="form-control" name = 'patientName' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >创建人姓名</label>
         <div>
-            <input class="form-control col-sm-3" name = 'creatorName' value = '' >
+            <input class="form-control" name = 'creatorName' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >预约医生姓名</label>
         <div>
-            <input class="form-control col-sm-3" name = 'doctorName' value = '' >
+            <input class="form-control" name = 'doctorName' value = '' >
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >就诊方式</label>
         <div>
             <select name = 'travelType' class="form-control">
@@ -55,7 +55,7 @@ $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >处理状态</label>
         <div>
             <select name = 'status' class="form-control">
@@ -69,13 +69,13 @@ $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付单号</label>
         <div>
             <input name = 'orderRefNo' class="form-control" value = ''>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付状态</label>
         <div>
             <select name = 'isDepositPaid' class="form-control">
@@ -86,13 +86,13 @@ $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付金额</label>
         <div>
             <input name = 'finalAmount' class="form-control" value = ''>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >费用种类</label>
         <div>
             <select name = 'orderType' class="form-control">
@@ -104,19 +104,19 @@ $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
             </select>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >建单时间</label>
         <div>
             <input name = 'dateOpen' class="form-control" value = ''>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >支付时间</label>
         <div>
             <input name = 'dateClosed' class="form-control" value = ''>
         </div>
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label >患者来源</label>
         <div>
             <select name = 'userAgent' class="form-control">
@@ -130,7 +130,7 @@ $urlUserView = $this->createAbsoluteUrl('patientBooking/view');
         </div>
     </div>
     
-    <div class="form-group col-sm-3 mt25">
+    <div class="form-group col-sm-2 mt25">
         <button id = 'btnSearch' type="submit" class="btn btn-primary">搜索</button>
     </div> 
     <div class="clearfix"></div>
