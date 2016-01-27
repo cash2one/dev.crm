@@ -68,7 +68,7 @@
                         <div class="menu" >
                             <h3 class="color-white">操作导航</h3>
                             <div class="collapse navbar-collapse" id="header-navbar-collapse"> 
-                                <style>ul{padding-left:0px; }a{color:#fff;}</style>
+                                <style>ul{padding-left:0px; }#header-navbar-collapse a{color:#fff;}</style>
                                 <div class="mt20" >
                                     <a href="<?php echo $this->createUrl('default/index') ?>">
                                         首页

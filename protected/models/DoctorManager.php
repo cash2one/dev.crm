@@ -359,6 +359,30 @@ class DoctorManager {
         }
     }
 
+    /*     * ** 修改医生签约信息 *** */
+
+    public function updateDoctorContracted($id) {
+        $output = array('status' => 'no');
+        $model = $this->loadDoctorById($id);
+        if (isset($model)) {
+            $isContracted = $model->getIsContracted();
+            if ($isContracted == 1) {
+                $model->is_contracted = 0;
+            } else {
+                $model->is_contracted = 1;
+            }
+            if ($model->update(array('is_contracted'))) {
+                $output['status'] = 'ok';
+                $output['is_contracted'] = $model->getIsContracted();
+            } else {
+                $output['errors'] = $model->getErrors();
+            }
+        } else {
+            $output['errors'] = 'no data...';
+        }
+        return $output;
+    }
+
     public function deleteDoctor(Doctor $model) {
         // DoctorFacultyJoin.
         FacultyDoctorJoin::model()->deleteAllByAttributes(array('doctor_id' => $model->id));

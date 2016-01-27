@@ -66,7 +66,7 @@ class DoctorController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'createExpertTeam', 'addFaculty', 'addAvatar', 'createDoctor', 'ajaxLoadloadHospitalDept', 'addDisease', 'updateDisease', ''),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'createExpertTeam', 'addFaculty', 'addAvatar', 'createDoctor', 'ajaxLoadloadHospitalDept', 'addDisease', 'updateDisease', 'updateContracted'),
                 'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -390,6 +390,14 @@ class DoctorController extends AdminController {
             'model' => $model,
             'fdJoin' => $fdJoin
         ));
+    }
+
+    /*     * ** 修改医生签约信息 *** */
+
+    public function actionUpdateContracted($id) {
+        $doctorMgr = new DoctorManager();
+        $output = $doctorMgr->updateDoctorContracted($id);
+        $this->renderJsonOutput($output);
     }
 
     /*
