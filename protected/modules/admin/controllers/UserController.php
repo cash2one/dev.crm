@@ -32,7 +32,7 @@ class UserController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'view', 'admin', 'listdoctors', 'verify', 'ajaxUserSearch', 'searchResult', 'search'),
+                'actions' => array('index', 'view', 'admin', 'listdoctors', 'verify', 'ajaxUserSearch', 'searchResult', 'search', 'ajaxUploadCert','delectDoctorCert'),
                 'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -70,7 +70,7 @@ class UserController extends AdminController {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $with = array('userDoctorProfile', 'userDoctorCerts');
+        $with = array('userDoctorProfile', 'userDoctorCerts'=>array('on'=>'userDoctorCerts.date_deleted is NULL'));
         $model = $this->loadModel($id, $with);
         $this->render('view', array(
             'model' => $model
@@ -217,6 +217,52 @@ class UserController extends AdminController {
         $this->renderPartial('searchResult', array(
             'dataProvider' => $dataProvider,
         ));
+    }
+
+    /**
+     * 上传医生认证图片
+     */
+    public function actionAjaxUploadCert() {
+        $output = array('status' => 'no');
+        if (isset($_POST['doctor'])) {
+            $values = $_POST['doctor'];
+            $userMgr = new UserManager();
+            if (isset($values['id']) === false) {
+                $output['status'] = 'no';
+                $output['error'] = 'invalid parameters';
+                $this->renderJsonOutput($output);
+            }
+            $ret = $userMgr->createUserDoctorCert($values['id']);
+            if (isset($ret['error'])) {
+                $output['status'] = 'no';
+                $output['error'] = $ret['error'];
+                $output['file'] = '';
+            } else {
+                // create file output.
+                $fileModel = $ret['filemodel'];
+                $data = new stdClass();
+                $data->id = $fileModel->getId();
+                $data->userId = $fileModel->getUserId();
+                $data->fileUrl = $fileModel->getAbsFileUrl();
+                $data->tnUrl = $fileModel->getAbsThumbnailUrl();
+                $data->deleteUrl = $this->createUrl('doctor/deleteCert', array('id' => $fileModel->getId()));
+                $output['status'] = 'ok';
+                $output['file'] = $data;
+            }
+        } else {
+            $output['error'] = 'invalid parameters.';
+        }
+        // android 插件
+
+        $this->renderJsonOutput($output);
+    }
+
+    //异步删除医生证明图片
+    public function actionDelectDoctorCert($id,$doctorId) {
+        $userId = $this->getCurrentUserId();
+        $userMgr = new UserManager();
+        $output = $userMgr->delectDoctorCertByIdAndUserId($id, $doctorId);
+        $this->renderJsonOutput($output);
     }
 
 }

@@ -1,10 +1,11 @@
 <?php
 /* @var $this UserController */
 /* @var $model User */
+$urlUploadFile = $this->createUrl("user/ajaxUploadCert");
 
 $this->breadcrumbs = array(
     '用户列表' => array('admin'),
-    $model->name,
+    $model->username,
 );
 
 $this->menu = array(
@@ -48,37 +49,93 @@ if (is_null($profile)) {
 }
 $files = $model->getUserDoctorCerts();
 ?>
-
+<style>
+    .table-info tbody th{width: 15%;}
+    .table-info tbody td{width: 35%;}
+    .imglist img{height: 160px;width: 100%;}
+    .delete .file-panel{padding: 5px;text-align: center;background-color: #f00;color: #fff;}
+</style>
 <h1>查看 #<?php echo $model->username; ?></h1>
 
-<table class="detail-view" id="yw0">
+<table class="table table-info mt20" id="yw0">
     <tbody>
-        <tr class="even"><th>ID</th><td><?php echo $model->id; ?></td></tr>
-        <tr class="odd"><th>手机</th><td><?php echo $model->username; ?></td></tr>
-        <tr class="even"><th>医生姓名</th><td><?php echo $profileData->name; ?></td></tr>        
-        <tr class="even"><th>所属医院</th><td><?php echo $profileData->hospital_name; ?></td></tr>
-        <tr class="even"><th>所属科室</th><td><?php echo $profileData->hp_dept_name; ?></td></tr>        
-        <tr class="even"><th>临床职称</th><td><?php echo $profileData->clinical_title; ?></td></tr>
-        <tr class="even"><th>学术职称</th><td><?php echo $profileData->academic_title; ?></td></tr>
-        <tr class="even"><th>省份</th><td><?php echo $profileData->state_name; ?></td></tr>
-        <tr class="even"><th>城市</th><td><?php echo $profileData->city_name; ?></td></tr>
-        <tr class="even"><th>认证状态</th><td><?php echo $profileData->verified . '     ' . $verifiyUrl; ?></td></tr>
-        <tr class="even"><th>注册日期</th><td><?php echo $model->getDateCreated(); ?></td></tr>
-        <tr class="even"><th>是否电子签约</th><td><?php echo $profileData->isContractDoctor; ?></td></tr>
-        <tr class="even"><th>期望患者类型</th><td><?php echo $profileData->preferred_patient; ?></td></tr>
+        <tr class="odd">
+            <th>医生姓名</th><td><?php echo $profileData->name; ?></td>
+            <th>手机</th><td><?php echo $model->username; ?></td>
+        </tr> 
+        <tr class="even">
+            <th>所属医院</th><td><?php echo $profileData->hospital_name; ?></td>
+            <th>所属科室</th><td><?php echo $profileData->hp_dept_name; ?></td>
+        </tr> 
+        <tr class="even">
+            <th>临床职称</th><td><?php echo $profileData->clinical_title; ?></td>
+            <th>学术职称</th><td><?php echo $profileData->academic_title; ?></td>
+        </tr>
+        <tr class="even">
+            <th>省份</th><td><?php echo $profileData->state_name; ?></td>
+            <th>城市</th><td><?php echo $profileData->city_name; ?></td>
+        </tr>
+        <tr class="even">
+            <th>认证状态</th><td><?php echo $profileData->verified . '     ' . $verifiyUrl; ?></td>
+            <th>注册日期</th><td><?php echo $model->getDateCreated(); ?></td>
+        </tr>
+        <tr class="even">
+            <th>是否电子签约</th><td><?php echo $profileData->isContractDoctor; ?></td>
+            <th>期望患者类型</th><td><?php echo $profileData->preferred_patient; ?></td>
+        </tr>
     </tbody>
 </table>
 <div>
-    <h3>证件：共 <?php echo count($files) ?>（份）</h3>      
+    <h3>证件：共 <?php echo count($files) ?>（份）</h3>
+    <div class="form-wrapper">
+        <form id="doctor-form" data-url-uploadfile="<?php echo $urlUploadFile; ?>" data-url-return="<?php echo $urlReturn; ?>">
+            <input id="doctorId" type="hidden" name="doctor[id]" value="<?php echo $model->id; ?>" />                
+        </form>
+        <div class="mb20 row">
+            <div class="col-sm-6">
+                <?php $this->renderPartial('_uploadFile'); ?>
+            </div>
+        </div>
+    </div>
     <?php
     if (arrayNotEmpty($files)):
+        echo '<div class="row imglist">';
+        $i = 0;
         foreach ($files as $file):
+            $i++;
             ?>
-            <div>
+            <div class="col-sm-2 mt10 docImg">
                 <?php echo CHtml::image($file->getAbsFileUrl(), '', array('class' => "img-responsive")); ?>
+                <a class="delete" href="<?php echo $this->createUrl('user/delectDoctorCert', array('id' => $file->id, 'doctorId' => $model->id)); ?>">
+                    <div class="file-panel">删除</div>
+                </a>
             </div>
             <?php
         endforeach;
+        echo '</div>';
     endif;
     ?>
 </div>
+<script>
+    $(document).ready(function () {
+        $('a.delete').click(function(e){
+            e.preventDefault();
+            var deleteUrl = $(this).attr('href');
+            var docImg= $(this).parents('.docImg');
+            if(confirm('确定删除这种图片?')){
+                $.ajax({
+                    url:deleteUrl,
+                    success:function(data){
+                        if(data.status == 'ok'){
+                            docImg.remove();
+                            alert('删除成功!');
+                        }
+                    },
+                    error:function(){
+                        alert('删除失败!');
+                    }
+                });
+            }
+        });
+    });
+</script>
