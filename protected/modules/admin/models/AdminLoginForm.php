@@ -28,8 +28,8 @@ class AdminLoginForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'username' => 'username',
-            'password' => 'password'
+            'username' => '用户名',
+            'password' => '密码'
         );
     }
 
@@ -39,11 +39,19 @@ class AdminLoginForm extends CFormModel {
      */
     public function authenticate($attribute, $params) {
         if (!$this->hasErrors()) {
-            $adminUsername = Yii::app()->params['admin'];
-            $adminPassword = Yii::app()->params['adminPassword'];
-            if ($adminUsername != $this->username || $adminPassword != $this->encryptPassword($this->password)) {
-          //  if ($adminUsername != $this->username || $adminPassword != $this->password) {
-                $this->addError('password', 'Incorrect username or password.');
+//            $adminUsername = Yii::app()->params['admin'];
+//            $adminPassword = Yii::app()->params['adminPassword'];
+//            if ($adminUsername != $this->username || $adminPassword != $this->encryptPassword($this->password)) {
+////            if ($adminUsername != $this->username || $adminPassword != $this->password) {
+//                $this->addError('password', '用户名或者密码错误');
+//            }
+            $adminUser = AdminUser::model()->getUserByUsername($this->username);
+            if (isset($adminUser)) {
+                if ($adminUser->password != $this->encryptPassword($this->password)) {
+                    $this->addError('password', '输入的密码不正确！');
+                }
+            } else {
+                $this->addError('password', '用户名不存在，请联系管理员！');
             }
         }
     }

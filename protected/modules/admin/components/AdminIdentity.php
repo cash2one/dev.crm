@@ -12,14 +12,25 @@ class AdminIdentity extends CUserIdentity {
     }
 
     public function authenticate() {
-        $username = Yii::app()->params['admin'];
-        $password = Yii::app()->params['adminPassword'];
-        if ($username != $this->username) {
+//        $username = Yii::app()->params['admin'];
+//        $password = Yii::app()->params['adminPassword'];
+//        if ($username != $this->username) {
+//            $this->errorCode = self::ERROR_USERNAME_INVALID;
+//        } else if ($password != $this->password) {
+//            $this->errorCode = self::ERROR_PASSWORD_INVALID;
+//        } else {
+//            $this->id = $username;
+//            $this->errorCode = self::ERROR_NONE;
+//        }
+//        return !$this->errorCode;
+        
+        $adminUser = AdminUser::model()->getUserByUsername($this->username);
+        if (isset($adminUser) === false) {
             $this->errorCode = self::ERROR_USERNAME_INVALID;
-        } else if ($password != $this->password) {
+        } else if ($adminUser->password != $this->password) {
             $this->errorCode = self::ERROR_PASSWORD_INVALID;
         } else {
-            $this->id = $username;
+            $this->id = $adminUser->username;
             $this->errorCode = self::ERROR_NONE;
         }
         return !$this->errorCode;
