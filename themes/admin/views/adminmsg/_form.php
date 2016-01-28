@@ -7,7 +7,6 @@
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js', CClientScript::POS_END);?>
 <div class="form">
-
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'admin-msg-form',
@@ -18,10 +17,8 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         'enableAjaxValidation' => false,
     ));
     ?>
-
-    <p class="note">Fields with <span class="required">*</span> are required.</p>
-
-<?php echo $form->errorSummary($model); ?>
+<p class="note">Fields with <span class="required">*</span> are required.</p>
+<div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
     <div class="form-horizontal">
         <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'subject'); ?></label>

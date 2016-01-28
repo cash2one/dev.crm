@@ -31,7 +31,7 @@
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
-    <?php echo $form->errorSummary($model); ?>
+    <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
  <div class="form-horizontal">
         <div class="form-group col-sm-7">
             <label ><?php echo '预约单号<br>'; ?></label>

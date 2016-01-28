@@ -20,7 +20,7 @@
             ));
     ?>
 
-    <?php echo $form->errorSummary($model); ?>
+    <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
 
     <?php echo $form->hiddenField($model, 'id'); ?>
 

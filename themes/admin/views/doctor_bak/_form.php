@@ -26,7 +26,7 @@
     ?>
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
-    <?php echo $form->errorSummary($model); ?>
+    <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
 
     <div class="hide">
         <input  class="hide" type="text" />

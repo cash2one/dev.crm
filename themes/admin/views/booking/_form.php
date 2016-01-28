@@ -19,9 +19,7 @@
     ?>
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
-
-    <?php echo $form->errorSummary($model); ?>
-
+   <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
     <div class="row">
         <?php echo $form->labelEx($model, 'id'); ?>
         <span><?php echo $model->id; ?></span>        

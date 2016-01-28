@@ -3,7 +3,7 @@
 /* @var $model AdminMsg */
 
 $this->breadcrumbs=array(
-	'Admin Msgs'=>array('index'),
+	'Admin Msgs'=>array('admin'),
 	'Create',
 );
 

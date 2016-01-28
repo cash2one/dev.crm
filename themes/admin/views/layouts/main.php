@@ -46,9 +46,19 @@
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/crm.css" />                   
             <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery-1.9.1.min.js"></script>
             <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/bootstrap.min.js"></script>
-            <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/main.js"></script>
     </head>	
     <body>
+      <script>
+       $(document).ready(function(){
+//        $(".dropdown-toggle").dropdown('toggle');
+//       $(".dropdown-menu li a").click(function(){
+//           var $url=$(this).attr("href");
+//           var ss;
+//           ss=$url.substr(0, $url.indexOf('/'));
+//           alert(ss);
+       });
+   });
+</script>
         <section id="body">
             <div class="container-fluid">
                 <nav class="navbar navbar-default" role="navigation">
@@ -69,11 +79,10 @@
                         <div class="menu" >
                             <h3 class="color-white">操作导航</h3>
                             <div class="collapse navbar-collapse" id="header-navbar-collapse"> 
-                                <style>ul{padding-left:0px; }#header-navbar-collapse a{color:#fff;}</style>
-                                <div class="mt20" >
+                                 <style>ul{padding-left:0px; }#header-navbar-collapse a{color:#fff;}</style>
+                                <div class="mt20 text16" >
                                     <a href="<?php echo $this->createUrl('default/index') ?>">
                                         首页
-
                                     </a>
                                 </div> 
                                 <?php if (!Yii::app()->user->isGuest): ?>
@@ -83,7 +92,6 @@
                                             <span class="caret pull-right"></span>
                                         </div>                                                         
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
-
                                             <li><a href="<?php echo $this->createUrl('hospital/admin') ?>">搜索</a></li>
                                             <li ><a href="<?php echo $this->createUrl('hospital/create') ?>">创建</a></li>
                                         </ul>
@@ -96,7 +104,7 @@
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
 
                                             <li><a href="<?php echo $this->createUrl('doctor/admin') ?>">搜索</a></li>
-                                            <li ><a href="<?php echo $this->createUrl('doctor/createDoctor') ?>">创建医生</a></li>
+                                            <li ><a href="<?php echo $this->createUrl('doctor/create') ?>">创建医生</a></li>
                                         </ul>
                                     </div>
 
@@ -108,7 +116,6 @@
 
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                             <li><a href="<?php echo $this->createUrl('booking/admin') ?>">搜索</a></li>
-    <!--                                                                <li ><a href="<?php echo $this->createUrl('booking/create') ?>">创建</a></li>-->                                                                               </ul>
                                     </div> 
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -118,9 +125,6 @@
 
                                         <ul class="dropdown-menu " aria-labelledby="dropdownMenu3">
                                             <li><a href="<?php echo $this->createUrl('patientbooking/admin') ?>">搜索</a></li>
-                                            <li ><a href="<?php echo $this->createUrl('patientbooking/create') ?>">创建</a></li>
-
-
                                         </ul>
                                     </div> 
                                     <div class="dropdown mt20" >
@@ -155,15 +159,26 @@
                                             <li><a href="<?php echo $this->createUrl('adminMsg/create') ?>">创建</a></li>  
                                         </ul>
                                     </div>
+                                    <div class="dropdown mt20" >
+                                        <div class="dropdown-toggle color-white"  id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            平台用户
+                                            <span class="caret pull-right"></span>
+                                        </div>
+
+                                        <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
+                                            <li><a href="<?php echo $this->createUrl('adminuser/admin') ?>">搜索</a></li>    
+                                            <li><a href="<?php echo $this->createUrl('adminuser/create') ?>">创建</a></li>  
+                                        </ul>
+                                    </div>
                                 <?php endif; ?>
                                 <?php if (Yii::app()->user->isGuest): ?>
-                                    <div class="mt20" > 
+                                    <div class="mt20 text16" > 
                                         <a href="<?php echo $this->createUrl('default/login') ?>">Login</a> 
 
                                     </div> 
                                 <?php endif; ?>
                                 <?php if (!Yii::app()->user->isGuest): ?>
-                                    <div class="mt20" >
+                                    <div class="mt20 text16" >
                                         <a href="<?php echo $this->createUrl('default/logout') ?>">LoginOut(<?php echo Yii::app()->user->name ?>)</a> 
 
                                     </div> 
