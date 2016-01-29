@@ -112,8 +112,12 @@ class ApiViewBooking extends EApiViewService {
 
     private function setExpertBooked($model) {
         $data = new stdClass();
-        $data->id = $model->getId();
-        $data->name = $model->getName();
+        if (!is_object($model)) {
+            $data->name = $model;
+        } else {
+            $data->id = $model->getId();
+            $data->name = $model->getName();
+        }
         $this->expertBooked = $data;
     }
 
