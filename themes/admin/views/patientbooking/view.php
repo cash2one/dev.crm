@@ -30,12 +30,39 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
 
 <a href="<?php echo $this->createUrl('order/createPBOrder', array('bid' => $booking->id)) ?>" class="btn btn-primary">生成订单</a>
 <a href="<?php echo $this->createUrl('relateDoctor', array('bid' => $booking->id)) ?>" class="btn btn-primary">关联医生</a>
-<h1>预约详情 - 医生端 #<?php echo $booking->refNo; ?></h1>
+<div class="mt10">
+    <h1>预约详情 - 医生端 #<?php echo $booking->refNo; ?></h1>
+</div>
 <style>
     .table-info tbody th{width: 15%;}
     .table-info tbody td{width: 35%;}
     a.docmobile,a.docmobile:hover{text-decoration: underline;}
 </style>
+<div class="mt10">
+    <h3>患者信息</h3>
+</div>
+<table class="table table-info">
+    <tbody>
+        <?php if (isset($patient)): ?>
+            <tr class="odd">
+                <th>患者姓名</th><td><span class="null"><?php echo $patient->name; ?></span></td>
+                <th>患者手机</th><td><span class="null"><?php echo $patient->mobile; ?></span></td>
+            </tr>
+            <tr class="odd">
+                <th>性别</th><td><?php echo $patient->gender; ?></td>
+                <th>年龄</th><td><?php echo $patient->age; ?></td>
+            </tr>
+            <tr class="odd">
+                <th>省份</th><td><?php echo $patient->placeState; ?></td>
+                <th>城市</th><td><?php echo $patient->placeCity; ?></td>
+            </tr>
+            <tr class="odd">
+                <th>疾病诊断</th><td><?php echo $patient->diseaseName; ?></td>
+                <th>病情描述</th><td><?php echo $patient->diseaseDetail; ?></td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
 <h3>预约信息</h3>
 <table class="table table-info">
     <tbody>
@@ -59,7 +86,7 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
             </td>
         </tr>
         <tr class="even">
-            <th>医生姓名</th><td><?php echo $creator->name; ?></td>
+            <th>医生姓名</th><td><?php echo $creator->name . '(' . $creator->hospitalName . '-' . $creator->hpDeptName . '-' . $creator->cTitle . '-' . $creator->stateName . $creator->cityName . ')'; ?></td>
             <th>医生手机</th><td><a class="docmobile" href="<?php echo $urlDoctor; ?>" target="_blank"><?php echo $creator->mobile; ?></a></td>
         </tr>
         <tr class="even">
@@ -78,29 +105,6 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
             <th>创建日期</th><td><?php echo $booking->dateCreated; ?></td>
             <th></th><td></td>
         </tr>
-    </tbody>
-</table>
-<h3>患者信息</h3>
-<table class="table table-info">
-    <tbody>
-        <?php if (isset($patient)): ?>
-            <tr class="odd">
-                <th>患者姓名</th><td><span class="null"><?php echo $patient->name; ?></span></td>
-                <th>患者手机</th><td><span class="null"><?php echo $patient->mobile; ?></span></td>
-            </tr>
-            <tr class="odd">
-                <th>性别</th><td><?php echo $patient->gender; ?></td>
-                <th>年龄</th><td><?php echo $patient->age; ?></td>
-            </tr>
-            <tr class="odd">
-                <th>省份</th><td><?php echo $patient->placeState; ?></td>
-                <th>城市</th><td><?php echo $patient->placeCity; ?></td>
-            </tr>
-            <tr class="odd">
-                <th>疾病诊断</th><td><?php echo $patient->diseaseName; ?></td>
-                <th>病情描述</th><td><?php echo $patient->diseaseDetail; ?></td>
-            </tr>
-        <?php endif; ?>
     </tbody>
 </table>
 

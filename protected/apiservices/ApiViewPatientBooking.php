@@ -172,6 +172,8 @@ class ApiViewPatientBooking extends EApiViewService {
             $data->hpDeptName = $profile->getHpDeptName();
             $data->cTitle = $profile->getClinicalTitle();
             $data->aTitle = $profile->getAcademicTitle();
+            $data->stateName = $profile->getStateName();
+            $data->cityName = $profile->getCityName();
         } else {
             $data->name = '';
             $data->hospitalName = '';

@@ -19,12 +19,14 @@ $this->menu = array(
 );
 ?>
 <a href="<?php echo $this->createUrl('order/createBKOrder', array('bid' => $booking->id)) ?>" class="btn btn-primary">生成订单</a>
-<h1>预约详情 #<?php echo $booking->refNo; ?></h1>
+<div class="mt10">
+    <h1>预约详情 #<?php echo $booking->refNo; ?></h1>
+</div>
 <style>
     .table-info tbody th{width: 15%;}
     .table-info tbody td{width: 35%;}
 </style>
-<table class="table table-info" id="yw0">
+<table class="table table-info mt10" id="yw0">
     <tbody>
         <tr class="even">
             <th>单号</th><td><?php echo $booking->refNo; ?></td>
@@ -44,11 +46,11 @@ $this->menu = array(
         </tr>
         <tr class="even">
             <th>预约专家</th><td><?php echo $booking->expertName; ?></td>
-            <th>医院</th><td><?php echo $booking->hospitalName; ?></td>
+            <th></th><td></td>
         </tr>
         <tr class="even">
+            <th>医院</th><td><?php echo $booking->hospitalName; ?></td>
             <th>科室</th><td><?php echo $booking->hpDeptName; ?></td>
-            <th></th><td></td>
         </tr>        
         <tr class="odd">
             <th>患者姓名</th><td><span class="null"><?php echo $booking->patientName; ?></span></td>

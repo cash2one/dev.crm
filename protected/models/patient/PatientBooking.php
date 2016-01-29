@@ -104,7 +104,7 @@ class PatientBooking extends EActiveRecord {
             'appt_date' => '最终预约日期',
             'date_confirm' => '预约确认日期',
             'remark' => '备注',
-            'date_created' => 'Date Created',
+            'date_created' => '创建日期',
             'date_updated' => 'Date Updated',
             'date_deleted' => 'Date Deleted',
         );
