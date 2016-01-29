@@ -359,13 +359,17 @@ class Booking extends EActiveRecord {
             return $this->getExpertteam();
         } elseif ($this->bk_type == StatCode::BK_TYPE_DOCTOR) {
             return $this->getDoctor();
+        } elseif ($this->bk_type == StatCode::BK_TYPE_QUICKBOOK) {
+            return $this->doctor_name;
         } else {
             return null;
         }
     }
 
     public function getExpertNameBooked() {
-        if ($this->getExpertBooked() !== null) {
+        if(!is_object($this->getExpertBooked())){
+            return $this->getExpertBooked();
+        }elseif ($this->getExpertBooked() !== null) {
             return $this->getExpertBooked()->getName();
         } else {
             return '';
