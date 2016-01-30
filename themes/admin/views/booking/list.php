@@ -20,3 +20,4 @@ $this->widget('zii.widgets.CListView', array(
     'itemView' => '_viewList',
 ));
 ?>
+<style>.list-view{position:relative;}</style>

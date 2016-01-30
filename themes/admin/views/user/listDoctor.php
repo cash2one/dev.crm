@@ -19,3 +19,4 @@ $this->widget('zii.widgets.CListView', array(
     'itemView' => '_viewListDoctors',
 ));
 ?>
+<style>.list-view{position:relative;}</style>

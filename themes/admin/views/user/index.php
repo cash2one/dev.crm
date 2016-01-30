@@ -17,3 +17,4 @@ $this->menu=array(
 	'dataProvider'=>$dataProvider,
 	'itemView'=>'_view',
 )); ?>
+<style>.list-view{position:relative;}</style>

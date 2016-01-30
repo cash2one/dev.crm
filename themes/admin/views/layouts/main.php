@@ -115,6 +115,7 @@
                                         </div>
 
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                            <li><a href="<?php echo $this->createUrl('booking/list') ?>">列表</a></li>
                                             <li><a href="<?php echo $this->createUrl('booking/admin') ?>">搜索</a></li>
                                     </div> 
                                     <div class="dropdown mt20" >
@@ -124,6 +125,7 @@
                                         </div>
 
                                         <ul class="dropdown-menu " aria-labelledby="dropdownMenu3">
+                                            <li><a href="<?php echo $this->createUrl('patientbooking/list') ?>">列表</a></li>
                                             <li><a href="<?php echo $this->createUrl('patientbooking/admin') ?>">搜索</a></li>
                                         </ul>
                                     </div> 
@@ -134,6 +136,7 @@
                                         </div>
 
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
+                                            <li><a href="<?php echo $this->createUrl('order/index') ?>">列表</a></li>  
                                             <li><a href="<?php echo $this->createUrl('order/admin') ?>">搜索</a></li>  
                                              <li><a href="<?php echo $this->createUrl('order/create') ?>">创建</a></li> 
                                         </ul>
@@ -145,6 +148,7 @@
                                         </div>
 
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
+                                            <li><a href="<?php echo $this->createUrl('user/index') ?>">列表</a></li>
                                             <li><a href="<?php echo $this->createUrl('user/admin') ?>">搜索</a></li>                                                             
                                         </ul>
                                     </div>
