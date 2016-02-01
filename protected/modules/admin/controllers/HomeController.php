@@ -1,7 +1,7 @@
 <?php
 
 class HomeController extends AdminController {
-
+    
     public function accessRules() {
         return array(
             array('allow',

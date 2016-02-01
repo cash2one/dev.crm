@@ -1,6 +1,6 @@
 <?php
 
-class AdminUserController extends AdminController {
+class AdminBookingController extends AdminController {
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -15,7 +15,6 @@ class AdminUserController extends AdminController {
         return array(
             'accessControl', // perform access control for CRUD operations
             'postOnly + delete', // we only allow deletion via POST request
-            'rights',
         );
     }
 
@@ -26,9 +25,17 @@ class AdminUserController extends AdminController {
      */
     public function accessRules() {
         return array(
+            array('allow', // allow all users to perform 'index' and 'view' actions
+                'actions' => array('index', 'view'),
+                'users' => array('*'),
+            ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('create', 'update'),
+                'users' => array('@'),
+            ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
-//                'users' => array('test'),
+                'actions' => array('admin', 'delete'),
+                'users' => array('admin'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -51,13 +58,13 @@ class AdminUserController extends AdminController {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new AdminUser;
+        $model = new AdminBooking;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['AdminUser'])) {
-            $model->attributes = $_POST['AdminUser'];
+        if (isset($_POST['AdminBooking'])) {
+            $model->attributes = $_POST['AdminBooking'];
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
         }
@@ -78,8 +85,8 @@ class AdminUserController extends AdminController {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['AdminUser'])) {
-            $model->attributes = $_POST['AdminUser'];
+        if (isset($_POST['AdminBooking'])) {
+            $model->attributes = $_POST['AdminBooking'];
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
         }
@@ -106,7 +113,7 @@ class AdminUserController extends AdminController {
      * Lists all models.
      */
     public function actionIndex() {
-        $dataProvider = new CActiveDataProvider('AdminUser');
+        $dataProvider = new CActiveDataProvider('AdminBooking');
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -116,10 +123,10 @@ class AdminUserController extends AdminController {
      * Manages all models.
      */
     public function actionAdmin() {
-        $model = new AdminUser('search');
+        $model = new AdminBooking('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['AdminUser']))
-            $model->attributes = $_GET['AdminUser'];
+        if (isset($_GET['AdminBooking']))
+            $model->attributes = $_GET['AdminBooking'];
 
         $this->render('admin', array(
             'model' => $model,
@@ -130,11 +137,11 @@ class AdminUserController extends AdminController {
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
      * @param integer $id the ID of the model to be loaded
-     * @return AdminUser the loaded model
+     * @return AdminBooking the loaded model
      * @throws CHttpException
      */
     public function loadModel($id) {
-        $model = AdminUser::model()->findByPk($id);
+        $model = AdminBooking::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
@@ -142,10 +149,10 @@ class AdminUserController extends AdminController {
 
     /**
      * Performs the AJAX validation.
-     * @param AdminUser $model the model to be validated
+     * @param AdminBooking $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'admin-user-form') {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'admin-booking-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

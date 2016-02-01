@@ -10,7 +10,7 @@ class DefaultController extends AdminController {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array(),
-                'users' => array(Yii::app()->params['admin'])
+//                'users' => array(Yii::app()->params['admin'])
             ),
             array('deny', // deny all users
                 'users' => array('*'),

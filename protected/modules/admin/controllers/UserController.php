@@ -11,6 +11,7 @@ class UserController extends AdminController {
         return array(
             'accessControl', // perform access control for CRUD operations
             'postOnly + delete', // we only allow deletion via POST request
+            'rights',
         );
     }
 
@@ -33,7 +34,7 @@ class UserController extends AdminController {
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('index', 'view', 'admin', 'listdoctors', 'verify', 'ajaxUserSearch', 'searchResult', 'search', 'ajaxUploadCert','delectDoctorCert'),
-                'users' => array('superbeta'),
+//                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
