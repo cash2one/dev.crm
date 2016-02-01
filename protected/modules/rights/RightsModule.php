@@ -133,6 +133,7 @@ class RightsModule extends CWebModule
 			// When installing we need to set the default controller to Install.
 			$this->defaultController = 'install';
 		}
+        $this->setTheme('rights');
 	}
 
 	/**
@@ -215,4 +216,15 @@ class RightsModule extends CWebModule
 	{
 		return '1.3.0';
 	}
+    private function setTheme($theme, $setViewPath = true) {
+        // set theme.
+        Yii::app()->theme = $theme;
+        // set theme url & path.
+        Yii::app()->themeManager->setBaseUrl(Yii::app()->theme->baseUrl);
+        Yii::app()->themeManager->setBasePath(Yii::app()->theme->basePath);
+        // set module viewPath.
+        if ($setViewPath) {
+            $this->setViewPath(Yii::app()->theme->basePath . '/views');
+        }
+    }
 }
