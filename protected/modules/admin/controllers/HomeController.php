@@ -2,15 +2,6 @@
 
 class HomeController extends AdminController {
     
-    /**
-     * @return array action filters
-     */
-    public function filters() {
-        return array(
-            'rights',
-        );
-    }
-    
     public function accessRules() {
         return array(
             array('allow',
@@ -19,7 +10,7 @@ class HomeController extends AdminController {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array(),
-//                'users' => array(Yii::app()->params['admin'])
+                'users' => array(Yii::app()->params['admin'])
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -58,7 +49,9 @@ class HomeController extends AdminController {
         // collect user input data
         if (isset($_POST['AdminLoginForm'])) {
             $model->attributes = $_POST['AdminLoginForm'];
+
             if ($model->validate() && $model->login()) {
+
                 $this->redirect(array('default/index'));
             }
             // var_dump($model->getErrors());exit;
