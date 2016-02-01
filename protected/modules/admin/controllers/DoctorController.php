@@ -45,6 +45,7 @@ class DoctorController extends AdminController {
             'postOnly + delete', // we only allow deletion via POST request
             'DoctorContext + update delete addFaculty addAvatar',
                 //  'FacultyDoctorJoinContext + deleteDF'
+            'rights',
         );
     }
 
@@ -67,7 +68,7 @@ class DoctorController extends AdminController {
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'createExpertTeam', 'addFaculty', 'addAvatar', 'createDoctor', 'ajaxLoadloadHospitalDept', 'addDisease', 'updateDisease', 'updateContracted'),
-                'users' => array('superbeta'),
+//                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),

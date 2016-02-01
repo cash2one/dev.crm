@@ -55,7 +55,8 @@ class OrderController extends AdminController {
             'postOnly + delete', // we only allow deletion via POST request
             'salesOrderContext + view',
             'bkContext + createBKOrder',
-            'pbContext + createPBOrder'
+            'pbContext + createPBOrder',
+            'rights',
         );
     }
 
@@ -78,7 +79,7 @@ class OrderController extends AdminController {
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'admin', 'searchResult'),
-                'users' => array('superbeta'),
+//                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),

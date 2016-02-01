@@ -11,6 +11,7 @@ class BookingController extends AdminController {
         return array(
             'accessControl', // perform access control for CRUD operations
             'postOnly + delete', // we only allow deletion via POST request
+            'rights',
         );
     }
 
@@ -33,7 +34,7 @@ class BookingController extends AdminController {
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('create', 'update', 'delete', 'admin', 'search', 'index', 'view', 'list', 'changeStatus', 'searchResult'),
-                'users' => array('superbeta'),
+//                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -70,7 +71,7 @@ class BookingController extends AdminController {
         $bkId = $output->booking->id;
         //salesorders for booking
         $orderList = SalesOrder::model()->getAllByAttributes(array('bk_id' => $bkId, 'bk_type' => StatCode::TRANS_TYPE_BK));
-        
+
         if ($output->status == 'ok') {
             $this->render('view', array(
                 'data' => $output,

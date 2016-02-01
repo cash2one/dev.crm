@@ -10,14 +10,23 @@ class DefaultController extends AdminController {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array(),
-                'users' => array(Yii::app()->params['admin'])
+//                'users' => array(Yii::app()->params['admin'])
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
     }
-
+    
+    /**
+     * @return array action filters
+     */
+    public function filters() {
+        return array(
+            'rights',
+        );
+    }
+    
     public function actions() {
         return array(
             // captcha action renders the CAPTCHA image displayed on the contact page
