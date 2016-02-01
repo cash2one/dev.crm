@@ -219,12 +219,5 @@ class RightsModule extends CWebModule
     private function setTheme($theme, $setViewPath = true) {
         // set theme.
         Yii::app()->theme = $theme;
-        // set theme url & path.
-        Yii::app()->themeManager->setBaseUrl(Yii::app()->theme->baseUrl);
-        Yii::app()->themeManager->setBasePath(Yii::app()->theme->basePath);
-        // set module viewPath.
-        if ($setViewPath) {
-            $this->setViewPath(Yii::app()->theme->basePath . '/views');
-        }
     }
 }
