@@ -1,6 +1,6 @@
 <?php
 
-abstract class Controller extends CController {
+abstract class Controller extends RController {
 
     /**
      * @var string the default layout for the controller view. Defaults to '//layouts/column1',

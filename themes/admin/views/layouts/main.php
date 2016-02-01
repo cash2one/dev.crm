@@ -93,7 +93,9 @@
                                         </div>                                                         
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
                                             <li><a href="<?php echo $this->createUrl('hospital/admin') ?>">搜索</a></li>
-                                            <li ><a href="<?php echo $this->createUrl('hospital/create') ?>">创建</a></li>
+                                            <?php if(Yii::app()->user->checkAccess('Admin.Hospital.Create')):?>
+                                                <li ><a href="<?php echo $this->createUrl('hospital/create') ?>">创建</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                     <div class="dropdown mt20" >
@@ -171,7 +173,10 @@
 
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
                                             <li><a href="<?php echo $this->createUrl('adminuser/admin') ?>">搜索</a></li>    
-                                            <li><a href="<?php echo $this->createUrl('adminuser/create') ?>">创建</a></li>  
+                                            <li><a href="<?php echo $this->createUrl('adminuser/create') ?>">创建</a></li>
+                                            <?php if(Yii::app()->user->checkAccess(Rights::module()->superuserName)):?>
+                                                <li><a href="<?php echo $this->createAbsoluteUrl('/rights') ?>">权限</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                 <?php endif; ?>

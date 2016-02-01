@@ -31,14 +31,14 @@ class AdminModule extends CWebModule {
               ),
              */
             'user' => array(
-                'class' => 'AdminWebUser',
-                'stateKeyPrefix' => '_admin',
+                'class' => 'RWebUser',
                 'loginUrl' => Yii::app()->createUrl($this->getId() . '/home/login'),
             ),
             'widgetFactory' => array(
                 'class' => 'CWidgetFactory',
                 'widgets' => array()
-            )
+            ),
+
                 ), false);
         // this method is called when the module is being created
         // you may place code here to customize the module or the application

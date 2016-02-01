@@ -5,6 +5,7 @@ class AdminLoginForm extends CFormModel {
     public $username;
     public $password;
     private $_identity;
+    public $rememberMe;
     public $verifyCode;
 
     /**
@@ -37,43 +38,32 @@ class AdminLoginForm extends CFormModel {
      * Authenticates the password.
      * This is the 'authenticate' validator as declared in rules().
      */
-    public function authenticate($attribute, $params) {
-        if (!$this->hasErrors()) {
-//            $adminUsername = Yii::app()->params['admin'];
-//            $adminPassword = Yii::app()->params['adminPassword'];
-//            if ($adminUsername != $this->username || $adminPassword != $this->encryptPassword($this->password)) {
-////            if ($adminUsername != $this->username || $adminPassword != $this->password) {
-//                $this->addError('password', '用户名或者密码错误');
-//            }
-            $adminUser = AdminUser::model()->getUserByUsername($this->username);
-            if (isset($adminUser)) {
-                if ($adminUser->password != $this->encryptPassword($this->password)) {
-                    $this->addError('password', '输入的密码不正确！');
-                }
-            } else {
-                $this->addError('password', '用户名不存在，请联系管理员！');
-            }
-        }
+    public function authenticate($attribute,$params)
+    {
+        $this->_identity=new AdminUserIdentity($this->username,$this->password);
+        if(!$this->_identity->authenticate())
+            $this->addError('password','用户名或密码错误');
     }
 
     /**
      * Logs in the user using the given username and password in the model.
      * @return boolean whether login is successful
      */
-    public function login() {
-        if ($this->_identity === null) {
-            $this->_identity = new AdminIdentity($this->username, $this->encryptPassword($this->password));
+    public function login()
+    {
+        if($this->_identity===null)
+        {
+            $this->_identity=new AdminUserIdentity($this->username,$this->password);
             $this->_identity->authenticate();
         }
-        if ($this->_identity->errorCode === UserIdentity::ERROR_NONE) {
-            $duration = 0;
-            Yii::app()->user->login($this->_identity, $duration);
+        if($this->_identity->errorCode===AdminUserIdentity::ERROR_NONE)
+        {
+            $duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
+            Yii::app()->user->login($this->_identity,$duration);
             return true;
         }
-    }
-
-    protected function encryptPassword($password) {
-        return hash('sha256', $password);
+        else
+            return false;
     }
 
 }

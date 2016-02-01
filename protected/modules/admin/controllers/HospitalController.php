@@ -40,6 +40,7 @@ class HospitalController extends AdminController {
             'accessControl', // perform access control for CRUD operations
             'postOnly + delete', // we only allow deletion via POST request
             'hospitalContext + update delete addFaculty',
+            'rights',
         );
     }
 
@@ -62,7 +63,7 @@ class HospitalController extends AdminController {
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'addFaculty', 'addDepartment'),
-                'users' => array('superbeta'),
+//                'users' => array('superbeta','test'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
