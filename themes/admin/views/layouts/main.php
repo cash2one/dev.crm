@@ -48,17 +48,17 @@
             <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/bootstrap.min.js"></script>
     </head>	
     <body>
-      <script>
-       $(document).ready(function(){
-//        $(".dropdown-toggle").dropdown('toggle');
-//       $(".dropdown-menu li a").click(function(){
-//           var $url=$(this).attr("href");
-//           var ss;
-//           ss=$url.substr(0, $url.indexOf('/'));
-//           alert(ss);
-       });
-   });
-</script>
+        <script>
+            $(document).ready(function () {
+                //        $(".dropdown-toggle").dropdown('toggle');
+                //       $(".dropdown-menu li a").click(function(){
+                //           var $url=$(this).attr("href");
+                //           var ss;
+                //           ss=$url.substr(0, $url.indexOf('/'));
+                //           alert(ss);
+//            });
+            });
+        </script>
         <section id="body">
             <div class="container-fluid">
                 <nav class="navbar navbar-default" role="navigation">
@@ -79,7 +79,7 @@
                         <div class="menu" >
                             <h3 class="color-white">操作导航</h3>
                             <div class="collapse navbar-collapse" id="header-navbar-collapse"> 
-                                 <style>ul{padding-left:0px; }#header-navbar-collapse a{color:#fff;}</style>
+                                <style>ul{padding-left:0px; }#header-navbar-collapse a{color:#fff;}</style>
                                 <div class="mt20 text16" >
                                     <a href="<?php echo $this->createUrl('default/index') ?>">
                                         首页
@@ -92,8 +92,10 @@
                                             <span class="caret pull-right"></span>
                                         </div>                                                         
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
-                                            <li><a href="<?php echo $this->createUrl('hospital/admin') ?>">搜索</a></li>
-                                            <?php if(Yii::app()->user->checkAccess('Admin.Hospital.Create')):?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Hospital.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('hospital/admin') ?>">搜索</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Hospital.Create')): ?>
                                                 <li ><a href="<?php echo $this->createUrl('hospital/create') ?>">创建</a></li>
                                             <?php endif; ?>
                                         </ul>
@@ -104,21 +106,26 @@
                                             <span class="caret pull-right"></span>
                                         </div>                                                         
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
-
-                                            <li><a href="<?php echo $this->createUrl('doctor/admin') ?>">搜索</a></li>
-                                            <li ><a href="<?php echo $this->createUrl('doctor/create') ?>">创建医生</a></li>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Doctor.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('doctor/admin') ?>">搜索</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Doctor.Create')): ?>
+                                                <li ><a href="<?php echo $this->createUrl('doctor/createDoctor') ?>">创建医生</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
-
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             预约-患者
                                             <span class="caret pull-right"></span>
                                         </div>
-
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                            <li><a href="<?php echo $this->createUrl('booking/list') ?>">列表</a></li>
-                                            <li><a href="<?php echo $this->createUrl('booking/admin') ?>">搜索</a></li>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Booking.List')): ?>
+                                                <li><a href="<?php echo $this->createUrl('booking/list') ?>">列表</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Booking.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('booking/admin') ?>">搜索</a></li>
+                                            <?php endif; ?>
                                     </div> 
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -127,8 +134,12 @@
                                         </div>
 
                                         <ul class="dropdown-menu " aria-labelledby="dropdownMenu3">
-                                            <li><a href="<?php echo $this->createUrl('patientbooking/list') ?>">列表</a></li>
-                                            <li><a href="<?php echo $this->createUrl('patientbooking/admin') ?>">搜索</a></li>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Patientbooking.List')): ?>
+                                                <li><a href="<?php echo $this->createUrl('patientbooking/list') ?>">列表</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Patientbooking.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('patientbooking/admin') ?>">搜索</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div> 
                                     <div class="dropdown mt20" >
@@ -136,11 +147,16 @@
                                             订单
                                             <span class="caret pull-right"></span>
                                         </div>
-
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
-                                            <li><a href="<?php echo $this->createUrl('order/index') ?>">列表</a></li>  
-                                            <li><a href="<?php echo $this->createUrl('order/admin') ?>">搜索</a></li>  
-                                             <li><a href="<?php echo $this->createUrl('order/create') ?>">创建</a></li> 
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Order.Index')): ?>
+                                                <li><a href="<?php echo $this->createUrl('order/index') ?>">列表</a></li>  
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Order.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('order/admin') ?>">搜索</a></li>  
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Order.Create')): ?>
+                                                <li><a href="<?php echo $this->createUrl('order/create') ?>">创建</a></li> 
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                     <div class="dropdown mt20" >
@@ -150,8 +166,12 @@
                                         </div>
 
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
-                                            <li><a href="<?php echo $this->createUrl('user/index') ?>">列表</a></li>
-                                            <li><a href="<?php echo $this->createUrl('user/admin') ?>">搜索</a></li>                                                             
+                                            <?php if (Yii::app()->user->checkAccess('Admin.User.Index')): ?>
+                                                <li><a href="<?php echo $this->createUrl('user/index') ?>">列表</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.User.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('user/admin') ?>">搜索</a></li>     
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                     <div class="dropdown mt20" >
@@ -161,8 +181,12 @@
                                         </div>
 
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
-                                            <li><a href="<?php echo $this->createUrl('adminMsg/admin') ?>">搜索</a></li>    
-                                            <li><a href="<?php echo $this->createUrl('adminMsg/create') ?>">创建</a></li>  
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminMsg.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminMsg/admin') ?>">搜索</a></li>    
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminMsg.Create')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminMsg/create') ?>">创建</a></li>  
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                     <div class="dropdown mt20" >
@@ -170,11 +194,14 @@
                                             平台用户
                                             <span class="caret pull-right"></span>
                                         </div>
-
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
-                                            <li><a href="<?php echo $this->createUrl('adminuser/admin') ?>">搜索</a></li>    
-                                            <li><a href="<?php echo $this->createUrl('adminuser/create') ?>">创建</a></li>
-                                            <?php if(Yii::app()->user->checkAccess(Rights::module()->superuserName)):?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Adminuser.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminuser/admin') ?>">搜索</a></li>   
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Adminuser.Create')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminuser/create') ?>">创建</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess(Rights::module()->superuserName)): ?>
                                                 <li><a href="<?php echo $this->createAbsoluteUrl('/rights') ?>">权限</a></li>
                                             <?php endif; ?>
                                         </ul>
