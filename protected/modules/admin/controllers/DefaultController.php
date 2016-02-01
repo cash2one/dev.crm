@@ -17,16 +17,7 @@ class DefaultController extends AdminController {
             ),
         );
     }
-    
-    /**
-     * @return array action filters
-     */
-    public function filters() {
-        return array(
-            'rights',
-        );
-    }
-    
+
     public function actions() {
         return array(
             // captcha action renders the CAPTCHA image displayed on the contact page
