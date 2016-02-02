@@ -48,6 +48,38 @@
  */
 class AdminBooking extends EActiveRecord {
 
+    const bk_type_bk = '1';
+    const bk_type_pb = '2';
+    const cus_request_shoushu = 'shoushu';
+    const cus_request_zhuanzhen = 'zhuanzhen';
+    const cus_request_wenzhen = 'wenzhen';
+    const cus_request_menzhen = 'menzhen';
+    const cus_request_huizhen = 'huizhen';
+    const cus_intention_normal = '1';
+    const cus_intention_good = '2';
+    const cus_intention_great = '3';
+    const cus_type_unsure = '1';
+    const cus_type_validity = '2';
+    const cus_type_invalid = '0';
+    const cus_diversion_baidu = 'baidu';
+    const cus_diversion_friend = 'friend';
+    const cus_diversion_doctor = 'doctor';
+    const cus_diversion_welfare = 'welfare';
+    const cus_agent_400 = '400';
+    const cus_agent_baidu = 'baidu';
+    const cus_agent_website = 'web';
+    const cus_agent_wap = 'wap';
+    const cus_agent_weixin = 'weixin';
+    const cus_agent_app_iOS = 'ios';
+    const cus_agent_app_android = 'android';
+    const cus_agent_BD = 'BD';
+    const cus_agent_ditui = 'ditui';
+    const cus_agent_weibo = 'weibo';
+    const cus_agent_friend = 'friend';
+    const cus_agent_doctor = 'doctor';
+    const cus_agent_bjoffice = 'bj_office';
+    const cus_agent_tuoshi = 'tuoshi';
+
     /**
      * @return string the associated database table name
      */
@@ -210,6 +242,70 @@ class AdminBooking extends EActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    /**
+     *  options getters 
+     */
+    public function getOptionsBookingType() {
+        return array(
+            self::bk_type_bk => '患者端预约',
+            self::bk_type_pb => '医生端预约',
+        );
+    }
+
+    public function getOptionsCustomerRequest() {
+        return array(
+            self::cus_request_shoushu => '手术',
+            self::cus_request_zhuanzhen => '转诊',
+            self::cus_request_wenzhen => '问诊',
+            self::cus_request_menzhen => '门诊',
+            self::cus_request_huizhen => '会诊',
+        );
+    }
+
+    public function getOptionsCustomerIntention() {
+        return array(
+            self::cus_intention_normal => '一般',
+            self::cus_intention_good => '很好',
+            self::cus_intention_great => '特别好',
+        );
+    }
+
+    public function getOptionsCustomerType() {
+        return array(
+            self::cus_type_unsure => '未确认的',
+            self::cus_type_validity => '有效的',
+            self::cus_type_invalid => '无效的',
+        );
+    }
+    
+    public function getOptionsCustomerDiversion() {
+        return array(
+            self:: cus_diversion_baidu => '百度搜索',
+            self:: cus_diversion_friend => '熟人推荐',
+            self:: cus_diversion_doctor => '医生推荐',
+            self:: cus_diversion_welfare => '公益项目',
+        );
+    }
+
+    public function getOptionsCustomerAgent() {
+        return array(
+            self:: cus_agent_400 => '400热线',
+            self:: cus_agent_baidu => '百度商桥',
+            self:: cus_agent_website => '网站',
+            self:: cus_agent_wap => '手机网站',
+            self:: cus_agent_weixin => '微信',
+            self:: cus_agent_app_iOS => '苹果APP',
+            self:: cus_agent_app_android => '安卓APP',
+            self:: cus_agent_BD => 'BD',
+            self:: cus_agent_ditui => '地推',
+            self:: cus_agent_weibo => '微博',
+            self:: cus_agent_friend => '熟人',
+            self:: cus_agent_doctor => '下级医生',
+            self:: cus_agent_bjoffice => '北京办介绍',
+            self:: cus_agent_tuoshi => '拓实企业用户',
+        );
     }
 
 }
