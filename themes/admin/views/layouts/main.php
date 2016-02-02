@@ -1,78 +1,34 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
-
-    <?php
-//    $this->widget('zii.widgets.CMenu', array(
-//        'items' => array(
-//            array('label' => '首页', 'url' => array('/admin/default/index')),
-//            //    array('label' => '医院', 'url' => array('/admin/hospital/index'), 'visible' => !Yii::app()->user->isGuest),
-//            array('label' => '医生', 'url' => array('/admin/doctor/index'), 'visible' => !Yii::app()->user->isGuest),
-//            //     array('label' => '科室', 'url' => array('/admin/faculty/index'), 'visible' => !Yii::app()->user->isGuest),
-//            array('label' => '预约-患者', 'url' => array('/admin/booking/list'), 'visible' => !Yii::app()->user->isGuest),
-//            array('label' => '预约-手术直通车', 'url' => array('/admin/patientbooking/list'), 'visible' => !Yii::app()->user->isGuest),
-//            array('label' => '医生认证', 'url' => array('/admin/user/listdoctors'), 'visible' => !Yii::app()->user->isGuest),
-//            //   array('label' => '病历', 'url' => array('/admin/medicalrecord/index'), 'visible' => !Yii::app()->user->isGuest),
-//            //   array('label' => '预约', 'url' => array('/admin/mrbooking/index'), 'visible' => !Yii::app()->user->isGuest),
-//            //    array('label' => '用户', 'url' => array('/admin/user/index'), 'visible' => !Yii::app()->user->isGuest),
-//            array('label' => 'Login', 'url' => array('/admin/default/login'), 'visible' => Yii::app()->user->isGuest),
-//            array('label' => '患者', 'url' => array('/admin/patientinfo/index'), 'visible' => !Yii::app()->user->isGuest),
-//            array('label' => 'Logout (' . Yii::app()->user->name . ')', 'url' => array('/admin/default/logout'), 'visible' => !Yii::app()->user->isGuest)
-//        ),
-//    ));
-    ?>
-    <!--                </div> mainmenu 
-                    <div class="container">-->
-    <?php //if (isset($this->breadcrumbs)): ?>
-    <!--                                                                    <div class="row">
-                                                                        <div class="col-sm-8 col-sm-offset-1">-->
-    <?php
-    // $this->widget('zii.widgets.CBreadcrumbs', array(
-    //    'links' => $this->breadcrumbs,
-    //   ));
-    ?> 
-    <!--                                                                    </div>
-                                                                        </div>-->
-    <?php //endif ?>
     <head>
         <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-            <title>后台管理系统</title>
+            <title><?php echo CHtml::encode($this->pageTitle); ?></title>
             <link rel="shortcut icon" type="image/ico" href="http://www.mingyizhudao.com/themes/v4/images/icons/favicon.ico"/>
             <!-- Bootstrap -->
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap.min.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/basic.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/crm.css" />                   
             <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery-1.9.1.min.js"></script>
-            <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/bootstrap.min.js"></script>           
     </head>	
     <body>
         <script>
-            $(document).ready(function () {
-                //        $(".dropdown-toggle").dropdown('toggle');
-                //       $(".dropdown-menu li a").click(function(){
-                //           var $url=$(this).attr("href");
-                //           var ss;
-                //           ss=$url.substr(0, $url.indexOf('/'));
-                //           alert(ss);
-//            });
-            });
         </script>
         <section id="body">
             <div class="container-fluid">
                 <nav class="navbar navbar-default" role="navigation">
                     <h3>后台管理系统</h3>
-                    <div class="">
-                        <!-- Brand and toggle get grouped for better mobile display -->
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>   
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>   
                 </nav>
                 <div class="row bg-blue" >
                     <div class="col-sm-3 col-md-2 ">
@@ -210,13 +166,11 @@
                                 <?php if (Yii::app()->user->isGuest): ?>
                                     <div class="mt20 text16" > 
                                         <a href="<?php echo $this->createUrl('default/login') ?>">Login</a> 
-
                                     </div> 
                                 <?php endif; ?>
                                 <?php if (!Yii::app()->user->isGuest): ?>
                                     <div class="mt20 text16" >
                                         <a href="<?php echo $this->createUrl('default/logout') ?>">LoginOut(<?php echo Yii::app()->user->name ?>)</a> 
-
                                     </div> 
                                 <?php endif; ?>
                             </div><!-- /.navbar-collapse -->
@@ -241,9 +195,7 @@
                     </div>
                 </div>
             </div>
-            </div>
         </section>                     
-
     </body>
 </html>
 

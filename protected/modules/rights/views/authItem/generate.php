@@ -9,7 +9,7 @@
 
 	<p><?php echo Rights::t('core', 'Please select which items you wish to generate.'); ?></p>
 
-	<div class="form">
+	<div class="form ml15">
 
 		<?php $form=$this->beginWidget('CActiveForm'); ?>
 
@@ -52,7 +52,7 @@
 
    			<div class="row">
 
-				<?php echo CHtml::submitButton(Rights::t('core', 'Generate')); ?>
+				<?php echo CHtml::submitButton(Rights::t('core', 'Generate'),array('class'=>'btn btn-primary')); ?>
 
 			</div>
 
