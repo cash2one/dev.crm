@@ -177,8 +177,7 @@
                                 <?php endif; ?>
                                 <?php if (!Yii::app()->user->isGuest): ?>
                                     <div class="mt20 text16" >
-                                        <a href="<?php echo $this->createUrl('default/logout') ?>">LoginOut(<?php echo Yii::app()->user->name ?>)</a> 
-
+                                        <a href="<?php echo $this->createUrl('/admin/default/logout') ?>">LoginOut(<?php echo Yii::app()->user->name ?>)</a> 
                                     </div> 
                                 <?php endif; ?>
                             </div><!-- /.navbar-collapse -->
