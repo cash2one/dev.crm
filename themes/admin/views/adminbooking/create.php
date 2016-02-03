@@ -34,7 +34,7 @@ $form = $this->beginWidget('CActiveForm', array(
 <div class="mt30">
     <div class="form-group">
         <div class="col-md-4">
-            <span class="tab-header">客户编号：</span><?php echo $form->textField($model, 'booking_id', array('class' => 'form-control w50')); ?>
+            <span class="tab-header">客户编号：</span><?php echo $form->textField($model, 'ref_no', array('class' => 'form-control w50')); ?>
         </div>
         <div class="col-md-4">
             <span class="tab-header">患者姓名：</span><?php echo $form->textField($model, 'patient_name', array('class' => 'form-control w50')); ?>
@@ -54,8 +54,8 @@ $form = $this->beginWidget('CActiveForm', array(
     <div class="form-group">
         <div class="col-md-4">
             <span class="tab-header">地址：</span><?php
-            echo $form->dropDownList($model, 'patient_state', $model->loadOptionsState(), array(
-                'name' => 'AdminBookingForm[patient_state]',
+            echo $form->dropDownList($model, 'state_id', $model->loadOptionsState(), array(
+                'name' => 'AdminBookingForm[state_id]',
                 'prompt' => '选择省份',
                 'class' => 'form-control w50',
             ));
@@ -63,8 +63,8 @@ $form = $this->beginWidget('CActiveForm', array(
         </div>
         <div class="col-md-3">
             <?php
-            echo $form->dropDownList($model, 'patient_city', $model->loadOptionsCity(), array(
-                'name' => 'AdminBookingForm[patient_city]',
+            echo $form->dropDownList($model, 'city_id', $model->loadOptionsCity(), array(
+                'name' => 'AdminBookingForm[city_id]',
                 'prompt' => '选择城市',
                 'class' => 'form-control w50',
             ));
@@ -217,7 +217,8 @@ $form = $this->beginWidget('CActiveForm', array(
         <div class="col-sm-4">
             <span>付费状态：</span><select class="form-control" name="AdminBookingForm[order_status]" id="AdminBookingForm_order_status">
                 <option value>--选择--</option>
-                <option value="1">xxxx</option>
+                <option value="1">已付费</option>
+                <option value="0">未付费</option>
             </select>
         </div>
         <div class="col-sm-4">
@@ -270,8 +271,8 @@ $form = $this->beginWidget('CActiveForm', array(
             format: "yyyy-mm-dd",
             language: "zh-CN"
         });
-        $("select#AdminBookingForm_patient_state").change(function () {
-            //$("select#patient_city_id").attr("disabled", true);
+        $("select#AdminBookingForm_state_id").change(function () {
+            //$("select#city_id_id").attr("disabled", true);
             var stateId = $(this).val();
             var actionUrl = "<?php echo $urlLoadCity; ?>";// + stateId + "&prompt=选择城市";
             $.ajax({
@@ -281,15 +282,15 @@ $form = $this->beginWidget('CActiveForm', array(
                 cache: false,
                 // dataType: "html",
                 'success': function (data) {
-                    $("select#AdminBookingForm_patient_city").html(data);
+                    $("select#AdminBookingForm_city_id").html(data);
                     // jquery mobile fix.
-                    captionText = $("select#AdminBookingForm_patient_city>option:first-child").text();
-                    $("#AdminBookingForm_patient_city-button>span:first-child").text(captionText);
+                    captionText = $("select#AdminBookingForm_city_id>option:first-child").text();
+                    $("#AdminBookingForm_city_id-button>span:first-child").text(captionText);
                 },
                 'error': function (data) {
                 },
                 complete: function () {
-                    //$("select#patient_city_id").attr("disabled", false);
+                    //$("select#city_id_id").attr("disabled", false);
                 }
             });
             return false;

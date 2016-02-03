@@ -11,6 +11,8 @@ class AdminBookingForm extends EFormModel {
     public $patient_mobile;
     public $patient_age;
     public $patient_identity;
+    public $state_id;
+    public $city_id;
     public $patient_state;
     public $patient_city;
     public $patient_address;
@@ -40,7 +42,18 @@ class AdminBookingForm extends EFormModel {
     public $admin_user_name;
     public $remark;
     public $display_order;
-
+    public $option_customer_request;
+    public $option_patient_state;
+    public $option_patient_city;
+    public $option_expected_hospital_id;
+    public $option_final_doctor_id;
+    public $option_customer_intention;
+    public $option_customer_type;
+    public $option_customer_diversion;
+    public $option_customer_agent;
+    public $option_booking_status;
+    public $option_admin_user_id;
+    public $option_expected_dept_id;
     /**
      * @return array validation rules for model attributes.
      */
@@ -48,7 +61,7 @@ class AdminBookingForm extends EFormModel {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('booking_id, booking_type, patient_id, patient_age, expected_hospital_id, expected_hp_dept_id, experted_doctor_id, final_doctor_id, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, admin_user_id, display_order', 'numerical', 'integerOnly' => true),
+            array('booking_id, booking_type, patient_id, patient_age, expected_hospital_id, expected_hp_dept_id, experted_doctor_id, final_doctor_id, disease_confirm, customer_intention, customer_type, booking_status, order_status, admin_user_id, display_order', 'numerical', 'integerOnly' => true),
             array('ref_no, patient_name, expected_hospital_name, expected_hp_dept_name, experted_doctor_name, final_doctor_name, order_amount', 'length', 'max' => 20),
             array('patient_mobile', 'length', 'max' => 11, 'message' => '请填写正确的11位中国手机号码'),
             array('patient_mobile', 'numerical', 'integerOnly' => true, 'message' => '请填写正确的11位中国手机号码'),
@@ -59,7 +72,7 @@ class AdminBookingForm extends EFormModel {
             array('disease_name', 'length', 'max' => 100),
             array('admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('id, expected_time_start, expected_time_end, final_time, date_updated, date_deleted', 'safe'),
+            array('id, state_id, city_id, expected_time_start, expected_time_end, final_time,patient_state,patient_city, customer_request, customer_diversion, customer_agent, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, experted_doctor_id, experted_doctor_name, final_doctor_id, final_doctor_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -136,86 +149,101 @@ class AdminBookingForm extends EFormModel {
     public function loadOptions() {
         $this->loadOptionsState();
         $this->loadOptionsCity();
+        $this->loadOptionsHospital();
         $this->loadOptionsDoctorProfile();
+        $this->loadOptionsCustomerRequest();
+        $this->loadOptionsCustomerIntention();
+        $this->loadOptionsCustomerType();
+        $this->loadOptionsCustomerDiversion();
+        $this->loadOptionsCustomerAgent();
+        $this->loadOptionsBookingStatus();
+        $this->loadOptionsAdminUser();
     }
 
     public function loadOptionsState() {
-        if (is_null($this->patient_state)) {
-            $this->patient_state = CHtml::listData(RegionState::model()->getAllByCountryId(1), 'id', 'name');
+        if (is_null($this->option_patient_state)) {
+            $this->option_patient_state = CHtml::listData(RegionState::model()->getAllByCountryId(1), 'id', 'name');
         }
-        return $this->patient_state;
+        return $this->option_patient_state;
     }
 
     public function loadOptionsCity() {
-        if (is_null($this->patient_city)) {
-            $this->patient_city = array();
+        if (is_null($this->option_patient_city)) {
+            $this->option_patient_city = array();
         } else {
-            $this->patient_city = CHtml::listData(RegionCity::model()->getAllByStateId($this->patient_state), 'id', 'name');
+            $this->option_patient_city = CHtml::listData(RegionCity::model()->getAllByStateId($this->state_id), 'id', 'name');
         }
-        return $this->patient_city;
+        return $this->option_patient_city;
     }
 
     public function loadOptionsHospital() {
-        if (is_null($this->expected_hospital_id)) {
-            $this->expected_hospital_id = CHtml::listData(Hospital::model()->getAll(null, array('order' => 't.name ASC')), 'id', 'name');
+        if (is_null($this->option_expected_hospital_id)) {
+            $this->option_expected_hospital_id = CHtml::listData(Hospital::model()->getAll(null, array('order' => 't.name ASC')), 'id', 'name');
         }
-        return $this->expected_hospital_id;
+        return $this->option_expected_hospital_id;
+    }
+
+    public function loadOptionsDepartment() {
+        if (is_null($this->option_expected_dept_id)) {
+            $this->option_expected_dept_id = CHtml::listData(HospitalDepartment::model()->getAllByHospitalId($this->expected_hospital_id), 'id', 'name');
+        }
+        return $this->option_expected_dept_id;
     }
 
     public function loadOptionsDoctorProfile() {
-        if (is_null($this->final_doctor_id)) {
-            $this->final_doctor_id = CHtml::listData(UserDoctorProfile::model()->getAll(null, null), 'user_id', 'name');
+        if (is_null($this->option_final_doctor_id)) {
+            $this->option_final_doctor_id = CHtml::listData(UserDoctorProfile::model()->getAll(null, null), 'user_id', 'name');
         }
-        return $this->final_doctor_id;
+        return $this->option_final_doctor_id;
     }
 
     public function loadOptionsCustomerRequest() {
-        if (is_null($this->customer_request)) {
-            $this->customer_request = AdminBooking::model()->getOptionsCustomerRequest();
+        if (is_null($this->option_customer_request)) {
+            $this->option_customer_request = AdminBooking::model()->getOptionsCustomerRequest();
         }
-        return $this->customer_request;
+        return $this->option_customer_request;
     }
 
     public function loadOptionsCustomerIntention() {
-        if (is_null($this->customer_intention)) {
-            $this->customer_intention = AdminBooking::model()->getOptionsCustomerIntention();
+        if (is_null($this->option_customer_intention)) {
+            $this->option_customer_intention = AdminBooking::model()->getOptionsCustomerIntention();
         }
-        return $this->customer_intention;
+        return $this->option_customer_intention;
     }
 
     public function loadOptionsCustomerType() {
-        if (is_null($this->customer_type)) {
-            $this->customer_type = AdminBooking::model()->getOptionsCustomerType();
+        if (is_null($this->option_customer_type)) {
+            $this->option_customer_type = AdminBooking::model()->getOptionsCustomerType();
         }
-        return $this->customer_type;
+        return $this->option_customer_type;
     }
 
     public function loadOptionsCustomerDiversion() {
-        if (is_null($this->customer_diversion)) {
-            $this->customer_diversion = AdminBooking::model()->getOptionsCustomerDiversion();
+        if (is_null($this->option_customer_diversion)) {
+            $this->option_customer_diversion = AdminBooking::model()->getOptionsCustomerDiversion();
         }
-        return $this->customer_diversion;
+        return $this->option_customer_diversion;
     }
 
     public function loadOptionsCustomerAgent() {
-        if (is_null($this->customer_agent)) {
-            $this->customer_agent = AdminBooking::model()->getOptionsCustomerAgent();
+        if (is_null($this->option_customer_agent)) {
+            $this->option_customer_agent = AdminBooking::model()->getOptionsCustomerAgent();
         }
-        return $this->customer_agent;
+        return $this->option_customer_agent;
     }
 
     public function loadOptionsBookingStatus() {
-        if (is_null($this->booking_status)) {
-            $this->booking_status = StatCode::getOptionsBookingStatus();
+        if (is_null($this->option_booking_status)) {
+            $this->option_booking_status = StatCode::getOptionsBookingStatus();
         }
-        return $this->booking_status;
+        return $this->option_booking_status;
     }
 
     public function loadOptionsAdminUser() {
-        if (is_null($this->admin_user_id)) {
-            $this->admin_user_id = CHtml::listData(AdminUser::model()->getAll(null, null), 'id', 'username');
+        if (is_null($this->option_admin_user_id)) {
+            $this->option_admin_user_id = CHtml::listData(AdminUser::model()->getAll(null, null), 'id', 'username');
         }
-        return $this->admin_user_id;
+        return $this->option_admin_user_id;
     }
 
 }

@@ -13,6 +13,8 @@
  * @property string $patient_mobile
  * @property integer $patient_age
  * @property string $patient_identity
+ * * @property string $state_id
+ * @property string $city_id
  * @property string $patient_state
  * @property string $patient_city
  * @property string $patient_address
@@ -51,26 +53,21 @@ class AdminBooking extends EActiveRecord {
     const bk_type_crm = '0';
     const bk_type_bk = '1';
     const bk_type_pb = '2';
-    
     const cus_request_shoushu = 'shoushu';
     const cus_request_zhuanzhen = 'zhuanzhen';
     const cus_request_wenzhen = 'wenzhen';
     const cus_request_menzhen = 'menzhen';
     const cus_request_huizhen = 'huizhen';
-    
     const cus_intention_normal = '1';
     const cus_intention_good = '2';
     const cus_intention_great = '3';
-    
     const cus_type_unsure = 1;
     const cus_type_validity = 2;
     const cus_type_invalid = 3;
-    
     const cus_diversion_baidu = 'baidu';
     const cus_diversion_friend = 'friend';
     const cus_diversion_doctor = 'doctor';
     const cus_diversion_welfare = 'welfare';
-    
     const cus_agent_400 = 'phone400';
     const cus_agent_baidu = 'baidu';
     const cus_agent_website = 'web';
@@ -110,10 +107,10 @@ class AdminBooking extends EActiveRecord {
             array('disease_name', 'length', 'max' => 100),
             array('admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('expected_time_start, expected_time_end, final_time, date_created, date_updated, date_deleted', 'safe'),
+            array('state_id, city_id, expected_time_start, expected_time_end, final_time, customer_request, customer_diversion, customer_agent, date_created, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, experted_doctor_id, experted_doctor_name, final_doctor_id, final_doctor_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, state_id, city_id, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, experted_doctor_id, experted_doctor_name, final_doctor_id, final_doctor_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -141,6 +138,8 @@ class AdminBooking extends EActiveRecord {
             'patient_mobile' => '患者手机',
             'patient_age' => '患者年龄',
             'patient_identity' => '患者身份证',
+            'state_id' => '患者所在省ID',
+            'city_id' => '患者所在市ID',
             'patient_state' => '患者所在省',
             'patient_city' => '患者所在市',
             'patient_address' => '患者地址',
@@ -202,6 +201,8 @@ class AdminBooking extends EActiveRecord {
         $criteria->compare('patient_mobile', $this->patient_mobile, true);
         $criteria->compare('patient_age', $this->patient_age);
         $criteria->compare('patient_identity', $this->patient_identity, true);
+        $criteria->compare('state_id', $this->state_id, true);
+        $criteria->compare('city_id', $this->city_id, true);
         $criteria->compare('patient_state', $this->patient_state, true);
         $criteria->compare('patient_city', $this->patient_city, true);
         $criteria->compare('patient_address', $this->patient_address, true);
@@ -286,7 +287,7 @@ class AdminBooking extends EActiveRecord {
             self::cus_type_invalid => '无效的',
         );
     }
-    
+
     public function getOptionsCustomerDiversion() {
         return array(
             self:: cus_diversion_baidu => '百度搜索',
@@ -315,4 +316,65 @@ class AdminBooking extends EActiveRecord {
         );
     }
 
+    public function getBookingType() {
+        $options = self::getOptionsBookingType();
+        if (isset($options[$this->booking_type])) {
+            return $options[$this->booking_type];
+        } else {
+            return null;
+        }
+    }
+
+    public function getCustomerRequest() {
+        $options = self::getOptionsCustomerRequest();
+        if (isset($options[$this->customer_request])) {
+            return $options[$this->customer_request];
+        } else {
+            return null;
+        }
+    }
+
+    public function getCustomerIntention() {
+        $options = self::getOptionsCustomerIntention();
+        if (isset($options[$this->customer_intention])) {
+            return $options[$this->customer_intention];
+        } else {
+            return null;
+        }
+    }
+
+    public function getCustomerType() {
+        $options = self::getOptionsCustomerType();
+        if (isset($options[$this->customer_type])) {
+            return $options[$this->customer_type];
+        } else {
+            return null;
+        }
+    }
+
+    public function getCustomerDiversion() {
+        $options = self::getOptionsCustomerDiversion();
+        if (isset($options[$this->customer_diversion])) {
+            return $options[$this->customer_diversion];
+        } else {
+            return null;
+        }
+    }
+
+    public function getCustomerAgent() {
+        $options = self::getOptionsCustomerAgent();
+        if (isset($options[$this->customer_agent])) {
+            return $options[$this->customer_agent];
+        } else {
+            return null;
+        }
+    }
+    public function getBookingStatue(){
+        $options = StatCode::getOptionsBookingStatus();
+        if (isset($options[$this->booking_status])) {
+            return $options[$this->booking_status];
+        } else {
+            return null;
+        }
+    }
 }

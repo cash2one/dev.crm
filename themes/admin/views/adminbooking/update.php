@@ -36,7 +36,7 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
 <div class="mt30">
     <div class="form-group">
         <div class="col-md-4">
-            <span class="tab-header">客户编号：</span><?php echo $form->textField($model, 'booking_id', array('class' => 'form-control w50')); ?>
+            <span class="tab-header">客户编号：</span><?php echo $form->textField($model, 'ref_no', array('class' => 'form-control w50')); ?>
         </div>
         <div class="col-md-4">
             <span class="tab-header">患者姓名：</span><?php echo $form->textField($model, 'patient_name', array('class' => 'form-control w50')); ?>
@@ -55,10 +55,10 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
     </div>
     <div class="form-group">
         <div class="col-md-4">
-            <span class="tab-header">地址：</span><?php
-            $model->patient_state = null;
-            echo $form->dropDownList($model, 'patient_state', $model->loadOptionsState(), array(
-                'name' => 'AdminBookingForm[patient_state]',
+            <span class="tab-header">地址：</span>
+            <?php
+            echo $form->dropDownList($model, 'state_id', $model->loadOptionsState(), array(
+                'name' => 'AdminBookingForm[state_id]',
                 'prompt' => '选择省份',
                 'class' => 'form-control w50',
             ));
@@ -66,9 +66,8 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
         </div>
         <div class="col-md-3">
             <?php
-            $model->patient_city = null;
-            echo $form->dropDownList($model, 'patient_city', $model->loadOptionsCity(), array(
-                'name' => 'AdminBookingForm[patient_city]',
+            echo $form->dropDownList($model, 'city_id', $model->loadOptionsCity(), array(
+                'name' => 'AdminBookingForm[city_id]',
                 'prompt' => '选择城市',
                 'class' => 'form-control w50',
             ));
@@ -132,7 +131,6 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
     <div class="form-group">
         <div class="col-md-4">
             <span class="tab-header">理想医院：</span><?php
-            $model->expected_hospital_id = null;
             echo $form->dropDownList($model, 'expected_hospital_id', $model->loadOptionsHospital(), array(
                 'name' => 'AdminBookingForm[expected_hospital_id]',
                 'prompt' => '选择医院',
@@ -141,9 +139,13 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
             ?>
         </div>
         <div class="col-md-4">
-            <span class="tab-header">理想科室：</span><select class="sel form-control w50" name="AdminBookingForm[expected_hp_dept_id]" id="AdminBookingForm_expected_hp_dept_id">
-                <option value="">-- 无 --</option>
-            </select>
+            <span class="tab-header">理想科室：</span><?php
+            echo $form->dropDownList($model, 'expected_hp_dept_id', $model->loadOptionsDepartment(), array(
+                'name' => 'AdminBookingForm[expected_hp_dept_id]',
+                'prompt' => '选择医院',
+                'class' => 'form-control w50',
+            ));
+            ?>
         </div>
         <div class="col-md-4">
             <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'experted_doctor_name', array('class' => 'form-control')); ?>
@@ -152,7 +154,6 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
     <div class="form-group">
         <div class="col-md-6">
             <span class="tab-header">最终手术的医生：</span><?php
-            $model->final_doctor_id = null;
             echo $form->dropDownList($model, 'final_doctor_id', $model->loadOptionsDoctorProfile(), array(
                 'name' => 'AdminBookingForm[final_doctor_id]',
                 'prompt' => '选择医生',
@@ -186,7 +187,6 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
             </div>
             <div class="with20">
                 <span>客户意向：</span><?php
-                $model->customer_intention = null;
                 echo $form->dropDownList($model, 'customer_intention', $model->loadOptionsCustomerIntention(), array(
                     'name' => 'AdminBookingForm[customer_intention]',
                     'prompt' => '选择',
@@ -196,7 +196,6 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
             </div>
             <div class="with20">
                 <span>客户类型：</span><?php
-                $model->customer_type = null;
                 echo $form->dropDownList($model, 'customer_type', $model->loadOptionsCustomerType(), array(
                     'name' => 'AdminBookingForm[customer_type]',
                     'prompt' => '选择',
@@ -206,7 +205,6 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
             </div>
             <div class="with20">
                 <span>导流来源：</span><?php
-                $model->customer_diversion = null;
                 echo $form->dropDownList($model, 'customer_diversion', $model->loadOptionsCustomerDiversion(), array(
                     'name' => 'AdminBookingForm[customer_diversion]',
                     'prompt' => '选择',
@@ -219,7 +217,6 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
     <div class="form-group">
         <div class="col-sm-4">
             <span>跟进状态：</span><?php
-            $model->booking_status = null;
             echo $form->dropDownList($model, 'booking_status', $model->loadOptionsBookingStatus(), array(
                 'name' => 'AdminBookingForm[booking_status]',
                 'prompt' => '选择',
@@ -230,7 +227,8 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
         <div class="col-sm-4">
             <span>付费状态：</span><select class="form-control" name="AdminBookingForm[order_status]" id="AdminBookingForm_order_status">
                 <option>--选择--</option>
-                <option value="1">xxxx</option>
+                <option value="1">已付费</option>
+                <option value="0">未付费</option>
             </select>
         </div>
         <div class="col-sm-4">
@@ -243,7 +241,6 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
         </div>
         <div class="col-sm-4">
             <span>业务员：</span><?php
-            $model->admin_user_id = null;
             echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
                 'name' => 'AdminBookingForm[admin_user_id]',
                 'prompt' => '选择',
@@ -253,7 +250,6 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
         </div>
         <div class="col-sm-4">
             <span>客户来源：</span><?php
-            $model->customer_agent = null;
             echo $form->dropDownList($model, 'customer_agent', $model->loadOptionsCustomerAgent(), array(
                 'name' => 'AdminBookingForm[customer_agent]',
                 'prompt' => '选择',
@@ -277,6 +273,7 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
 <?php $this->endWidget(); ?>
 <script>
     $(document).ready(function () {
+        initForm();
         $(".datepicker").datepicker({
             startDate: "+1d",
             todayBtn: true,
@@ -294,8 +291,8 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
                 }
             }
         });
-        $("select#AdminBookingForm_patient_state").change(function () {
-            //$("select#patient_city_id").attr("disabled", true);
+        $("select#AdminBookingForm_state_id").change(function () {
+            //$("select#city_id_id").attr("disabled", true);
             var stateId = $(this).val();
             var actionUrl = "<?php echo $urlLoadCity; ?>";// + stateId + "&prompt=选择城市";
             $.ajax({
@@ -305,15 +302,15 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
                 cache: false,
                 // dataType: "html",
                 'success': function (data) {
-                    $("select#AdminBookingForm_patient_city").html(data);
+                    $("select#AdminBookingForm_city_id").html(data);
                     // jquery mobile fix.
-                    captionText = $("select#AdminBookingForm_patient_city>option:first-child").text();
-                    $("#AdminBookingForm_patient_city-button>span:first-child").text(captionText);
+                    captionText = $("select#AdminBookingForm_city_id>option:first-child").text();
+                    $("#AdminBookingForm_city_id-button>span:first-child").text(captionText);
                 },
                 'error': function (data) {
                 },
                 complete: function () {
-                    //$("select#patient_city_id").attr("disabled", false);
+                    //$("select#city_id_id").attr("disabled", false);
                 }
             });
             return false;
@@ -339,6 +336,20 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
             return false;
         });
     });
+    function initForm(){
+        var disease_confirm = '<?php echo $model->disease_confirm; ?>';
+        var order_status = '<?php echo $model->order_status; ?>';
+        $('select#AdminBookingForm_disease_confirm>option').each(function(){
+            if($(this).val() == disease_confirm){
+                $(this).attr('selected','selected');
+            }
+        });
+        $('select#AdminBookingForm_order_status>option').each(function(){
+            if($(this).val() == order_status){
+                $(this).attr('selected','selected');
+            }
+        });
+    }
     function setFileHtml(results) {
         if (results) {
             var innerHtml = '';

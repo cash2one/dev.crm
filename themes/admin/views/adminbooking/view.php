@@ -82,20 +82,20 @@ $orderList = isset($orderList) ? $orderList : null;
                 <span>是否确诊：</span><?php echo $model->disease_confirm == null ? '未填写' : $model->disease_confirm; ?>
             </div>
             <div class="with20">
-                <span>患者目的：</span><?php echo $model->customer_request == null ? '未填写' : $model->customer_request; ?>
+                <span>患者目的：</span><?php echo $model->getCustomerRequest() == null ? '未填写' : $model->getCustomerRequest(); ?>
             </div>
             <div class="with20">
-                <span>客户意向：</span><?php echo $model->customer_intention == null ? '未填写' : $model->customer_intention; ?>
+                <span>客户意向：</span><?php echo $model->getCustomerIntention() == null ? '未填写' : $model->getCustomerIntention(); ?>
             </div>
             <div class="with20">
-                <span>客户类型：</span><?php echo $model->customer_type == null ? '未填写' : $model->customer_type; ?>
+                <span>客户类型：</span><?php echo $model->getCustomerType() == null ? '未填写' : $model->getCustomerType(); ?>
             </div>
             <div class="with20">
-                <span>导流来源：</span><?php echo $model->customer_diversion == null ? '未填写' : $model->customer_diversion; ?>
+                <span>导流来源：</span><?php echo $model->getCustomerDiversion() == null ? '未填写' : $model->getCustomerDiversion(); ?>
             </div>
         </div>
         <div class="col-sm-4 border-bottom">
-            <span>跟进状态：</span><?php echo $model->booking_status == null ? '未填写' : $model->booking_status; ?>
+            <span>跟进状态：</span><?php echo $model->getBookingStatue() == null ? '未填写' : $model->getBookingStatue(); ?>
         </div>
         <div class="col-sm-4 border-bottom">
             <span>付费状态：</span><?php echo $model->order_status == null ? '未填写' : $model->order_status; ?>
@@ -110,7 +110,7 @@ $orderList = isset($orderList) ? $orderList : null;
             <span>业务员：</span><?php echo $model->admin_user_name == null ? '未填写' : $model->admin_user_name; ?>
         </div>
         <div class="col-sm-4 border-bottom">
-            <span>客户来源：</span><?php echo $model->booking_id == null ? '未填写' : $model->customer_agent; ?>
+            <span>客户来源：</span><?php echo $model->getCustomerAgent() == null ? '未填写' : $model->getCustomerAgent(); ?>
         </div>
         <div class="col-sm-12 border-bottom">
             <span>特殊备注：</span><?php echo $model->remark == null ? '未填写' : $model->remark; ?>

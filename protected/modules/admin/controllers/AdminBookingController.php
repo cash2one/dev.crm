@@ -30,7 +30,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate','list','uploadsummary'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -84,12 +84,12 @@ class AdminBookingController extends AdminController {
                 $form->expected_hp_dept_name = $dept->getName();
             }
             //给省市赋值
-            if (!is_null($form->patient_state)) {
-                $state = RegionState::model()->getById($form->patient_state);
+            if (!is_null($form->state_id)) {
+                $state = RegionState::model()->getById($form->state_id);
                 $form->patient_state = $state->getName();
             }
-            if (!is_null($form->patient_city)) {
-                $city = RegionCity::model()->getById($form->patient_city);
+            if (!is_null($form->city_id)) {
+                $city = RegionCity::model()->getById($form->city_id);
                 $form->patient_city = $city->getName();
             }
             //给最终手术专家赋值
@@ -98,6 +98,7 @@ class AdminBookingController extends AdminController {
             //业务员信息
             $adminUser = AdminUser::model()->getById($form->admin_user_id);
             $form->admin_user_name = $adminUser->username;
+            $form->booking_type = AdminBooking::bk_type_crm;
 
             $model = new AdminBooking();
             $model->setAttributes($form->attributes);
@@ -123,10 +124,8 @@ class AdminBookingController extends AdminController {
         $form = new AdminBookingForm();
         $model = $this->loadModel($id);
         $form->initModel($model);
-
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-
         $this->render('update', array(
             'model' => $form,
         ));
@@ -142,29 +141,22 @@ class AdminBookingController extends AdminController {
             $model = $this->loadModel($value['id']);
             $form->attributes = $_POST['AdminBookingForm'];
             //给 医院 科室名称赋值
-            if ($form->expected_hospital_id != $model->expected_hospital_id) {
-                $hospital = Hospital::model()->getById($form->expected_hospital_id);
-                $form->expected_hospital_name = $hospital->getName();
-            }
-            if ($form->expected_hp_dept_id != $model->expected_hp_dept_id) {
-                $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
-                $form->expected_hp_dept_name = $dept->getName();
-            }
+            $hospital = Hospital::model()->getById($form->expected_hospital_id);
+            $form->expected_hospital_name = $hospital->getName();
+            $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
+            $form->expected_hp_dept_name = $dept->getName();
             //给省市赋值
-            if ($form->patient_state != $model->patient_state) {
-                $state = RegionState::model()->getById($form->patient_state);
-                $form->patient_state = $state->getName();
-            }
-            if ($form->patient_city != $model->patient_city) {
-                $city = RegionCity::model()->getById($form->patient_city);
-                $form->patient_city = $city->getName();
-            }
+            $state = RegionState::model()->getById($form->state_id);
+            $form->patient_state = $state->getName();
+            $city = RegionCity::model()->getById($form->city_id);
+            $form->patient_city = $city->getName();
             //给最终手术专家赋值
-            if ($form->final_doctor_id != $model->final_doctor_id) {
-                $userDoctorProfile = UserDoctorProfile::model()->getByUserId($form->final_doctor_id);
-                $form->final_doctor_name = $userDoctorProfile->getName();
-            }
-
+            $userDoctorProfile = UserDoctorProfile::model()->getByUserId($form->final_doctor_id);
+            $form->final_doctor_name = $userDoctorProfile->getName();
+            //业务员信息
+            $adminUser = AdminUser::model()->getById($form->admin_user_id);
+            $form->admin_user_name = $adminUser->username;
+            $form->booking_type = AdminBooking::bk_type_crm;
             $model->setAttributes($form->attributes);
             if ($model->save()) {
                 $output['status'] = 'ok';
@@ -203,16 +195,16 @@ class AdminBookingController extends AdminController {
     /**
      * Manages all models.
      */
-    public function actionAdmin() {
-        $model = new AdminBooking('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['AdminBooking']))
-            $model->attributes = $_GET['AdminBooking'];
-
-        $this->render('admin', array(
-            'model' => $model,
-        ));
-    }
+//    public function actionAdmin() {
+//        $model = new AdminBooking('search');
+//        $model->unsetAttributes();  // clear any default values
+//        if (isset($_GET['AdminBooking']))
+//            $model->attributes = $_GET['AdminBooking'];
+//
+//        $this->render('admin', array(
+//            'model' => $model,
+//        ));
+//    }
 
     public function actionAjaxUploadFile() {
         $output = array('status' => 'no');
@@ -286,9 +278,45 @@ class AdminBookingController extends AdminController {
         ));
     }
 
-    public function actionUploadsummary(){
+    public function actionUploadsummary() {
         $this->render('uploadSummary');
     }
+
+    /**
+     * Manages all models.
+     */
+    public function actionAdmin() {
+        $model = new AdminBooking('search');
+        $model->unsetAttributes();  // clear any default values
+        $form = new AdminBookingSearchForm();
+        $values = array();
+        if (isset($_GET['AdminBookingSearchForm'])) {
+            $values = $_GET['AdminBookingSearchForm'];
+        } else if (isset($_GET['AdminBooking'])) {
+
+            $values = $_GET['AdminBooking'];
+        }
+
+        $this->render('search', array(
+            'model' => $model,
+            'form' => $form,
+        ));
+    }
+
+    public function actionSearchResult() {
+        $pbSeach = new AdminBookingSearch($_GET);
+        $criteria = $pbSeach->criteria;
+        $dataProvider = new CActiveDataProvider('AdminBooking', array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+        ));
+        $this->renderPartial('searchResult', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
