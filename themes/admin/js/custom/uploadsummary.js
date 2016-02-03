@@ -2,16 +2,16 @@ $(function () {
 
     //图片上传板块
     var btnSubmit = $("#btnSubmit"),
-            domForm = $("#doctor-form"),
+            domForm = $("#booking-form"),
             $wrap = $('#uploader'),
             //全部成功 返回地址
             uploadReturnUrl = domForm.attr("data-url-return"),
             //data-url-uploadFile
             urlUploadFile = domForm.attr('data-url-uploadFile'),
             //data-url-sendEmail
-            urlSendEmail = domForm.attr('data-url-sendEmail');
-    //图片上传时所需要的参数
-    fileParam = {},
+            urlSendEmail = domForm.attr('data-url-sendEmail'),
+            //图片上传时所需要的参数
+            fileParam = {},
             // 图片容器
             $queue = $('<ul class="filelist"></ul>')
             .appendTo($wrap.find('.queueList')),
@@ -78,7 +78,7 @@ $(function () {
         //compress: true,
         chunked: true,
         method: 'post',
-        formData: {'doctor[id]': domForm.find("input#doctorId").val()},
+        formData: {'AdminBookingForm[id]': domForm.find("input#bookingId").val()},
         // server: 'http://webuploader.duapp.com/server/fileupload.php',
         server: urlUploadFile,
         fileNumLimit: 10,
@@ -365,7 +365,7 @@ $(function () {
                     //window.location.href = uploadReturnUrl;
                     location.href = uploadReturnUrl;
                     //location.reload();
-                    
+
                 } else {
                     // 没有成功的图片，重设
                     //state = 'done';
@@ -454,7 +454,6 @@ $(function () {
         //console.log(errorinfo);
         alert('错误信息: ' + errorinfo);
     };
-
     //当所有文件上传结束时触发
     uploader.on("uploadFinished", function (file, data) {
     });

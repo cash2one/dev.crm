@@ -72,6 +72,22 @@
                                     </div>
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            预约
+                                            <span class="caret pull-right"></span>
+                                        </div>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminBooking.List')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminbooking/list') ?>">列表</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminBooking.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminbooking/admin') ?>">搜索</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminBooking.Create')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminbooking/create') ?>">创建</a></li>
+                                            <?php endif; ?>
+                                    </div> 
+                                    <div class="dropdown mt20" >
+                                        <div class="dropdown-toggle color-white"  id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             预约-患者
                                             <span class="caret pull-right"></span>
                                         </div>

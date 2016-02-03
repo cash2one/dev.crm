@@ -1,0 +1,6 @@
+.border-bottom{border-bottom: 1px solid #ddd;margin-bottom: 5px;padding-bottom: 5px;}
+.tab-header{display: inline-block;min-width: 6em;}
+.with20{width: 20%;float: left;}
+.form-group{width: 100%;border-bottom: 1px solid #ddd;margin-bottom: 5px;padding-bottom: 5px;padding-top: 5px;}
+.form-control{display: inline-block;width: auto;}
+.w50{width: 50%;}
