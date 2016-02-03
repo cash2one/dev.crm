@@ -26,13 +26,12 @@ $this->breadcrumbs = array(
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
-    <div class="row">
+    <div>
         <?php echo $form->labelEx($model, 'username'); ?>
         <?php echo $form->textField($model, 'username'); ?>
         <?php echo $form->error($model, 'username'); ?>
     </div>
-
-    <div class="row">
+    <div>
         <?php echo $form->labelEx($model, 'password'); ?>
         <?php echo $form->passwordField($model, 'password'); ?>
         <?php echo $form->error($model, 'password'); ?>
@@ -40,7 +39,7 @@ $this->breadcrumbs = array(
     </div>
 
     <?php if (CCaptcha::checkRequirements()): ?>
-        <div class="row">
+        <div>
             <?php echo $form->labelEx($model, 'verifyCode'); ?>
             <div>
                 <?php $this->widget('CCaptcha', array('buttonLabel' => '&nbsp;&nbsp;换一张&nbsp;&nbsp;', 'buttonOptions' => array('class' => 'btn btn-info mt10'))); ?>
@@ -53,7 +52,7 @@ $this->breadcrumbs = array(
     <?php endif; ?>
 
 
-    <div class="row buttons">
+    <div class="buttons">
         <?php echo CHtml::submitButton('Login'); ?>
     </div>
 
