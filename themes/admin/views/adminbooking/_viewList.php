@@ -2,50 +2,47 @@
 /* @var $this BookingController */
 /* @var $data Booking */
 ?>
-<style>
-    .items>.view>b{width: 6em;}
-</style>
-<div class="view">
+<tr class="view">
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+    <td>
     <?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('ref_no')); ?>:</b>    
+    <td>  
     <?php echo CHtml::link(CHtml::encode($data->ref_no), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('patient_name')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->patient_name); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('patient_mobile')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->patient_mobile); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('patient_state')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->patient_state); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('patient_city')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->patient_city); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('disease_name')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->disease_name); ?>
-    <br />
+    </td>
     
-    <b><?php echo CHtml::encode($data->getAttributeLabel('customer_agent')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->customer_agent); ?>
-    <br />
+    </td>
     
-    <b><?php echo CHtml::encode($data->getAttributeLabel('admin_user_name')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->admin_user_name); ?>
-    <br />
+    </td>
     
-    <b><?php echo CHtml::encode($data->getAttributeLabel('date_created')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->date_created); ?>
-    <br />
+    </td>
     
 
     <?php /*
@@ -107,4 +104,4 @@
 
      */ ?>
 
-</div>
+</tr>

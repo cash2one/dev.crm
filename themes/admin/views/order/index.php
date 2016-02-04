@@ -13,9 +13,26 @@ $this->menu=array(
 ?>
 
 <h1>Sales Orders</h1>
-
-<?php $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-)); ?>
-<style>.list-view{position:relative;}</style>
+<div class="data-list mt10">
+    <table class="table">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>预约号</td>
+                <td>预约号</td>
+                <td>订单标题</td>
+                <td>订单详情</td>
+                <td>支付情况</td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $this->widget('zii.widgets.CListView', array(
+                'dataProvider' => $dataProvider,
+                'itemView' => '_view',
+            ));
+            ?>
+        </tbody>
+    </table>
+</div>
+<style>.data-list,.list-view{position:relative;}.pager{margin: 0;}</style>

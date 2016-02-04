@@ -3,15 +3,15 @@
 /* @var $data SalesOrder */
 ?>
 
-<div class="view">
+<tr class="view">
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<td>
 	<?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?>
-	<br />
+	</td>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ref_no')); ?>:</b>
+	<td>
 	<?php echo CHtml::link(CHtml::encode($data->ref_no), array('view', 'id'=>$data->id)); ?>
-	<br />
+	</td>
 	
         <?php /*
         <b><?php echo CHtml::encode($data->getAttributeLabel('user_id')); ?>:</b>
@@ -27,20 +27,20 @@
 	<br />
         */ ?>
         
-        <b><?php echo CHtml::encode($data->getAttributeLabel('bk_ref_no')); ?>:</b>
+        <td>
 	<?php echo CHtml::encode($data->bk_ref_no); ?>
-	<br />
+	</td>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('subject')); ?>:</b>
+	<td>
 	<?php echo CHtml::encode($data->subject); ?>
-	<br />
+	</td>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
+	<td>
 	<?php echo CHtml::encode($data->description); ?>
-	<br />
-        <b><?php echo CHtml::encode($data->getAttributeLabel('is_paid')); ?>:</b>
+	</td>
+        <td>
 	<?php echo $data->is_paid==1?'已支付':'未支付'; ?>
-	<br />
+	</td>
 
 	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('is_paid')); ?>:</b>
@@ -93,4 +93,4 @@
 
 	*/ ?>
 
-</div>
+</tr>

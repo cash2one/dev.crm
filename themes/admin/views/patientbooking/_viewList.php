@@ -14,45 +14,45 @@ $diseaseDetail = $patient->getDiseaseDetail()!=null ? $patient->getDiseaseDetail
 
 ?>
 
-<div class="view">
+<tr class="view">
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+    <td>
     <?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
-    <br />
+    </td>
     
-    <b>患者姓名:</b>
+    <td>
     <?php echo CHtml::encode($patientName); ?>
-    <br />
-    <b>患者手机:</b>
+    </td>
+    <td>
     <?php echo CHtml::encode($patientMobile); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('ref_no')); ?>:</b>
+    <td>
     <?php echo CHtml::link(CHtml::encode($data->ref_no), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('status')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->getStatus()); ?>
-    <br />
+    </td>
 
-    <b>医生姓名:</b>
+    <td>
     <?php echo CHtml::encode($creatorName); ?>
-    <br />
-    <b>医生手机:</b>
+    </td>
+    <td>
     <?php echo $creatorMobile; ?>
-    <br />
+    </td>
 
-    <b>疾病诊断:</b>
+    <td>
     <?php echo CHtml::encode($diseaseName); ?>
-    <br />
+    </td>
     
-    <b>疾病描述:</b>
+    <td>
     <?php echo CHtml::encode($diseaseDetail); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('date_created')); ?>:</b>
+    <td>
     <?php echo CHtml::encode($data->getDateCreated()); ?>
-    <br />
+    </td>
 
     <?php /*
       <b><?php echo CHtml::encode($data->getAttributeLabel('date_end')); ?>:</b>
@@ -89,4 +89,4 @@ $diseaseDetail = $patient->getDiseaseDetail()!=null ? $patient->getDiseaseDetail
 
      */ ?>
 
-</div>
+</tr>

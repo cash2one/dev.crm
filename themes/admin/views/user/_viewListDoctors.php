@@ -33,27 +33,27 @@ if (isset($profile)) {
     $verified = $profile->isVerified();
 }
 ?>
-<div class="view">
+<tr class="view">
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+    <td>
     <?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
-    <br />
+    </td>
 
-    <b><?php echo CHtml::encode($data->getAttributeLabel('username')); ?>:</b>
+    <td>
     <?php echo CHtml::link(CHtml::encode($data->getUsername()), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
     <?php //echo CHtml::link(CHtml::encode($data->getUsername()), array('view', 'id'=>$data->id), array('target'=>'_blank')); ?>
-    <br />
+    </td>
 
-    <b>医生姓名:</b>
+    <td>
     <?php echo CHtml::encode($profileData->name); ?>
-    <br />
-    <b>认证状态:</b>
+    </td>
+    <td>
     <?php echo ($verified ? '已认证' : '未认证');  ?>
-    <br />
+    </td>
 
-    <b>注册日期:</b>
+    <td>
     <?php echo CHtml::encode($data->date_created); ?>
-    <br />
+    </td>
 
     <?php /*
       <b><?php echo CHtml::encode($data->getAttributeLabel('login_attempts')); ?>:</b>
@@ -87,4 +87,4 @@ if (isset($profile)) {
 
      */ ?>
 
-</div>
+</tr>
