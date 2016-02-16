@@ -8,7 +8,7 @@
 
 	<p>
 		<?php echo Rights::t('install', 'You can start by generating your authorization items') ;?>
-		<?php echo CHtml::link(Rights::t('install', 'here'), array('authItem/generate')); ?>.
+		<?php echo CHtml::link(Rights::t('install', 'here'), array('authitem/generate')); ?>.
 	</p>
 
 </div>

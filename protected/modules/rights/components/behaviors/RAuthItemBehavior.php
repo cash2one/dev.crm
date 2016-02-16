@@ -48,7 +48,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getNameLink()
 	{
 		return CHtml::link($this->getNameText(), array(
-			'authItem/update',
+			'authitem/update',
 			'name'=>urlencode($this->owner->name),
 		));
 	}
@@ -60,7 +60,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getGridNameLink()
 	{
 		$markup = CHtml::link($this->owner->name, array(
-			'authItem/update',
+			'authitem/update',
 			'name'=>urlencode($this->owner->name),
 		));
 
@@ -107,7 +107,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getDeleteOperationLink()
 	{
 		return CHtml::linkButton(Rights::t('core', 'Delete'), array(
-			'submit'=>array('authItem/delete', 'name'=>urlencode($this->owner->name)),
+			'submit'=>array('authitem/delete', 'name'=>urlencode($this->owner->name)),
 			'confirm'=>Rights::t('core', 'Are you sure you want to delete this operation?'),
 			'class'=>'delete-link',
 			'csrf'=>Yii::app()->request->enableCsrfValidation,
@@ -121,7 +121,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getDeleteTaskLink()
 	{
 		return CHtml::linkButton(Rights::t('core', 'Delete'), array(
-			'submit'=>array('authItem/delete', 'name'=>urlencode($this->owner->name)),
+			'submit'=>array('authitem/delete', 'name'=>urlencode($this->owner->name)),
 			'confirm'=>Rights::t('core', 'Are you sure you want to delete this task?'),
 			'class'=>'delete-link',
 			'csrf'=>Yii::app()->request->enableCsrfValidation,
@@ -138,7 +138,7 @@ class RAuthItemBehavior extends CBehavior
 		if( $this->owner->name!==Rights::module()->superuserName )
 		{
 			return CHtml::linkButton(Rights::t('core', 'Delete'), array(
-				'submit'=>array('authItem/delete', 'name'=>urlencode($this->owner->name)),
+				'submit'=>array('authitem/delete', 'name'=>urlencode($this->owner->name)),
 				'confirm'=>Rights::t('core', 'Are you sure you want to delete this role?'),
 				'class'=>'delete-link',
 				'csrf'=>Yii::app()->request->enableCsrfValidation,
@@ -153,7 +153,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getRemoveParentLink()
 	{
 		return CHtml::linkButton(Rights::t('core', 'Remove'), array(
-			'submit'=>array('authItem/removeChild', 'name'=>urlencode($this->owner->name), 'child'=>urlencode($this->parent->name)),
+			'submit'=>array('authitem/removeChild', 'name'=>urlencode($this->owner->name), 'child'=>urlencode($this->parent->name)),
 			'class'=>'remove-link',
 			'csrf'=>Yii::app()->request->enableCsrfValidation,
 		));
@@ -166,7 +166,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getRemoveChildLink()
 	{
 		return CHtml::linkButton(Rights::t('core', 'Remove'), array(
-			'submit'=>array('authItem/removeChild', 'name'=>urlencode($this->parent->name), 'child'=>urlencode($this->owner->name)),
+			'submit'=>array('authitem/removeChild', 'name'=>urlencode($this->parent->name), 'child'=>urlencode($this->owner->name)),
 			'class'=>'remove-link',
 			'csrf'=>Yii::app()->request->enableCsrfValidation,
 		));
@@ -198,13 +198,13 @@ class RAuthItemBehavior extends CBehavior
 			'onclick'=>"
 				jQuery.ajax({
 					type:'POST',
-					url:'".Yii::app()->controller->createUrl('authItem/revoke', array(
+					url:'".Yii::app()->controller->createUrl('authitem/revoke', array(
 						'name'=>urlencode($role->name), 
 						'child'=>urlencode($this->owner->name),
 					))."',
 					data:{ ajax:1 $csrf },
 					success:function() {
-						$('#permissions').load('".Yii::app()->controller->createUrl('authItem/permissions')."', { ajax:1 $csrf });
+						$('#permissions').load('".Yii::app()->controller->createUrl('authitem/permissions')."', { ajax:1 $csrf });
 					}
 				});
 
@@ -227,13 +227,13 @@ class RAuthItemBehavior extends CBehavior
 			'onclick'=>"
 				jQuery.ajax({
 					type:'POST',
-					url:'".Yii::app()->controller->createUrl('authItem/assign', array(
+					url:'".Yii::app()->controller->createUrl('authitem/assign', array(
 						'name'=>urlencode($role->name), 
 						'child'=>urlencode($this->owner->name),
 					))."',
 					data:{ ajax:1 $csrf },
 					success:function() {
-						$('#permissions').load('".Yii::app()->controller->createUrl('authItem/permissions')."', { ajax:1 $csrf });
+						$('#permissions').load('".Yii::app()->controller->createUrl('authitem/permissions')."', { ajax:1 $csrf });
 					}
 				});
 

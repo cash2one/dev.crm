@@ -12,7 +12,7 @@
 		<?php echo Rights::t('core', 'Roles exist at the top of the authorization hierarchy and can therefore inherit from other roles, tasks and/or operations.'); ?>
 	</p>
 
-	<p><?php echo CHtml::link(Rights::t('core', 'Create a new role'), array('authItem/create', 'type'=>CAuthItem::TYPE_ROLE), array(
+	<p><?php echo CHtml::link(Rights::t('core', 'Create a new role'), array('authitem/create', 'type'=>CAuthItem::TYPE_ROLE), array(
 	   	'class'=>'add-role-link',
 	)); ?></p>
 

@@ -12,7 +12,7 @@
 		<?php echo Rights::t('core', 'Operations exist below tasks in the authorization hierarchy and can therefore only inherit from other operations.'); ?>
 	</p>
 
-	<p><?php echo CHtml::link(Rights::t('core', 'Create a new operation'), array('authItem/create', 'type'=>CAuthItem::TYPE_OPERATION), array(
+	<p><?php echo CHtml::link(Rights::t('core', 'Create a new operation'), array('authitem/create', 'type'=>CAuthItem::TYPE_OPERATION), array(
 		'class'=>'add-operation-link',
 	)); ?></p>
 

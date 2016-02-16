@@ -7,7 +7,7 @@
  * @copyright Copyright &copy; 2010 Christoffer Niska
  * @since 0.5
  */
-class AuthItemController extends RController {
+class AuthitemController extends RController {
 
     /**
      * @property RAuthorizer
@@ -73,6 +73,7 @@ class AuthItemController extends RController {
      * Displays the permission overview.
      */
     public function actionPermissions() {
+
         $dataProvider = new RPermissionDataProvider('permissions');
 
         // Get the roles from the data provider
@@ -119,14 +120,14 @@ class AuthItemController extends RController {
      * Displays the operation management page.
      */
     public function actionOperations() {
-        Yii::app()->user->rightsReturnUrl = array('authItem/operations');
+        Yii::app()->user->rightsReturnUrl = array('authitem/operations');
 
         $dataProvider = new RAuthItemDataProvider('operations', array(
             'type' => CAuthItem::TYPE_OPERATION,
             'sortable' => array(
                 'id' => 'RightsOperationTableSort',
                 'element' => '.operation-table',
-                'url' => $this->createUrl('authItem/sortable'),
+                'url' => $this->createUrl('authitem/sortable'),
             ),
         ));
 
@@ -142,14 +143,14 @@ class AuthItemController extends RController {
      * Displays the operation management page.
      */
     public function actionTasks() {
-        Yii::app()->user->rightsReturnUrl = array('authItem/tasks');
+        Yii::app()->user->rightsReturnUrl = array('authitem/tasks');
 
         $dataProvider = new RAuthItemDataProvider('tasks', array(
             'type' => CAuthItem::TYPE_TASK,
             'sortable' => array(
                 'id' => 'RightsTaskTableSort',
                 'element' => '.task-table',
-                'url' => $this->createUrl('authItem/sortable'),
+                'url' => $this->createUrl('authitem/sortable'),
             ),
         ));
 
@@ -165,14 +166,14 @@ class AuthItemController extends RController {
      * Displays the role management page.
      */
     public function actionRoles() {
-        Yii::app()->user->rightsReturnUrl = array('authItem/roles');
+        Yii::app()->user->rightsReturnUrl = array('authitem/roles');
 
         $dataProvider = new RAuthItemDataProvider('roles', array(
             'type' => CAuthItem::TYPE_ROLE,
             'sortable' => array(
                 'id' => 'RightsRoleTableSort',
                 'element' => '.role-table',
-                'url' => $this->createUrl('authItem/sortable'),
+                'url' => $this->createUrl('authitem/sortable'),
             ),
         ));
 
@@ -220,7 +221,7 @@ class AuthItemController extends RController {
                 if (($generatedItems = $generator->run()) !== false && $generatedItems !== array()) {
                     Yii::app()->getUser()->setFlash($this->module->flashSuccessKey, Rights::t('core', 'Authorization items created.')
                     );
-                    $this->redirect(array('authItem/permissions'));
+                    $this->redirect(array('authitem/permissions'));
                 }
             }
         }
@@ -270,7 +271,7 @@ class AuthItemController extends RController {
                 );
 
                 // Redirect to the correct destination
-                $this->redirect(Yii::app()->user->getRightsReturnUrl(array('authItem/permissions')));
+                $this->redirect(Yii::app()->user->getRightsReturnUrl(array('authitem/permissions')));
             }
         }
 
@@ -304,7 +305,7 @@ class AuthItemController extends RController {
                 );
 
                 // Redirect to the correct destination
-                $this->redirect(Yii::app()->user->getRightsReturnUrl(array('authItem/permissions')));
+                $this->redirect(Yii::app()->user->getRightsReturnUrl(array('authitem/permissions')));
             }
         }
 
@@ -329,7 +330,7 @@ class AuthItemController extends RController {
                     );
 
                     // Reidrect to the same page
-                    $this->redirect(array('authItem/update', 'name' => urlencode($itemName)));
+                    $this->redirect(array('authitem/update', 'name' => urlencode($itemName)));
                 }
             }
         } else {
@@ -378,7 +379,7 @@ class AuthItemController extends RController {
 
             // If AJAX request, we should not redirect the browser
             if (isset($_POST['ajax']) === false)
-                $this->redirect(Yii::app()->user->getRightsReturnUrl(array('authItem/permissions')));
+                $this->redirect(Yii::app()->user->getRightsReturnUrl(array('authitem/permissions')));
         }
         else {
             throw new CHttpException(400, Rights::t('core', 'Invalid request. Please do not repeat this request again.'));
@@ -405,7 +406,7 @@ class AuthItemController extends RController {
 
             // If AJAX request, we should not redirect the browser
             if (isset($_POST['ajax']) === false)
-                $this->redirect(array('authItem/update', 'name' => urlencode($itemName)));
+                $this->redirect(array('authitem/update', 'name' => urlencode($itemName)));
         }
         else {
             throw new CHttpException(400, Rights::t('core', 'Invalid request. Please do not repeat this request again.'));
@@ -426,7 +427,7 @@ class AuthItemController extends RController {
 
             // if AJAX request, we should not redirect the browser
             if (isset($_POST['ajax']) === false)
-                $this->redirect(array('authItem/permissions'));
+                $this->redirect(array('authitem/permissions'));
         }
         else {
             throw new CHttpException(400, Rights::t('core', 'Invalid request. Please do not repeat this request again.'));
@@ -447,7 +448,7 @@ class AuthItemController extends RController {
 
             // if AJAX request, we should not redirect the browser
             if (isset($_POST['ajax']) === false)
-                $this->redirect(array('authItem/permissions'));
+                $this->redirect(array('authitem/permissions'));
         }
         else {
             throw new CHttpException(400, Rights::t('core', 'Invalid request. Please do not repeat this request again.'));

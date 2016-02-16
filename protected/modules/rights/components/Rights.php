@@ -123,9 +123,9 @@ class Rights
 	{
 		switch( (int)$type )
 		{
-			case CAuthItem::TYPE_OPERATION: return array('authItem/operations');
-			case CAuthItem::TYPE_TASK: return array('authItem/tasks');
-			case CAuthItem::TYPE_ROLE: return array('authItem/roles');
+			case CAuthItem::TYPE_OPERATION: return array('authitem/operations');
+			case CAuthItem::TYPE_TASK: return array('authitem/tasks');
+			case CAuthItem::TYPE_ROLE: return array('authitem/roles');
 			default: throw new CException(Rights::t('core', 'Invalid authorization item type.'));
 		}
 	}
