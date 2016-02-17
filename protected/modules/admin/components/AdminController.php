@@ -4,7 +4,7 @@
  * Controller is the customized base controller class.
  * All controller classes for the module should extend from this base class.
  */
-class AdminController extends WebsiteController {
+class AdminController extends RController {
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
