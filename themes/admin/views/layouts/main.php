@@ -45,6 +45,18 @@
                                 <?php if (!Yii::app()->user->isGuest): ?>
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            任务
+                                            <span class="caret pull-right"></span>
+                                        </div>
+                                        <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
+
+                                                <li><a href="<?php echo $this->createUrl('adminTask/admin') ?>">搜索</a></li>
+                                                <li ><a href="<?php echo $this->createUrl('adminTask/create') ?>">创建</a></li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="dropdown mt20" >
+                                        <div class="dropdown-toggle color-white"  id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             医院
                                             <span class="caret pull-right"></span>
                                         </div>                                                         
