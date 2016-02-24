@@ -44,7 +44,7 @@ class DoctorController extends AdminController {
             'accessControl', // perform access control for CRUD operations
             'postOnly + delete', // we only allow deletion via POST request
             'DoctorContext + update delete addFaculty addAvatar',
-                //  'FacultyDoctorJoinContext + deleteDF'
+            //  'FacultyDoctorJoinContext + deleteDF'
             'rights',
         );
     }
@@ -128,27 +128,28 @@ class DoctorController extends AdminController {
 
         if (isset($_POST['DoctorFormAdmin'])) {
             $form->attributes = $_POST['DoctorFormAdmin'];
-            $form->name = $form->fullname;
-            //给省市id 医院 科室名称赋值
-            $hospital = Hospital::model()->getById($form->hospital_id);
-            $form->state_id = $hospital->state_id;
-            $form->city_id = $hospital->city_id;
-            $form->country_id = $hospital->country_id;
-            $form->hospital_name = $hospital->getName();
-            $dept = HospitalDepartment::model()->getById($form->hp_dept_id);
-            $form->hp_dept_name = $dept->getName();
-            $doctor = new Doctor();
-            $doctor->setAttributes($form->attributes);
+            if ($form->validate()) {
+                $form->name = $form->fullname;
+                //给省市id 医院 科室名称赋值
+                $hospital = Hospital::model()->getById($form->hospital_id);
+                $form->state_id = $hospital->state_id;
+                $form->city_id = $hospital->city_id;
+                $form->country_id = $hospital->country_id;
+                $form->hospital_name = $hospital->getName();
+                $dept = HospitalDepartment::model()->getById($form->hp_dept_id);
+                $form->hp_dept_name = $dept->getName();
+                $doctor = new Doctor();
+                $doctor->setAttributes($form->attributes);
 
-            $doctor->honour = explode('#', $form->honour);
-            $doctor->is_contracted = 1; //签约医生
-            if ($doctor->save()) {
-                //保存成功 保存关联表
-                $join = new HospitalDeptDoctorJoin();
-                $join->hp_dept_id = $doctor->hp_dept_id;
-                $join->doctor_id = $doctor->getId();
-                if ($join->save()) {
-                    $this->redirect(array('view', 'id' => $doctor->getId()));
+                $doctor->honour = explode('#', $form->honour);
+                if ($doctor->save()) {
+                    //保存成功 保存关联表
+                    $join = new HospitalDeptDoctorJoin();
+                    $join->hp_dept_id = $doctor->hp_dept_id;
+                    $join->doctor_id = $doctor->getId();
+                    if ($join->save()) {
+                        $this->redirect(array('view', 'id' => $doctor->getId()));
+                    }
                 }
             }
         }
@@ -301,9 +302,6 @@ class DoctorController extends AdminController {
      */
     public function actionIndex() {
         $dataProvider = new CActiveDataProvider('Doctor', array(
-            'criteria' => array(
-                'with' => array('doctorFaculties')
-            ),
             'pagination' => array(
                 'pageSize' => 20,
             //  'pageVar' => 'page'

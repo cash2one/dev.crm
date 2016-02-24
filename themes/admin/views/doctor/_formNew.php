@@ -28,17 +28,17 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
     ));
     ?>
     <p class="note">Fields with <span class="required">*</span> are required.</p>
-    <?php echo $form->errorSummary($model); ?>
+    <?php //echo $form->errorSummary($model); ?>
     <div class="form-horizontal">
         <div class="form-group col-sm-7">
-            <label > <?php echo $form->labelEx($model, 'fullname', array('size' => 45, 'maxlength' => 45)); ?></label>
+            <?php echo $form->labelEx($model, 'fullname', array('size' => 45, 'maxlength' => 45)); ?>
             <div>
                 <?php echo $form->textField($model, 'fullname', array('class' => 'form-control', 'placeholder' => '此姓名仅供记录用途')); ?>                
                 <div class="text-danger "> <?php echo $form->error($model, 'fullname'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
-            <label > <?php echo $form->labelEx($model, 'hospital_id', array('class' => '')); ?></label>
+            <?php echo $form->labelEx($model, 'hospital_id', array('class' => '')); ?>
             <div>
                 <?php
                 echo $form->dropDownList($model, 'hospital_id', $model->loadOptionsHospital(), array(
@@ -53,7 +53,7 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
             <div class="clearfix"></div>
         </div>
         <div class="form-group col-sm-7">
-            <label ><?php echo $form->labelEx($model, 'hp_dept_id', array('class' => '1')); ?></label>
+            <?php echo $form->labelEx($model, 'hp_dept_id', array('class' => '1')); ?>
             <div>
                 <?php
 //                echo $form->dropDownList($model, 'hp_dept_id', array(
@@ -70,7 +70,7 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
             <div class="clearfix"></div>
         </div>
         <div class="form-group col-sm-7">
-            <label ><?php echo $form->labelEx($model, 'medical_title', array('class' => '')); ?></label>
+            <?php echo $form->labelEx($model, 'medical_title', array('class' => '')); ?>
             <div>
                 <?php
                 echo $form->dropDownList($model, 'medical_title', $model->loadOptionsMedicalTitle(), array(
@@ -84,7 +84,7 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
             <div class="clearfix"></div>
         </div>
         <div class="form-group col-sm-7">
-            <label ><?php echo $form->labelEx($model, 'academic_title', array('class' => '')); ?></label>
+            <?php echo $form->labelEx($model, 'academic_title', array('class' => '')); ?>
             <div>
                 <?php
                 echo $form->dropDownList($model, 'academic_title', $model->loadOptionsAcademicTitle(), array(
@@ -98,25 +98,56 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
             <div class="clearfix"></div>
         </div>
         <div class="form-group col-sm-7">
-            <label > <?php echo $form->labelEx($model, 'career_exp'); ?></label>
+            <?php echo $form->labelEx($model, 'career_exp'); ?>
             <div>
                 <?php echo $form->textarea($model, 'career_exp', array('rows' => 4, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
                 <div class="text-danger "> <?php echo $form->error($model, 'career_exp'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
-            <label > <?php echo $form->labelEx($model, 'honour'); ?></label>
+            <?php echo $form->labelEx($model, 'honour'); ?>
             <div>
                 <?php echo $form->textarea($model, 'honour', array('rows' => 4, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
                 <div class="text-danger "> <?php echo $form->error($model, 'honour'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
-            <label > <?php echo $form->labelEx($model, 'description'); ?></label>
+            <?php echo $form->labelEx($model, 'reason_one'); ?>
+            <div>
+                <?php echo $form->textField($model, 'reason_one', array('class' => 'form-control')); ?>
+                <div class="text-danger "> <?php echo $form->error($model, 'reason_one'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <?php echo $form->labelEx($model, 'reason_two'); ?>
+            <div>
+                <?php echo $form->textField($model, 'reason_two', array('class' => 'form-control')); ?>
+                <div class="text-danger "> <?php echo $form->error($model, 'reason_two'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <?php echo $form->labelEx($model, 'reason_three'); ?>
+            <div>
+                <?php echo $form->textField($model, 'reason_three', array('class' => 'form-control')); ?>
+                <div class="text-danger "> <?php echo $form->error($model, 'reason_three'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <?php echo $form->labelEx($model, 'description'); ?>
             <div>
                 <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
                 <div class="text-danger "> <?php echo $form->error($model, 'description'); ?></div>
             </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <?php echo $form->labelEx($model, 'is_contracted'); ?>
+            <?php echo $form->checkBox($model, 'is_contracted', array('class' => '')); ?>    
+            <div class="text-danger "> <?php echo $form->error($model, 'is_contracted'); ?></div>
+        </div>
+        <div class="form-group col-sm-7">
+            <?php echo $form->labelEx($model, 'role'); ?>
+            <?php echo $form->checkBox($model, 'role', array('class' => '')); ?>    
+            <div class="text-danger "> <?php echo $form->error($model, 'role'); ?></div>
         </div>
         <div class="form-group col-sm-7">
             <button type="submit" class="btn btn-primary">保存</button>
@@ -126,6 +157,46 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        //错误信息清除
+        $('input').focus(function () {
+            if ($(this).hasClass('error')) {
+                $(this).removeClass('error');
+                $(this).parents('.form-group').find('.errorMessage').text('');
+                $(this).parents('.form-group').find('label').removeClass('error');
+            }
+        });
+        $('select').change(function () {
+            $(this).removeClass('error');
+            $(this).parents('.form-group').find('.errorMessage').text('');
+            $(this).parents('.form-group').find('label').removeClass('error');
+        });
+        $('textarea').focus(function () {
+            if ($(this).hasClass('error')) {
+                $(this).removeClass('error');
+                $(this).parents('.form-group').find('.errorMessage').text('');
+                $(this).parents('.form-group').find('label').removeClass('error');
+            }
+        });
+        //推荐理由填写规则
+        $('#DoctorFormAdmin_reason_two').focus(function () {
+            var reson_one = $('#DoctorFormAdmin_reason_one').val();
+            if (!reson_one) {
+                $('#DoctorFormAdmin_reason_one').focus();
+                alert('请先填写推荐理由1');
+            }
+        });
+        $('#DoctorFormAdmin_reason_three').focus(function () {
+            var reson_two = $('#DoctorFormAdmin_reason_two').val();
+            var reson_one = $('#DoctorFormAdmin_reason_one').val();
+            if (!reson_one) {
+                $('#DoctorFormAdmin_reason_one').focus();
+                alert('请先填写推荐理由1');
+            } else if (!reson_two) {
+                $('#DoctorFormAdmin_reason_two').focus();
+                alert('请先填写推荐理由2');
+            }
+        });
+        //根据医院异步加载科室
         $("select#hospital").change(function () {
             $("select#DoctorFormAdmin_hp_dept_id").attr("disabled", true);
             var hopitalId = $(this).val();
@@ -136,7 +207,6 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
                 //cache: false,
                 //dataType: "html",
                 'success': function (data) {
-                    console.log(data);
                     $("select#DoctorFormAdmin_hp_dept_id").html(data);
                 },
                 'error': function (data) {

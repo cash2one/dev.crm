@@ -50,7 +50,7 @@ $hospitalId = $model->hospital_id;
         <div class="clearfix"></div>
     </div>
 
-    <div class="mb15">
+    <div class="mb15 form-select">
         <?php echo $form->labelEx($model, 'hp_dept_id', array('class' => ' ')); ?>
         <div class="">
             <div>
@@ -116,9 +116,40 @@ $hospitalId = $model->hospital_id;
         </div>
     </div>
     <div class="mb15">
+        <?php echo $form->labelEx($model, 'reason_one'); ?>
+        <div>
+            <?php echo $form->textField($model, 'reason_one', array('class' => 'form-control')); ?>
+            <div class="text-danger "> <?php echo $form->error($model, 'reason_one'); ?></div>
+        </div>
+    </div>
+    <div class="mb15">
+        <?php echo $form->labelEx($model, 'reason_two'); ?>
+        <div>
+            <?php echo $form->textField($model, 'reason_two', array('class' => 'form-control')); ?>
+            <div class="text-danger "> <?php echo $form->error($model, 'reason_two'); ?></div>
+        </div>
+    </div>
+    <div class="mb15">
+        <?php echo $form->labelEx($model, 'reason_three'); ?>
+        <div>
+            <?php echo $form->textField($model, 'reason_three', array('class' => 'form-control')); ?>
+            <div class="text-danger "> <?php echo $form->error($model, 'reason_three'); ?></div>
+        </div>
+    </div>
+    <div class="mb15">
         <?php echo $form->labelEx($model, 'description'); ?>
         <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>
         <?php echo $form->error($model, 'description'); ?>
+    </div>
+    <div class="mb15">
+        <?php echo $form->labelEx($model, 'is_contracted'); ?>
+        <?php echo $form->checkBox($model, 'is_contracted', array('class' => '')); ?>    
+        <div class="text-danger "> <?php echo $form->error($model, 'is_contracted'); ?></div>
+    </div>
+    <div class="mb15">
+        <?php echo $form->labelEx($model, 'role'); ?>
+        <?php echo $form->checkBox($model, 'role', array('class' => '')); ?>    
+        <div class="text-danger "> <?php echo $form->error($model, 'role'); ?></div>
     </div>
     <div class="mb15">        
         <button type="submit" class="btn btn-success">保存</button>
@@ -127,6 +158,31 @@ $hospitalId = $model->hospital_id;
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('select').change(function () {
+            $(this).removeClass('error');
+            $(this).parents('.form-select').find('.errorMessage').text('');
+            $(this).parents('.form-select').find('label').removeClass('error');
+        });
+        //推荐理由填写规则
+        $('#DoctorFormAdmin_reason_two').focus(function () {
+            var reson_one = $('#DoctorFormAdmin_reason_one').val();
+            if (!reson_one) {
+                $('#DoctorFormAdmin_reason_one').focus();
+                alert('请先填写推荐理由1');
+            }
+        });
+        $('#DoctorFormAdmin_reason_three').focus(function () {
+            var reson_two = $('#DoctorFormAdmin_reason_two').val();
+            var reson_one = $('#DoctorFormAdmin_reason_one').val();
+            if (!reson_one) {
+                $('#DoctorFormAdmin_reason_one').focus();
+                alert('请先填写推荐理由1');
+            } else if (!reson_two) {
+                $('#DoctorFormAdmin_reason_two').focus();
+                alert('请先填写推荐理由2');
+            }
+        });
+        //异步获取科室
         getHpDept('<?php echo $hospitalId; ?>');
         $("select#hospital").change(function () {
             var hopitalId = $(this).val();

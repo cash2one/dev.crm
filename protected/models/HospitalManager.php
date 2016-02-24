@@ -6,7 +6,7 @@ class HospitalManager {
         if ($form->validate()) {
             $model = new Hospital();
             $model->attributes = $form->attributes;
-
+            $model->is_show = 0;
             if ($model->save() === false) {
                 $form->addErrors($model->getErrors());
             } else {
@@ -190,19 +190,20 @@ class HospitalManager {
      * 根据科室名查看是否存在
      * @param type $name
      */
-    public function checkDepartment($name,$hospitalId) {
-        $data = HospitalDepartment::model()->getByNameAndHostitalId($name,$hospitalId);
-        if(isset($data)){
+    public function checkDepartment($name, $hospitalId) {
+        $data = HospitalDepartment::model()->getByNameAndHostitalId($name, $hospitalId);
+        if (isset($data)) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
-    
-     public function addDepartment(DepartmentForm $form) {
+
+    public function addDepartment(DepartmentForm $form) {
         if ($form->validate()) {
             $model = new HospitalDepartment();
             $model->attributes = $form->attributes;
+            $model->is_show = 0;
             if ($model->save() === false) {
                 $form->addErrors($model->getErrors());
             }

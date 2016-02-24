@@ -49,6 +49,9 @@
                                             <span class="caret pull-right"></span>
                                         </div>                                                         
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Hospital.List')): ?>
+                                                <li><a href="<?php echo $this->createUrl('hospital/list') ?>">列表</a></li>
+                                            <?php endif; ?>
                                             <?php if (Yii::app()->user->checkAccess('Admin.Hospital.Admin')): ?>
                                                 <li><a href="<?php echo $this->createUrl('hospital/admin') ?>">搜索</a></li>
                                             <?php endif; ?>
@@ -63,6 +66,9 @@
                                             <span class="caret pull-right"></span>
                                         </div>                                                         
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Doctor.Index')): ?>
+                                                <li><a href="<?php echo $this->createUrl('doctor/index') ?>">列表</a></li>
+                                            <?php endif; ?>
                                             <?php if (Yii::app()->user->checkAccess('Admin.Doctor.Admin')): ?>
                                                 <li><a href="<?php echo $this->createUrl('doctor/admin') ?>">搜索</a></li>
                                             <?php endif; ?>

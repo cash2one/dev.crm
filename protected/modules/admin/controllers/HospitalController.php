@@ -62,7 +62,7 @@ class HospitalController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'addFaculty', 'addDepartment'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'addFaculty', 'addDepartment','list','deleteDepartment'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -133,6 +133,21 @@ class HospitalController extends AdminController {
 
         $this->render('update', array(
             'model' => $form,
+        ));
+    }
+
+    public function actionList() {
+        $criteria = new CDbCriteria();
+        $criteria->addCondition("t.date_deleted is NULL");
+        $criteria->order = "t.id DESC";
+        $dataProvider = new CActiveDataProvider('Hospital', array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+        ));
+        $this->render('list', array(
+            'dataProvider' => $dataProvider,
         ));
     }
 
@@ -255,6 +270,22 @@ class HospitalController extends AdminController {
         ));
     }
 
+    /**
+     * 删除科室
+     */
+    public function actionDeleteDepartment($id) {
+        $output['status'] = false;
+        $hospitalDepartment = HospitalDepartment::model()->getById($id);
+        $doctors = Doctor::model()->getAllByAttributes(array('hp_dept_id'=>$hospitalDepartment->id));
+        if(arrayNotEmpty($doctors)){
+            $output['error'] = '该科室有关联医生';
+        }else{
+            $hospitalDepartment->delete();
+            $output['status'] = true;
+        }
+        $this->renderJsonOutput($output);
+    }
+    
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

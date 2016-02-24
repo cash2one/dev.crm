@@ -18,11 +18,33 @@ $this->menu = array(
 ?>
 
 <h1>Doctors</h1>
-
-<?php
-$this->widget('zii.widgets.CListView', array(
-    'dataProvider' => $dataProvider,
-    'itemView' => '_view',
-));
-?>
+<style>
+    .data-list, .list-view {position: relative;}
+    .pager {margin: 0;}
+</style>
+<div class="data-list mt10">
+    <table class="table">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>姓名</td>
+                <td>职称</td>
+                <td>所属医院</td>
+                <td>所属科室</td>
+                <td>手机</td>
+                <td>是否签约</td>
+                <td>是否是牛人榜</td>
+                <td>创建时间</td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $this->widget('zii.widgets.CListView', array(
+                'dataProvider' => $dataProvider,
+                'itemView' => '_view',
+            ));
+            ?>
+        </tbody>
+    </table>
+</div>
 <style>.list-view{position:relative;}</style>

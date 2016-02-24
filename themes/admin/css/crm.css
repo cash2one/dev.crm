@@ -290,9 +290,9 @@ ul.yiiPager a:link:hover, ul.yiiPager a:visited:hover{border:solid 1px #0e509e;}
 .datepicker.dropdown-menu{width:190px;}
 .datepicker thead tr:first-child th:hover, .datepicker tfoot tr th:hover{background:#65a5cc; }
 #content{padding-top:0!important;}
-h1{margin-top:0;margin-bottom:0!important;}
 .dropdown-toggle{font-size:16px;}
 .text16{font-size:16px;}
 .items>.view>a,.items>.view>a:hover,.items>.view>a:visited,.items>.view>a:focus{color:#06c;}
 .items>.view>b{width:5em;display:inline-block;}
 form .error{color: #f00;}
+img{max-width: 100%;}

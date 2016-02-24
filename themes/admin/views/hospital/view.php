@@ -16,47 +16,31 @@ $this->menu = array(
     array('label' => 'Manage Hospital', 'url' => array('admin')),
 );
 ?>
-<a href="<?php echo $this->createUrl('addDepartment', array('id' =>  $model->id))?>" class="btn btn-primary">添加科室</a>
+<style>
+    .table .tab-title{width: 10%;}
+</style>
+<a href="<?php echo $this->createUrl('addDepartment', array('id' => $model->id)) ?>" class="btn btn-primary">添加科室</a>
 
 <h1><?php echo $model->name; ?></h1>
-<div><?php echo CHtml::Image($model->getAbsUrlAvatar(false), $model->name, array('title' => $model->name)); ?></div>
-<?php
-$this->widget('zii.widgets.CDetailView', array(
-    'data' => $model,
-    'attributes' => array(
-        'id',
-        'name',
-        'short_name',
-        array(
-            'name' => '医院等级',
-            'value' => CHtml::encode($model->getClass())
-        ),
-        array(
-            'name' => '医院类型',
-            'value' => CHtml::encode($model->getType())
-        ),
-        array(
-            'name' => 'description',
-            'type' => 'ntext',
-            'value' => CHtml::encode($model->description)
-        ),
-        array(
-            'name' => 'city_id',
-            'value' => CHtml::encode($model->getCityName())
-        ),
-        'search_keywords',
-        'phone',
-        array(
-            'name' => 'address',
-            'type' => 'ntext',
-            'value' => CHtml::encode($model->address)
-        ),
-        'website',
-        'thumbnail_url',
-        'image_url',
-    ),
-));
-?>
+<div class="row">
+    <div class="col-lg-4 col-md-8 col-sm-12"><?php echo CHtml::Image($model->getAbsUrlAvatar(false), $model->name, array('title' => $model->name)); ?></div>
+</div>
+<br />
+<table class="table mt10" id="yw0">
+    <tbody>
+        <tr class="odd"><th class="tab-title">ID</th><td><?php echo $model->id; ?></td></tr>
+        <tr class="even"><th class="tab-title">医院全称</th><td><?php echo $model->name; ?></td></tr>
+        <tr class="odd"><th class="tab-title">医院简称</th><td><?php echo $model->short_name; ?></td></tr>
+        <tr class="even"><th class="tab-title">医院等级</th><td><?php echo $model->getClass(); ?></td></tr>
+        <tr class="odd"><th class="tab-title">医院类型</th><td><?php echo $model->getType(); ?></td></tr>
+        <tr class="even"><th class="tab-title">医院描述</th><td><?php echo $model->description; ?></td></tr>
+        <tr class="odd"><th class="tab-title">医院城市</th><td><?php echo $model->getCityName(); ?></td></tr>
+        <tr class="even"><th class="tab-title">医院电话</th><td><?php echo $model->phone; ?></td></tr>
+        <tr class="odd"><th class="tab-title">医院地址</th><td><?php echo $model->address; ?></td></tr>
+        <tr class="even"><th class="tab-title">医院网址</th><td><?php echo $model->website; ?></td></tr>
+    </tbody>
+</table>
+
 <br />
 
 <?php
