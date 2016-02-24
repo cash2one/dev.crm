@@ -26,7 +26,7 @@ $this->menu = array(
     $jsonDeptList = CJSON::encode($deptList);
     if (emptyArray($deptList) === false) {
         foreach ($deptList as $dept => $value) {
-            echo '<div>' . $value . '</div>';
+            echo '<div class="department">' . $value . '</div>';
         }
     }
     ?>
@@ -34,3 +34,26 @@ $this->menu = array(
 
 <br />
 <?php $this->renderPartial('_formAddDepartment', array('model' => $model)); ?>
+<script>
+    $(document).ready(function () {
+        $('.deleteDepartment').click(function (e) {
+            e.preventDefault();
+            var deptHtml = $(this).parents('.department');
+            if (confirm('确定删除此科室?')) {
+                var url = $(this).attr('href');
+                $.ajax({
+                    url: url,
+                    success: function (data) {
+                        if (data.status == true) {
+                            deptHtml.remove();
+                            alert('删除成功!');
+                        } else {
+                            alert('删除失败!' + data.error);
+                        }
+                    }
+                });
+            }
+
+        });
+    });
+</script>

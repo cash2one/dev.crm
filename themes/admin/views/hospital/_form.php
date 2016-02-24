@@ -28,13 +28,15 @@
     <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
 
     <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'name'); ?>
+        <?php //echo $form->labelEx($model, 'name'); ?>
+        <label for="HospitalForm_name">医院全称<span class="required">*</span></label>
         <?php echo $form->textField($model, 'name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100, 'placeholder' => '用于记录')); ?>
         <?php echo $form->error($model, 'name'); ?>
     </div>
 
     <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'short_name'); ?>
+        <?php //echo $form->labelEx($model, 'short_name'); ?>
+        <label for="HospitalForm_short_name">医院简称<span class="required">*</span></label>
         <?php echo $form->textField($model, 'short_name', array('class' => 'form-control', 'size' => 45, 'maxlength' => 45, 'placeholder' => '用于展示给用户')); ?>
         <?php echo $form->error($model, 'short_name'); ?>
     </div>
@@ -64,15 +66,10 @@
     </div>
 
     <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'description'); ?>
+        <?php //echo $form->labelEx($model, 'description'); ?>
+        <label for="HospitalForm_description">医院描述<span class="required">*</span></label>
         <?php echo $form->textarea($model, 'description', array('class' => 'form-control', 'rows' => 8, 'cols' => 80, 'maxlength' => 500)); ?>
         <?php echo $form->error($model, 'description'); ?>
-    </div>
-
-    <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'search_keywords'); ?>
-        <?php echo $form->textField($model, 'search_keywords', array('class' => 'form-control', 'size' => 45, 'maxlength' => 100, 'placeholder' => '如：骨科, 肝胆, 妇产')); ?>
-        <?php echo $form->error($model, 'search_keywords'); ?>
     </div>
 
     <div class="form-group col-sm-7">
@@ -101,7 +98,7 @@
                         'ajax' => array(
                             'type' => 'get',
                             'url' => $this->createAbsoluteUrl('/region/loadCities'),
-                            'data' => array('id' => 'js:this.value'),
+                            'data' => array('state' => 'js:this.value'),
                             'update' => '#city-list',
                         )
                     ));
@@ -120,32 +117,23 @@
     </div>
 
     <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'thumbnail_url'); ?>
-        <?php echo $form->textField($model, 'thumbnail_url', array('class' => 'form-control', 'size' => 100, 'maxlength' => 100, 'placeholder' => 'Absolute internet url')); ?>
-        <?php echo $form->error($model, 'thumbnail_url'); ?>
-    </div>
-
-    <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'image_url'); ?>
-        <?php echo $form->textField($model, 'image_url', array('class' => 'form-control', 'size' => 100, 'maxlength' => 100, 'placeholder' => 'Full-size image. Absolute internet url.')); ?>
-        <?php echo $form->error($model, 'image_url'); ?>
-    </div>
-
-    <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'address'); ?>
+        <?php //echo $form->labelEx($model, 'address'); ?>
+        <label for="HospitalForm_address">医院地址<span class="required">*</span></label>
         <?php echo $form->textarea($model, 'address', array('class' => 'form-control', 'rows' => 4, 'cols' => 50, 'maxlength' => 100)); ?>
         <?php echo $form->error($model, 'address'); ?>
     </div>
 
     <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'phone'); ?>
+        <?php //echo $form->labelEx($model, 'phone'); ?>
+        <label for="HospitalForm_phone">医院电话<span class="required">*</span></label>
         <?php echo $form->textField($model, 'phone', array('class' => 'form-control', 'size' => 45, 'maxlength' => 45)); ?>
         <?php echo $form->error($model, 'phone'); ?>
     </div>
 
 
     <div class="form-group col-sm-7">
-        <?php echo $form->labelEx($model, 'website'); ?>
+        <?php //echo $form->labelEx($model, 'website'); ?>
+        <label for="HospitalForm_website">医院网址<span class="required">*</span></label>
         <?php echo $form->textField($model, 'website', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
         <?php echo $form->error($model, 'website'); ?>
     </div>
@@ -205,7 +193,7 @@
             type: 'get',
             url: actionUrl,
             cache: false,
-            data: {id: stateId},
+            data: {state: stateId},
             beforeSend: '',
             success: function (response) {
                 $(updateSelector).html(response);
