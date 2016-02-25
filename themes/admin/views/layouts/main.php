@@ -49,10 +49,12 @@
                                             <span class="caret pull-right"></span>
                                         </div>
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
-
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Index')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminTask/index') ?>">列表</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Admin')): ?>
                                                 <li><a href="<?php echo $this->createUrl('adminTask/admin') ?>">搜索</a></li>
-                                                <li ><a href="<?php echo $this->createUrl('adminTask/create') ?>">创建</a></li>
-
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                     <div class="dropdown mt20" >
@@ -164,22 +166,7 @@
                                                 <li><a href="<?php echo $this->createUrl('user/admin') ?>">搜索</a></li>     
                                             <?php endif; ?>
                                         </ul>
-                                    </div>
-                                    <div class="dropdown mt20" >
-                                        <div class="dropdown-toggle color-white"  id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                            消息
-                                            <span class="caret pull-right"></span>
-                                        </div>
-
-                                        <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
-                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminMsg.Admin')): ?>
-                                                <li><a href="<?php echo $this->createUrl('adminMsg/admin') ?>">搜索</a></li>    
-                                            <?php endif; ?>
-                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminMsg.Create')): ?>
-                                                <li><a href="<?php echo $this->createUrl('adminMsg/create') ?>">创建</a></li>  
-                                            <?php endif; ?>
-                                        </ul>
-                                    </div>
+                                    </div>                             
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             平台用户

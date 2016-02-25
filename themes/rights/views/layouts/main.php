@@ -13,7 +13,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/basic.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/crm.css" /> 
         <!--[if lt IE 8]>
-        <link rel="stylesheet" type="text/css" href="<?php //echo Yii::app()->theme->baseUrl;       ?>/css/ie.css" media="screen, projection" />
+        <link rel="stylesheet" type="text/css" href="<?php //echo Yii::app()->theme->baseUrl;        ?>/css/ie.css" media="screen, projection" />
         <![endif]-->
         <?php
         Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/jquery-1.9.1.min.js', CClientScript::POS_HEAD);
@@ -50,6 +50,20 @@
                                 <?php if (!Yii::app()->user->isGuest): ?>
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            任务
+                                            <span class="caret pull-right"></span>
+                                        </div>
+                                        <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Index')): ?>
+                                                <li><a href="<?php echo $this->createUrl('/admin/adminTask/index') ?>">列表</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('/admin/adminTask/admin') ?>">搜索</a></li>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+                                    <div class="dropdown mt20" >
+                                        <div class="dropdown-toggle color-white"  id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             医院
                                             <span class="caret pull-right"></span>
                                         </div>                                                         
@@ -76,6 +90,22 @@
                                             <?php endif; ?>
                                         </ul>
                                     </div>
+                                    <div class="dropdown mt20" >
+                                        <div class="dropdown-toggle color-white"  id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            预约
+                                            <span class="caret pull-right"></span>
+                                        </div>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminBooking.List')): ?>
+                                                <li><a href="<?php echo $this->createUrl('/admin/adminbooking/list') ?>">列表</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminBooking.Admin')): ?>
+                                                <li><a href="<?php echo $this->createUrl('/admin/adminbooking/admin') ?>">搜索</a></li>
+                                            <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminBooking.Create')): ?>
+                                                <li><a href="<?php echo $this->createUrl('/admin/adminbooking/create') ?>">创建</a></li>
+                                            <?php endif; ?>
+                                    </div> 
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             预约-患者
@@ -135,22 +165,7 @@
                                                 <li><a href="<?php echo $this->createUrl('/admin/user/admin') ?>">搜索</a></li>     
                                             <?php endif; ?>
                                         </ul>
-                                    </div>
-                                    <div class="dropdown mt20" >
-                                        <div class="dropdown-toggle color-white"  id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                            消息
-                                            <span class="caret pull-right"></span>
-                                        </div>
-
-                                        <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu4">
-                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminMsg.Admin')): ?>
-                                                <li><a href="<?php echo $this->createUrl('/admin/adminMsg/admin') ?>">搜索</a></li>    
-                                            <?php endif; ?>
-                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminMsg.Create')): ?>
-                                                <li><a href="<?php echo $this->createUrl('/admin/adminMsg/create') ?>">创建</a></li>  
-                                            <?php endif; ?>
-                                        </ul>
-                                    </div>
+                                    </div>                          
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             平台用户
