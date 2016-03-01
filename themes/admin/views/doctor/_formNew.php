@@ -2,6 +2,7 @@
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . "/js/multiple-select-master/multiple-select.css");
 $urlAjaxLoadloadHospitalDept = $this->createUrl('doctor/ajaxLoadloadHospitalDept', array('hid' => ''));
 $urlSubmit = $this->createUrl('doctor/createDoctor');
+$urlSearchHospital = $this->createUrl('hospital/searchResult');
 ?>
 <style>
     .ms-parent{padding:0;}
@@ -26,6 +27,7 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
         ),
         'enableAjaxValidation' => true,
     ));
+    echo CHtml::hiddenField("DoctorFormAdmin[hospital_id]");
     ?>
     <p class="note">Fields with <span class="required">*</span> are required.</p>
     <?php //echo $form->errorSummary($model); ?>
@@ -33,7 +35,7 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
         <div class="form-group col-sm-7">
             <?php echo $form->labelEx($model, 'fullname', array('size' => 45, 'maxlength' => 45)); ?>
             <div>
-                <?php echo $form->textField($model, 'fullname', array('class' => 'form-control', 'placeholder' => '此姓名仅供记录用途')); ?>                
+                <?php echo $form->textField($model, 'fullname', array('class' => 'form-control', 'placeholder' => '此姓名仅供记录用途')); ?>   
                 <div class="text-danger "> <?php echo $form->error($model, 'fullname'); ?></div>
             </div>
         </div>
@@ -41,11 +43,12 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
             <?php echo $form->labelEx($model, 'hospital_id', array('class' => '')); ?>
             <div>
                 <?php
-                echo $form->dropDownList($model, 'hospital_id', $model->loadOptionsHospital(), array(
-                    'prompt' => '-- 无 --',
-                    'class' => 'sel form-control',
-                    'id' => 'hospital'
-                ));
+                echo $form->textField($model, 'hospital_name', array('class' => 'form-control', 'placeholder' => '选择医院', 'readonly' => true));
+//                echo $form->dropDownList($model, 'hospital_id', $model->loadOptionsHospital(), array(
+//                    'prompt' => '-- 无 --',
+//                    'class' => 'sel form-control',
+//                    'id' => 'hospital'
+//                ));
                 ?>           
 
             </div>
@@ -155,6 +158,32 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
     </div>
     <?php $this->endWidget(); ?>
 </div>
+<div class="modal fade mt100" id="hospitalSearchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center">搜索医院</h4>
+            </div>
+            <div class="modal-body">
+                <form id="searchHp-form" class="form-inline text-center">
+                    <div class="form-group">
+                        <label class="control-label">医院名</label>
+                        <input class="form-control" name="hpName" id="Hospital_hpName" type="text">
+                        <button id="searchHp" type="button" class="btn btn-primary">搜索</button>
+                    </div>
+
+                </form>
+                <div class="mt20">
+                    <h4 class="strong">展示结果:</h4>
+                    <div id="hpList" class="row">
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script type="text/javascript">
     $(document).ready(function () {
         //错误信息清除
@@ -196,26 +225,75 @@ $urlSubmit = $this->createUrl('doctor/createDoctor');
                 alert('请先填写推荐理由2');
             }
         });
+        //搜索医院弹框
+        $('#DoctorFormAdmin_hospital_name').click(function () {
+            $('#hospitalSearchModal').modal();
+        });
+        $('#searchHp').click(function () {
+            ajaxLoadHospital();
+        });
+        //搜索回车操作
+        $('#Hospital_hpName').keydown(function (event) {
+            if (event.keyCode == "13") {
+                event.preventDefault();
+                ajaxLoadHospital();
+            }
+        });
+
         //根据医院异步加载科室
         $("select#hospital").change(function () {
             $("select#DoctorFormAdmin_hp_dept_id").attr("disabled", true);
             var hopitalId = $(this).val();
-            var actionUrl = "<?php echo $urlAjaxLoadloadHospitalDept; ?>/" + hopitalId;// + hopitalId + "&prompt=选择城市";
-            $.ajax({
-                type: 'get',
-                url: actionUrl,
-                //cache: false,
-                //dataType: "html",
-                'success': function (data) {
-                    $("select#DoctorFormAdmin_hp_dept_id").html(data);
-                },
-                'error': function (data) {
-                },
-                complete: function () {
-                    $("select#DoctorFormAdmin_hp_dept_id").attr("disabled", false);
-                }
-            });
-            return false;
+            ajaxLoadHpDept(hopitalId);
         });
     });
+    function ajaxLoadHospital() {
+        $.ajax({
+            url: '<?php echo $urlSearchHospital; ?>',
+            data: $('#searchHp-form').serialize(),
+            success: function (data) {
+                setHpHtml(data);
+            }
+        });
+    }
+    function setHpHtml(hospitals) {
+        var innerHtml = '';
+        if (hospitals && hospitals.length > 0) {
+            for (var i = 0; i < hospitals.length; i++) {
+                var hospital = hospitals[i];
+                innerHtml += '<div class="col-sm-6"><span><a class="determineHp" data-id="' + hospital.id + '" data-hpName="' + hospital.name + '" href="javascript:void(0);">' + hospital.name + '</a></span></div>';
+            }
+        } else {
+            innerHtml += '<div class="col-sm-12">未查询到结果</div>';
+        }
+        $('#hpList').html(innerHtml);
+        $('.determineHp').click(function () {
+            var hpId = $(this).attr('data-id');
+            var hpName = $(this).attr('data-hpName');
+            $('#DoctorFormAdmin_hospital_name').val(hpName);
+            $('#DoctorFormAdmin_hospital_id').val(hpId);
+            $('#hospitalSearchModal').modal('hide');
+            ajaxLoadHpDept(hpId);
+        });
+    }
+    function ajaxLoadHpDept(hopitalId) {
+        $("select#DoctorFormAdmin_hp_dept_id").attr("disabled", true);
+        //var hopitalId = $(this).val();
+        var actionUrl = "<?php echo $urlAjaxLoadloadHospitalDept; ?>/" + hopitalId;// + hopitalId + "&prompt=选择城市";
+        $.ajax({
+            type: 'get',
+            url: actionUrl,
+            //cache: false,
+            //dataType: "html",
+            'success': function (data) {
+                $("select#DoctorFormAdmin_hp_dept_id").html(data);
+            },
+            'error': function (data) {
+            },
+            complete: function () {
+                $("select#DoctorFormAdmin_hp_dept_id").attr("disabled", false);
+            }
+        });
+        return false;
+    }
 </script>

@@ -141,7 +141,7 @@ class DoctorController extends AdminController {
                 $doctor = new Doctor();
                 $doctor->setAttributes($form->attributes);
 
-                $doctor->honour = explode('#', $form->honour);
+                $doctor->honour = $form->honour;//explode('#', $form->honour);
                 if ($doctor->save()) {
                     //保存成功 保存关联表
                     $join = new HospitalDeptDoctorJoin();
@@ -270,13 +270,13 @@ class DoctorController extends AdminController {
                 $this->redirect(array('view', 'id' => $model->getId()));
             }
         }
-        if (!isset($_POST['DoctorFormAdmin']) && is_null($form->honour) == false) {
-            $honour = '';
-            foreach ($form->honour as $v) {
-                $honour.=$v . '#';
-            }
-            $form->honour = substr($honour, 0, strlen($honour) - 1);
-        }
+//        if (!isset($_POST['DoctorFormAdmin']) && is_null($form->honour) == false) {
+//            $honour = '';
+//            foreach ($form->honour as $v) {
+//                $honour.=$v . '#';
+//            }
+//            $form->honour = substr($honour, 0, strlen($honour) - 1);
+//        }
         $this->render('update', array(
             'model' => $form,
         ));

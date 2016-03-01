@@ -340,7 +340,7 @@ class DoctorManager {
                 $form->hp_dept_name = $dept->getName();
             }
             $model->setAttributes($form->attributes);
-            $model->honour = explode('#', $form->honour);
+            $model->honour = $form->honour;//explode('#', $form->honour);
             if ($model->save()) {
                 //保存成功 保存关联表
                 $join = HospitalDeptDoctorJoin::model()->getByDoctorIdAndDeptId($model->getId(), $deptId);

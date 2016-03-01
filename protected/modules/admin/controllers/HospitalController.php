@@ -62,7 +62,7 @@ class HospitalController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'addFaculty', 'addDepartment','list','deleteDepartment'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'addFaculty', 'addDepartment','list','deleteDepartment','searchResult'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -286,6 +286,13 @@ class HospitalController extends AdminController {
         $this->renderJsonOutput($output);
     }
     
+    public function actionSearchResult() {
+        $hpSeach = new HospitalSearch($_GET);
+        $criteria = $hpSeach->criteria;
+        $criteria->limit = 50;
+        $hospitals = Hospital::model()->findAll($criteria);
+        $this->renderJsonOutput($hospitals);
+    }
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

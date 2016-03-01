@@ -11,7 +11,7 @@ class HospitalSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('disease', 'city', 'cate', 'is_show');
+        return array('hpName', 'disease', 'city', 'cate', 'is_show');
     }
 
     public function addQueryConditions() {
@@ -19,6 +19,11 @@ class HospitalSearch extends ESearchModel {
 
         //$criteria->order = 't.display_order ASC';        
         if ($this->hasQueryParams()) {
+            // is_show
+            if (isset($this->queryParams['hpName'])) {
+                $hpName = $this->queryParams['hpName'];
+                $this->criteria->compare('t.name', $hpName, true);
+            }
             // is_show
             if (isset($this->queryParams['is_show'])) {
                 $isShow = $this->queryParams['is_show'];
