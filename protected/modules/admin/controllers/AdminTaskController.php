@@ -37,7 +37,7 @@ class AdminTaskController extends AdminController
 //				'users'=>array('@'),
 //			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','index','view','create','update','ajaxAlert','ajaxPlan'),
+				'actions'=>array('admin','delete','index','view','create','ajaxCreate','update','ajaxAlert','ajaxPlan'),
 //				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -79,6 +79,48 @@ class AdminTaskController extends AdminController
 			'model'=>$model,
 		));
 	}
+
+    /**
+     * Creates a new model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     */
+    public function actionAjaxCreate()
+    {
+        $adminBookingModel = AdminBooking::model()->getById(1);
+        $taskMrg = new TaskManager();
+        $_POST['task']['content'] = 'content';
+        $_POST['task']['date_plan'] = '2016-03-04 18:40:00';
+        $_POST['task']['admin_user_id'] = 1;
+        $_POST['task']['work_type'] = 1;
+
+
+
+        $output = array('status' => 'no');
+        if (isset($_POST['task'])) {
+            $values = $_POST['task'];
+            $taskMrg->createTaskPlan($adminBookingModel, $values);
+            $output['status'] = 'ok';
+                $output['errorCode'] = 0;
+                $output['errorMsg'] = 'success';
+//            $form = new AdminTaskForm();
+//            $form->setAttributes($values, true);
+//
+//            if ($form->hasErrors() === false) {
+//                $output['status'] = 'ok';
+//                $output['errorCode'] = 0;
+//                $output['errorMsg'] = 'success';
+//
+//            } else {
+//                $output['errors'] = $form->getErrors();
+//                throw new CException('error saving data.');
+//            }
+
+        } else {
+            $output['errorCode'] = 400;
+            $output['errorMsg'] = 'missing parameters';
+        }
+        $this->renderJsonOutput($output);
+    }
 
 	/**
 	 * Updates a particular model.

@@ -28,7 +28,7 @@ class TaskManager {
             }
             $adminTaskBkJoin = new AdminTaskBkJoin();
             $adminTaskBkJoin->admin_task_join_id = $adminTaskJoin->getId();
-            $adminTaskBkJoin->admin_booking_id = 1;   //test
+            $adminTaskBkJoin->admin_booking_id = $model->getId();
             if ($adminTaskBkJoin->save() === false) {
                 throw new CException("Error saving adminTaskBkJoin");
             }
@@ -45,6 +45,8 @@ class TaskManager {
     }
 
     public function createTaskPlan($model, $values) {
+//        print_r($model);
+//        print_r($values);
         $adminTask = new AdminTask();
 
         $adminTask->subject = '您有一条新的任务，预约编号：' . $model->ref_no;
@@ -54,19 +56,23 @@ class TaskManager {
         $dbTran = Yii::app()->db->beginTransaction();
         try {
             if ($adminTask->save() === false) {
+
                 throw new CException("Error saving adminTask");
             }
             $adminTaskJoin = new AdminTaskJoin();
-            $adminTask->date_plan = $values['date_plan'];
+            $adminTaskJoin->date_plan = $values['date_plan'];
             $adminTaskJoin->admin_task_id = $adminTask->getId();
-            $adminTaskJoin->admin_user_id = $values['admin_user_id'];    //test
+            $adminTaskJoin->admin_user_id = $values['admin_user_id'];
             $adminTaskJoin->work_type = $values['work_type'];
+
             if ($adminTaskJoin->save() === false) {
+
                 throw new CException("Error saving adminTask");
             }
+
             $adminTaskBkJoin = new AdminTaskBkJoin();
             $adminTaskBkJoin->admin_task_join_id = $adminTaskJoin->getId();
-            $adminTaskBkJoin->admin_booking_id = 1;   //test
+            $adminTaskBkJoin->admin_booking_id = $model->getId();
             if ($adminTaskBkJoin->save() === false) {
                 throw new CException("Error saving adminTaskBkJoin");
             }
