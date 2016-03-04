@@ -1,24 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "admin_task_order_join".
+ * This is the model class for table "admin_task_doctor_join".
  *
- * The followings are the available columns in table 'admin_task_order_join':
+ * The followings are the available columns in table 'admin_task_doctor_join':
  * @property integer $id
  * @property integer $admin_task_join_id
- * @property integer $order_id
+ * @property integer $doctor_id
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
  */
-class AdminTaskOrderJoin extends EActiveRecord
+class AdminTaskDoctorJoin extends EActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'admin_task_order_join';
+		return 'admin_task_doctor_join';
 	}
 
 	/**
@@ -29,12 +29,12 @@ class AdminTaskOrderJoin extends EActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('admin_task_join_id, order_id, date_created', 'required'),
-			array('admin_task_join_id, order_id', 'numerical', 'integerOnly'=>true),
+			array('admin_task_join_id, doctor_id, date_created', 'required'),
+			array('admin_task_join_id, doctor_id', 'numerical', 'integerOnly'=>true),
 			array('date_updated, date_deleted', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, admin_task_join_id, order_id, date_created, date_updated, date_deleted', 'safe', 'on'=>'search'),
+			array('id, admin_task_join_id, doctor_id, date_created, date_updated, date_deleted', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,7 +57,7 @@ class AdminTaskOrderJoin extends EActiveRecord
 		return array(
 			'id' => 'ID',
 			'admin_task_join_id' => 'admin_task_join.id',
-			'order_id' => 'admin_user.id',
+			'doctor_id' => 'admin_user.id',
 			'date_created' => 'Date Created',
 			'date_updated' => 'Date Updated',
 			'date_deleted' => 'Date Deleted',
@@ -84,7 +84,7 @@ class AdminTaskOrderJoin extends EActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('admin_task_join_id',$this->admin_task_join_id);
-		$criteria->compare('order_id',$this->order_id);
+		$criteria->compare('doctor_id',$this->doctor_id);
 		$criteria->compare('date_created',$this->date_created,true);
 		$criteria->compare('date_updated',$this->date_updated,true);
 		$criteria->compare('date_deleted',$this->date_deleted,true);
@@ -98,7 +98,7 @@ class AdminTaskOrderJoin extends EActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return AdminTaskOrderJoin the static model class
+	 * @return AdminTaskDoctorJoin the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

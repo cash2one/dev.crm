@@ -65,7 +65,7 @@ class AdminTaskJoin extends EActiveRecord
 			'admin_task_id' => 'admin_msg.id',
 			'admin_user_id' => 'admin_user.id',
 			'work_type' => '跟单方式',
-			'status' => '完成状态',
+			'status' => '完成状态 0未完成 1已完成',
 			'date_plan' => '计划跟单时间',
 			'date_done' => '跟单完成时间',
 			'is_read' => '是否已读',

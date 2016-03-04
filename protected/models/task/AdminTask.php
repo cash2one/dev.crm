@@ -11,6 +11,9 @@
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
+ *
+ * The followings are the available model relations:
+ * @property AdminTaskJoin[] $adminTaskJoins
  */
 class AdminTask extends EActiveRecord
 {
@@ -48,6 +51,7 @@ class AdminTask extends EActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'adminTaskJoins' => array(self::HAS_MANY, 'AdminTaskJoin', 'admin_task_id'),
 		);
 	}
 

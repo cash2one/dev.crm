@@ -16,6 +16,7 @@ class AdminTaskController extends AdminController
 		return array(
 			'accessControl', // perform access control for CRUD operations
 			'postOnly + delete', // we only allow deletion via POST request
+            'rights',
 		);
 	}
 
@@ -31,13 +32,13 @@ class AdminTaskController extends AdminController
 				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
+//			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+//				'actions'=>array('create','update'),
+//				'users'=>array('@'),
+//			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'actions'=>array('admin','delete','index','view','create','update','ajaxNew','ajaxPlan'),
+//				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -137,7 +138,6 @@ class AdminTaskController extends AdminController
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['AdminTask']))
 			$model->attributes=$_GET['AdminTask'];
-
 		$this->render('admin',array(
 			'model'=>$model,
 		));
@@ -170,4 +170,38 @@ class AdminTaskController extends AdminController
 			Yii::app()->end();
 		}
 	}
+
+    /**
+     * ajax 获取新任务
+     */
+    public function actionAjaxNew() {
+        $taskMrg = new TaskManager();
+        $data = $taskMrg->getNewTask(Yii::app()->user->id);
+        $output = array(
+            'status' => 'ok',
+            'errorCode'=> 0,
+            'errorMsg'=> 'success',
+            'results' => array(
+                'new' => count($data),
+            ),
+        );
+        $this->renderJsonOutput($output);
+
+    }
+
+    /**
+     * ajax 获取推送任务
+     */
+    public function actionAjaxPlan() {
+        $taskMrg = new TaskManager();
+        $data = $taskMrg->getPlanTask(Yii::app()->user->id);
+        $output = array(
+            'status' => 'ok',
+            'errorCode'=> 0,
+            'errorMsg'=> 'success',
+            'results' => $data,
+        );
+        $this->renderJsonOutput($output);
+
+    }
 }

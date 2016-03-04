@@ -10,6 +10,10 @@
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
+ *
+ * The followings are the available model relations:
+ * @property AdminBooking $adminBooking
+ * @property AdminTaskJoin $adminTaskJoin
  */
 class AdminTaskBkJoin extends EActiveRecord
 {
@@ -46,6 +50,8 @@ class AdminTaskBkJoin extends EActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'adminBooking' => array(self::BELONGS_TO, 'AdminBooking', 'admin_booking_id'),
+			'adminTaskJoin' => array(self::BELONGS_TO, 'AdminTaskJoin', 'admin_task_join_id'),
 		);
 	}
 
@@ -56,7 +62,7 @@ class AdminTaskBkJoin extends EActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'admin_task_join_id' => 'admin_msg.id',
+			'admin_task_join_id' => 'admin_task_join.id',
 			'admin_booking_id' => 'admin_booking.id',
 			'date_created' => 'Date Created',
 			'date_updated' => 'Date Updated',
