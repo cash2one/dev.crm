@@ -175,8 +175,7 @@ class AdminTaskController extends AdminController
      * ajax 获取提醒任务
      */
     public function actionAjaxAlert() {
-        $taskMrg = new TaskManager();
-        $new = $taskMrg->getNewTask(Yii::app()->user->id);
+        $new = AdminTaskJoin::model()->getNewTask(Yii::app()->user->id);
         $undone = AdminTaskJoin::model()->getUndoneTask(Yii::app()->user->id);
         $output = array(
             'status' => 'ok',
@@ -195,8 +194,7 @@ class AdminTaskController extends AdminController
      * ajax 获取计划跟单
      */
     public function actionAjaxPlan() {
-        $taskMrg = new TaskManager();
-        $data = $taskMrg->getPlanTask(Yii::app()->user->id);
+        $data =  AdminTaskJoin::model()->getPlanTask(Yii::app()->user->id);
         $output = array(
             'status' => 'ok',
             'errorCode'=> 0,

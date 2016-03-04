@@ -58,24 +58,4 @@ class TaskManager {
 
     }
 
-    /**
-     * 获取新任务
-     */
-    public function getNewTask($admin_user_id){
-        $models = AdminTaskJoin::model()->getAllByAttributes(array('admin_user_id'=>$admin_user_id, 'is_read'=>0));
-        return $models;
-    }
-
-    /**
-     * 获取推送任务
-     */
-    public function getPlanTask($admin_user_id){
-        $admin_user_id = (int) $admin_user_id;
-        $db = Yii::app()->db;
-        $sql = "SELECT * FROM `admin_task_join` where admin_user_id={$admin_user_id} and (UNIX_TIMESTAMP(now())- UNIX_TIMESTAMP(date_plan) < 60)";
-        $command = $db->createCommand($sql);
-        $result = $command->queryAll();
-        return $result;
-    }
-
 }

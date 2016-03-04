@@ -123,13 +123,36 @@ class AdminTaskJoin extends EActiveRecord
 		return parent::model($className);
 	}
 
-    public function getUndoneTask($admin_user_id) {
-        // get hospitals by city.
+    /**
+     * 获取新任务
+     */
+    public function getNewTask($adminUserId){
+        $models = $this->getAllByAttributes(array('admin_user_id'=>$adminUserId, 'is_read'=>0));
+        return $models;
+    }
+
+    /**
+     * 获取未完成任务
+     */
+    public function getUndoneTask($adminUserId) {
         $criteria = new CDbCriteria();
         $criteria->addCondition("t.date_deleted is NULL");
         $criteria->addCondition("t.date_done is NULL");
-        $criteria->compare("t.admin_user_id", $admin_user_id);
+        $criteria->addCondition("t.admin_user_id=:adminUserId");
+        $criteria->params[":adminUserId"] = $adminUserId;
 
+        return $this->findAll($criteria);
+    }
+
+    /**
+     * 获取推送任务
+     */
+    public function getPlanTask($adminUserId){
+        $criteria = new CDbCriteria();
+        $criteria->addCondition("t.date_deleted is NULL");
+        $criteria->addCondition("t.admin_user_id=:adminUserId");
+        $criteria->params[":adminUserId"] = $adminUserId;
+        $criteria->addCondition("UNIX_TIMESTAMP(now())- UNIX_TIMESTAMP(date_plan) < 60");
         return $this->findAll($criteria);
     }
 }
