@@ -194,7 +194,11 @@ class AdminTaskController extends AdminController
      * ajax 获取计划跟单
      */
     public function actionAjaxPlan() {
-        $data =  AdminTaskJoin::model()->getPlanTask(Yii::app()->user->id);
+        $adminTaskJoin =  AdminTaskJoin::model()->getPlanTask(Yii::app()->user->id);
+        $data =array();
+        foreach($adminTaskJoin as $v){
+            $data[] = AdminTask::model()->getById($v->admin_task_id);
+        }
         $output = array(
             'status' => 'ok',
             'errorCode'=> 0,

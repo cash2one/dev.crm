@@ -152,7 +152,9 @@ class AdminTaskJoin extends EActiveRecord
         $criteria->addCondition("t.date_deleted is NULL");
         $criteria->addCondition("t.admin_user_id=:adminUserId");
         $criteria->params[":adminUserId"] = $adminUserId;
-        $criteria->addCondition("UNIX_TIMESTAMP(now())- UNIX_TIMESTAMP(date_plan) < 60");
+        $criteria->addCondition("UNIX_TIMESTAMP(now())- UNIX_TIMESTAMP(date_plan) < 6000");
+        $criteria->join .= 'left join admin_task a on (t.`admin_task_id`=a.`id`)';
+
         return $this->findAll($criteria);
     }
 }
