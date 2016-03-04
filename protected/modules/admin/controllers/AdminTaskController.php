@@ -37,7 +37,7 @@ class AdminTaskController extends AdminController
 //				'users'=>array('@'),
 //			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','index','view','create','update','ajaxNew','ajaxPlan'),
+				'actions'=>array('admin','delete','index','view','create','update','ajaxAlert','ajaxPlan'),
 //				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -172,17 +172,19 @@ class AdminTaskController extends AdminController
 	}
 
     /**
-     * ajax 获取新任务
+     * ajax 获取提醒任务
      */
-    public function actionAjaxNew() {
+    public function actionAjaxAlert() {
         $taskMrg = new TaskManager();
-        $data = $taskMrg->getNewTask(Yii::app()->user->id);
+        $new = $taskMrg->getNewTask(Yii::app()->user->id);
+        $undone = AdminTaskJoin::model()->getUndoneTask(Yii::app()->user->id);
         $output = array(
             'status' => 'ok',
             'errorCode'=> 0,
             'errorMsg'=> 'success',
             'results' => array(
-                'new' => count($data),
+                'new' => count($new),
+                'undone' => count($undone),
             ),
         );
         $this->renderJsonOutput($output);
@@ -190,7 +192,7 @@ class AdminTaskController extends AdminController
     }
 
     /**
-     * ajax 获取推送任务
+     * ajax 获取计划跟单
      */
     public function actionAjaxPlan() {
         $taskMrg = new TaskManager();
