@@ -5,45 +5,45 @@
 <tr class="view">
 
     <td>
-    <?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
+        <?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
     </td>
 
     <td>  
-    <?php echo CHtml::link(CHtml::encode($data->ref_no), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
+        <?php echo CHtml::link(CHtml::encode($data->ref_no), array('view', 'id' => $data->id), array('target' => '_blank')); ?>
     </td>
 
     <td>
-    <?php echo CHtml::encode($data->patient_name); ?>
+        <?php echo CHtml::encode($data->patient_name); ?>
     </td>
 
     <td>
-    <?php echo CHtml::encode($data->patient_mobile); ?>
+        <?php echo CHtml::encode($data->patient_mobile); ?>
     </td>
 
     <td>
-    <?php echo CHtml::encode($data->patient_state); ?>
+        <?php echo CHtml::encode($data->patient_state); ?>
     </td>
 
     <td>
-    <?php echo CHtml::encode($data->patient_city); ?>
+        <?php echo CHtml::encode($data->patient_city); ?>
     </td>
 
     <td>
-    <?php echo CHtml::encode($data->disease_name); ?>
+        <?php echo CHtml::encode($data->disease_name); ?>
     </td>
-    
+
     <td>
-    <?php echo CHtml::encode($data->customer_agent); ?>
+        <?php echo CHtml::encode($data->getCustomerAgent() == '' ? '未填写' : $data->getCustomerAgent()); ?>
     </td>
-    
+
     <td>
-    <?php echo CHtml::encode($data->admin_user_name); ?>
+        <?php echo CHtml::encode($data->admin_user_name); ?>
     </td>
-    
+
     <td>
-    <?php echo CHtml::encode($data->date_created); ?>
+        <?php echo CHtml::encode($data->date_created); ?>
     </td>
-    
+
 
     <?php /*
       <b><?php echo CHtml::encode($data->getAttributeLabel('faculty_id')); ?>:</b>

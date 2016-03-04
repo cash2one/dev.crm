@@ -33,6 +33,7 @@ class AdminController extends RController {
      * for more details on how to specify this property.
      */
     public $breadcrumbs = array();
+    public $current_user = null;
 
     /**
      * @return array action filters
@@ -67,6 +68,35 @@ class AdminController extends RController {
 
     public function init() {
         parent::init();
+    }
+
+    /**
+     * Protected method to load the associated User model class from login session.
+     * @return object the User data model based on the primary key stored in session.
+     */
+    public function loadUser($with = null) {
+        if (is_null($this->current_user)) {
+            //var_dump(Yii::app()->user->id);exit;
+            if (isset(Yii::app()->user->id)) {
+                $this->current_user = AdminUser::model()->getById(Yii::app()->user->id, $with);
+                if (is_null($this->current_user)) {
+                    // 有session但存的user.id不存在，所以logout user.
+                    Yii::app()->user->logout();
+                    // 跳转到登录页面.
+                    $this->redirect(Yii::app()->user->loginUrl);
+                    //throw new CHttpException(404, 'The requested page does not exist.');
+                }
+            }
+        }
+        return $this->current_user;
+    }
+
+    public function getCurrentUser() {
+        try {
+            return $this->loadUser();
+        } catch (CException $cex) {
+            return null;
+        }
     }
 
 }

@@ -55,6 +55,11 @@ class PatientManager {
         return PatientMRFile::model()->getAllByPatientId($patientId, $attributes, $with);
     }
 
+    //根据图片类型加载病人文件信息
+    public function loadPatientMRFilesByPatientIdAndType($patientId, $type, $attributes = null, $with = null) {
+        return PatientMRFile::model()->getFilesOfPatientByPatientIdType($patientId, $type, $attributes, $with);
+    }
+
     public function loadPatientBookingById($bookingId, $attributes = null, $with = null) {
         return PatientBooking::model()->getById($bookingId, $with);
     }
@@ -133,6 +138,15 @@ class PatientManager {
         return PatientMRFile::model()->getFilesOfPatientByPatientIdAndCreaterIdAndType($patientId, $creatorId, $type, $attributes, $with);
     }
 
+//查询患者的病历/出院小结图片/
+    public function loadFilesOfPatientByPatientIdType($patientId, $type, $attributes = null, $with = null, $options = null) {
+        if (is_null($attributes)) {
+            $attributes = '*';
+        }
+
+        return PatientMRFile::model()->getFilesOfPatientByPatientIdAndCreaterIdAndType($patientId, $type, $attributes, $with);
+    }
+
     //查询患者列表
     public function loadPatientInfoListByCreateorId($creatorId, $attributes, $with = null, $options = null) {
         if (is_null($attributes)) {
@@ -174,10 +188,10 @@ class PatientManager {
      * @param null $id
      * @return mixed
      */
-    public function apiCreatePatientInfo(User $user, $values, $id=null) {
+    public function apiCreatePatientInfo(User $user, $values, $id = null) {
         // create a new model and save into db.
         $userId = $user->getId();
-        if(isset($id)){
+        if (isset($id)) {
             $model = PatientInfo::model()->getByIdAndCreatorId($id, $userId);
             if (is_null($model)) {
                 $output['status'] = EApiViewService::RESPONSE_NO;
@@ -185,7 +199,7 @@ class PatientManager {
                 $output['errorMsg'] = '您没有权限执行此操作';
                 return $output;
             }
-        }else{
+        } else {
             $model = new PatientInfo();
         }
 
@@ -313,7 +327,7 @@ class PatientManager {
             $output['status'] = EApiViewService::RESPONSE_OK;
             $output['errorCode'] = ErrorList::ERROR_NONE;
             $output['errorMsg'] = 'success';
-            $output['results'] = array('bookingId'=>$model->getId(), 'refNo'=>$salesOrder->getRefNo());
+            $output['results'] = array('bookingId' => $model->getId(), 'refNo' => $salesOrder->getRefNo());
         } else {
             $output['status'] = EApiViewService::RESPONSE_NO;
             $output['errorCode'] = ErrorList::UNAUTHORIZED;

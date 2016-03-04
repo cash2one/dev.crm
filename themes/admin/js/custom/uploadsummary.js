@@ -3,6 +3,7 @@ $(function () {
     //图片上传板块
     var btnSubmit = $("#btnSubmit"),
             domForm = $("#booking-form"),
+            byType = domForm.attr("data-bkType"),
             $wrap = $('#uploader'),
             //全部成功 返回地址
             uploadReturnUrl = domForm.attr("data-url-return"),
@@ -78,7 +79,7 @@ $(function () {
         //compress: true,
         chunked: true,
         method: 'post',
-        formData: {'AdminBookingForm[id]': domForm.find("input#bookingId").val()},
+        //formData: {'AdminBooking[id]': domForm.find("input#bookingId").val(), 'AdminBooking[report_type]': domForm.find("input#reportType").val()},
         // server: 'http://webuploader.duapp.com/server/fileupload.php',
         server: urlUploadFile,
         fileNumLimit: 10,
@@ -454,6 +455,28 @@ $(function () {
         //console.log(errorinfo);
         alert('错误信息: ' + errorinfo);
     };
+    //单个文件上传之前触发的事件
+    uploader.on("startUpload", function () {
+        //文件上传之前加上表单成功返回的参数
+        if (byType == 2) {
+            uploader.option("formData", {
+                'AdminBooking[id]': domForm.find("input#bookingId").val(),
+                'AdminBooking[report_type]': domForm.find("input#reportType").val()
+            });
+        } else if (byType == 1) {
+            uploader.option("formData", {
+                'booking[id]': domForm.find("input#bookingId").val(),
+                'booking[report_type]': domForm.find("input#reportType").val()
+            });
+        } else {
+            uploader.option("formData", {
+                'AdminBookingForm[id]': domForm.find("input#bookingId").val(),
+                'AdminBookingForm[report_type]': domForm.find("input#reportType").val()
+            });
+        }
+
+
+    });
     //当所有文件上传结束时触发
     uploader.on("uploadFinished", function (file, data) {
     });

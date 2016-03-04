@@ -11,12 +11,14 @@ class PatientBookingSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('bookingRefNo', 'patientName', 'creatorName', 'doctorName', 'status', 'travelType', 'detail', 'isDepositPaid', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'bkType', 'userAgent');
+        return array('bookingRefNo', 'patientName', 'creatorName', 'doctorName', 'status', 'travelType', 'detail', 'isDepositPaid', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'bkType', 'userAgent', 'stateId', 'cityId');
     }
 
     public function addQueryConditions() {
         $udpAlias = 's';
+        $udpAlias2 = 'u';
         $this->criteria->join = 'LEFT JOIN sales_order s ON (t.`id` = s.`bk_id` AND s.`bk_type` =2)';
+        $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_id` = u.`user_id`)';
         $this->criteria->distinct = true;
         if ($this->hasQueryParams()) {
             //patientBooking的参数
@@ -76,6 +78,14 @@ class PatientBookingSearch extends ESearchModel {
             if (isset($this->queryParams['dateClosed'])) {
                 $dateClosed = $this->queryParams['dateClosed'];
                 $this->criteria->compare($udpAlias . ".date_closed", $dateClosed, true); // sql like condition
+            }
+            if (isset($this->queryParams['stateId'])) {
+                $stateId = $this->queryParams['stateId'];
+                $this->criteria->compare($udpAlias2 . ".state_id", $stateId);
+            }
+            if (isset($this->queryParams['cityId'])) {
+                $cityId = $this->queryParams['cityId'];
+                $this->criteria->compare($udpAlias2 . ".city_id", $cityId);
             }
         }
     }

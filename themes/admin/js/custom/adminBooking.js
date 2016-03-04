@@ -4,6 +4,8 @@ $(function () {
             domForm = $("#booking-form"),
             $wrap = $('#uploaderBooking'),
             //全部成功 返回地址
+            byType = domForm.attr("data-bkType"),
+            //全部成功 返回地址
             uploadReturnUrl = domForm.attr("data-url-return"),
             //data-url-uploadFile
             urlUploadFile = domForm.attr('data-url-uploadFile'),
@@ -455,9 +457,20 @@ $(function () {
 //单个文件上传之前触发的事件
     uploader.on("startUpload", function () {
         //文件上传之前加上表单成功返回的参数
-        uploader.option("formData", {
-            'AdminBookingForm[id]': fileParam.id,
-        });
+        if (byType == 2) {
+            uploader.option("formData", {
+                'AdminBooking[id]': fileParam.id,
+            });
+        } else if (byType == 1) {
+            uploader.option("formData", {
+                'booking[id]': fileParam.id,
+            });
+        } else {
+            uploader.option("formData", {
+                'AdminBookingForm[id]': fileParam.id,
+            });
+        }
+
 
     });
     //当所有文件上传结束时触发
@@ -555,9 +568,9 @@ $(function () {
             'AdminBookingForm[expected_hp_dept_id]': {
                 required: true
             },
-            'AdminBookingForm[experted_doctor_name]': {
-                required: true
-            },
+//            'AdminBookingForm[experted_doctor_name]': {
+//                required: true
+//            },
             'AdminBookingForm[disease_confirm]': {
                 required: true
             },
@@ -613,9 +626,9 @@ $(function () {
             'AdminBookingForm[expected_hp_dept_id]': {
                 required: '请选择理想科室'
             },
-            'AdminBookingForm[experted_doctor_name]': {
-                required: '请填写理想专家'
-            },
+//            'AdminBookingForm[experted_doctor_name]': {
+//                required: '请填写理想专家'
+//            },
             'AdminBookingForm[disease_confirm]': {
                 required: '请选择是否确诊'
             },
@@ -643,7 +656,6 @@ $(function () {
                 type: 'post',
                 url: actionUrl,
                 success: function (data) {
-                    console.log(data);
                     //图片上传
                     if (data.status == 'ok') {
                         fileParam.id = data.booking.id;

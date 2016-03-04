@@ -79,6 +79,7 @@ class PatientBooking extends EActiveRecord {
             'pbCreator' => array(self::BELONGS_TO, 'User', 'creator_id'),
             'pbDoctor' => array(self::BELONGS_TO, 'User', 'doctor_id'),
             'pbOrder' => array(self::HAS_MANY, 'SalesOrder', 'bk_id'),
+            'pbUserDoctorProfile' => array(self::BELONGS_TO, 'UserDoctorProfile', 'creator_id'),
         );
     }
 

@@ -8,12 +8,21 @@ Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyun
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.form.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/adminBooking.js', CClientScript::POS_END);
-$urlUploadFile = $this->createUrl("adminbooking/ajaxUploadFile");
+
 $urlAjaxLoadloadHospitalDept = $this->createUrl('doctor/ajaxLoadloadHospitalDept', array('hid' => ''));
 $urlReturn = $this->createUrl('adminbooking/view', array('id' => ''));
 $urlSubmit = $this->createUrl('adminbooking/ajaxUpdate');
 $urlLoadCity = $this->createUrl('region/loadCities');
-$urlLoadFiles = $this->createUrl('adminbooking/bookingFile', array('id' => $model->id));
+if ($model->booking_type == AdminBooking::bk_type_crm) {
+    $urlUploadFile = $this->createUrl("adminbooking/ajaxUploadFile");
+    $urlLoadFiles = $this->createUrl('adminbooking/adminBookingFile', array('id' => $model->id));
+} else if ($model->booking_type == AdminBooking::bk_type_pb) {
+    $urlUploadFile = $this->createUrl("patientbooking/ajaxUploadMRFile");
+    $urlLoadFiles = $this->createUrl('patientbooking/patientMRFiles', array('id' => $model->patient_id));
+} else {
+    $urlUploadFile = $this->createUrl("booking/ajaxUploadFile");
+    $urlLoadFiles = $this->createUrl('booking/bookingFile', array('id' => $model->id));
+}
 ?>
 <h1 class="">预约患者</h1>
 <style>
@@ -28,10 +37,14 @@ $urlLoadFiles = $this->createUrl('adminbooking/bookingFile', array('id' => $mode
 <?php
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'booking-form',
-    'htmlOptions' => array('class' => 'form-horizontal', 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
+    'htmlOptions' => array('class' => 'form-horizontal','data-bkType'=>$model->booking_type, 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
     'enableAjaxValidation' => false,
         ));
 echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
+echo CHtml::hiddenField("AdminBookingForm[booking_id]", $model->booking_id);
+echo CHtml::hiddenField("AdminBookingForm[booking_type]", $model->booking_type);
+echo CHtml::hiddenField("AdminBookingForm[patient_id]", $model->patient_id);
+echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id);
 ?>
 <div class="mt30">
     <div class="form-group">
@@ -152,7 +165,16 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <span class="tab-header">最终手术的医院：</span><?php
+            echo $form->dropDownList($model, 'final_hospital_id', $model->loadOptionsHospital(), array(
+                'name' => 'AdminBookingForm[final_hospital_id]',
+                'prompt' => '选择医院',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+        <div class="col-md-4">
             <span class="tab-header">最终手术的医生：</span><?php
             echo $form->dropDownList($model, 'final_doctor_id', $model->loadOptionsDoctorProfile(), array(
                 'name' => 'AdminBookingForm[final_doctor_id]',
@@ -161,7 +183,7 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
             ));
             ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <span class="tab-header">最终手术时间：</span><?php echo $form->textField($model, 'final_time', array('class' => 'form-control datepicker', 'data-format' => 'yyyy-mm-dd', 'readonly' => true)); ?>
         </div>
     </div>
@@ -226,7 +248,7 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
         </div>
         <div class="col-sm-4">
             <span>付费状态：</span><select class="form-control" name="AdminBookingForm[order_status]" id="AdminBookingForm_order_status">
-                <option>--选择--</option>
+                <option value="">--选择--</option>
                 <option value="1">已付费</option>
                 <option value="0">未付费</option>
             </select>
@@ -237,15 +259,13 @@ echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
     </div>
     <div class="form-group">
         <div class="col-sm-4">
-            <span>录入日期：</span><?php echo $form->textField($model, 'final_time', array('class' => 'form-control datepicker', 'data-format' => 'yyyy-mm-dd', 'readonly' => true)); ?>
-        </div>
-        <div class="col-sm-4">
-            <span>业务员：</span><?php
-            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
-                'name' => 'AdminBookingForm[admin_user_id]',
-                'prompt' => '选择',
-                'class' => 'form-control',
-            ));
+            <span>业务员：&nbsp;&nbsp;&nbsp;</span><input class="form-control" type="text" value="<?php echo $model->admin_user_name; ?>" readonly/>
+                <?php
+//            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
+//                'name' => 'AdminBookingForm[admin_user_id]',
+//                'prompt' => '选择',
+//                'class' => 'form-control',
+//            ));
             ?>
         </div>
         <div class="col-sm-4">

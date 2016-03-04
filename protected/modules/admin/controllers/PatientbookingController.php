@@ -34,7 +34,7 @@ class PatientbookingController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('create', 'update', 'delete', 'admin', 'search', 'index', 'view', 'list', 'changeStatus', 'relateDoctor', 'relate', 'searchResult'),
+                'actions' => array('create', 'update', 'delete', 'admin', 'search', 'index', 'view', 'list', 'changeStatus', 'relateDoctor', 'relate', 'searchResult', 'ajaxUploadMRFile', 'patientMRFiles'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -160,7 +160,7 @@ class PatientbookingController extends AdminController {
     public function actionAdmin() {
         $this->render('admin');
     }
-    
+
     public function actionSearch() {
         $this->render('search');
     }
@@ -227,6 +227,71 @@ class PatientbookingController extends AdminController {
             }
         }
         throw new CHttpException(404, 'The requested page does not exist.');
+    }
+
+    /**
+     * 患者文件上传
+     */
+    public function actionAjaxUploadMRFile() {
+        $output = array('status' => 'no');
+        if (isset($_POST['AdminBooking'])) {
+            $values = $_POST['AdminBooking'];
+            $patientMgr = new PatientManager();
+            if (isset($values['id']) === false) {
+// ['patient']['mrid'] is missing.
+                $output['status'] = 'no';
+                $output['error'] = 'invalid parameters';
+                $this->renderJsonOutput($output);
+            }
+            $id = $values['id'];
+            $adminBooking = AdminBooking::model()->getById($id);
+            $patientId = $adminBooking->patient_id;
+            $patientInfo = $patientMgr->loadPatientInfoById($patientId);
+            if (isset($patientInfo) === false) {
+// PatientInfo record is not found in db.
+                $output['status'] = 'no';
+                $output['errors'] = 'invalid mrid';
+                $this->renderJsonOutput($output);
+            } else {
+                $output['patientId'] = $patientInfo->getId();
+                $reportType = isset($values['report_type']) ? $values['report_type'] : StatCode::MR_REPORTTYPE_MR;
+                $ret = $patientMgr->createPatientMRFile($patientInfo, $reportType);
+                if (isset($ret['error'])) {
+                    $output['status'] = 'no';
+                    $output['error'] = $ret['error'];
+                    $output['file'] = '';
+                } else {
+// create file output.
+                    $fileModel = $ret['filemodel'];
+                    $data = new stdClass();
+                    $data->id = $fileModel->getId();
+                    $data->patientId = $fileModel->getPatientId();
+                    $data->fileUrl = $fileModel->getAbsFileUrl();
+                    $data->tnUrl = $fileModel->getAbsThumbnailUrl();
+                    $data->deleteUrl = $this->createUrl('patient/deleteMRFile', array('id' => $fileModel->getId()));
+
+                    $output['status'] = 'ok';
+                    $output['file'] = $data;
+                }
+            }
+        }
+        if (isset($_POST['plugin'])) {
+            echo CJSON::encode($output);
+            Yii::app()->end(200, true); //结束 返回200
+        } else {
+            $this->renderJsonOutput($output);
+        }
+    }
+
+    /**
+     * 异步patientMRFile加载图片
+     * @param type $id
+     */
+    public function actionPatientMRFiles($id, $type = null) {
+        $values = array('report_type' => $type);
+        $apisvc = new ApiViewFilesOfPatient($id, $values);
+        $output = $apisvc->loadApiViewData();
+        $this->renderJsonOutput($output);
     }
 
     /**

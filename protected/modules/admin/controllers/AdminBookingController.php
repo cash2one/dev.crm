@@ -15,6 +15,7 @@ class AdminBookingController extends AdminController {
         return array(
             'accessControl', // perform access control for CRUD operations
             'postOnly + delete', // we only allow deletion via POST request
+            'rights',
         );
     }
 
@@ -30,7 +31,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -48,8 +49,12 @@ class AdminBookingController extends AdminController {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $form = new AdminBookingForm;
+        $data = $this->loadModel($id);
+        $form->initModel($data);
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'data' => $data,
+            'model' => $form
         ));
     }
 
@@ -83,6 +88,10 @@ class AdminBookingController extends AdminController {
                 $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
                 $form->expected_hp_dept_name = $dept->getName();
             }
+            if (!is_null($form->final_hospital_id) && !strIsEmpty($form->final_hospital_id)) {
+                $hospital = Hospital::model()->getById($form->final_hospital_id);
+                $form->final_hospital_name = $hospital->getName();
+            }
             //给省市赋值
             if (!is_null($form->state_id)) {
                 $state = RegionState::model()->getById($form->state_id);
@@ -93,11 +102,18 @@ class AdminBookingController extends AdminController {
                 $form->patient_city = $city->getName();
             }
             //给最终手术专家赋值
-            $userDoctorProfile = UserDoctorProfile::model()->getByUserId($form->final_doctor_id);
-            $form->final_doctor_name = $userDoctorProfile->getName();
+            if (!is_null($form->final_doctor_id) && !strIsEmpty($form->final_doctor_id)) {
+                $userDoctorProfile = UserDoctorProfile::model()->getByUserId($form->final_doctor_id);
+                $form->final_doctor_name = $userDoctorProfile->getName();
+            }
+            //最终手术时间如无则设为NULL
+            if (strIsEmpty($form->final_time)) {
+                $form->final_time = NULL;
+            }
             //业务员信息
             $adminUser = AdminUser::model()->getById($form->admin_user_id);
             $form->admin_user_name = $adminUser->username;
+            //设置booking type 为 bk_type_crm
             $form->booking_type = AdminBooking::bk_type_crm;
 
             $model = new AdminBooking();
@@ -107,8 +123,6 @@ class AdminBookingController extends AdminController {
                 $output['booking']['id'] = $model->id;
             } else {
                 $output['errors'] = $model->getErrors();
-                var_dump($output['errors']);
-                exit;
                 throw new CException('error saving data.');
             }
         }
@@ -145,25 +159,37 @@ class AdminBookingController extends AdminController {
             $form->expected_hospital_name = $hospital->getName();
             $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
             $form->expected_hp_dept_name = $dept->getName();
+            if (is_null($form->final_hospital_id) || $form->final_hospital_id == '') {
+                $form->final_hospital_id = $model->final_hospital_id;
+                $form->final_hospital_name = $model->final_hospital_name;
+            } else {
+                $finaoHospital = Hospital::model()->getById($form->final_hospital_id);
+                $form->final_hospital_name = $finaoHospital->getName();
+            }
             //给省市赋值
             $state = RegionState::model()->getById($form->state_id);
             $form->patient_state = $state->getName();
             $city = RegionCity::model()->getById($form->city_id);
             $form->patient_city = $city->getName();
             //给最终手术专家赋值
-            $userDoctorProfile = UserDoctorProfile::model()->getByUserId($form->final_doctor_id);
-            $form->final_doctor_name = $userDoctorProfile->getName();
+            if (!is_null($form->final_doctor_id) && !strIsEmpty($form->final_doctor_id)) {
+                $userDoctorProfile = UserDoctorProfile::model()->getByUserId($form->final_doctor_id);
+                $form->final_doctor_name = $userDoctorProfile->getName();
+            }
             //业务员信息
             $adminUser = AdminUser::model()->getById($form->admin_user_id);
             $form->admin_user_name = $adminUser->username;
-            $form->booking_type = AdminBooking::bk_type_crm;
+            //最终手术时间如无则设为NULL
+            if (strIsEmpty($form->final_time)) {
+                $form->final_time = NULL;
+            }
             $model->setAttributes($form->attributes);
             if ($model->save()) {
                 $output['status'] = 'ok';
                 $output['booking']['id'] = $model->id;
             } else {
                 $output['errors'] = $model->getErrors();
-                throw new CException('error saving data.');
+                //throw new CException('error saving data.');
             }
         }
         $this->renderJsonOutput($output);
@@ -219,7 +245,7 @@ class AdminBookingController extends AdminController {
             }
             $bookingId = $values['id'];
             //    $userId = $this->getCurrentUserId();
-            $booking = $bookingMgr->loadBookingMobileById($bookingId);
+            $booking = $bookingMgr->getAdminBookingById($bookingId);
             //$patientMR = $patientMgr->loadPatientMRById($mrid);
             if (isset($booking) === false) {
                 // PatientInfo record is not found in db.
@@ -228,7 +254,8 @@ class AdminBookingController extends AdminController {
                 $this->renderJsonOutput($output);
             } else {
                 $output['bookingId'] = $booking->getId();
-                $ret = $bookingMgr->createBookingFile($booking);
+                $reportType = isset($values['report_type']) ? $values['report_type'] : StatCode::MR_REPORTTYPE_MR;
+                $ret = $bookingMgr->createAdminBookingFile($booking, $reportType);
                 if (isset($ret['error'])) {
                     $output['status'] = 'no';
                     $output['error'] = $ret['error'];
@@ -254,11 +281,12 @@ class AdminBookingController extends AdminController {
     }
 
     /**
-     * 异步加载图片
+     * 异步adminbooking加载图片
      * @param type $id
      */
-    public function actionBookingFile($id) {
-        $apisvc = new ApiViewBookingFile($id);
+    public function actionAdminBookingFile($id, $type = null) {
+        $values = array('report_type' => $type);
+        $apisvc = new ApiViewAdminBookingFile($id,$values);
         $output = $apisvc->loadApiViewData();
         $this->renderJsonOutput($output);
     }
@@ -315,6 +343,52 @@ class AdminBookingController extends AdminController {
         $this->renderPartial('searchResult', array(
             'dataProvider' => $dataProvider,
         ));
+    }
+
+    //分配业务员
+    public function actionAddAdminUser() {
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+        if (isset($_POST['AdminBookingForm'])) {
+            $value = $_POST['AdminBookingForm'];
+            $form = new AdminBookingForm();
+            $adminbookingId = $value['id'];
+            $model = $this->loadModel($adminbookingId);
+            $form->attributes = $_POST['AdminBookingForm'];
+            //业务员信息
+            if (!strIsEmpty($form->admin_user_id)) {
+                $model->admin_user_id = $form->admin_user_id;
+                $adminUser = AdminUser::model()->getById($form->admin_user_id);
+                $model->admin_user_name = $adminUser->username;
+            }
+            if ($model->save()) {
+                $this->redirect(array('view', 'id' => $adminbookingId));
+            }
+        }
+        //$this->renderJsonOutput($output);
+    }
+
+    //授权地推/KA
+    public function actionAddBdUser() {
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+        if (isset($_POST['AdminBookingForm'])) {
+            $value = $_POST['AdminBookingForm'];
+            $form = new AdminBookingForm();
+            $adminbookingId = $value['id'];
+            $model = $this->loadModel($adminbookingId);
+            $form->attributes = $_POST['AdminBookingForm'];
+            //业务员信息
+            if (!strIsEmpty($form->bd_user_id)) {
+                $model->bd_user_id = $form->bd_user_id;
+                $adminUser = AdminUser::model()->getById($form->bd_user_id);
+                $model->bd_user_name = $adminUser->username;
+            }
+            if ($model->save()) {
+                $this->redirect(array('view', 'id' => $adminbookingId));
+            }
+        }
+        //$this->renderJsonOutput($output);
     }
 
     /**

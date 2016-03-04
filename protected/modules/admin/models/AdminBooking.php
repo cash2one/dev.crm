@@ -30,6 +30,8 @@
  * @property string $experted_doctor_name
  * @property integer $final_doctor_id
  * @property string $final_doctor_name
+ * @property integer $final_hospital_id
+ * @property string $final_hospital_name
  * @property string $final_time
  * @property integer $disease_confirm
  * @property integer $customer_request
@@ -107,7 +109,7 @@ class AdminBooking extends EActiveRecord {
             array('disease_name', 'length', 'max' => 100),
             array('admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('state_id, city_id, expected_time_start, expected_time_end, final_time, customer_request, customer_diversion, customer_agent, date_created, date_updated, date_deleted', 'safe'),
+            array('state_id, city_id, expected_time_start, expected_time_end, final_time, final_hospital_id, final_hospital_name, customer_request, customer_diversion, customer_agent, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, state_id, city_id, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, experted_doctor_id, experted_doctor_name, final_doctor_id, final_doctor_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -218,6 +220,8 @@ class AdminBooking extends EActiveRecord {
         $criteria->compare('experted_doctor_name', $this->experted_doctor_name, true);
         $criteria->compare('final_doctor_id', $this->final_doctor_id);
         $criteria->compare('final_doctor_name', $this->final_doctor_name, true);
+        $criteria->compare('final_hospital_id', $this->final_hospital_id);
+        $criteria->compare('final_hospital_name', $this->final_hospital_name, true);
         $criteria->compare('final_time', $this->final_time, true);
         $criteria->compare('disease_confirm', $this->disease_confirm);
         $criteria->compare('customer_request', $this->customer_request);
@@ -369,7 +373,8 @@ class AdminBooking extends EActiveRecord {
             return null;
         }
     }
-    public function getBookingStatue(){
+
+    public function getBookingStatue() {
         $options = StatCode::getOptionsBookingStatus();
         if (isset($options[$this->booking_status])) {
             return $options[$this->booking_status];
@@ -377,4 +382,21 @@ class AdminBooking extends EActiveRecord {
             return null;
         }
     }
+
+    public function getDiseaseConfirm() {
+        if (!strIsEmpty($this->disease_confirm)) {
+            return $this->disease_confirm == 1 ? '是' : '否';
+        } else {
+            return '未填写';
+        }
+    }
+
+    public function getOrderStatus() {
+        if (!strIsEmpty($this->order_status)) {
+            return $this->order_status == 1 ? '已付费' : '未付费';
+        } else {
+            return '未填写';
+        }
+    }
+
 }

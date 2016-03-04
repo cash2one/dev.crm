@@ -33,7 +33,7 @@ class BookingController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('create', 'update', 'delete', 'admin', 'search', 'index', 'view', 'list', 'changeStatus', 'searchResult'),
+                'actions' => array('create', 'update', 'delete', 'admin', 'search', 'index', 'view', 'list', 'changeStatus', 'searchResult', 'bookingFile', 'ajaxUploadFile'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -247,6 +247,73 @@ class BookingController extends AdminController {
 
         $returnUrl = isset($_GET['returnUrl']) ? $_GET['returnUrl'] : array('view', 'id' => $model->id);
         $this->redirect($returnUrl);
+    }
+
+    public function actionAjaxUploadFile() {
+        $output = array('status' => 'no');
+        if (isset($_POST['booking'])) {
+            $values = $_POST['booking'];
+            $bookingMgr = new BookingManager();
+            if (isset($values['id']) === false) {
+                // ['patient']['mrid'] is missing.
+                $output['status'] = 'no';
+                $output['error'] = 'invalid parameters';
+                $this->renderJsonOutput($output);
+            }
+            $adminbooking = AdminBooking::model()->getById($values['id']);
+            $bookingId = $adminbooking->booking_id;
+            //    $userId = $this->getCurrentUserId();
+            $booking = $bookingMgr->loadBookingMobileById($bookingId);
+            //$patientMR = $patientMgr->loadPatientMRById($mrid);
+            if (isset($booking) === false) {
+                // PatientInfo record is not found in db.
+                $output['status'] = 'no';
+                $output['errors'] = 'invalid id';
+                $this->renderJsonOutput($output);
+            } else {
+                $output['bookingId'] = $booking->getId();
+                $reportType = isset($values['report_type']) ? $values['report_type'] : StatCode::MR_REPORTTYPE_MR;
+                $ret = $bookingMgr->createBookingFile($booking, $reportType);
+                if (isset($ret['error'])) {
+                    $output['status'] = 'no';
+                    $output['error'] = $ret['error'];
+                    $output['file'] = '';
+                } else {
+                    // create file output.
+                    $fileModel = $ret['filemodel'];
+                    $data = new stdClass();
+                    $data->id = $fileModel->getId();
+                    $data->bookingId = $fileModel->getBookingId();
+                    $data->fileUrl = $fileModel->getAbsFileUrl();
+                    $data->tnUrl = $fileModel->getAbsThumbnailUrl();
+                    //    $data->deleteUrl = $this->createUrl('patient/deleteMRFile', array('id' => $fileModel->getId()));
+                    $output['status'] = 'ok';
+                    $output['file'] = $data;
+                    //$output['redirectUrl'] = $this->createUrl("home/index");
+                }
+            }
+        } else {
+            $output['error'] = 'missing parameters';
+        }
+        if (isset($_POST['plugin'])) {
+            echo CJSON::encode($output);
+            Yii::app()->end(200, true); //结束 返回200
+        } else {
+            $this->renderJsonOutput($output);
+        }
+    }
+
+    /**
+     * 异步booking加载图片
+     * @param type $id
+     */
+    public function actionBookingFile($id, $type = null) {
+        $adminbooking = AdminBooking::model()->getById($id);
+        $bookingId = $adminbooking->booking_id;
+        $values = array('report_type' => $type);
+        $apisvc = new ApiViewBookingFile($bookingId, $values);
+        $output = $apisvc->loadApiViewData();
+        $this->renderJsonOutput($output);
     }
 
     /**

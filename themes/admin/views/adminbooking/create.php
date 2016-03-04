@@ -13,6 +13,7 @@ $urlAjaxLoadloadHospitalDept = $this->createUrl('doctor/ajaxLoadloadHospitalDept
 $urlReturn = $this->createUrl('adminbooking/view', array('id' => ''));
 $urlSubmit = $this->createUrl('adminbooking/ajaxCreate');
 $urlLoadCity = $this->createUrl('region/loadCities');
+$user = $this->getCurrentUser();
 ?>
 <h1 class="">预约患者</h1>
 <style>
@@ -27,9 +28,12 @@ $urlLoadCity = $this->createUrl('region/loadCities');
 <?php
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'booking-form',
-    'htmlOptions' => array('class' => 'form-horizontal', 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
+    'htmlOptions' => array('class' => 'form-horizontal','data-bkType'=>$model->booking_type, 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
     'enableAjaxValidation' => false,
         ));
+echo CHtml::hiddenField("AdminBookingForm[booking_type]", $model->booking_type);
+echo CHtml::hiddenField("AdminBookingForm[patient_id]", $model->patient_id);
+echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
 ?>
 <div class="mt30">
     <div class="form-group">
@@ -142,7 +146,16 @@ $form = $this->beginWidget('CActiveForm', array(
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <span class="tab-header">最终手术的医院：</span><?php
+            echo $form->dropDownList($model, 'final_hospital_id', $model->loadOptionsHospital(), array(
+                'name' => 'AdminBookingForm[final_hospital_id]',
+                'prompt' => '选择医院',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+        <div class="col-md-4">
             <span class="tab-header">最终手术的医生：</span><?php
             echo $form->dropDownList($model, 'final_doctor_id', $model->loadOptionsDoctorProfile(), array(
                 'name' => 'AdminBookingForm[final_doctor_id]',
@@ -151,7 +164,7 @@ $form = $this->beginWidget('CActiveForm', array(
             ));
             ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <span class="tab-header">最终手术时间：</span><?php echo $form->textField($model, 'final_time', array('class' => 'form-control datepicker', 'data-format' => 'yyyy-mm-dd', 'readonly' => true)); ?>
         </div>
     </div>
@@ -227,15 +240,13 @@ $form = $this->beginWidget('CActiveForm', array(
     </div>
     <div class="form-group">
         <div class="col-sm-4">
-            <span>录入日期：</span><?php echo $form->textField($model, 'final_time', array('class' => 'form-control datepicker', 'data-format' => 'yyyy-mm-dd', 'readonly' => true)); ?>
-        </div>
-        <div class="col-sm-4">
-            <span>业务员：</span><?php
-            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
-                'name' => 'AdminBookingForm[admin_user_id]',
-                'prompt' => '选择',
-                'class' => 'form-control',
-            ));
+            <span>业务员：&nbsp;&nbsp;&nbsp;</span><input class="form-control" type="text" value="<?php echo $user->username; ?>" readonly/>
+                <?php
+//            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
+//                'name' => 'AdminBookingForm[admin_user_id]',
+//                'prompt' => '选择',
+//                'class' => 'form-control',
+//            ));
             ?>
         </div>
         <div class="col-sm-4">

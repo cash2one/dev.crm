@@ -9,7 +9,6 @@ class BookingManager {
     public function loadBookingMobileById($id, $attributes = null, $with = null) {
         return Booking::model()->getById($id, $with);
     }
-    
 
     /*     * ****** Api 5.0 ******* */
 
@@ -354,7 +353,7 @@ class BookingManager {
         return $output;
     }
 
-    public function createBookingFile($booking) {
+    public function createBookingFile($booking, $reportType) {
         $bookingId = $booking->getId();
         $userId = $booking->getUserId();
 
@@ -363,7 +362,7 @@ class BookingManager {
         $file = EUploadedFile::getInstanceByName($uploadField);
         if (isset($file)) {
             //文件储存
-            $output['filemodel'] = $this->saveBookingFile($file, $bookingId, $userId);
+            $output['filemodel'] = $this->saveBookingFile($file, $bookingId, $userId, $reportType);
         } else {
             $output['error'] = 'missing uploaded file in - ' . $uploadField;
         }
@@ -376,16 +375,15 @@ class BookingManager {
      * @param integer $bookingId Booking.id     
      * @return BookingFile 
      */
-    private function saveBookingFile($file, $bookingId, $userid) {
+    private function saveBookingFile($file, $bookingId, $userid, $reportType) {
         $bFile = new BookingFile();
-        $bFile->initModel($bookingId, $userid, $file);
+        $bFile->initModel($bookingId, $userid, $file, $reportType);
         $bFile->saveModel();
 
         return $bFile;
     }
-    
-    
-    public function cerateBookingCorp($booking){
+
+    public function cerateBookingCorp($booking) {
         $bookingId = $booking->getId();
         $userId = $booking->getUserId();
         $uploadField = 'file';
@@ -398,16 +396,14 @@ class BookingManager {
         }
         return $output;
     }
-    
-     private function saveBookingCorp($file, $bookingId, $userid) {
+
+    private function saveBookingCorp($file, $bookingId, $userid) {
         $bFile = new BookingCorpIc();
         $bFile->initModel($bookingId, $userid, $file);
         $bFile->saveModel();
 
         return $bFile;
     }
-    
-    
 
     public function loadIBooking($id, $with = null) {
         if (is_null($with)) {
@@ -525,6 +521,41 @@ class BookingManager {
             }
         }
         return $model;
+    }
+
+    //crm
+    public function getAdminBookingById($id) {
+        return AdminBooking::model()->getById($id);
+    }
+
+    public function createAdminBookingFile($booking, $reportType) {
+        $bookingId = $booking->getId();
+        $userId = null;
+
+        //$uploadField = BookingFile::model()->file_upload_field;
+        $uploadField = 'file';
+        $file = EUploadedFile::getInstanceByName($uploadField);
+        if (isset($file)) {
+            //文件储存
+            $output['filemodel'] = $this->saveAdminBookingFile($file, $bookingId, $userId, $reportType);
+        } else {
+            $output['error'] = 'missing uploaded file in - ' . $uploadField;
+        }
+        return $output;
+    }
+
+    /**
+     * Get EUploadedFile from $_FILE. Create BookingFile model. Save file in filesystem. Save model in db.
+     * @param EUploadedFile $file EUploadedFile::getInstances()
+     * @param integer $bookingId Booking.id     
+     * @return BookingFile 
+     */
+    private function saveAdminBookingFile($file, $bookingId, $userid, $reportType) {
+        $bFile = new AdminBookingFile();
+        $bFile->initModel($bookingId, $userid, $file, $reportType);
+        $bFile->saveModel();
+
+        return $bFile;
     }
 
 }

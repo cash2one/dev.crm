@@ -1,6 +1,6 @@
 <?php
 
-class ApiViewBookingFile extends EApiViewService {
+class ApiViewAdminBookingFile extends EApiViewService {
 
     private $bookingId;
     private $files;
@@ -29,7 +29,7 @@ class ApiViewBookingFile extends EApiViewService {
     }
 
     private function loadBookingFile() {
-        $models = BookingFile::model()->getAllByAttributes(array('booking_id' => $this->bookingId, 'report_type' => $this->type));
+        $models = AdminBookingFile::model()->getAllByAttributes(array('admin_booking_id' => $this->bookingId, 'report_type' => $this->type));
         if (arrayNotEmpty($models)) {
             $this->setBookingFile($models);
         }

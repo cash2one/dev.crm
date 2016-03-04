@@ -101,10 +101,11 @@ class BookingFile extends EFileModel {
         return parent::model($className);
     }
 
-    public function initModel($bookingId, $userId, $file) {
+    public function initModel($bookingId, $userId, $file, $reportType) {
         $this->setBookingId($bookingId);
         $this->setUserId($userId);
         $this->setFileAttributes($file);
+        $this->setReportType($reportType);
     }
 
     public function saveModel() {
@@ -180,6 +181,10 @@ class BookingFile extends EFileModel {
 
     public function setUserId($v) {
         $this->user_id = $v;
+    }
+
+    public function setReportType($v) {
+        $this->report_type = $v;
     }
 
 }

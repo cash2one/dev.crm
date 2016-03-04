@@ -1,15 +1,13 @@
 <?php
 
 /**
- * This is the model class for table "patient_mr_file".
+ * This is the model class for table "booking_file".
  *
- * The followings are the available columns in table 'patient_mr_file':
+ * The followings are the available columns in table 'booking_file':
  * @property integer $id
- * @property integer $patient_id
- * @property integer $creator_id
- * @property integer $mr_id
  * @property string $uid
- * @property string report_type
+ * @property integer $admin_booking_id
+ * @property integer $user_id
  * @property string $file_ext
  * @property string $mime_type
  * @property string $file_name
@@ -22,17 +20,20 @@
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
+ *
+ * The followings are the available model relations:
+ * @property Booking $booking
  */
-class PatientMRFile extends EFileModel {
+class AdminBookingFile extends EFileModel {
 
-    public $file_upload_field = 'file'; // $_FILE['file'].   
+    public $file_upload_field = 'AdminBookingFiles'; // $_FILE['upload'].
 
     /**
      * @return string the associated database table name
      */
 
     public function tableName() {
-        return 'patient_mr_file';
+        return 'admin_booking_file';
     }
 
     /**
@@ -42,14 +43,17 @@ class PatientMRFile extends EFileModel {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('patient_id, creator_id, uid', 'required'),
-            array('patient_id, creator_id, file_size, display_order', 'numerical', 'integerOnly' => true),
+            array('uid, admin_booking_id, file_ext, file_name, file_url', 'required'),
+            array('admin_booking_id, user_id, file_size, display_order', 'numerical', 'integerOnly' => true),
             array('uid', 'length', 'max' => 32),
             array('file_ext, report_type', 'length', 'max' => 10),
             array('mime_type', 'length', 'max' => 20),
             array('file_name, thumbnail_name', 'length', 'max' => 40),
             array('file_url, thumbnail_url, base_url', 'length', 'max' => 255),
             array('date_created, date_updated, date_deleted', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, uid, admin_booking_id, user_id, file_ext, mime_type, file_name, file_url, file_size, thumbnail_name, thumbnail_url, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -60,6 +64,7 @@ class PatientMRFile extends EFileModel {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'adminbfBooking' => array(self::BELONGS_TO, 'adminBooking', 'admin_booking_id'),
         );
     }
 
@@ -69,9 +74,9 @@ class PatientMRFile extends EFileModel {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'patient_id' => '患者',
-            'uid' => 'UID',
-            'report_type' => '资料类别',
+            'uid' => 'Uid',
+            'admin_booking_id' => 'Booking ID',
+            'user_id' => 'User',
             'file_ext' => 'File Ext',
             'mime_type' => 'Mime Type',
             'file_name' => 'File Name',
@@ -79,7 +84,6 @@ class PatientMRFile extends EFileModel {
             'file_size' => 'File Size',
             'thumbnail_name' => 'Thumbnail Name',
             'thumbnail_url' => 'Thumbnail Url',
-            'base_url' => 'Base Url',
             'display_order' => 'Display Order',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
@@ -91,21 +95,20 @@ class PatientMRFile extends EFileModel {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return PatientMRFile the static model class
+     * @return AdminBookingFile the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
-    public function initModel($patientId, $creatorId, $reportType, $file) {
-        $this->setPatientId($patientId);
-        $this->setCreatorId($creatorId);
-        $this->setReportType($reportType);
+    public function initModel($bookingId, $userId, $file, $reportType) {
+        $this->setBookingId($bookingId);
+        $this->setUserId($userId);
         $this->setFileAttributes($file);
+        $this->setReportType($reportType);
     }
 
     public function saveModel() {
-        //数据校验
         if ($this->validate()) {    // validates model attributes before saving file.
             try {
                 $fileSysDir = $this->getFileSystemUploadPath();
@@ -120,8 +123,9 @@ class PatientMRFile extends EFileModel {
                 if ($this->file->saveAs($fileSysDir . '/' . $this->getFileName()) === false) {
                     throw new CException('Error saving file.');
                 }
-                //文件存储
-                return $this->save();
+
+                // validation is done before hand, so skip validation when saving into db.
+                return $this->save(false);
             } catch (CException $e) {
                 $this->addError('file', $e->getMessage());
                 return false;
@@ -133,7 +137,7 @@ class PatientMRFile extends EFileModel {
 
     //Overwrites parent::getFileUploadRootPath().
     public function getFileUploadRootPath() {
-        return Yii::app()->params['patientMRFilePath'];
+        return Yii::app()->params['bookingFilePath'];
     }
 
     public function getFileSystemUploadPath($folderName = null) {
@@ -148,36 +152,35 @@ class PatientMRFile extends EFileModel {
         return parent::deleteModel($absolute);
     }
 
-    /*     * ****** Query methods ******* */
+    /*     * ****** Query Methods ******* */
 
-    public function getAllByPatientId($patientId, $attributes = null, $with = null) {
-        return $this->getAllByAttributes(array('patient_id' => $patientId), $with);
-    }
-
-    public function getFilesOfPatientByPatientIdAndCreaterIdAndType($patientId, $creatorId, $type, $attributes = null, $with = null) {
-        return $this->getAllByAttributes(array('patient_id' => $patientId, 'creator_id' => $creatorId, 'report_type' => $type), $with);
-    }
-
-    public function getFilesOfPatientByPatientIdType($patientId, $type, $attributes = null, $with = null) {
-        return $this->getAllByAttributes(array('patient_id' => $patientId, 'report_type' => $type), $with);
+    public function getAllByBookingId($bid) {
+        $criteria = new CDbCriteria(array('order' => 't.display_order'));
+        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('admin_booking_id', $bid);
+        return $this->findAll($criteria);
     }
 
     /*     * ****** Accessors ****** */
 
-    public function getPatientId() {
-        return $this->patient_id;
+    public function getBooking() {
+        return $this->booking;
     }
 
-    public function setPatientId($v) {
-        $this->patient_id = $v;
+    public function getBookingId() {
+        return $this->admin_booking_id;
     }
 
-    public function setCreatorId($v) {
-        $this->creator_id = $v;
+    public function setBookingId($v) {
+        $this->admin_booking_id = $v;
     }
 
-    public function getCreatorId() {
-        return $this->creator_id;
+    public function getUserId() {
+        return $this->user_id;
+    }
+
+    public function setUserId($v) {
+        $this->user_id = $v;
     }
 
     public function setReportType($v) {
