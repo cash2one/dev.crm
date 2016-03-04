@@ -181,7 +181,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         <label >城市</label>
         <div>
             <select id="cityId" name="cityId" class="form-control">
-                <option>选择城市</option>
+                <option value="">选择城市</option>
             </select>
         </div>
     </div>
