@@ -122,4 +122,14 @@ class AdminTaskJoin extends EActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function getUndoneTask($admin_user_id) {
+        // get hospitals by city.
+        $criteria = new CDbCriteria();
+        $criteria->addCondition("t.date_deleted is NULL");
+        $criteria->addCondition("t.date_done is NULL");
+        $criteria->compare("t.admin_user_id", $admin_user_id);
+
+        return $this->findAll($criteria);
+    }
 }
