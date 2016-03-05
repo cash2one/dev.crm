@@ -343,7 +343,9 @@ $this->renderPartial('addBdUserModal', array('model' => $model));
             if (arrTaskId.length == 0) {
                 alert('至少选择一个任务');
             } else {
-                deleteTask(arrTaskId);
+                if (confirm('确认删除?')){
+                    deleteTask(arrTaskId);
+                }
             }
         });
         //异步完成跟单任务
@@ -383,7 +385,7 @@ $this->renderPartial('addBdUserModal', array('model' => $model));
             url: deleteUrl,
             success: function (data) {
                 if (data.status == 'ok') {
-                    $('#task'+id).remove();
+                    $('#task' + id).remove();
                 } else {
                     alert('删除失败');
                 }
