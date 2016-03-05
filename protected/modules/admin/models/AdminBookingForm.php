@@ -2,6 +2,10 @@
 
 class AdminBookingForm extends EFormModel {
 
+    const admin_user_role_cs = '1';//客服
+    const admin_user_role_bd = '2';//地推/KA
+    const admin_user_role_accounting = '3';//财务
+
     public $id;
     public $booking_id;
     public $booking_type;
@@ -247,14 +251,14 @@ class AdminBookingForm extends EFormModel {
 
     public function loadOptionsAdminUser() {
         if (is_null($this->option_admin_user_id)) {
-            $this->option_admin_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => 1)), 'id', 'username');
+            $this->option_admin_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::admin_user_role_cs)), 'id', 'username');
         }
         return $this->option_admin_user_id;
     }
 
     public function loadOptionsBdUser() {
         if (is_null($this->option_bd_user_id)) {
-            $this->option_bd_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => 2)), 'id', 'username');
+            $this->option_bd_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::admin_user_role_bd)), 'id', 'username');
         }
         return $this->option_bd_user_id;
     }

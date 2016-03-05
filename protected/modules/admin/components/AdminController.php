@@ -99,4 +99,21 @@ class AdminController extends RController {
         }
     }
 
+    public function renderJsonOutput($data, $exit = true, $httpStatus = 200) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo CJSON::encode($data);
+        foreach (Yii::app()->log->routes as $route) {
+            if ($route instanceof CWebLogRoute || $route instanceof XWebDebugRouter) {
+                $route->enabled = false; // disable any weblogroutes
+            }
+        }
+        if ($exit) {
+            Yii::app()->end($httpStatus, true);
+        }
+    }
+
+    public function headerUTF8() {
+        header('Content-Type: text/html; charset=utf-8');
+    }
+
 }

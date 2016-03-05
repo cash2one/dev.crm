@@ -48,7 +48,6 @@ class TaskManager {
 //        print_r($model);
 //        print_r($values);
         $adminTask = new AdminTask();
-
         $adminTask->subject = '您有一条新的任务，预约编号：' . $model->ref_no;
         $adminTask->content = $values['content'];
         $adminTask->url = 'http://localhost/crm.myzd.com/index.php/admin/adminBooking/view/id/' . $model->getId();
@@ -100,6 +99,28 @@ class TaskManager {
      */
     public function createTaskDoctor($model) {
         
+    }
+
+    /*
+     * 获取adminbooking相关的追单任务
+     */
+
+    public function loadAdminTaskByAdminBookingId($adminBooingId, $isDone) {
+        $adminTaskBkJoin = AdminTaskBkJoin::model()->loadllAdminBkJoinByAdminBookingId($adminBooingId, $isDone);
+        $data = array();
+        foreach ($adminTaskBkJoin as $v) {
+            $adminTaskJoin = $v->getAdminTaskJoin();
+            $adminTask = AdminTask::model()->getById($adminTaskJoin->admin_task_id);
+            $taskPlan = new stdClass();
+            $taskPlan->id = $v->id;
+            $taskPlan->taskJoinId = $adminTaskJoin->id;
+            $taskPlan->date_plan = $adminTaskJoin->date_plan;
+            $taskPlan->admin_user = AdminUser::model()->getById($adminTaskJoin->admin_user_id)->username;
+            $taskPlan->content = $adminTask->content;
+            $taskPlan->date_done = $adminTaskJoin->date_done;
+            $data[] = $taskPlan;
+        }
+        return $data;
     }
 
 }

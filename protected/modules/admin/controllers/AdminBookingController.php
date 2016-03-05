@@ -52,9 +52,14 @@ class AdminBookingController extends AdminController {
         $form = new AdminBookingForm;
         $data = $this->loadModel($id);
         $form->initModel($data);
+        //跟单任务
+        $taskMr = new TaskManager;
+        $adminTasks['adminTasksNotDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '0');
+        $adminTasks['adminTasksDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '1');
         $this->render('view', array(
             'data' => $data,
-            'model' => $form
+            'model' => $form,
+            'adminTasks' => $adminTasks
         ));
     }
 
@@ -286,7 +291,7 @@ class AdminBookingController extends AdminController {
      */
     public function actionAdminBookingFile($id, $type = null) {
         $values = array('report_type' => $type);
-        $apisvc = new ApiViewAdminBookingFile($id,$values);
+        $apisvc = new ApiViewAdminBookingFile($id, $values);
         $output = $apisvc->loadApiViewData();
         $this->renderJsonOutput($output);
     }

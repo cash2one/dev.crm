@@ -1,5 +1,13 @@
 <?php
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/css/adminbooking.css");
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datetimepicker.css");
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.zh-CN.js', CClientScript::POS_END);
+
+Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.form.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/custom/task.js", CClientScript::POS_END);
+
 if ($data->booking_type == AdminBooking::bk_type_crm) {
     $urlLoadFiles = $this->createUrl('adminbooking/adminBookingFile', array('id' => $data->id));
     $urlLoadDCFiles = $this->createUrl('adminbooking/adminBookingFile', array('id' => $data->id, 'type' => 'dc'));
@@ -12,6 +20,7 @@ if ($data->booking_type == AdminBooking::bk_type_crm) {
 }
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
 $urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'bktype' => $data->booking_type));
+$deleteTaskUrl = $this->createUrl('adminTask/ajaxDeleteTask', array('id' => ''));
 $orderList = isset($orderList) ? $orderList : null;
 ?>
 <h1 class="">预约患者</h1>
@@ -144,25 +153,29 @@ $orderList = isset($orderList) ? $orderList : null;
                 <td>跟单任务</td>
                 <td>操作</td>
             </tr>
-            <tr class="odd">
-                <td><input type="checkbox"></td>
-                <td>2016-01-11   10:45</td>
-                <td>张三</td>
-                <td>确定其是否需要手术</td>
-                <td><a href="">完成任务</a></td>
-            </tr>
-            <tr class="odd">
-                <td><input type="checkbox"></td>
-                <td>2016-01-11   10:45</td>
-                <td>张三</td>
-                <td>确定其是否需要手术</td>
-                <td><a href="">完成任务</a></td>
-            </tr>
+            <?php
+            $adminTasksNotDone = $adminTasks['adminTasksNotDone'];
+            if (isset($adminTasksNotDone) && arrayNotEmpty($adminTasksNotDone)) {
+                foreach ($adminTasksNotDone as $bktask) {
+                    ?>
+                    <tr id="task<?php echo $bktask->id; ?>" class="odd">
+                        <td><input class="bkTaskId" type="checkbox" value="<?php echo $bktask->id; ?>"></td>
+                        <td><?php echo $bktask->date_plan; ?></td>
+                        <td><?php echo $bktask->admin_user; ?></td>
+                        <td><?php echo $bktask->content; ?></td>
+                        <td><a class="completedTask" href="<?php echo $this->createUrl('adminTask/ajaxCompletedTask', array('id' => $bktask->taskJoinId)) ?>">完成任务</a></td>
+                    </tr>
+                    <?php
+                }
+            } else {
+                echo '<tr><td colspan="5">无跟单记录</td></tr>';
+            }
+            ?>
         </tbody>
     </table>
 </div>
 <div class="mt30 task">
-    <h3>跟单历史&nbsp;&nbsp;&nbsp;<span class="btn btn-primary">删除</span></h3>
+    <h3>跟单历史&nbsp;&nbsp;&nbsp;<span class="btn btn-primary delete">删除</span></h3>
     <table class="table">
         <tbody>
             <tr class="odd">
@@ -170,22 +183,26 @@ $orderList = isset($orderList) ? $orderList : null;
                 <td>跟单时间</td>
                 <td>跟单人员</td>
                 <td>跟单方式</td>
-                <td>跟单任务</td>
+                <td>完成时间</td>
             </tr>
-            <tr class="odd">
-                <td><input type="checkbox"></td>
-                <td>2016-01-11</td>
-                <td>张三</td>
-                <td>电话</td>
-                <td>确定其是否需要手术</td>
-            </tr>
-            <tr class="odd">
-                <td><input type="checkbox"></td>
-                <td>2016-01-11</td>
-                <td>张三</td>
-                <td>电话</td>
-                <td>确定其是否需要手术</td>
-            </tr>
+            <?php
+            $adminTasksDone = $adminTasks['adminTasksDone'];
+            if (isset($adminTasksDone) && arrayNotEmpty($adminTasksDone)) {
+                foreach ($adminTasksDone as $bktask) {
+                    ?>
+                    <tr id="task<?php echo $bktask->id; ?>" class="odd">
+                        <td><input class="bkTaskId" type="checkbox" value="<?php echo $bktask->id; ?>"></td>
+                        <td><?php echo $bktask->date_plan; ?></td>
+                        <td><?php echo $bktask->admin_user; ?></td>
+                        <td><?php echo $bktask->content; ?></td>
+                        <td><?php echo $bktask->date_done; ?></td>
+                    </tr>
+                    <?php
+                }
+            } else {
+                echo '<tr><td colspan="5">无跟单历史</td></tr>';
+            }
+            ?>
         </tbody>
     </table>
 </div>
@@ -242,7 +259,9 @@ $orderList = isset($orderList) ? $orderList : null;
 $this->renderPartial('addAdminUserModal', array('model' => $model));
 $this->renderPartial('addBdUserModal', array('model' => $model));
 ?>
-
+<style>
+    .datetimepicker-dropdown{z-index: 9999!important;}
+</style>
 <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -251,53 +270,127 @@ $this->renderPartial('addBdUserModal', array('model' => $model));
                 <h4 class="modal-title text-center">跟单任务</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="inputDate" class="col-sm-2 control-label">计划跟单时间</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="inputDate" placeholder="计划跟单时间">
-                        </div>
-                        <label for="inputUser" class="col-sm-2 control-label">跟单人员</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="inputUser" placeholder="跟单人员">
-                        </div>
-                        <label for="inputType" class="col-sm-2 control-label">跟单方式</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="inputType" placeholder="跟单方式">
-                        </div>
+                <?php
+                $form = $this->beginWidget('CActiveForm', array(
+                    'id' => 'task-form',
+                    'htmlOptions' => array('class' => 'form-horizontal', 'data-action' => $this->createUrl('adminTask/ajaxCreate')),
+                    'enableAjaxValidation' => false,
+                ));
+                echo CHtml::hiddenField("task[booking_id]", $model->id);
+                ?>
+                <div class="form-group">
+                    <label for="inputDate" class="col-sm-2 control-label">计划跟单时间</label>
+                    <div class="col-sm-2">
+                        <input type="text" id='task_date_plan' name='task[date_plan]' class="form-control" placeholder="计划跟单时间">
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <label class="control-label">跟单内容</label>
-                            <textarea class="form-control" rows="3"></textarea>
-                        </div>
+                    <label for="inputUser" class="col-sm-2 control-label">跟单人员</label>
+                    <div class="col-sm-2">
+                        <?php
+                        echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
+                            'name' => 'task[admin_user_id]',
+                            'prompt' => '选择',
+                            'class' => 'form-control',
+                        ));
+                        ?>
                     </div>
-                    <div class="mt20 text-right clearfix">
-                        <button type="submit" class="btn btn-primary">保存任务</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <label for="inputType" class="col-sm-2 control-label">跟单方式</label>
+                    <div class="col-sm-2">
+                        <select name="task[work_type]" class="form-control" id="task_work_type">
+                            <option value="1">电话</option>
+                        </select>
                     </div>
-
-                </form>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="control-label">跟单内容</label>
+                        <textarea id='task_content' name='task[content]' class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="mt20 text-right clearfix">
+                    <button id='taskSubmit' type="button" class="btn btn-primary">保存任务</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+                <?php $this->endWidget(); ?>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script>
     $(document).ready(function () {
+        //日期选择
+        $("#task_date_plan").datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left",
+            language: "zh-CN"
+        });
+        //全选
         $('.checkAll').click(function () {
             var isChecked = $(this).is(':checked');
             $(this).parents('.table').find("input[type='checkbox']").prop('checked', isChecked);
         });
         $('.delete').click(function () {
-            $(this).parents('.task').find("input[type='checkbox']").each(function () {
+            var arrTaskId = new Array();
+            var i = 0;
+            $(this).parents('.task').find("input.bkTaskId").each(function () {
                 var isChecked = $(this).is(':checked');
+                if (isChecked) {
+                    arrTaskId[i] = $(this).val();
+                    i++;
+                }
             });
+            if (arrTaskId.length == 0) {
+                alert('至少选择一个任务');
+            } else {
+                deleteTask(arrTaskId);
+            }
+        });
+        //异步完成跟单任务
+        $('.completedTask').click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            if (confirm('确定完成跟单任务?')) {
+                $.ajax({
+                    url: url,
+                    success: function (data) {
+                        if (data.status == 'ok') {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+
         });
         var urlLoadFiles = '<?php echo $urlLoadFiles; ?>';
         var urlLoadDcFiles = '<?php echo $urlLoadDCFiles; ?>';
         ajaxLoadFiles(urlLoadFiles, $('.bookingImgList'));
         ajaxLoadFiles(urlLoadDcFiles, $('.bookingDcImgList'));
     });
+    //删除跟单任务
+    function deleteTask(arrTaskId) {
+        var count = 0;
+        for (var i = 0; i < arrTaskId.length; i++) {
+            var taskId = arrTaskId[i];
+            if (ajaxDeleteTask(taskId)) {
+                count++;
+            }
+        }
+    }
+    function ajaxDeleteTask(id) {
+        var deleteUrl = '<?php echo $deleteTaskUrl; ?>/' + id;
+        $.ajax({
+            url: deleteUrl,
+            success: function (data) {
+                if (data.status == 'ok') {
+                    $('#task'+id).remove();
+                } else {
+                    alert('删除失败');
+                }
+            }
+        });
+    }
+    //加载图片
     function ajaxLoadFiles(urlLoadFiles, fileDom) {
         $.ajax({
             url: urlLoadFiles,
