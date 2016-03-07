@@ -16,40 +16,22 @@ $this->menu = array(
 );
 ?>
 
-<h1>View SalesOrder #<?php echo $model->id; ?></h1>
+<h1>订单详情 #<?php echo $model->id; ?></h1>
+<table class="table table-info mt10" id="yw0">    
+    <tbody>
+        <tr><th>ID</th><td><?php echo $model->id; ?></td><th>订单号</th><td><?php echo $model->ref_no; ?></td></tr>
+        <tr><th>订单标题</th><td><?php echo $model->subject; ?></td><th>订单详情</th><td><?php echo $model->description; ?></a></td></tr>
+        <tr><th>支付情况</th><td><?php echo $model->is_paid; ?></td><th>订单创建时间</th><td><?php echo $model->date_open; ?></td></tr>
+        <tr><th>订单关闭时间</th><td><?php echo $model->date_closed == null ? '未设置' : $model->date_closed; ?></td><th>ping++付款ID</th><td><?php echo $model->ping_id == null ? '未设置' : $model->ping_id; ?></td></tr>
+        <tr><th>金额</th><td><?php echo $model->final_amount; ?></td><th>货币</th><td><?php echo $model->currency; ?></td></tr>
+        <tr><th>地推</th><td><?php echo $model->bd_code == null ? '未设置' : $model->bd_code; ?></td><th></th><td></td></tr>
+    </tbody>
+</table>
 
-<?php
-$this->widget('zii.widgets.CDetailView', array(
-    'data' => $model,
-    'attributes' => array(
-        'id',
-        'ref_no',
-//        'user_id',
-//        'bk_id',
-//        'bk_type',
-        'subject',
-        'description',
-        'is_paid',
-        'date_open',
-        'date_closed',
-        'ping_id',
-//        'created_by',
-//        'total_amount',
-//        'discount_percent',
-//        'discount_amount',
-        'final_amount',
-        'currency',
-        'bd_code',
-//        'date_created',
-//        'date_updated',
-//        'date_deleted',
-    ),
-));
-?>
 <br />
 <?php
 //$url = $this->createAbsoluteUrl('/order/view', array('refno' => $model->ref_no));
-$url = 'http://mingyizhudao.com/order/view?refno='.$model->ref_no;
+$url = 'http://mingyizhudao.com/order/view?refno=' . $model->ref_no;
 //var_dump($url);
 echo '<h5>支付链接: </h5> ' . '<a class="color-blue" href="' . $url . '" target="_blank">' . $url . '</a>';
 ?>
