@@ -306,6 +306,9 @@ class OrderController extends AdminController {
      */
     public function actionIndex() {
         $criteria = new CDbCriteria();
+        $criteria->join = 'left join sales_payment s on (t.`id`=s.`order_id`)';
+        $criteria->compare("s.payment_status", StatCode::PAY_SUCCESS);
+        $criteria->distinct = true;
         $criteria->addCondition("t.date_deleted is NULL");
         $criteria->order = "t.id DESC";
         $dataProvider = new CActiveDataProvider('SalesOrder', array(
