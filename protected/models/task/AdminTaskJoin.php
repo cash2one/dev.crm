@@ -159,20 +159,36 @@ class AdminTaskJoin extends EActiveRecord {
         return $this->findAll($criteria);
     }
 
+    public static function getOptionsWorkType() {
+        return array(
+            self::WORK_TYPE_TEL => '电话',
+        );
+    }
+
     public function getWorkType() {
-        if ($this->work_type == self::WORK_TYPE_TEL) {
-            return '电话';
+        $options = self::getOptionsWorkType();
+        if (isset($options[$this->work_type])) {
+            return $options[$this->work_type];
+        } else {
+            return null;
         }
     }
 
+    public static function getOptionsType() {
+        return array(
+            self::TASK_TYPE_BK => '预约',
+            self::TASK_TYPE_ORDER => '订单',
+            self::TASK_TYPE_USER_DR => '医生用户',
+        );
+    }
+
     public function getType() {
-        if ($this->type == self::TASK_TYPE_BK) {
-            return '预约';
-        }else if($this->type == self::TASK_TYPE_ORDER){
-            return '订单';
-        }else if($this->type == self::TASK_TYPE_USER_DR){
-            return '医生用户';
+        $options = self::getOptionsType();
+        if (isset($options[$this->type])) {
+            return $options[$this->type];
+        } else {
+            return null;
         }
     }
-    
+
 }
