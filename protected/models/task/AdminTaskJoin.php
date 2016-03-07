@@ -19,8 +19,10 @@
  */
 class AdminTaskJoin extends EActiveRecord {
 
-    const NOT_READ = 1;
+    const NOT_READ = 0;
     const IS_READ = 1;
+    const STATUS_NO = 0;
+    const STATUS_OK = 1;
     const WORK_TYPE_TEL = 1;
     const TASK_TYPE_BK = 1;
     const TASK_TYPE_USER_DR = 2;
@@ -56,6 +58,7 @@ class AdminTaskJoin extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'adminTask' => array(self::BELONGS_TO, 'AdminTask', 'admin_task_id'),
         );
     }
 
@@ -165,13 +168,16 @@ class AdminTaskJoin extends EActiveRecord {
         );
     }
 
-    public function getWorkType() {
-        $options = self::getOptionsWorkType();
-        if (isset($options[$this->work_type])) {
-            return $options[$this->work_type];
-        } else {
-            return null;
+    public function getWorkType($v = true) {
+        if ($v) {
+            $options = self::getOptionsWorkType();
+            if (isset($options[$this->work_type])) {
+                return $options[$this->work_type];
+            } else {
+                return null;
+            }
         }
+        return $this->work_type;
     }
 
     public static function getOptionsType() {
@@ -182,13 +188,62 @@ class AdminTaskJoin extends EActiveRecord {
         );
     }
 
-    public function getType() {
-        $options = self::getOptionsType();
-        if (isset($options[$this->type])) {
-            return $options[$this->type];
-        } else {
-            return null;
+    public static function getReadType() {
+        return array(
+            self::NOT_READ => '未阅读',
+            self::IS_READ => '已阅读',
+        );
+    }
+
+    public static function getStatusType() {
+        return array(
+            self::STATUS_OK => '已完成',
+            self::STATUS_NO => '未完成',
+        );
+    }
+
+    public function getType($v = true) {
+        if ($v) {
+            $options = self::getOptionsType();
+            if (isset($options[$this->type])) {
+                return $options[$this->type];
+            } else {
+                return null;
+            }
         }
+        return $this->type;
+    }
+
+    public function getStatus($v = true) {
+        if ($v) {
+            $options = self::getStatusType();
+            if (isset($options[$this->status])) {
+                return $options[$this->status];
+            } else {
+                return '';
+            }
+        }
+        return $this->status;
+    }
+
+    public function getRead($v = true) {
+        if ($v) {
+            $options = self::getReadType();
+            if (isset($options[$this->is_read])) {
+                return $options[$this->is_read];
+            } else {
+                return '';
+            }
+        }
+        return $this->is_read;
+    }
+
+    public function getDatePlan() {
+        return $this->date_plan;
+    }
+
+    public function getDateDone() {
+        return $this->date_done;
     }
 
 }

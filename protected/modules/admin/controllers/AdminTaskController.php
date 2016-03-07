@@ -35,13 +35,36 @@ class AdminTaskController extends AdminController {
 //				'users'=>array('@'),
 //			),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask'),
+                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask'),
 //				'users'=>array('admin'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
+    }
+
+    public function actionAdmin() {
+        $this->render('admin');
+    }
+
+    public function actionSearch() {
+        $this->render('search');
+    }
+
+    public function actionSearchResult() {
+        $searcgInputs = $_GET;
+        $search = new AdminTaskSearch($searcgInputs,array('adminTask'));
+        $criteria = $search->criteria;
+        $dataProvider = new CActiveDataProvider('AdminTaskJoin', array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+        ));
+        $this->renderPartial('searchResult', array(
+            'dataProvider' => $dataProvider,
+        ));
     }
 
     /**
@@ -163,15 +186,15 @@ class AdminTaskController extends AdminController {
     /**
      * Manages all models.
      */
-    public function actionAdmin() {
-        $model = new AdminTask('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['AdminTask']))
-            $model->attributes = $_GET['AdminTask'];
-        $this->render('admin', array(
-            'model' => $model,
-        ));
-    }
+//    public function actionAdmin() {
+//        $model = new AdminTask('search');
+//        $model->unsetAttributes();  // clear any default values
+//        if (isset($_GET['AdminTask']))
+//            $model->attributes = $_GET['AdminTask'];
+//        $this->render('admin', array(
+//            'model' => $model,
+//        ));
+//    }
 
     /**
      * Returns the data model based on the primary key given in the GET variable.
@@ -263,7 +286,7 @@ class AdminTaskController extends AdminController {
         $taskJoinModel = AdminTaskJoin::model()->getByAttributes(array('id' => $bkJoinModel->admin_task_join_id));
         $taskModel = $this->loadModel($taskJoinModel->admin_task_id);
         if ($bkJoinModel->delete(true) & $taskJoinModel->delete(true) & $taskModel->delete(true)) {
-            
+
             $output['status'] = 'ok';
             $output['taskJoin']['id'] = $bkJoinModel->id;
         }
