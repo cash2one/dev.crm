@@ -2,6 +2,8 @@
 
 class AdminBookingController extends AdminController {
 
+    public $bid;
+
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -31,7 +33,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -52,6 +54,9 @@ class AdminBookingController extends AdminController {
         $form = new AdminBookingForm;
         $data = $this->loadModel($id);
         $form->initModel($data);
+
+        //salesorder for adminBooking
+        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_id' => $id, 'bk_type' => StatCode::TRANS_TYPE_AB));
         //跟单任务
         $taskMr = new TaskManager;
         $adminTasks['adminTasksNotDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '0');
@@ -59,6 +64,7 @@ class AdminBookingController extends AdminController {
         $this->render('view', array(
             'data' => $data,
             'model' => $form,
+            'orderList' => $orderList,
             'adminTasks' => $adminTasks
         ));
     }
@@ -182,8 +188,11 @@ class AdminBookingController extends AdminController {
                 $form->final_doctor_name = $userDoctorProfile->getName();
             }
             //业务员信息
-            $adminUser = AdminUser::model()->getById($form->admin_user_id);
-            $form->admin_user_name = $adminUser->username;
+            if (!strIsEmpty($form->admin_user_id)) {
+                $adminUser = AdminUser::model()->getById($form->admin_user_id);
+                $form->admin_user_name = $adminUser->username;
+            }
+
             //最终手术时间如无则设为NULL
             if (strIsEmpty($form->final_time)) {
                 $form->final_time = NULL;
@@ -394,6 +403,43 @@ class AdminBookingController extends AdminController {
             }
         }
         //$this->renderJsonOutput($output);
+    }
+
+    /*
+     * 预约关联医生doctorProfile.user_id
+     */
+
+    public function actionRelateDoctor($bid) {
+//        $model = $this->loadModel($bid);
+        $this->bid = $bid;
+        $model = new UserDoctorProfile('search');
+        $model->unsetAttributes();
+        if (isset($_GET['UserDoctorProfile']))
+            $model->attributes = $_GET['UserDoctorProfile'];
+
+        $this->render('relateDoctor', array(
+            'model' => $model,
+            'bid' => $bid,
+        ));
+    }
+
+    public function actionRelate($bid, $userid, $name) {
+        $this->headerUTF8();
+        if (isset($bid) && isset($userid) && isset($name)) {
+            $model = $this->loadModel($bid);
+            $model->setFinalDoctorId($userid);
+            $model->setFinalDoctorName($name);
+            if ($model->save()) {
+                $user = User::model()->getById($userid);
+                $sendMgs = new SmsManager();
+                $data = new stdClass();
+                $data->refno = $model->ref_no;
+                $data->id = $model->getId();
+                $sendMgs->sendSmsBookingAssignDoctor($user->username, $data);
+                $this->redirect(array('view', 'id' => $model->id));
+            }
+        }
+        throw new CHttpException(404, 'The requested page does not exist.');
     }
 
     /**

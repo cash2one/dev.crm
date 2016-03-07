@@ -84,6 +84,10 @@ class AdminBooking extends EActiveRecord {
     const cus_agent_doctor = 'doctor';
     const cus_agent_bjoffice = 'bj_office';
     const cus_agent_tuoshi = 'tuoshi';
+    const disease_confirm_no = 0;
+    const disease_confirm_yes = 1;
+    const order_status_no = 0;
+    const order_status_yes = 1;
 
     /**
      * @return string the associated database table name
@@ -383,20 +387,60 @@ class AdminBooking extends EActiveRecord {
         }
     }
 
-    public function getDiseaseConfirm() {
-        if (!strIsEmpty($this->disease_confirm)) {
-            return $this->disease_confirm == 1 ? '是' : '否';
+    public function getTravelType($text = true) {
+        if ($text) {
+            return StatCode::getBookingTravelType($this->travel_type);
         } else {
-            return '未填写';
+            return $this->travel_type;
         }
     }
 
-    public function getOrderStatus() {
-        if (!strIsEmpty($this->order_status)) {
-            return $this->order_status == 1 ? '已付费' : '未付费';
+    public static function getOptionsDiseaseConfirm() {
+        return array(
+            self::disease_confirm_no => '否',
+            self::disease_confirm_yes => '是',
+        );
+    }
+
+    public function getDiseaseConfirm($v = true) {
+        if ($v) {
+            $options = self::getOptionsDiseaseConfirm();
+            if (isset($options[$this->disease_confirm])) {
+                return $options[$this->disease_confirm];
+            } else {
+                return '未填写';
+            }
         } else {
-            return '未填写';
+            $this->disease_confirm;
         }
+    }
+
+    public static function getOptionsOrderStatus() {
+        return array(
+            self::order_status_no => '未付费',
+            self::order_status_yes => '已付费',
+        );
+    }
+
+    public function getOrderStatus($v = true) {
+        if ($v) {
+            $options = self::getOptionsOrderStatus();
+            if (isset($options[$this->order_status])) {
+                return $options[$this->order_status];
+            } else {
+                return '未填写';
+            }
+        } else {
+            $this->order_status;
+        }
+    }
+
+    public function setFinalDoctorId($id) {
+        $this->final_doctor_id = $id;
+    }
+
+    public function setFinalDoctorName($id) {
+        $this->final_doctor_name = $id;
     }
 
 }

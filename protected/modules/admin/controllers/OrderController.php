@@ -33,6 +33,19 @@ class OrderController extends AdminController {
         $filterChain->run();
     }
 
+    public function filterAdminBkContext($filterChain) {
+        $bookingId = null;
+        if (isset($_GET['bid'])) {
+            $bookingId = $_GET['bid'];
+        } else if (isset($_POST['order']['bk_id'])) {
+            $bookingId = $_POST['order']['bk_id'];
+        }
+        $this->loadAdminBookingById($bookingId);
+
+        //complete the running of other filters and execute the requested action.
+        $filterChain->run();
+    }
+
     public function filterPbContext($filterChain) {
         $bookingId = null;
         if (isset($_GET['bid'])) {
@@ -56,6 +69,7 @@ class OrderController extends AdminController {
             'salesOrderContext + view',
             'bkContext + createBKOrder',
             'pbContext + createPBOrder',
+            'adminBKContext + createAdminBKOrder',
             'rights',
         );
     }
@@ -78,7 +92,7 @@ class OrderController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'admin', 'searchResult'),
+                'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'admin', 'searchResult', 'createAdminBKOrder'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -158,6 +172,46 @@ class OrderController extends AdminController {
         ));
     }
 
+    public function actionCreateAdminBKOrder($bid) {
+        //  $booking = Booking::model()->getById($bid);
+        $booking = $this->booking;
+
+        $order = new SalesOrder();
+        $order->bk_id = $booking->id;
+        $order->bk_type = $booking->booking_type;
+        $order->bk_ref_no = $booking->ref_no;
+        $order->user_id = $booking->patient_id;
+        if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_PATIENT_GO) {
+            $order->order_type = SalesOrder::ORDER_TYPE_SERVICE;
+            $order->setAmount(1000.00);
+        } else if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_DOCTOR_COME) {
+            $order->order_type = SalesOrder::ORDER_TYPE_DEPOSIT;
+            $order->setAmount(500.00);
+        } else {
+            $order->order_type = SalesOrder::ORDER_TYPE_SERVICE;
+        }
+        //$this->performAjaxValidation($order);
+
+        if (isset($_POST['order'])) {
+            $values = $_POST['order'];
+
+            $order->setAmount($values['final_amount']);
+            $order->setSubject($values['subject']);
+            $order->setDescription($values['description']);
+            $order->setIsPaid(0);
+            $order->setDateOpen(new CDbExpression('NOW()'));
+
+            $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_AB);
+            //$order->validate();
+            if ($order->save()) {
+                $this->redirect(array('view', 'id' => $order->id));
+            }
+        }
+        $this->render('createAdminBKOrder', array(
+            'model' => $order
+        ));
+    }
+
     public function loadModelById($id, $with = null) {
         if (is_null($this->model)) {
             $this->model = SalesOrder::model()->getById($id, $with);
@@ -180,6 +234,15 @@ class OrderController extends AdminController {
         if (is_null($this->patientBooking)) {
             $this->patientBooking = PatientBooking::model()->getById($id, $with);
             if (is_null($this->patientBooking)) {
+                throw new CHttpException(404, 'The requested page does not exists.');
+            }
+        }
+    }
+
+    public function loadAdminBookingById($id, $with = null) {
+        if (is_null($this->booking)) {
+            $this->booking = AdminBooking::model()->getById($id, $with);
+            if (is_null($this->booking)) {
                 throw new CHttpException(404, 'The requested page does not exists.');
             }
         }

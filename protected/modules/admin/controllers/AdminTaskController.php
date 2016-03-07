@@ -35,7 +35,7 @@ class AdminTaskController extends AdminController {
 //				'users'=>array('@'),
 //			),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask'),
+                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask', 'ajaxReadTask'),
 //				'users'=>array('admin'),
             ),
             array('deny', // deny all users
@@ -44,36 +44,16 @@ class AdminTaskController extends AdminController {
         );
     }
 
-    public function actionAdmin() {
-        $this->render('admin');
-    }
-
-    public function actionSearch() {
-        $this->render('search');
-    }
-
-    public function actionSearchResult() {
-        $searcgInputs = $_GET;
-        $search = new AdminTaskSearch($searcgInputs,array('adminTask'));
-        $criteria = $search->criteria;
-        $dataProvider = new CActiveDataProvider('AdminTaskJoin', array(
-            'criteria' => $criteria,
-            'pagination' => array(
-                'pageSize' => 20,
-            ),
-        ));
-        $this->renderPartial('searchResult', array(
-            'dataProvider' => $dataProvider,
-        ));
-    }
-
     /**
      * Displays a particular model.
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = AdminTask::model()->getById($id, array('adminTaskJoins'));
+        $adminUser = AdminUser::model()->getById($model->adminTaskJoins[0]->admin_user_id);
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
+            'adminUser' => $adminUser
         ));
     }
 
@@ -196,6 +176,29 @@ class AdminTaskController extends AdminController {
 //        ));
 //    }
 
+    public function actionAdmin() {
+        $this->render('admin');
+    }
+
+    public function actionSearch() {
+        $this->render('search');
+    }
+
+    public function actionSearchResult() {
+        $searcgInputs = $_GET;
+        $search = new AdminTaskSearch($searcgInputs, array('adminTask'));
+        $criteria = $search->criteria;
+        $dataProvider = new CActiveDataProvider('AdminTaskJoin', array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+        ));
+        $this->renderPartial('searchResult', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
@@ -289,6 +292,18 @@ class AdminTaskController extends AdminController {
 
             $output['status'] = 'ok';
             $output['taskJoin']['id'] = $bkJoinModel->id;
+        }
+        $this->renderJsonOutput($output);
+    }
+
+    //将信息标志为已读
+    public function actionAjaxReadTask($id) {
+        $output = array('status' => 'no');
+        $model = AdminTaskJoin::model()->getById($id);
+        $model->is_read = AdminTaskJoin::IS_READ;
+        if ($model->save()) {
+            $output['status'] = 'ok';
+            $output['taskJoin']['id'] = $model->id;
         }
         $this->renderJsonOutput($output);
     }

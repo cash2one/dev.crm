@@ -66,7 +66,7 @@ class SalesOrder extends EActiveRecord {
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, ref_no, user_id, bk_id, bk_type, subject, description, is_paid, date_open, date_closed, created_by, total_amount, discount_percent, discount_amount, final_amount, currency, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
-            array('bk_ref_no', 'checkBookingExists'),
+            array('bk_ref_no', 'checkBookingExistsNew'),
         );
     }
 
@@ -93,6 +93,23 @@ class SalesOrder extends EActiveRecord {
         }
     }
 
+    public function checkBookingExistsNew() {
+        $bkRefNo = trim($this->bk_ref_no);
+        if (strIsEmpty($bkRefNo) === false) {
+            $booking = AdminBooking::model()->getByAttributes(array('ref_no' => $bkRefNo));
+            if (isset($booking)) {
+                $this->setBkType(StatCode::TRANS_TYPE_AB);
+                $this->setBkId($booking->id);
+            } else {
+                $this->addError('bk_ref_no', '预约号不存在');
+            }
+            $this->setBkRefNo($bkRefNo);
+            $this->createRefNo2($bkRefNo);
+        } else {
+            $this->createRandomRefno();
+        }
+    }
+
     public function createRandomRefno() {
         $flag = true;
         while ($flag) {
@@ -111,6 +128,7 @@ class SalesOrder extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'salesPayment' => array(self::HAS_MANY, 'SalesPayment', 'id'),
         );
     }
 
@@ -326,7 +344,7 @@ class SalesOrder extends EActiveRecord {
     public function getFinalAmount() {
         return $this->final_amount;
     }
-    
+
     public function getDateClosed() {
         return $this->date_closed;
     }

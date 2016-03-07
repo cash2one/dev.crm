@@ -376,7 +376,7 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id
             var files = results.files;
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absThumbnailUrl + '"/></div>';
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absThumbnailUrl + '"/><div class="mt5">'+file.dateCreated+'</div></div>';
             }
         } else {
             var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';

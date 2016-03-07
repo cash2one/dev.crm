@@ -52,8 +52,8 @@
                                             <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Index')): ?>
                                                 <li><a href="<?php echo $this->createUrl('adminTask/index') ?>">列表</a></li>
                                             <?php endif; ?>
-                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Admin')): ?>
-                                                <li><a href="<?php echo $this->createUrl('adminTask/admin') ?>">搜索</a></li>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Search')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminTask/search') ?>">搜索</a></li>
                                             <?php endif; ?>
                                         </ul>
                                     </div>

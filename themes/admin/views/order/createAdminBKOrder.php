@@ -15,4 +15,4 @@ $this->breadcrumbs=array(
 
 <h1>创建订单</h1>
 
-<?php $this->renderPartial('_formOrder', array('model'=>$model)); ?>
+<?php $this->renderPartial('_formAdminOrder', array('model'=>$model)); ?>

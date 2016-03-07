@@ -12,7 +12,7 @@ class TaskManager {
 
         $adminTask->subject = '您有一条新的任务，预约编号：' . $model->ref_no;
         $adminTask->content = $model->disease_detail;
-        $adminTask->url = 'http://localhost/crm.myzd.com/index.php/admin/adminBooking/view/id/' . $model->getId();
+        $adminTask->url = Yii::app()->params['baseUrlCrm'].'/admin/adminBooking/view/id/' . $model->getId();
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {
@@ -50,7 +50,7 @@ class TaskManager {
         $adminTask = new AdminTask();
         $adminTask->subject = '您有一条新的任务，预约编号：' . $model->ref_no;
         $adminTask->content = $values['content'];
-        $adminTask->url = 'http://localhost/crm.myzd.com/index.php/admin/adminBooking/view/id/' . $model->getId();
+        $adminTask->url = Yii::app()->params['baseUrlCrm'].'/admin/adminBooking/view/id/' . $model->getId();
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {

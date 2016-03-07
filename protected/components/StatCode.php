@@ -33,6 +33,7 @@ class StatCode {
     const DR_A_TITLE_NONE = 9;          // 无    
     const TRAN_STATUS_UNPAID = 0;
     const TRAN_STATUS_PAID = 1;
+    const TRANS_TYPE_AB = 0;          // booking.
     const TRANS_TYPE_BK = 1;          // booking.
     const TRANS_TYPE_PB = 2;          // patient_booking.
     const PAY_UNPAID = 0;           //未支付

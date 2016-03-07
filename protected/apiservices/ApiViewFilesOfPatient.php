@@ -65,6 +65,7 @@ class ApiViewFilesOfPatient extends EApiViewService {
             $data->id = $model->getId();
             $data->absFileUrl = $model->getAbsFileUrl();
             $data->absThumbnailUrl = $model->getAbsThumbnailUrl();
+            $data->dateCreated = $model->date_created;
             $this->files[] = $data;
         }
     }

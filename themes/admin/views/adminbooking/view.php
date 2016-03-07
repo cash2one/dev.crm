@@ -21,13 +21,14 @@ if ($data->booking_type == AdminBooking::bk_type_crm) {
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
 $urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'bktype' => $data->booking_type));
 $deleteTaskUrl = $this->createUrl('adminTask/ajaxDeleteTask', array('id' => ''));
+$urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
 $orderList = isset($orderList) ? $orderList : null;
 ?>
 <h1 class="">预约患者</h1>
 <div class="mt30">
     <a href="<?php echo $urlUpdateAdminBooking; ?>" class="btn btn-primary">修改订单</a>
-    <a href="" class="btn btn-primary">生成订单</a>
-    <a href="" class="btn btn-primary">关联医生</a>
+    <a href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary">生成订单</a>
+    <a href="<?php echo $this->createUrl('adminBooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary">关联医生</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal">授权KA/地推</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal">分配业务员</a>
     <a href="<?php echo $urlUploadSummary; ?>" class="btn btn-primary">上传出院小结</a>
@@ -343,7 +344,7 @@ $this->renderPartial('addBdUserModal', array('model' => $model));
             if (arrTaskId.length == 0) {
                 alert('至少选择一个任务');
             } else {
-                if (confirm('确认删除?')){
+                if (confirm('确认删除?')) {
                     deleteTask(arrTaskId);
                 }
             }
@@ -362,12 +363,18 @@ $this->renderPartial('addBdUserModal', array('model' => $model));
                     }
                 });
             }
-
         });
         var urlLoadFiles = '<?php echo $urlLoadFiles; ?>';
         var urlLoadDcFiles = '<?php echo $urlLoadDCFiles; ?>';
         ajaxLoadFiles(urlLoadFiles, $('.bookingImgList'));
         ajaxLoadFiles(urlLoadDcFiles, $('.bookingDcImgList'));
+<?php
+if (isset($adminTasksNotDone) && arrayNotEmpty($adminTasksNotDone)) {
+    foreach ($adminTasksNotDone as $bktask) {
+        echo 'ajaxReadTaks(' . $bktask->taskJoinId . ');';
+    }
+}
+?>
     });
     //删除跟单任务
     function deleteTask(arrTaskId) {
@@ -392,6 +399,12 @@ $this->renderPartial('addBdUserModal', array('model' => $model));
             }
         });
     }
+    //页面的跟单任务标记为已读
+    function ajaxReadTaks(id) {
+        $.ajax({
+            url: '<?php echo $this->createUrl('adminTask/ajaxReadTask', array('id' => '')); ?>/' + id
+        });
+    }
     //加载图片
     function ajaxLoadFiles(urlLoadFiles, fileDom) {
         $.ajax({
@@ -408,7 +421,7 @@ $this->renderPartial('addBdUserModal', array('model' => $model));
             var innerHtml = '';
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absThumbnailUrl + '"/></div>';
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absThumbnailUrl + '"/><div class="mt5">' + file.dateCreated + '</div></div>';
             }
         } else {
             var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';
