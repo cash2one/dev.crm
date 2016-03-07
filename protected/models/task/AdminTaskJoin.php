@@ -19,6 +19,13 @@
  */
 class AdminTaskJoin extends EActiveRecord {
 
+    const NOT_READ = 1;
+    const IS_READ = 1;
+    const WORK_TYPE_TEL = 1;
+    const TASK_TYPE_BK = 1;
+    const TASK_TYPE_USER_DR = 2;
+    const TASK_TYPE_ORDER = 3;
+
     /**
      * @return string the associated database table name
      */
@@ -146,10 +153,26 @@ class AdminTaskJoin extends EActiveRecord {
         $criteria->addCondition("t.date_deleted is NULL");
         $criteria->addCondition("t.admin_user_id=:adminUserId");
         $criteria->params[":adminUserId"] = $adminUserId;
-        $criteria->addCondition("UNIX_TIMESTAMP(now())- UNIX_TIMESTAMP(date_plan) < 6000");
-        $criteria->join .= 'left join admin_task a on (t.`admin_task_id`=a.`id`)';
+        $criteria->addCondition("abs(UNIX_TIMESTAMP(now())- UNIX_TIMESTAMP(date_plan)) < 30");
+//        $criteria->join .= 'left join admin_task a on (t.`admin_task_id`=a.`id`)';
 
         return $this->findAll($criteria);
     }
 
+    public function getWorkType() {
+        if ($this->work_type == self::WORK_TYPE_TEL) {
+            return '电话';
+        }
+    }
+
+    public function getType() {
+        if ($this->type == self::TASK_TYPE_BK) {
+            return '预约';
+        }else if($this->type == self::TASK_TYPE_ORDER){
+            return '订单';
+        }else if($this->type == self::TASK_TYPE_USER_DR){
+            return '医生用户';
+        }
+    }
+    
 }
