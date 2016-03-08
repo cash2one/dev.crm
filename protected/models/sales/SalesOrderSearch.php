@@ -16,6 +16,8 @@ class SalesOrderSearch extends ESearchModel {
     }
 
     public function addQueryConditions() {
+        $this->criteria->join = 'left join sales_payment s on (t.`id`=s.`order_id` and s.payment_status = ' . StatCode::PAY_SUCCESS . ')';
+        //外键关联 不是支付成功的不
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['refNo'])) {
                 $refNo = $this->queryParams['refNo'];
@@ -62,6 +64,7 @@ class SalesOrderSearch extends ESearchModel {
                 $this->criteria->compare("t.bd_code", $bdCode, true);
             }
         }
+
         //去掉测试的支付
         $this->criteria->addCondition("t.final_amount > 1");
     }

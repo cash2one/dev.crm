@@ -124,7 +124,7 @@ class AdminUserRegionJoin extends EActiveRecord {
     }
 
     public function getDefaultUser($bookingType, $role) {
-        return $this->getByAttributes(array('city_id' => $cityId, 'booking_type' => $bookingType, 'admin_user_role' => $role));
+        return $this->getByAttributes(array('booking_type' => $bookingType, 'admin_user_role' => $role));
     }
 
 }

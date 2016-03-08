@@ -144,8 +144,8 @@
                                             <?php if (Yii::app()->user->checkAccess('Admin.Order.Index')): ?>
                                                 <li><a href="<?php echo $this->createUrl('order/index') ?>">列表</a></li>  
                                             <?php endif; ?>
-                                            <?php if (Yii::app()->user->checkAccess('Admin.Order.Admin')): ?>
-                                                <li><a href="<?php echo $this->createUrl('order/admin') ?>">搜索</a></li>  
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Order.Search')): ?>
+                                                <li><a href="<?php echo $this->createUrl('order/search') ?>">搜索</a></li>  
                                             <?php endif; ?>
                                             <?php if (Yii::app()->user->checkAccess('Admin.Order.Create')): ?>
                                                 <li><a href="<?php echo $this->createUrl('order/create') ?>">创建</a></li> 
@@ -256,8 +256,8 @@
                         for (var i = 0; i < results.length; i++) {
                             var taskPlan = results[i];
                             innerHtml += '<div class="taskplan"><div class="taskplan-title"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="text-center">跟单任务提醒</h4></div>' +
-                                    '<div class="taskplan-content"><div>'+taskPlan.subject+'</div><div>'+taskPlan.content+'</div></div>' +
-                                    '<div class="taskplan-footer"><div class="text-right"><a href="'+taskPlan.url+'" target="_blank">详情>></a></div><div class="mt5 text-right">创建时间: '+taskPlan.date_created+'</div></div></div>';
+                                    '<div class="taskplan-content"><div>' + taskPlan.subject + '</div><div>' + taskPlan.content + '</div></div>' +
+                                    '<div class="taskplan-footer"><div class="text-right"><a href="' + taskPlan.url + '" target="_blank">详情>></a></div><div class="mt5 text-right">创建时间: ' + taskPlan.date_created + '</div></div></div>';
                         }
                     }
                     $('#task-area').append(innerHtml);

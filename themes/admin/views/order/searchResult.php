@@ -3,7 +3,10 @@
         <tr>
             <th>ID</th>
             <th>订单号</th>
+            <th>名医交易号</th>
             <th>Ping++ ID</th>
+            <th>第三方交易号</th>
+            <th>支付来源</th>
             <th>支付时间</th>
             <th>订单标题</th>
             <th>地推</th>
@@ -12,6 +15,7 @@
             <th>预约类型</th>
             <th>预约信息</th>
             <th></th>
+
         </tr>
     </thead>
 
