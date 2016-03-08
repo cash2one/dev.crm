@@ -534,18 +534,10 @@ $(function () {
                 required: true,
                 max: 150
             },
-            'AdminBookingForm[patient_identity]': {
-                required: true,
-                maxlength: 18,
-                minlength: 16
-            },
-            'AdminBookingForm[patient_state]': {
+            'AdminBookingForm[state_id]': {
                 required: true
             },
-            'AdminBookingForm[patient_city]': {
-                required: true
-            },
-            'AdminBookingForm[patient_address]': {
+            'AdminBookingForm[city_id]': {
                 required: true
             },
             'AdminBookingForm[disease_name]': {
@@ -574,6 +566,15 @@ $(function () {
             'AdminBookingForm[disease_confirm]': {
                 required: true
             },
+            'AdminBookingForm[customer_request]': {
+                required: true
+            },
+            'AdminBookingForm[customer_diversion]': {
+                required: true
+            },
+            'AdminBookingForm[customer_agent]': {
+                required: true
+            },
             'AdminBookingForm[admin_user_id]': {
                 required: true
             },
@@ -592,19 +593,11 @@ $(function () {
                 required: '请填写患者年龄',
                 max: '患者最大年龄为150岁'
             },
-            'AdminBookingForm[patient_identity]': {
-                required: '请填写患者身份证',
-                maxlength: '请填写正确的患者身份证',
-                minlength: '请填写正确的患者身份证'
-            },
-            'AdminBookingForm[patient_state]': {
+            'AdminBookingForm[state_id]': {
                 required: '请选择患者所在省'
             },
-            'AdminBookingForm[patient_city]': {
+            'AdminBookingForm[city_id]': {
                 required: '请选择患者所在市'
-            },
-            'AdminBookingForm[patient_address]': {
-                required: '请填写患者地址'
             },
             'AdminBookingForm[disease_name]': {
                 required: '请填写病情诊断',
@@ -631,6 +624,15 @@ $(function () {
 //            },
             'AdminBookingForm[disease_confirm]': {
                 required: '请选择是否确诊'
+            },
+            'AdminBookingForm[customer_request]': {
+                required: '请选择患者目的'
+            },
+            'AdminBookingForm[customer_diversion]': {
+                required: '请选择导流来源'
+            },
+            'AdminBookingForm[customer_agent]': {
+                required: '请选择客户来源'
             },
             'AdminBookingForm[admin_user_id]': {
                 required: '请选择业务员'

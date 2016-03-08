@@ -11,7 +11,9 @@ $this->menu = array(
     array('label' => '订单管理', 'url' => array('admin')),
 );
 ?>
-
+<style>
+    td{word-break: break-all; word-wrap:break-word;min-width: 5em;max-width: 50em;vertical-align: middle;}
+</style>
 <h1>Sales Orders</h1>
 <div class="data-list mt10">
     <table class="table">

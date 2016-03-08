@@ -13,10 +13,10 @@ $urlAjaxLoadloadHospitalDept = $this->createUrl('doctor/ajaxLoadloadHospitalDept
 $urlReturn = $this->createUrl('adminbooking/view', array('id' => ''));
 $urlSubmit = $this->createUrl('adminbooking/ajaxUpdate');
 $urlLoadCity = $this->createUrl('region/loadCities');
-if ($model->booking_type == AdminBooking::bk_type_crm) {
+if ($model->booking_type == AdminBooking::BK_TYPE_CRM) {
     $urlUploadFile = $this->createUrl("adminbooking/ajaxUploadFile");
     $urlLoadFiles = $this->createUrl('adminbooking/adminBookingFile', array('id' => $model->id));
-} else if ($model->booking_type == AdminBooking::bk_type_pb) {
+} else if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
     $urlUploadFile = $this->createUrl("patientbooking/ajaxUploadMRFile");
     $urlLoadFiles = $this->createUrl('patientbooking/patientMRFiles', array('id' => $model->patient_id));
 } else {
@@ -37,14 +37,16 @@ if ($model->booking_type == AdminBooking::bk_type_crm) {
 <?php
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'booking-form',
-    'htmlOptions' => array('class' => 'form-horizontal','data-bkType'=>$model->booking_type, 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
+    'htmlOptions' => array('class' => 'form-horizontal', 'data-bkType' => $model->booking_type, 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
     'enableAjaxValidation' => false,
         ));
 echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
 echo CHtml::hiddenField("AdminBookingForm[booking_id]", $model->booking_id);
 echo CHtml::hiddenField("AdminBookingForm[booking_type]", $model->booking_type);
+echo CHtml::hiddenField("AdminBookingForm[booking_status]", $model->booking_status);
 echo CHtml::hiddenField("AdminBookingForm[patient_id]", $model->patient_id);
 echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id);
+echo CHtml::hiddenField("AdminBookingForm[travel_type]", $model->travel_type);
 ?>
 <div class="mt30">
     <div class="form-group">
@@ -190,85 +192,32 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id
 </div>
 <div class="mt30">
     <div class="form-group">
-        <div class="col-sm-12">
-            <div class="with20">
-                <span>是否确诊：</span><select class="form-control" name="AdminBookingForm[disease_confirm]" id="AdminBookingForm_disease_confirm">
-                    <option>--选择--</option>
-                    <option value="1">是</option>
-                    <option value="0">否</option>
-                </select>
-            </div>
-            <div class="with20">
-                <span>患者目的：</span><?php
-                echo $form->dropDownList($model, 'customer_request', $model->loadOptionsCustomerRequest(), array(
-                    'name' => 'AdminBookingForm[customer_request]',
-                    'prompt' => '选择',
-                    'class' => 'form-control',
-                ));
-                ?>
-            </div>
-            <div class="with20">
-                <span>客户意向：</span><?php
-                echo $form->dropDownList($model, 'customer_intention', $model->loadOptionsCustomerIntention(), array(
-                    'name' => 'AdminBookingForm[customer_intention]',
-                    'prompt' => '选择',
-                    'class' => 'form-control',
-                ));
-                ?>
-            </div>
-            <div class="with20">
-                <span>客户类型：</span><?php
-                echo $form->dropDownList($model, 'customer_type', $model->loadOptionsCustomerType(), array(
-                    'name' => 'AdminBookingForm[customer_type]',
-                    'prompt' => '选择',
-                    'class' => 'form-control',
-                ));
-                ?>
-            </div>
-            <div class="with20">
-                <span>导流来源：</span><?php
-                echo $form->dropDownList($model, 'customer_diversion', $model->loadOptionsCustomerDiversion(), array(
-                    'name' => 'AdminBookingForm[customer_diversion]',
-                    'prompt' => '选择',
-                    'class' => 'form-control',
-                ));
-                ?>
-            </div>
+        <div class="col-sm-2">
+            <span>是否确诊：</span><select class="form-control" name="AdminBookingForm[disease_confirm]" id="AdminBookingForm_disease_confirm">
+                <option value="">--选择--</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-4">
-            <span>跟进状态：</span><?php
-            echo $form->dropDownList($model, 'booking_status', $model->loadOptionsBookingStatus(), array(
-                'name' => 'AdminBookingForm[booking_status]',
+        <div class="col-sm-2">
+            <span>患者目的：</span><?php
+            echo $form->dropDownList($model, 'customer_request', $model->loadOptionsCustomerRequest(), array(
+                'name' => 'AdminBookingForm[customer_request]',
                 'prompt' => '选择',
                 'class' => 'form-control',
             ));
             ?>
         </div>
-        <div class="col-sm-4">
-            <span>付费状态：</span><select class="form-control" name="AdminBookingForm[order_status]" id="AdminBookingForm_order_status">
-                <option value="">--选择--</option>
-                <option value="1">已付费</option>
-                <option value="0">未付费</option>
-            </select>
-        </div>
-        <div class="col-sm-4">
-            <span>付费金额：</span><?php echo $form->textField($model, 'order_amount', array('class' => 'form-control')); ?>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-4">
-            <span>业务员：&nbsp;&nbsp;&nbsp;</span><input class="form-control" type="text" value="<?php echo $model->admin_user_name; ?>" readonly/>
-                <?php
-//            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
-//                'name' => 'AdminBookingForm[admin_user_id]',
-//                'prompt' => '选择',
-//                'class' => 'form-control',
-//            ));
+        <div class="col-sm-2">
+            <span>导流来源：</span><?php
+            echo $form->dropDownList($model, 'customer_diversion', $model->loadOptionsCustomerDiversion(), array(
+                'name' => 'AdminBookingForm[customer_diversion]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
             ?>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <span>客户来源：</span><?php
             echo $form->dropDownList($model, 'customer_agent', $model->loadOptionsCustomerAgent(), array(
                 'name' => 'AdminBookingForm[customer_agent]',
@@ -277,11 +226,44 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id
             ));
             ?>
         </div>
+        <div class="col-sm-2">
+            <span>客户意向：</span><?php
+            echo $form->dropDownList($model, 'customer_intention', $model->loadOptionsCustomerIntention(), array(
+                'name' => 'AdminBookingForm[customer_intention]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+        <div class="col-sm-2">
+            <span>客户类型：</span><?php
+            echo $form->dropDownList($model, 'customer_type', $model->loadOptionsCustomerType(), array(
+                'name' => 'AdminBookingForm[customer_type]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+
     </div>
+
     <div class="form-group">
         <div class="col-sm-12">
             <span>特殊备注：</span><?php echo $form->textArea($model, 'remark', array('class' => 'form-control w50', 'maxlength' => 1000)); ?>
         </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-4">
+            <span>业务员：&nbsp;&nbsp;&nbsp;</span><input class="form-control" type="text" value="<?php echo $model->admin_user_name; ?>" readonly/>
+            <?php
+//            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
+//                'name' => 'AdminBookingForm[admin_user_id]',
+//                'prompt' => '选择',
+//                'class' => 'form-control',
+//            ));
+            ?>
+        </div>
+
     </div>
 </div>
 <div class="mt30">
@@ -356,17 +338,17 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id
             return false;
         });
     });
-    function initForm(){
+    function initForm() {
         var disease_confirm = '<?php echo $model->disease_confirm; ?>';
         var order_status = '<?php echo $model->order_status; ?>';
-        $('select#AdminBookingForm_disease_confirm>option').each(function(){
-            if($(this).val() == disease_confirm){
-                $(this).attr('selected','selected');
+        $('select#AdminBookingForm_disease_confirm>option').each(function () {
+            if ($(this).val() == disease_confirm) {
+                $(this).attr('selected', 'selected');
             }
         });
-        $('select#AdminBookingForm_order_status>option').each(function(){
-            if($(this).val() == order_status){
-                $(this).attr('selected','selected');
+        $('select#AdminBookingForm_order_status>option').each(function () {
+            if ($(this).val() == order_status) {
+                $(this).attr('selected', 'selected');
             }
         });
     }
@@ -376,7 +358,7 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id
             var files = results.files;
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absThumbnailUrl + '"/><div class="mt5">'+file.dateCreated+'</div></div>';
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absThumbnailUrl + '"/><div class="mt5">' + file.dateCreated + '</div></div>';
             }
         } else {
             var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';

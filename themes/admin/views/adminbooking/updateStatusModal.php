@@ -1,4 +1,4 @@
-<div class="modal fade" id="addAdminUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="updateStatusModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog mt100">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,16 +9,16 @@
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
                     'id' => 'booking-form',
-                    'action'=>$this->createUrl('adminbooking/addAdminUser'),
+                    'action'=>$this->createUrl('adminbooking/updateBookingStatus'),
                     'htmlOptions' => array('class' => 'form-inline text-center'),
                     'enableAjaxValidation' => false,
                 ));
                 echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
                 ?>
                 <div class="form-group">
-                    <span>业务员：&nbsp;&nbsp;&nbsp;</span><?php
-                    echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
-                        'name' => 'AdminBookingForm[admin_user_id]',
+                    <span>预约状态：&nbsp;&nbsp;&nbsp;</span><?php
+                    echo $form->dropDownList($model, 'booking_status', $model->loadOptionsBookingStatus(), array(
+                        'name' => 'AdminBookingForm[booking_status]',
                         'prompt' => '选择',
                         'class' => 'form-control',
                     ));

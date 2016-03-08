@@ -33,7 +33,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate','updateBookingStatus'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate', 'updateBookingStatus'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -418,6 +418,11 @@ class AdminBookingController extends AdminController {
             //booking status信息
             if (!strIsEmpty($form->booking_status)) {
                 $model->booking_status = $form->booking_status;
+                //如果设为无效的，则删除所有任务
+                if ($form->booking_status = StatCode::BK_STATUS_INVALID) {
+                    $taskMgr = new TaskManager();
+                    $taskMgr->updateAdminTaskJoinByAdminBookingId($adminbookingId);
+                }
             }
             if ($model->save()) {
                 $this->redirect(array('view', 'id' => $adminbookingId));

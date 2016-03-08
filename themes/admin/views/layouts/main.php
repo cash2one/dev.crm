@@ -49,8 +49,8 @@
                                             <span class="caret pull-right"></span>
                                         </div>
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
-                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Index')): ?>
-                                                <li><a href="<?php echo $this->createUrl('adminTask/index') ?>">列表</a></li>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.List')): ?>
+                                                <li><a href="<?php echo $this->createUrl('adminTask/list') ?>">列表</a></li>
                                             <?php endif; ?>
                                             <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Search')): ?>
                                                 <li><a href="<?php echo $this->createUrl('adminTask/search') ?>">搜索</a></li>

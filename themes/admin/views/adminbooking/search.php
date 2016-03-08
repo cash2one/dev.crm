@@ -13,7 +13,7 @@ $this->menu = array(
 );
 ?>
 
-<h1>患者预约搜索</h1>
+<h1>预约搜索</h1>
 
 <?php
 $urlSearch = $this->createUrl('adminbooking/searchResult');

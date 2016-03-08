@@ -111,6 +111,7 @@ class AdminTaskBkJoin extends EActiveRecord {
     public function loadllAdminBkJoinByAdminBookingId($adminbookingId, $isDone) {
         $criteria = new CDbCriteria();
         $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->addCondition('adminTaskJoin.date_deleted is NULL');
         if ($isDone == 1) {
             $criteria->addCondition('adminTaskJoin.date_done is NOT NULL');
         } else {

@@ -1,9 +1,9 @@
 <?php
 $bookingId = Yii::app()->request->getQuery('id', '');
 $bktype = Yii::app()->request->getQuery('bktype', '');
-if ($bktype == AdminBooking::bk_type_crm) {
+if ($bktype == AdminBooking::BK_TYPE_CRM) {
     $urlUploadFile = $this->createUrl("adminbooking/ajaxUploadFile");
-} else if ($bktype == AdminBooking::bk_type_pb) {
+} else if ($bktype == AdminBooking::BK_TYPE_PB) {
     $urlUploadFile = $this->createUrl("patientbooking/ajaxUploadMRFile");
 } else {
     $urlUploadFile = $this->createUrl("booking/ajaxUploadFile");

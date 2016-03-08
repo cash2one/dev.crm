@@ -15,7 +15,7 @@ $urlSubmit = $this->createUrl('adminbooking/ajaxCreate');
 $urlLoadCity = $this->createUrl('region/loadCities');
 $user = $this->getCurrentUser();
 ?>
-<h1 class="">预约患者</h1>
+<h1 class="">创建预约</h1>
 <style>
     .border-bottom{border-bottom: 1px solid #ddd;margin-bottom: 5px;padding-bottom: 5px;}
     .tab-header{display: inline-block;min-width: 6em;}
@@ -28,7 +28,7 @@ $user = $this->getCurrentUser();
 <?php
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'booking-form',
-    'htmlOptions' => array('class' => 'form-horizontal','data-bkType'=>$model->booking_type, 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
+    'htmlOptions' => array('class' => 'form-horizontal', 'data-bkType' => $model->booking_type, 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
     'enableAjaxValidation' => false,
         ));
 echo CHtml::hiddenField("AdminBookingForm[booking_type]", $model->booking_type);
@@ -171,85 +171,32 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
 </div>
 <div class="mt30">
     <div class="form-group">
-        <div class="col-sm-12">
-            <div class="with20">
-                <span>是否确诊：</span><select class="form-control" name="AdminBookingForm[disease_confirm]" id="AdminBookingForm_disease_confirm">
-                    <option value>--选择--</option>
-                    <option value="1">是</option>
-                    <option value="0">否</option>
-                </select>
-            </div>
-            <div class="with20">
-                <span>患者目的：</span><?php
-                echo $form->dropDownList($model, 'customer_request', $model->loadOptionsCustomerRequest(), array(
-                    'name' => 'AdminBookingForm[customer_request]',
-                    'prompt' => '选择',
-                    'class' => 'form-control',
-                ));
-                ?>
-            </div>
-            <div class="with20">
-                <span>客户意向：</span><?php
-                echo $form->dropDownList($model, 'customer_intention', $model->loadOptionsCustomerIntention(), array(
-                    'name' => 'AdminBookingForm[customer_intention]',
-                    'prompt' => '选择',
-                    'class' => 'form-control',
-                ));
-                ?>
-            </div>
-            <div class="with20">
-                <span>客户类型：</span><?php
-                echo $form->dropDownList($model, 'customer_type', $model->loadOptionsCustomerType(), array(
-                    'name' => 'AdminBookingForm[customer_type]',
-                    'prompt' => '选择',
-                    'class' => 'form-control',
-                ));
-                ?>
-            </div>
-            <div class="with20">
-                <span>导流来源：</span><?php
-                echo $form->dropDownList($model, 'customer_diversion', $model->loadOptionsCustomerDiversion(), array(
-                    'name' => 'AdminBookingForm[customer_diversion]',
-                    'prompt' => '选择',
-                    'class' => 'form-control',
-                ));
-                ?>
-            </div>
+        <div class="col-sm-2">
+            <span>是否确诊：</span><select class="form-control" name="AdminBookingForm[disease_confirm]" id="AdminBookingForm_disease_confirm">
+                <option value="">--选择--</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-4">
-            <span>跟进状态：</span><?php
-            echo $form->dropDownList($model, 'booking_status', $model->loadOptionsBookingStatus(), array(
-                'name' => 'AdminBookingForm[booking_status]',
+        <div class="col-sm-2">
+            <span>患者目的：</span><?php
+            echo $form->dropDownList($model, 'customer_request', $model->loadOptionsCustomerRequest(), array(
+                'name' => 'AdminBookingForm[customer_request]',
                 'prompt' => '选择',
                 'class' => 'form-control',
             ));
             ?>
         </div>
-        <div class="col-sm-4">
-            <span>付费状态：</span><select class="form-control" name="AdminBookingForm[order_status]" id="AdminBookingForm_order_status">
-                <option value>--选择--</option>
-                <option value="1">已付费</option>
-                <option value="0">未付费</option>
-            </select>
-        </div>
-        <div class="col-sm-4">
-            <span>付费金额：</span><?php echo $form->textField($model, 'order_amount', array('class' => 'form-control')); ?>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-4">
-            <span>业务员：&nbsp;&nbsp;&nbsp;</span><input class="form-control" type="text" value="<?php echo $user->username; ?>" readonly/>
-                <?php
-//            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
-//                'name' => 'AdminBookingForm[admin_user_id]',
-//                'prompt' => '选择',
-//                'class' => 'form-control',
-//            ));
+        <div class="col-sm-2">
+            <span>导流来源：</span><?php
+            echo $form->dropDownList($model, 'customer_diversion', $model->loadOptionsCustomerDiversion(), array(
+                'name' => 'AdminBookingForm[customer_diversion]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
             ?>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <span>客户来源：</span><?php
             echo $form->dropDownList($model, 'customer_agent', $model->loadOptionsCustomerAgent(), array(
                 'name' => 'AdminBookingForm[customer_agent]',
@@ -258,11 +205,44 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
             ));
             ?>
         </div>
+        <div class="col-sm-2">
+            <span>客户意向：</span><?php
+            echo $form->dropDownList($model, 'customer_intention', $model->loadOptionsCustomerIntention(), array(
+                'name' => 'AdminBookingForm[customer_intention]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+        <div class="col-sm-2">
+            <span>客户类型：</span><?php
+            echo $form->dropDownList($model, 'customer_type', $model->loadOptionsCustomerType(), array(
+                'name' => 'AdminBookingForm[customer_type]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+        
     </div>
+
     <div class="form-group">
         <div class="col-sm-12">
             <span>特殊备注：</span><?php echo $form->textArea($model, 'remark', array('class' => 'form-control w50', 'maxlength' => 1000)); ?>
         </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-4">
+            <span>业务员：&nbsp;&nbsp;&nbsp;</span><input class="form-control" type="text" value="<?php echo $user->username; ?>" readonly/>
+            <?php
+//            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
+//                'name' => 'AdminBookingForm[admin_user_id]',
+//                'prompt' => '选择',
+//                'class' => 'form-control',
+//            ));
+            ?>
+        </div>
+
     </div>
 </div>
 <div class="mt30">

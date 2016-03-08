@@ -410,9 +410,9 @@ class AdminBooking extends EActiveRecord {
 //            StatCode::BK_STATUS_CONFIRMED_DOCTOR => '专家已确认',
 //            StatCode::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
             StatCode::BK_STATUS_PROCESS_DONE => '跟进结束',
-            StatCode::BK_STATUS_INVALID => '跟进无效',
             StatCode::BK_STATUS_DONE => '已完成',
-            StatCode::BK_STATUS_CANCELLED => '已取消'
+            StatCode::BK_STATUS_INVALID => '无效',
+//            StatCode::BK_STATUS_CANCELLED => '已取消'
         );
     }
 
