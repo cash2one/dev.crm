@@ -18,10 +18,11 @@ class StatCode {
     const BK_TRAVELTYPE_PATIENT_GO = 1;    // 患者过去
     const BK_TRAVELTYPE_DOCTOR_COME = 2;   // 医生过来
     const BK_STATUS_NEW = 1;         // 待处理
-    const BK_STATUS_PROCESSING = 2;   // 处理中
+    const BK_STATUS_PROCESSING = 2;   // 跟进中
     const BK_STATUS_CONFIRMED_DOCTOR = 3;   // 已确认专家
     const BK_STATUS_PATIENT_ACCEPTED = 4;   // 患者已接受
-    const BK_STATUS_INVALID = 7;      // 失效的
+    const BK_STATUS_PROCESS_DONE = 5;   // 跟进结束
+    const BK_STATUS_INVALID = 7;      // 跟进无效
     const BK_STATUS_DONE = 8;         // 已完成
     const BK_STATUS_CANCELLED = 9;   // 已取消
     const DR_C_TITLE_ZHUREN = 1;        // 主任
@@ -41,13 +42,13 @@ class StatCode {
     const PAY_FAIL = 2;             //支付失败
     const MR_REPORTTYPE_MR = 'mr';    // 病历  Medical Record - PatientMRFile.reprot_type
     const MR_REPORTTYPE_DA = 'dc';    // 出院小结  Discharge Certificate - PatientMRFile.reprot_type
-    const USER_AGENT_WEBSITE='website';
+    const USER_AGENT_WEBSITE = 'website';
     const USER_AGENT_WEIXIN = 'weixin';  //预约来源为微信
     const USER_AGENT_MOBILEWEB = 'wap'; // 手机网站
     const USER_AGENT_APP_ANDROID = 'android';
     const USER_AGENT_APP_IOS = 'ios';
-    const APP_NAME_MYZD='myzd'; // 患者版
-    const APP_NAME_MOBILEDOCTOR='md';   // 医生版
+    const APP_NAME_MYZD = 'myzd'; // 患者版
+    const APP_NAME_MOBILEDOCTOR = 'md';   // 医生版
 
     // gender.
 
@@ -113,10 +114,11 @@ class StatCode {
     public static function getOptionsBookingStatus() {
         return array(
             self::BK_STATUS_NEW => '待处理',
-            self::BK_STATUS_PROCESSING => '处理中',
+            self::BK_STATUS_PROCESSING => '跟进中',
             self::BK_STATUS_CONFIRMED_DOCTOR => '专家已确认',
             self::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
-            self::BK_STATUS_INVALID => '失效的',
+            self::BK_STATUS_PROCESS_DONE => '跟进结束',
+            self::BK_STATUS_INVALID => '跟进无效',
             self::BK_STATUS_DONE => '已完成',
             self::BK_STATUS_CANCELLED => '已取消'
         );

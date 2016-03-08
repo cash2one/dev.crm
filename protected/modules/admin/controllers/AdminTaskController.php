@@ -35,7 +35,7 @@ class AdminTaskController extends AdminController {
 //				'users'=>array('@'),
 //			),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask', 'ajaxReadTask'),
+                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask', 'ajaxReadTask', 'list'),
 //				'users'=>array('admin'),
             ),
             array('deny', // deny all users
@@ -163,6 +163,23 @@ class AdminTaskController extends AdminController {
         ));
     }
 
+    public function actionList() {
+        $criteria = new CDbCriteria();
+        $criteria->addCondition("t.date_deleted is NULL");
+        $criteria->order = "t.is_read ASC,t.status ASC,t.date_created DESC";
+        $criteria->with = array('adminTask');
+        $criteria->compare('t.admin_user_id', Yii::app()->user->id);
+        $dataProvider = new CActiveDataProvider('AdminTaskJoin', array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+        ));
+        $this->render('list', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
     /**
      * Manages all models.
      */
@@ -188,6 +205,10 @@ class AdminTaskController extends AdminController {
         $searcgInputs = $_GET;
         $search = new AdminTaskSearch($searcgInputs, array('adminTask'));
         $criteria = $search->criteria;
+        //只能搜索到自己的任务信息 
+        $criteria->compare('t.admin_user_id', Yii::app()->user->id, false);
+        $criteria->order = "t.is_read ASC,t.status ASC,t.date_created DESC";
+        $criteria->addCondition("t.date_deleted is NULL");
         $dataProvider = new CActiveDataProvider('AdminTaskJoin', array(
             'criteria' => $criteria,
             'pagination' => array(
@@ -275,6 +296,7 @@ class AdminTaskController extends AdminController {
         $model = AdminTaskJoin::model()->getById($id);
         date_default_timezone_set("Asia/Shanghai");
         $model->date_done = date('Y-m-d H:i:s');
+        $model->status = AdminTaskJoin::STATUS_OK;
         if ($model->save()) {
             $output['status'] = 'ok';
             $output['taskJoin']['id'] = $model->id;
@@ -299,13 +321,18 @@ class AdminTaskController extends AdminController {
     //将信息标志为已读
     public function actionAjaxReadTask($id) {
         $output = array('status' => 'no');
-        $model = AdminTaskJoin::model()->getById($id);
-        $model->is_read = AdminTaskJoin::IS_READ;
-        if ($model->save()) {
-            $output['status'] = 'ok';
-            $output['taskJoin']['id'] = $model->id;
+        $taskMr = new TaskManager();
+        $model = $taskMr->loadAdminTaskByIdAndUserId($id, Yii::app()->user->id);
+        if (isset($model)) {
+            $model->is_read = AdminTaskJoin::IS_READ;
+            date_default_timezone_set("Asia/Shanghai");
+            $model->date_read = date('Y-m-d H:i:s');
+            if ($model->save()) {
+                $output['status'] = 'ok';
+                $output['taskJoin']['id'] = $model->id;
+            }
+            $this->renderJsonOutput($output);
         }
-        $this->renderJsonOutput($output);
     }
 
 }

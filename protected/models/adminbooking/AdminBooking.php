@@ -13,8 +13,8 @@
  * @property string $patient_mobile
  * @property integer $patient_age
  * @property string $patient_identity
- * * @property string $state_id
- * @property string $city_id
+ * @property integer $state_id
+ * @property integer $city_id
  * @property string $patient_state
  * @property string $patient_city
  * @property string $patient_address
@@ -26,68 +26,41 @@
  * @property string $expected_hospital_name
  * @property integer $expected_hp_dept_id
  * @property string $expected_hp_dept_name
- * @property integer $experted_doctor_id
- * @property string $experted_doctor_name
+ * @property integer $expected_doctor_id
+ * @property string $expected_doctor_name
+ * @property integer $creator_doctor_id
+ * @property string $creator_doctor_name
+ * @property string $creator_hospital_name
+ * @property string $creator_dept_name
  * @property integer $final_doctor_id
  * @property string $final_doctor_name
  * @property integer $final_hospital_id
  * @property string $final_hospital_name
  * @property string $final_time
  * @property integer $disease_confirm
- * @property integer $customer_request
+ * @property string $customer_request
  * @property integer $customer_intention
  * @property integer $customer_type
- * @property integer $customer_diversion
- * @property integer $customer_agent
+ * @property string $customer_diversion
+ * @property string $customer_agent
  * @property integer $booking_status
  * @property integer $order_status
  * @property string $order_amount
  * @property integer $admin_user_id
  * @property string $admin_user_name
+ * @property integer $bd_user_id
+ * @property string $bd_user_name
  * @property string $remark
  * @property integer $display_order
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
+ *
+ * The followings are the available model relations:
+ * @property AdminBookingFile[] $adminBookingFiles
+ * @property AdminTaskBkJoin[] $adminTaskBkJoins
  */
 class AdminBooking extends EActiveRecord {
-
-    const bk_type_crm = '0';
-    const bk_type_bk = '1';
-    const bk_type_pb = '2';
-    const cus_request_shoushu = 'shoushu';
-    const cus_request_zhuanzhen = 'zhuanzhen';
-    const cus_request_wenzhen = 'wenzhen';
-    const cus_request_menzhen = 'menzhen';
-    const cus_request_huizhen = 'huizhen';
-    const cus_intention_normal = '1';
-    const cus_intention_good = '2';
-    const cus_intention_great = '3';
-    const cus_type_unsure = 1;
-    const cus_type_validity = 2;
-    const cus_type_invalid = 3;
-    const cus_diversion_baidu = 'baidu';
-    const cus_diversion_friend = 'friend';
-    const cus_diversion_doctor = 'doctor';
-    const cus_diversion_welfare = 'welfare';
-    const cus_agent_400 = 'phone400';
-    const cus_agent_baidu = 'baidu';
-    const cus_agent_website = 'web';
-    const cus_agent_wap = 'wap';
-    const cus_agent_weixin = 'weixin';
-    const cus_agent_app_iOS = 'ios';
-    const cus_agent_app_android = 'android';
-    const cus_agent_BD = 'bd';
-    const cus_agent_ditui = 'ditui';
-    const cus_agent_weibo = 'weibo';
-    const cus_agent_friend = 'friend';
-    const cus_agent_doctor = 'doctor';
-    const cus_agent_bjoffice = 'bj_office';
-    const cus_agent_tuoshi = 'tuoshi';
-    const disease_confirm_no = 0;
-    const disease_confirm_yes = 1;
-    const order_status_no = 0;
-    const order_status_yes = 1;
 
     /**
      * @return string the associated database table name
@@ -96,6 +69,43 @@ class AdminBooking extends EActiveRecord {
         return 'admin_booking';
     }
 
+    const BK_TYPE_CRM = '0';
+    const BK_TYPE_BK = '1';
+    const BK_TYPE_PB = '2';
+    const CUS_REQUEST_SHOUSHU = 'shoushu';
+    const CUS_REQUEST_ZHUANZHEN = 'zhuanzhen';
+    const CUS_REQUEST_WENZHEN = 'wenzhen';
+    const CUS_REQUEST_MENZHEN = 'menzhen';
+    const CUS_REQUEST_HUIZHEN = 'huizhen';
+    const CUS_INTENTION_NORMAL = '1';
+    const CUS_INTENTION_GOOD = '2';
+    const CUS_INTENTION_GREAT = '3';
+    const CUS_TYPE_UNSURE = 1;
+    const CUS_TYPE_VALIDITY = 2;
+    const CUS_TYPE_INVALID = 3;
+    const CUS_DIVERSION_baidu = 'baidu';
+    const CUS_DIVERSION_FRIEND = 'friend';
+    const CUS_DIVERSION_DOCTOR = 'doctor';
+    const CUS_DIVERSION_WELFARE = 'welfare';
+    const CUS_AGENT_400 = 'phone400';
+    const CUS_AGENT_BAIDU = 'baidu';
+    const CUS_AGENT_WEBSITE = 'web';
+    const CUS_AGENT_WAP = 'wap';
+    const CUS_AGENT_WEIXIN = 'weixin';
+    const CUS_AGENT_APP_IOS = 'ios';
+    const CUS_AGENT_APP_ANDROID = 'android';
+    const CUS_AGENT_BD = 'bd';
+    const CUS_AGENT_DITUI = 'ditui';
+    const CUS_AGENT_WEIBO = 'weibo';
+    const CUS_AGENT_FRIEND = 'friend';
+    const CUS_AGENT_DOCTOR = 'doctor';
+    const CUS_AGENT_BJ_OFFICE = 'bj_office';
+    const CUS_AGENT_TUOSHI = 'tuoshi';
+    const DISEASE_CONFIRM_NO = 0;
+    const DISEASE_CONFIRM_YES = 1;
+    const ORDER_STATUS_NO = 0;
+    const ORDER_STATUS_YES = 1;
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -103,20 +113,19 @@ class AdminBooking extends EActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            //array('date_created', 'required'),
-            array('booking_id, booking_type, patient_id, patient_age, expected_hospital_id, expected_hp_dept_id, experted_doctor_id, final_doctor_id, disease_confirm, customer_intention, customer_type, booking_status, order_status, admin_user_id, display_order', 'numerical', 'integerOnly' => true),
-            array('ref_no, patient_name, expected_hospital_name, expected_hp_dept_name, experted_doctor_name, final_doctor_name, order_amount', 'length', 'max' => 20),
-            array('patient_mobile', 'length', 'max' => 11),
+            array('booking_id, booking_type, patient_id, patient_age, state_id, city_id, expected_hospital_id, expected_hp_dept_id, expected_doctor_id, creator_doctor_id, final_doctor_id, final_hospital_id, disease_confirm, customer_intention, customer_type, booking_status, order_status, admin_user_id, bd_user_id, display_order', 'numerical', 'integerOnly' => true),
+            array('ref_no, patient_name, order_amount, bd_user_name', 'length', 'max' => 20),
+            array('patient_mobile, customer_request, customer_diversion, customer_agent', 'length', 'max' => 11),
             array('patient_identity', 'length', 'max' => 18),
             array('patient_state, patient_city', 'length', 'max' => 10),
             array('patient_address, disease_detail', 'length', 'max' => 200),
-            array('disease_name', 'length', 'max' => 100),
-            array('admin_user_name', 'length', 'max' => 50),
+            array('disease_name, final_hospital_name', 'length', 'max' => 100),
+            array('expected_hospital_name, expected_hp_dept_name, expected_doctor_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('state_id, city_id, expected_time_start, expected_time_end, final_time, final_hospital_id, final_hospital_name, customer_request, customer_diversion, customer_agent, date_updated, date_deleted', 'safe'),
+            array('expected_time_start, expected_time_end, final_time, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, state_id, city_id, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, experted_doctor_id, experted_doctor_name, final_doctor_id, final_doctor_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, state_id, city_id, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, expected_doctor_id, expected_doctor_name, creator_doctor_id, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_id, final_doctor_name, final_hospital_id, final_hospital_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -127,6 +136,8 @@ class AdminBooking extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'adminBookingFiles' => array(self::HAS_MANY, 'AdminBookingFile', 'admin_booking_id'),
+            'adminTaskBkJoins' => array(self::HAS_MANY, 'AdminTaskBkJoin', 'admin_booking_id'),
         );
     }
 
@@ -157,10 +168,16 @@ class AdminBooking extends EActiveRecord {
             'expected_hospital_name' => '理想医院',
             'expected_hp_dept_id' => '理想科室ID',
             'expected_hp_dept_name' => '理想科室',
-            'experted_doctor_id' => '理想专家ID',
-            'experted_doctor_name' => '理想专家',
+            'expected_doctor_id' => '理想专家ID',
+            'expected_doctor_name' => '理想专家',
+            'creator_doctor_id' => '推送医生ID',
+            'creator_doctor_name' => '推送医生姓名',
+            'creator_hospital_name' => '推送医生医院',
+            'creator_dept_name' => '推送医生科室',
             'final_doctor_id' => '手术医生ID',
             'final_doctor_name' => '手术医生',
+            'final_hospital_id' => '手术医院ID',
+            'final_hospital_name' => '手术医院ID',
             'final_time' => '最终手术时间',
             'disease_confirm' => '是否确诊',
             'customer_request' => '客户需求',
@@ -173,6 +190,8 @@ class AdminBooking extends EActiveRecord {
             'order_amount' => '付费金额',
             'admin_user_id' => '业务员ID',
             'admin_user_name' => '业务员',
+            'bd_user_id' => '地推人员ID',
+            'bd_user_name' => '地推人员',
             'remark' => '备注',
             'display_order' => '排序序号',
             'date_created' => '创建日期',
@@ -207,8 +226,8 @@ class AdminBooking extends EActiveRecord {
         $criteria->compare('patient_mobile', $this->patient_mobile, true);
         $criteria->compare('patient_age', $this->patient_age);
         $criteria->compare('patient_identity', $this->patient_identity, true);
-        $criteria->compare('state_id', $this->state_id, true);
-        $criteria->compare('city_id', $this->city_id, true);
+        $criteria->compare('state_id', $this->state_id);
+        $criteria->compare('city_id', $this->city_id);
         $criteria->compare('patient_state', $this->patient_state, true);
         $criteria->compare('patient_city', $this->patient_city, true);
         $criteria->compare('patient_address', $this->patient_address, true);
@@ -220,24 +239,30 @@ class AdminBooking extends EActiveRecord {
         $criteria->compare('expected_hospital_name', $this->expected_hospital_name, true);
         $criteria->compare('expected_hp_dept_id', $this->expected_hp_dept_id);
         $criteria->compare('expected_hp_dept_name', $this->expected_hp_dept_name, true);
-        $criteria->compare('experted_doctor_id', $this->experted_doctor_id);
-        $criteria->compare('experted_doctor_name', $this->experted_doctor_name, true);
+        $criteria->compare('expected_doctor_id', $this->expected_doctor_id);
+        $criteria->compare('expected_doctor_name', $this->expected_doctor_name, true);
+        $criteria->compare('creator_doctor_id', $this->creator_doctor_id);
+        $criteria->compare('creator_doctor_name', $this->creator_doctor_name, true);
+        $criteria->compare('creator_hospital_name', $this->creator_hospital_name, true);
+        $criteria->compare('creator_dept_name', $this->creator_dept_name, true);
         $criteria->compare('final_doctor_id', $this->final_doctor_id);
         $criteria->compare('final_doctor_name', $this->final_doctor_name, true);
         $criteria->compare('final_hospital_id', $this->final_hospital_id);
         $criteria->compare('final_hospital_name', $this->final_hospital_name, true);
         $criteria->compare('final_time', $this->final_time, true);
         $criteria->compare('disease_confirm', $this->disease_confirm);
-        $criteria->compare('customer_request', $this->customer_request);
+        $criteria->compare('customer_request', $this->customer_request, true);
         $criteria->compare('customer_intention', $this->customer_intention);
         $criteria->compare('customer_type', $this->customer_type);
-        $criteria->compare('customer_diversion', $this->customer_diversion);
-        $criteria->compare('customer_agent', $this->customer_agent);
+        $criteria->compare('customer_diversion', $this->customer_diversion, true);
+        $criteria->compare('customer_agent', $this->customer_agent, true);
         $criteria->compare('booking_status', $this->booking_status);
         $criteria->compare('order_status', $this->order_status);
         $criteria->compare('order_amount', $this->order_amount, true);
         $criteria->compare('admin_user_id', $this->admin_user_id);
         $criteria->compare('admin_user_name', $this->admin_user_name, true);
+        $criteria->compare('bd_user_id', $this->bd_user_id);
+        $criteria->compare('bd_user_name', $this->bd_user_name, true);
         $criteria->compare('remark', $this->remark, true);
         $criteria->compare('display_order', $this->display_order);
         $criteria->compare('date_created', $this->date_created, true);
@@ -264,63 +289,63 @@ class AdminBooking extends EActiveRecord {
      */
     public function getOptionsBookingType() {
         return array(
-            self::bk_type_bk => '患者端预约',
-            self::bk_type_pb => '医生端预约',
-            self::bk_type_crm => '人工添加预约',
+            self::BK_TYPE_BK => '患者端预约',
+            self::BK_TYPE_PB => '医生端预约',
+            self::BK_TYPE_CRM => '人工添加预约',
         );
     }
 
     public function getOptionsCustomerRequest() {
         return array(
-            self::cus_request_shoushu => '手术',
-            self::cus_request_zhuanzhen => '转诊',
-            self::cus_request_wenzhen => '问诊',
-            self::cus_request_menzhen => '门诊',
-            self::cus_request_huizhen => '会诊',
+            self::CUS_REQUEST_SHOUSHU => '手术',
+            self::CUS_REQUEST_ZHUANZHEN => '转诊',
+            self::CUS_REQUEST_WENZHEN => '问诊',
+            self::CUS_REQUEST_MENZHEN => '门诊',
+            self::CUS_REQUEST_HUIZHEN => '会诊',
         );
     }
 
     public function getOptionsCustomerIntention() {
         return array(
-            self::cus_intention_normal => '一般',
-            self::cus_intention_good => '很好',
-            self::cus_intention_great => '特别好',
+            self::CUS_INTENTION_NORMAL => '一般',
+            self::CUS_INTENTION_GOOD => '很好',
+            self::CUS_INTENTION_GREAT => '特别好',
         );
     }
 
     public function getOptionsCustomerType() {
         return array(
-            self::cus_type_unsure => '未确认的',
-            self::cus_type_validity => '有效的',
-            self::cus_type_invalid => '无效的',
+            self::CUS_TYPE_UNSURE => '未确认的',
+            self::CUS_TYPE_VALIDITY => '有效的',
+            self::CUS_TYPE_INVALID => '无效的',
         );
     }
 
     public function getOptionsCustomerDiversion() {
         return array(
-            self:: cus_diversion_baidu => '百度搜索',
-            self:: cus_diversion_friend => '熟人推荐',
-            self:: cus_diversion_doctor => '医生推荐',
-            self:: cus_diversion_welfare => '公益项目',
+            self:: CUS_DIVERSION_baidu => '百度搜索',
+            self:: CUS_DIVERSION_FRIEND => '熟人推荐',
+            self:: CUS_DIVERSION_DOCTOR => '医生推荐',
+            self:: CUS_DIVERSION_WELFARE => '公益项目',
         );
     }
 
     public function getOptionsCustomerAgent() {
         return array(
-            self:: cus_agent_400 => '400热线',
-            self:: cus_agent_baidu => '百度商桥',
-            self:: cus_agent_website => '网站',
-            self:: cus_agent_wap => '手机网站',
-            self:: cus_agent_weixin => '微信',
-            self:: cus_agent_app_iOS => '苹果APP',
-            self:: cus_agent_app_android => '安卓APP',
-            self:: cus_agent_BD => 'BD',
-            self:: cus_agent_ditui => '地推',
-            self:: cus_agent_weibo => '微博',
-            self:: cus_agent_friend => '熟人',
-            self:: cus_agent_doctor => '下级医生',
-            self:: cus_agent_bjoffice => '北京办介绍',
-            self:: cus_agent_tuoshi => '拓实企业用户',
+            self:: CUS_AGENT_400 => '400热线',
+            self:: CUS_AGENT_BAIDU => '百度商桥',
+            self:: CUS_AGENT_WEBSITE => '网站',
+            self:: CUS_AGENT_WAP => '手机网站',
+            self:: CUS_AGENT_WEIXIN => '微信',
+            self:: CUS_AGENT_APP_IOS => '苹果APP',
+            self:: CUS_AGENT_APP_ANDROID => '安卓APP',
+            self:: CUS_AGENT_BD => 'BD',
+            self:: CUS_AGENT_DITUI => '地推',
+            self:: CUS_AGENT_WEIBO => '微博',
+            self:: CUS_AGENT_FRIEND => '熟人',
+            self:: CUS_AGENT_DOCTOR => '下级医生',
+            self:: CUS_AGENT_BJ_OFFICE => '北京办介绍',
+            self:: CUS_AGENT_TUOSHI => '拓实企业用户',
         );
     }
 
@@ -378,8 +403,21 @@ class AdminBooking extends EActiveRecord {
         }
     }
 
+    public static function getOptionsBookingStatus() {
+        return array(
+            StatCode::BK_STATUS_NEW => '待处理',
+            StatCode::BK_STATUS_PROCESSING => '跟进中',
+//            StatCode::BK_STATUS_CONFIRMED_DOCTOR => '专家已确认',
+//            StatCode::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
+            StatCode::BK_STATUS_PROCESS_DONE => '跟进结束',
+            StatCode::BK_STATUS_INVALID => '跟进无效',
+            StatCode::BK_STATUS_DONE => '已完成',
+            StatCode::BK_STATUS_CANCELLED => '已取消'
+        );
+    }
+
     public function getBookingStatue() {
-        $options = StatCode::getOptionsBookingStatus();
+        $options = self::getOptionsBookingStatus();
         if (isset($options[$this->booking_status])) {
             return $options[$this->booking_status];
         } else {
@@ -397,8 +435,8 @@ class AdminBooking extends EActiveRecord {
 
     public static function getOptionsDiseaseConfirm() {
         return array(
-            self::disease_confirm_no => '否',
-            self::disease_confirm_yes => '是',
+            self::DISEASE_CONFIRM_NO => '否',
+            self::DISEASE_CONFIRM_YES => '是',
         );
     }
 
@@ -408,7 +446,7 @@ class AdminBooking extends EActiveRecord {
             if (isset($options[$this->disease_confirm])) {
                 return $options[$this->disease_confirm];
             } else {
-                return '未填写';
+                return null;
             }
         } else {
             $this->disease_confirm;
@@ -417,8 +455,8 @@ class AdminBooking extends EActiveRecord {
 
     public static function getOptionsOrderStatus() {
         return array(
-            self::order_status_no => '未付费',
-            self::order_status_yes => '已付费',
+            self::ORDER_STATUS_NO => '未付费',
+            self::ORDER_STATUS_YES => '已付费',
         );
     }
 
@@ -428,7 +466,7 @@ class AdminBooking extends EActiveRecord {
             if (isset($options[$this->order_status])) {
                 return $options[$this->order_status];
             } else {
-                return '未填写';
+                return null;
             }
         } else {
             $this->order_status;

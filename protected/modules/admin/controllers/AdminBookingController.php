@@ -33,7 +33,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate','updateBookingStatus'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -123,10 +123,10 @@ class AdminBookingController extends AdminController {
             }
             //业务员信息
             $adminUser = AdminUser::model()->getById($form->admin_user_id);
-            $form->admin_user_name = $adminUser->username;
+            $form->admin_user_name = $adminUser->fullname;
             //设置booking type 为 bk_type_crm
             $form->booking_type = AdminBooking::bk_type_crm;
-
+            $form->booking_status = StatCode::BK_STATUS_NEW;
             $model = new AdminBooking();
             $model->setAttributes($form->attributes);
             if ($model->save()) {
@@ -190,7 +190,7 @@ class AdminBookingController extends AdminController {
             //业务员信息
             if (!strIsEmpty($form->admin_user_id)) {
                 $adminUser = AdminUser::model()->getById($form->admin_user_id);
-                $form->admin_user_name = $adminUser->username;
+                $form->admin_user_name = $adminUser->fullname;
             }
 
             //最终手术时间如无则设为NULL
@@ -397,6 +397,27 @@ class AdminBookingController extends AdminController {
                 $model->bd_user_id = $form->bd_user_id;
                 $adminUser = AdminUser::model()->getById($form->bd_user_id);
                 $model->bd_user_name = $adminUser->username;
+            }
+            if ($model->save()) {
+                $this->redirect(array('view', 'id' => $adminbookingId));
+            }
+        }
+        //$this->renderJsonOutput($output);
+    }
+
+    //修改booking status
+    public function actionUpdateBookingStatus() {
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+        if (isset($_POST['AdminBookingForm'])) {
+            $value = $_POST['AdminBookingForm'];
+            $form = new AdminBookingForm();
+            $adminbookingId = $value['id'];
+            $model = $this->loadModel($adminbookingId);
+            $form->attributes = $_POST['AdminBookingForm'];
+            //booking status信息
+            if (!strIsEmpty($form->booking_status)) {
+                $model->booking_status = $form->booking_status;
             }
             if ($model->save()) {
                 $this->redirect(array('view', 'id' => $adminbookingId));

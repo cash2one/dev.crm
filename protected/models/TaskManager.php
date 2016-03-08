@@ -12,7 +12,7 @@ class TaskManager {
 
         $adminTask->subject = '您有一条新的任务，预约编号：' . $model->ref_no;
         $adminTask->content = $model->disease_detail;
-        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/adminBooking/view', array('id'=>$model->getId()));
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/adminBooking/view', array('id' => $model->getId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {
@@ -50,7 +50,7 @@ class TaskManager {
 
         $adminTask->subject = '您有一条新的任务，预约编号：' . $model->ref_no;
         $adminTask->content = $values['content'];
-        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/adminBooking/view', array('id'=>$model->getId()));
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/adminBooking/view', array('id' => $model->getId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {
@@ -96,7 +96,7 @@ class TaskManager {
 
         $adminTask->subject = $model->subject;
         $adminTask->content = $model->description . '已支付完成';
-        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/order/view', array('id'=>$model->getId()));
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/order/view', array('id' => $model->getId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {
@@ -106,8 +106,8 @@ class TaskManager {
 
             $adminTaskJoin = new AdminTaskJoin();
             $adminTaskJoin->admin_task_id = $adminTask->getId();
-            $adminBooking = AdminBooking::model()->getByAttributes(array('booking_id'=>$model->bk_id, 'booking_type'=>$model->bk_type));
-            if($adminBooking){
+            $adminBooking = AdminBooking::model()->getByAttributes(array('booking_id' => $model->bk_id, 'booking_type' => $model->bk_type));
+            if ($adminBooking) {
                 $adminTaskJoin->admin_user_id = $adminBooking->admin_user_id;
             }
 
@@ -142,8 +142,8 @@ class TaskManager {
         $adminTask = new AdminTask();
 
         $adminTask->subject = '上传照片';
-        $adminTask->content = $model->name . ':' .  $model->hospital_name . '-' . $model->hp_dept_name;
-        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id'=>$model->getId()));
+        $adminTask->content = $model->name . ':' . $model->hospital_name . '-' . $model->hp_dept_name;
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id' => $model->getId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {
@@ -177,7 +177,6 @@ class TaskManager {
         }
 
         return true;
-
     }
 
     /*
@@ -224,6 +223,8 @@ class TaskManager {
         }
     }
 
-
+    public function loadAdminTaskByIdAndUserId($id, $adminUserId) {
+        return AdminTaskJoin::model()->getByAttributes(array('id' => $id, 'admin_user_id' => $adminUserId));
+    }
 
 }
