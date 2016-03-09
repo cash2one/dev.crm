@@ -34,11 +34,12 @@ $form = $this->beginWidget('CActiveForm', array(
 echo CHtml::hiddenField("AdminBookingForm[booking_type]", $model->booking_type);
 echo CHtml::hiddenField("AdminBookingForm[patient_id]", $model->patient_id);
 echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
+echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expected_hospital_id);
 ?>
 <div class="mt30">
     <div class="form-group">
         <div class="col-md-4">
-            <span class="tab-header">客户编号：</span><?php echo $form->textField($model, 'ref_no', array('class' => 'form-control w50')); ?>
+            <span class="tab-header">客户编号：</span><?php echo $form->textField($model, 'ref_no', array('class' => 'form-control w50', 'readonly' => true)); ?>
         </div>
         <div class="col-md-4">
             <span class="tab-header">患者姓名：</span><?php echo $form->textField($model, 'patient_name', array('class' => 'form-control w50')); ?>
@@ -129,17 +130,18 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
     <div class="form-group">
         <div class="col-md-4">
             <span class="tab-header">理想医院：</span><?php
-            echo $form->dropDownList($model, 'expected_hospital_id', $model->loadOptionsHospital(), array(
-                'name' => 'AdminBookingForm[expected_hospital_id]',
-                'prompt' => '选择医院',
-                'class' => 'form-control w50',
-            ));
+            echo $form->textField($model, 'expected_hospital_name', array('class' => 'form-control'));
+//            echo $form->dropDownList($model, 'expected_hospital_id', $model->loadOptionsHospital(), array(
+//                'name' => 'AdminBookingForm[expected_hospital_id]',
+//                'prompt' => '选择医院',
+//                'class' => 'form-control w50',
+//            ));
             ?>
         </div>
         <div class="col-md-4">
-            <span class="tab-header">理想科室：</span><select class="sel form-control w50" name="AdminBookingForm[expected_hp_dept_id]" id="AdminBookingForm_expected_hp_dept_id">
-                <option value="">-- 无 --</option>
-            </select>
+            <span class="tab-header">理想科室：</span><?php
+            echo $form->textField($model, 'expected_hp_dept_name', array('class' => 'form-control'));
+            ?>
         </div>
         <div class="col-md-4">
             <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'experted_doctor_name', array('class' => 'form-control')); ?>
@@ -148,20 +150,22 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
     <div class="form-group">
         <div class="col-md-4">
             <span class="tab-header">最终手术的医院：</span><?php
-            echo $form->dropDownList($model, 'final_hospital_id', $model->loadOptionsHospital(), array(
-                'name' => 'AdminBookingForm[final_hospital_id]',
-                'prompt' => '选择医院',
-                'class' => 'form-control',
-            ));
+            echo $form->textField($model, 'final_hospital_name', array('class' => 'form-control'));
+//            echo $form->dropDownList($model, 'final_hospital_id', $model->loadOptionsHospital(), array(
+//                'name' => 'AdminBookingForm[final_hospital_id]',
+//                'prompt' => '选择医院',
+//                'class' => 'form-control',
+//            ));
             ?>
         </div>
         <div class="col-md-4">
             <span class="tab-header">最终手术的医生：</span><?php
-            echo $form->dropDownList($model, 'final_doctor_id', $model->loadOptionsDoctorProfile(), array(
-                'name' => 'AdminBookingForm[final_doctor_id]',
-                'prompt' => '选择医生',
-                'class' => 'form-control',
-            ));
+            echo $form->textField($model, 'final_doctor_name', array('class' => 'form-control'));
+//            echo $form->dropDownList($model, 'final_doctor_id', $model->loadOptionsDoctorProfile(), array(
+//                'name' => 'AdminBookingForm[final_doctor_id]',
+//                'prompt' => '选择医生',
+//                'class' => 'form-control',
+//            ));
             ?>
         </div>
         <div class="col-md-4">
@@ -223,7 +227,7 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
             ));
             ?>
         </div>
-        
+
     </div>
 
     <div class="form-group">
@@ -252,8 +256,32 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
     </div>
 </div>
 <?php $this->endWidget(); ?>
+<?php
+//搜索医院modal
+$this->renderPartial('//doctor/searchHpModal');
+?>
 <script>
     $(document).ready(function () {
+        //搜索医院弹框
+        $('#AdminBookingForm_expected_hospital_name').click(function () {
+            $('#hospitalSearchModal').modal();
+        }).keyup(function () {
+            $('#AdminBookingForm_expected_hospital_id').val('');
+        });
+        $('#searchHp').click(function () {
+            ajaxLoadHospital();
+        });
+        //搜索回车操作
+        $('#Hospital_hpName').keydown(function (event) {
+            if (event.keyCode == "13") {
+                event.preventDefault();
+                ajaxLoadHospital();
+            }
+        });
+        //隐藏搜索医院弹框后，医院获得焦点
+        $('#hospitalSearchModal').on('hidden.bs.modal', function () {
+            $('#AdminBookingForm_expected_hospital_name').focus();
+        });
         $(".datepicker").datepicker({
             startDate: "+1d",
             todayBtn: true,
@@ -307,4 +335,34 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
             return false;
         });
     });
+    function initHpClick() {
+        $('.determineHp').click(function () {
+            var hpId = $(this).attr('data-id');
+            var hpName = $(this).attr('data-hpName');
+            $('#AdminBookingForm_expected_hospital_name').val(hpName);
+            $('#AdminBookingForm_expected_hospital_id').val(hpId);
+            $('#hospitalSearchModal').modal('hide');
+            //ajaxLoadHpDept(hpId);
+        });
+    }
+    function ajaxLoadHpDept(hopitalId) {
+        $("select#AdminBookingForm_expected_hp_dept_id").attr("disabled", true);
+        //var hopitalId = $(this).val();
+        var actionUrl = "<?php echo $urlAjaxLoadloadHospitalDept; ?>/" + hopitalId;// + hopitalId + "&prompt=选择城市";
+        $.ajax({
+            type: 'get',
+            url: actionUrl,
+            //cache: false,
+            //dataType: "html",
+            'success': function (data) {
+                $("select#AdminBookingForm_expected_hp_dept_id").html(data);
+            },
+            'error': function (data) {
+            },
+            complete: function () {
+                $("select#AdminBookingForm_expected_hp_dept_id").attr("disabled", false);
+            }
+        });
+        return false;
+    }
 </script> 

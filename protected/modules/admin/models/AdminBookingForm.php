@@ -252,14 +252,14 @@ class AdminBookingForm extends EFormModel {
 
     public function loadOptionsAdminUser() {
         if (is_null($this->option_admin_user_id)) {
-            $this->option_admin_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::admin_user_role_cs)), 'id', 'username');
+            $this->option_admin_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::admin_user_role_cs)), 'id', 'fullname');
         }
         return $this->option_admin_user_id;
     }
 
     public function loadOptionsBdUser() {
         if (is_null($this->option_bd_user_id)) {
-            $this->option_bd_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::admin_user_role_bd)), 'id', 'username');
+            $this->option_bd_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::admin_user_role_bd)), 'id', 'fullname');
         }
         return $this->option_bd_user_id;
     }

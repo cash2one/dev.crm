@@ -194,6 +194,7 @@ class TaskManager {
             $taskPlan->taskJoinId = $adminTaskJoin->id;
             $taskPlan->date_plan = $adminTaskJoin->date_plan;
             $taskPlan->admin_user = AdminUser::model()->getById($adminTaskJoin->admin_user_id)->fullname;
+            $taskPlan->work_type = $adminTaskJoin->getWorkType();
             $taskPlan->content = $adminTask->content;
             $taskPlan->date_done = $adminTaskJoin->date_done;
             $data[] = $taskPlan;
@@ -227,7 +228,7 @@ class TaskManager {
         return AdminTaskJoin::model()->getByAttributes(array('id' => $id, 'admin_user_id' => $adminUserId));
     }
 
-    public function updateAdminTaskJoinByAdminBookingId($adminBookingId) {
+    public function deleteAdminTaskJoinByAdminBookingId($adminBookingId) {
         $adminTaskBkJoins = AdminTaskBkJoin::model()->getAllByAttributes(array('admin_booking_id' => $adminBookingId), array('adminTaskJoin'));
         foreach ($adminTaskBkJoins as $value) {
             $adminTaskJoin = $value->getAdminTaskJoin();

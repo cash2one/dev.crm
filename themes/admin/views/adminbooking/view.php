@@ -43,7 +43,10 @@ $orderList = isset($orderList) ? $orderList : null;
 <div class="mt30">
     <div class="row">
         <div class="col-md-4 border-bottom">
-            <span class="tab-header">预约状态：</span><?php echo $data->getBookingStatue() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatue(); ?>
+            <span class="tab-header">预约状态：</span><?php
+            $bookingStatus = $data->getBookingStatue() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatue();
+            echo $data->booking_status == StatCode::BK_STATUS_INVALID ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
+            ?>
         </div>
         <div class="col-sm-4 border-bottom">
             <span>地推/KA：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
@@ -157,6 +160,7 @@ $orderList = isset($orderList) ? $orderList : null;
                 <td class="w10"><input type="checkbox" class="checkAll"> 全选</td>
                 <td>待跟单时间</td>
                 <td>跟单人员</td>
+                <td>跟单方式</td>
                 <td>跟单任务</td>
                 <td>操作</td>
             </tr>
@@ -169,13 +173,14 @@ $orderList = isset($orderList) ? $orderList : null;
                         <td><input class="bkTaskId" type="checkbox" value="<?php echo $bktask->id; ?>"></td>
                         <td><?php echo $bktask->date_plan; ?></td>
                         <td><?php echo $bktask->admin_user; ?></td>
+                        <td><?php echo $bktask->work_type; ?></td>
                         <td><?php echo $bktask->content; ?></td>
                         <td><a class="completedTask" href="<?php echo $this->createUrl('adminTask/ajaxCompletedTask', array('id' => $bktask->taskJoinId)) ?>">完成任务</a></td>
                     </tr>
                     <?php
                 }
             } else {
-                echo '<tr><td colspan="5">无跟单记录</td></tr>';
+                echo '<tr><td colspan="6">无跟单记录</td></tr>';
             }
             ?>
         </tbody>
@@ -190,6 +195,7 @@ $orderList = isset($orderList) ? $orderList : null;
                 <td>跟单时间</td>
                 <td>跟单人员</td>
                 <td>跟单方式</td>
+                <td>跟单任务</td>
                 <td>完成时间</td>
             </tr>
             <?php
@@ -201,13 +207,14 @@ $orderList = isset($orderList) ? $orderList : null;
                         <td><input class="bkTaskId" type="checkbox" value="<?php echo $bktask->id; ?>"></td>
                         <td><?php echo $bktask->date_plan; ?></td>
                         <td><?php echo $bktask->admin_user; ?></td>
+                        <td><?php echo $bktask->work_type; ?></td>
                         <td><?php echo $bktask->content; ?></td>
                         <td><?php echo $bktask->date_done; ?></td>
                     </tr>
                     <?php
                 }
             } else {
-                echo '<tr><td colspan="5">无跟单历史</td></tr>';
+                echo '<tr><td colspan="6">无跟单历史</td></tr>';
             }
             ?>
         </tbody>
@@ -228,6 +235,7 @@ $orderList = isset($orderList) ? $orderList : null;
                     <th>订单内容</th>
                     <th>金额</th>
                     <th>支付情况</th>
+                    <th>支付时间</th>
                     <th>查看详情</th>
                 </tr>
                 <?php
@@ -242,6 +250,7 @@ $orderList = isset($orderList) ? $orderList : null;
                             <td><?php echo $order->getDescription(); ?></td>
                             <td><?php echo $order->getFinalAmount(); ?></td>
                             <td><?php echo $order->getIsPaid(); ?></td>
+                            <td><?php echo $order->date_closed == null ? '未支付' : $order->date_closed; ?></td>
                             <td><a href="<?php echo $urlOrderView . '/' . $order->getId(); ?>" class="btn-admin btn-default" target="_blank">查看</a></td>
                         <?php endif; ?>
                         <?php
@@ -288,7 +297,7 @@ $this->renderPartial('updateStatusModal', array('model' => $model));
                 ?>
                 <div class="form-group">
                     <label for="inputDate" class="col-sm-2 control-label">计划跟单时间</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 pl0 pr0">
                         <input type="text" id='task_date_plan' name='task[date_plan]' class="form-control" placeholder="计划跟单时间">
                     </div>
                     <label for="inputUser" class="col-sm-2 control-label">跟单人员</label>

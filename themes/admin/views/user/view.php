@@ -30,7 +30,7 @@ if (is_null($profile)) {
     $profileData->verified_by = '';
     $profileData->isContractDoctor = '';
     $profileData->preferred_patient = '';
-    $verifiyUrl = '';
+    $verifiyUrl = '<span class="color-red">该医生未提交医生信息</span>';
 } else {
     $profileData->name = $profile->getName();
     $profileData->hospital_name = $profile->getHospitalName();
@@ -40,7 +40,7 @@ if (is_null($profile)) {
     $profileData->state_name = $profile->getStateName();
     $profileData->city_name = $profile->getCityName();
     $abtn = $profile->isVerified() ? '取消认证' : '认证';
-    $verifiyUrl = '<a href="' . $urlVerifyUser . '" >' . $abtn . '</a>';
+    $verifiyUrl = '<a class="btn btn-primary" href="' . $urlVerifyUser . '" >' . $abtn . '</a>';
     $profileData->verified = $profile->isVerified() ? '已认证' : '未认证';
     $profileData->date_verified = $profile->getDateVerified();
     $profileData->verified_by = $profile->getVerifiedBy();

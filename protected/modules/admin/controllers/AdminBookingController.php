@@ -91,15 +91,15 @@ class AdminBookingController extends AdminController {
             $form = new AdminBookingForm;
             $form->attributes = $_POST['AdminBookingForm'];
             //给 医院 科室名称赋值
-            if (!is_null($form->expected_hospital_id)) {
+            if (!strIsEmpty($form->expected_hospital_id)) {
                 $hospital = Hospital::model()->getById($form->expected_hospital_id);
                 $form->expected_hospital_name = $hospital->getName();
             }
-            if (!is_null($form->expected_hp_dept_id)) {
+            if (!strIsEmpty($form->expected_hp_dept_id)) {
                 $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
                 $form->expected_hp_dept_name = $dept->getName();
             }
-            if (!is_null($form->final_hospital_id) && !strIsEmpty($form->final_hospital_id)) {
+            if (!strIsEmpty($form->final_hospital_id)) {
                 $hospital = Hospital::model()->getById($form->final_hospital_id);
                 $form->final_hospital_name = $hospital->getName();
             }
@@ -113,7 +113,7 @@ class AdminBookingController extends AdminController {
                 $form->patient_city = $city->getName();
             }
             //给最终手术专家赋值
-            if (!is_null($form->final_doctor_id) && !strIsEmpty($form->final_doctor_id)) {
+            if (!strIsEmpty($form->final_doctor_id)) {
                 $userDoctorProfile = UserDoctorProfile::model()->getByUserId($form->final_doctor_id);
                 $form->final_doctor_name = $userDoctorProfile->getName();
             }
@@ -125,7 +125,7 @@ class AdminBookingController extends AdminController {
             $adminUser = AdminUser::model()->getById($form->admin_user_id);
             $form->admin_user_name = $adminUser->fullname;
             //设置booking type 为 bk_type_crm
-            $form->booking_type = AdminBooking::bk_type_crm;
+            $form->booking_type = AdminBooking::BK_TYPE_CRM;
             $form->booking_status = StatCode::BK_STATUS_NEW;
             $model = new AdminBooking();
             $model->setAttributes($form->attributes);
@@ -166,17 +166,15 @@ class AdminBookingController extends AdminController {
             $model = $this->loadModel($value['id']);
             $form->attributes = $_POST['AdminBookingForm'];
             //给 医院 科室名称赋值
-            $hospital = Hospital::model()->getById($form->expected_hospital_id);
-            $form->expected_hospital_name = $hospital->getName();
-            $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
-            $form->expected_hp_dept_name = $dept->getName();
-            if (is_null($form->final_hospital_id) || $form->final_hospital_id == '') {
-                $form->final_hospital_id = $model->final_hospital_id;
-                $form->final_hospital_name = $model->final_hospital_name;
-            } else {
-                $finaoHospital = Hospital::model()->getById($form->final_hospital_id);
-                $form->final_hospital_name = $finaoHospital->getName();
+            if (!strIsEmpty($form->expected_hospital_id)) {
+                $hospital = Hospital::model()->getById($form->expected_hospital_id);
+                $form->expected_hospital_name = $hospital->getName();
             }
+            if (!strIsEmpty($form->expected_hp_dept_id)) {
+                $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
+                $form->expected_hp_dept_name = $dept->getName();
+            }
+            
             //给省市赋值
             $state = RegionState::model()->getById($form->state_id);
             $form->patient_state = $state->getName();
@@ -373,7 +371,7 @@ class AdminBookingController extends AdminController {
             if (!strIsEmpty($form->admin_user_id)) {
                 $model->admin_user_id = $form->admin_user_id;
                 $adminUser = AdminUser::model()->getById($form->admin_user_id);
-                $model->admin_user_name = $adminUser->username;
+                $model->admin_user_name = $adminUser->fullname;
             }
             if ($model->save()) {
                 $this->redirect(array('view', 'id' => $adminbookingId));
@@ -396,7 +394,7 @@ class AdminBookingController extends AdminController {
             if (!strIsEmpty($form->bd_user_id)) {
                 $model->bd_user_id = $form->bd_user_id;
                 $adminUser = AdminUser::model()->getById($form->bd_user_id);
-                $model->bd_user_name = $adminUser->username;
+                $model->bd_user_name = $adminUser->fullname;
             }
             if ($model->save()) {
                 $this->redirect(array('view', 'id' => $adminbookingId));
@@ -421,7 +419,7 @@ class AdminBookingController extends AdminController {
                 //如果设为无效的，则删除所有任务
                 if ($form->booking_status = StatCode::BK_STATUS_INVALID) {
                     $taskMgr = new TaskManager();
-                    $taskMgr->updateAdminTaskJoinByAdminBookingId($adminbookingId);
+                    $taskMgr->deleteAdminTaskJoinByAdminBookingId($adminbookingId);
                 }
             }
             if ($model->save()) {

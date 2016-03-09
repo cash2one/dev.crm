@@ -284,6 +284,44 @@ class AdminBooking extends EActiveRecord {
         return parent::model($className);
     }
 
+    public function beforeValidate() {
+        $this->createRefNumber();
+        return parent::beforeValidate();
+    }
+
+    private function createRefNumber() {
+        if ($this->isNewRecord) {
+            $flag = true;
+            while ($flag) {
+                $refNumber = $this->getRefNumberPrefix() . date("ymd") . str_pad(mt_rand(0, 999999), 6, "0", STR_PAD_LEFT);
+                if ($this->exists('t.ref_no =:refno', array(':refno' => $refNumber)) == false) {
+                    $this->ref_no = $refNumber;
+                    $flag = false;
+                }
+            }
+        }
+    }
+
+    /**
+     * Return ref_no prefix charactor based on bk_type
+     * default 'AA' is an eception charactor
+     * @return string
+     */
+    private function getRefNumberPrefix() {
+        switch ($this->booking_type) {
+            case StatCode::BK_TYPE_DOCTOR :
+                return "DR";
+            case StatCode::BK_TYPE_EXPERTTEAM :
+                return "ET";
+            case StatCode::BK_TYPE_QUICKBOOK :
+                return "QB";
+            case StatCode::BK_TYPE_DEPT :
+                return "HP";
+            default:
+                return "AA";
+        }
+    }
+
     /**
      *  options getters 
      */

@@ -180,6 +180,8 @@ class ApiViewPatientBooking extends EApiViewService {
             $data->hpDeptName = '';
             $data->cTitle = '';
             $data->aTitle = '';
+            $data->stateName = '';
+            $data->cityName = '';
         }
         $this->creator = $data;
     }

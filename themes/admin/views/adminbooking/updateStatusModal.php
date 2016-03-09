@@ -8,8 +8,8 @@
             <div class="modal-body">
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
-                    'id' => 'booking-form',
-                    'action'=>$this->createUrl('adminbooking/updateBookingStatus'),
+                    'id' => 'status-form',
+                    'action' => $this->createUrl('adminbooking/updateBookingStatus'),
                     'htmlOptions' => array('class' => 'form-inline text-center'),
                     'enableAjaxValidation' => false,
                 ));
@@ -31,3 +31,17 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<script>
+    $(document).ready(function () {
+        $('#status-form').submit(function (e) {
+            var BK_STATUS_INVALID = '<?php echo StatCode::BK_STATUS_INVALID; ?>';
+            if ($('#AdminBookingForm_booking_status').val() == BK_STATUS_INVALID) {
+                if (confirm('确认该预约无效吗?')) {
+                } else {
+                    e.preventDefault();
+                    return;
+                }
+            }
+        });
+    });
+</script>

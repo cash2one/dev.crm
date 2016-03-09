@@ -563,18 +563,18 @@ $(function () {
 //            'AdminBookingForm[experted_doctor_name]': {
 //                required: true
 //            },
-            'AdminBookingForm[disease_confirm]': {
-                required: true
-            },
-            'AdminBookingForm[customer_request]': {
-                required: true
-            },
-            'AdminBookingForm[customer_diversion]': {
-                required: true
-            },
-            'AdminBookingForm[customer_agent]': {
-                required: true
-            },
+//            'AdminBookingForm[disease_confirm]': {
+//                required: true
+//            },
+//            'AdminBookingForm[customer_request]': {
+//                required: true
+//            },
+//            'AdminBookingForm[customer_diversion]': {
+//                required: true
+//            },
+//            'AdminBookingForm[customer_agent]': {
+//                required: true
+//            },
             'AdminBookingForm[admin_user_id]': {
                 required: true
             },
@@ -622,18 +622,18 @@ $(function () {
 //            'AdminBookingForm[experted_doctor_name]': {
 //                required: '请填写理想专家'
 //            },
-            'AdminBookingForm[disease_confirm]': {
-                required: '请选择是否确诊'
-            },
-            'AdminBookingForm[customer_request]': {
-                required: '请选择患者目的'
-            },
-            'AdminBookingForm[customer_diversion]': {
-                required: '请选择导流来源'
-            },
-            'AdminBookingForm[customer_agent]': {
-                required: '请选择客户来源'
-            },
+//            'AdminBookingForm[disease_confirm]': {
+//                required: '请选择是否确诊'
+//            },
+//            'AdminBookingForm[customer_request]': {
+//                required: '请选择患者目的'
+//            },
+//            'AdminBookingForm[customer_diversion]': {
+//                required: '请选择导流来源'
+//            },
+//            'AdminBookingForm[customer_agent]': {
+//                required: '请选择客户来源'
+//            },
             'AdminBookingForm[admin_user_id]': {
                 required: '请选择业务员'
             },
