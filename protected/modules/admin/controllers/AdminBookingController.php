@@ -435,11 +435,12 @@ class AdminBookingController extends AdminController {
                 } else if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
                     $booking = PatientBooking::model()->getById($model->booking_id);
                     $booking->status = $form->booking_status;
-                } else {
-                    $booking = $model;
+                }
+                if (isset($booking)) {
+                    $booking->save();
                 }
             }
-            if ($booking->save() && $model->save()) {
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $adminbookingId));
             }
         }
