@@ -1,8 +1,12 @@
 <?php
-$payments = $data->salesPayment;
+$payments = $data->salesPayments;
 $payment = null;
 if (arrayNotEmpty($payments)) {
-    $payment = $payments[0];
+    foreach ($payments as $value) {
+        if ($value->payment_status == StatCode::PAY_SUCCESS) {
+            $payment = $value;
+        }
+    }
 }
 ?>
 
@@ -41,25 +45,25 @@ if (arrayNotEmpty($payments)) {
     <td>
         <?php echo CHtml::encode($data->description); ?>
     </td>
-    
+
     <td>
         <?php echo $data->is_paid == 1 ? '已支付' : '未支付'; ?>
     </td>
-    
+
     <td>
         <?php echo CHtml::encode($payment->uid); ?>
     </td>
-    
+
     <td>
         <?php echo CHtml::encode($payment->ping_charge_id); ?>
     </td>
-    
+
     <td>
         <?php echo CHtml::encode($payment->pay_channel); ?>
     </td>
-    
+
     <td>
-        <?php echo CHtml::encode($payment->bill_amount.$payment->bill_currency); ?>
+        <?php echo CHtml::encode($payment->bill_amount . $payment->bill_currency); ?>
     </td>
 
 

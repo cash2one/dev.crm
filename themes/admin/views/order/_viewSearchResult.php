@@ -1,5 +1,5 @@
 <?php
-$payments = $data->salesPayment;
+$payments = $data->salesPayments;
 $payment = null;
 if (arrayNotEmpty($payments)) {
     foreach ($payments as $value) {
