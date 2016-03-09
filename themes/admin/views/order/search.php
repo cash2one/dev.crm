@@ -100,7 +100,9 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
 <div class="clearfix"></div>
 <div id="searchResult">   
 </div>
-
+<style>
+    td{word-break: break-all; word-wrap:break-word;min-width: 5em;max-width: 50em;vertical-align: middle;}
+</style>
 
 <script>
     $(document).ready(function () {
