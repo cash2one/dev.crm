@@ -92,7 +92,7 @@ class OrderController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'search', 'searchResult', 'createAdminBKOrder'),
+                'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'search', 'searchResult', 'createAdminBKOrder', 'countAmount'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -353,6 +353,17 @@ class OrderController extends AdminController {
         $this->renderPartial('searchResult', array(
             'dataProvider' => $dataProvider,
         ));
+    }
+
+    /**
+     * 统计金额
+     */
+    public function actionCountAmount() {
+        $pbSeach = new PaymentSearch($_GET);
+        $criteria = $pbSeach->criteria;
+        $model = SalesOrder::model()->find($criteria);
+        $output = array('amount' => $model->final_amount);
+        $this->renderJsonOutput($output);
     }
 
 }

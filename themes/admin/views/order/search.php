@@ -75,15 +75,27 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         </div>
     </div>
     <div class="form-group col-sm-2">
-        <label >建单时间</label>
+        <label >建单开始时间</label>
         <div>
-            <input class="form-control dateOpen" name = 'dateOpen' value = '' placeholder="yyyy-MM-dd">
+            <input class="form-control dateOpen" name = 'dateOpenStart' value = '' placeholder="yyyy-MM-dd">
         </div>
     </div>
     <div class="form-group col-sm-2">
-        <label >支付时间</label>
+        <label >建单结束时间</label>
         <div>
-            <input class="form-control dateClosed" name = 'dateClosed' value = '' placeholder="yyyy-MM-dd">
+            <input class="form-control dateOpen" name = 'dateOpenEnd' value = '' placeholder="yyyy-MM-dd">
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >支付开始时间</label>
+        <div>
+            <input class="form-control dateOpen" name = 'dateOpenStart' value = '' placeholder="yyyy-MM-dd">
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >支付结束时间</label>
+        <div>
+            <input class="form-control dateClosed" name = 'dateClosedEnd' value = '' placeholder="yyyy-MM-dd">
         </div>
     </div>
     <div class="form-group col-sm-2">
@@ -106,7 +118,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
 
 <script>
     $(document).ready(function () {
-         $(".dateOpen").datepicker({            
+        $(".dateOpen").datepicker({
             //startDate: "+1d",
             //todayBtn: true,
             autoclose: true,
@@ -116,7 +128,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             format: "yyyy-mm-dd",
             language: "zh-CN"
         });
-          $(".dateClosed").datepicker({            
+        $(".dateClosed").datepicker({
             //startDate: "+1d",
             //todayBtn: true,
             autoclose: true,
@@ -129,7 +141,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
         var requestUrl = "<?php echo $urlSearch; ?>";
-        loadUserSearchResult(requestUrl+ '?he=2', selectorSearchResult);
+        loadUserSearchResult(requestUrl + '?he=2', selectorSearchResult);
 
         $("#btnSearch").click(function () {
             var searchUrl = requestUrl + '?he=2';

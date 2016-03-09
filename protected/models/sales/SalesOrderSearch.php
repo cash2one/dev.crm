@@ -12,7 +12,7 @@ class SalesOrderSearch extends ESearchModel {
 
 //refNo orderType crmNo bkType finalAmount isPaid
     public function getQueryFields() {
-        return array('refNo', 'bkType', 'orderType', 'pingId', 'finalAmount', 'isPaid', 'dateOpen', 'dateClosed', 'bdCode');
+        return array('refNo', 'bkType', 'orderType', 'pingId', 'finalAmount', 'isPaid', 'dateOpenStart', 'dateOpenEnd', 'dateClosedStart', 'dateClosedEnd', 'bdCode');
     }
 
     public function addQueryConditions() {
@@ -51,13 +51,21 @@ class SalesOrderSearch extends ESearchModel {
                     $this->criteria->compare("t.is_paid", $isPaid);
                 }
             }
-            if (isset($this->queryParams['dateOpen'])) {
-                $dateOpen = $this->queryParams['dateOpen'];
-                $this->criteria->compare("t.date_open", $dateOpen, true);
+            if (isset($this->queryParams['dateOpenStart'])) {
+                $dateOpenStart = $this->queryParams['dateOpenStart'];
+                $this->criteria->addCondition("t.date_open >= '" . $dateOpenStart . "'");
             }
-            if (isset($this->queryParams['dateClosed'])) {
-                $dateClosed = $this->queryParams['dateClosed'];
-                $this->criteria->compare("t.date_closed", $dateClosed, true);
+            if (isset($this->queryParams['dateOpenEnd'])) {
+                $dateOpenEnd = $this->queryParams['dateOpenEnd'];
+                $this->criteria->addCondition("t.date_open <= '" . $dateOpenEnd . "'");
+            }
+            if (isset($this->queryParams['dateClosedStart'])) {
+                $dateClosedStart = $this->queryParams['dateClosedStart'];
+                $this->criteria->addCondition("t.date_closed <= '" . $dateClosedStart . "'");
+            }
+            if (isset($this->queryParams['dateClosedEnd'])) {
+                $dateClosedEnd = $this->queryParams['dateClosedEnd'];
+                $this->criteria->addCondition("t.date_closed <= '" . $dateClosedEnd . "'");
             }
             if (isset($this->queryParams['bdCode'])) {
                 $bdCode = $this->queryParams['bdCode'];

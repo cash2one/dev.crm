@@ -470,11 +470,11 @@ class SalesOrder extends EActiveRecord {
     }
 
     public function getDateClosed($format = self::DB_FORMAT_DATETIME) {
+        if (strIsEmpty($this->date_closed)) {
+            return '';
+        }
         $date = new DateTime($this->date_closed);
-        if ($date === false) {
-            return null;
-        } else
-            return $date->format($format);
+        return $date->format($format);
     }
 
 }
