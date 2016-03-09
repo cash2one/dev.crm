@@ -302,3 +302,15 @@ h1{margin-top:0;margin-bottom:0!important;}
 .permission-table>.items>tbody>tr>td>a:hover{text-decoration:underline;}
 .actions-column>a.delete-link:hover{text-decoration:underline;}
 .right-cancel>a:hover{text-decoration:underline;}
+.docImg>img{height: 100px;}
+.task{font-size: 12px;}
+.task>.new,.task>.undown{background-color: #fff;color: #f00;border-radius: 50%;min-width: 1.9em;display: inline-block;text-align: center;padding: 2px;margin-right: 1px;}
+.task>.undown{margin-left: 3px;}
+.taskplan{background-color: #f7f7f7;width: 20%;position: fixed;bottom: 0;right: 0;height: 200px;}
+.taskplan .taskplan-title{background-color: #19aea5;padding: 5px 10px 5px;color: #fff;}
+.taskplan .taskplan-title .close{color: #fff;opacity: 1;}
+.taskplan .taskplan-title .close:hover{opacity: 0.8;}
+.taskplan .taskplan-content{padding: 10px 10px 10px;}
+.taskplan .taskplan-footer{position: absolute;bottom: 10px;right: 10px;}
+.color-red{color: #f00;}
+.color-blue{color: #00f;}

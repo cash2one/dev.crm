@@ -27,7 +27,7 @@ $orderList = isset($orderList) ? $orderList : null;
 <h1 class="">预约</h1>
 <div class="mt30">
     <a href="<?php echo $urlUpdateAdminBooking; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改订单</a>
-    <a href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>生成订单</a>
+    <a id="createAdminBKOrder" href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>生成订单</a>
     <a href="<?php echo $this->createUrl('adminBooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>关联医生</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>授权KA/地推</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配业务员</a>
@@ -42,17 +42,20 @@ $orderList = isset($orderList) ? $orderList : null;
 </style>
 <div class="mt30">
     <div class="row">
-        <div class="col-md-4 border-bottom">
+        <div class="col-md-3 border-bottom">
             <span class="tab-header">预约状态：</span><?php
             $bookingStatus = $data->getBookingStatue() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatue();
             echo $data->booking_status == StatCode::BK_STATUS_INVALID ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
             ?>
         </div>
-        <div class="col-sm-4 border-bottom">
+        <div class="col-sm-3 border-bottom">
             <span>地推/KA：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
         </div>
-        <div class="col-sm-4 border-bottom">
+        <div class="col-sm-3 border-bottom">
             <span>业务员：</span><?php echo $data->admin_user_name == null ? '<span class="color-blue">未填写</span>' : $data->admin_user_name; ?>
+        </div>
+        <div class="col-sm-3 border-bottom">
+            <span>预约来源：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
         </div>
     </div>
 </div>
@@ -94,10 +97,23 @@ $orderList = isset($orderList) ? $orderList : null;
 
     </div>
 </div>
+<?php
+$bookingCreator = new stdClass();
+if (is_null($creator) == false) {
+    $bookingCreator->name = $creator->name;
+    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>';
+} else {
+    $bookingCreator->name = '无';
+    $bookingCreator->mobile = '无';
+}
+?>
 <div class="mt30">
     <div class="row">
         <div class="col-md-4 border-bottom">
-            <span class="tab-header">理想医院：</span><?php echo $data->expected_hospital_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_hospital_name; ?>
+            <span class="tab-header">推送医生：</span><?php echo $bookingCreator->name; ?>
+        </div>
+        <div class="col-md-8 border-bottom">
+            <span class="tab-header">推送医生手机：</span><?php echo $bookingCreator->mobile; ?>
         </div>
         <div class="col-md-4 border-bottom">
             <span class="tab-header">理想科室：</span><?php echo $data->expected_hp_dept_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_hp_dept_name; ?>
@@ -111,7 +127,7 @@ $orderList = isset($orderList) ? $orderList : null;
         <div class="col-md-4 border-bottom">
             <span class="tab-header">最终手术的医生：</span><?php echo $data->final_doctor_name == null ? '<span class="color-blue">未填写</span>' : $data->final_doctor_name; ?>
         </div>
-        <div class="col-md-4 border-bottom">
+        <div class="col-md-8 border-bottom">
             <span class="tab-header">最终手术时间：</span><?php echo $data->final_time == null ? '<span class="color-blue">未填写</span>' : $data->final_time; ?>
         </div>
     </div>
@@ -134,12 +150,6 @@ $orderList = isset($orderList) ? $orderList : null;
             <div class="with20">
                 <span>导流来源：</span><?php echo $data->getCustomerDiversion() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerDiversion(); ?>
             </div>
-        </div>
-        <div class="col-sm-4 border-bottom">
-            <span>付费状态：</span><?php echo $data->getOrderStatus() == null ? '<span class="color-blue">未填写</span>' : $data->getOrderStatus(); ?>
-        </div>
-        <div class="col-sm-8 border-bottom">
-            <span>付费金额：</span><?php echo $data->order_amount == null ? '<span class="color-blue">未填写</span>' : $data->order_amount; ?>
         </div>
         <div class="col-sm-4 border-bottom">
             <span>客户来源：</span><?php echo $data->getCustomerAgent() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerAgent(); ?>
@@ -334,6 +344,19 @@ $this->renderPartial('updateStatusModal', array('model' => $model));
 </div><!-- /.modal -->
 <script>
     $(document).ready(function () {
+        //创建之前先确定KA/地推是否存在
+        $('#createAdminBKOrder').click(function (e) {
+            e.preventDefault();
+            var bdUser = '<?php echo $data->bd_user_name; ?>';
+            var href = $(this).attr('href');
+            if (bdUser) {
+                location.href = href;
+            } else {
+                if (confirm('未分配KA/地推,确认创建订单?')) {
+                    location.href = href;
+                }
+            }
+        });
         //日期选择
         $("#task_date_plan").datetimepicker({
             format: "yyyy-mm-dd hh:ii",

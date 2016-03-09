@@ -140,6 +140,13 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
         </div>
     </div>
     <div class="mb15">
+        <?php echo $form->labelEx($model, 'reason_four'); ?>
+        <div>
+            <?php echo $form->textField($model, 'reason_four', array('class' => 'form-control')); ?>
+            <div class="text-danger "> <?php echo $form->error($model, 'reason_four'); ?></div>
+        </div>
+    </div>
+    <div class="mb15">
         <?php echo $form->labelEx($model, 'description'); ?>
         <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>
         <?php echo $form->error($model, 'description'); ?>
@@ -209,6 +216,22 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
             } else if (!reson_two) {
                 $('#DoctorFormAdmin_reason_two').focus();
                 alert('请先填写推荐理由2');
+            }
+        });
+        $('#DoctorFormAdmin_reason_four').focus(function () {
+            var reson_three = $('#DoctorFormAdmin_reason_three').val();
+            var reson_two = $('#DoctorFormAdmin_reason_two').val();
+            var reson_one = $('#DoctorFormAdmin_reason_one').val();
+            if (!reson_one) {
+                $('#DoctorFormAdmin_reason_one').focus();
+                alert('请先填写推荐理由1');
+            } else if (!reson_two) {
+                $('#DoctorFormAdmin_reason_two').focus();
+                alert('请先填写推荐理由2');
+            }
+            else if (!reson_three) {
+                $('#DoctorFormAdmin_reason_three').focus();
+                alert('请先填写推荐理由3');
             }
         });
         //异步获取科室

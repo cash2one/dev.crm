@@ -18,7 +18,7 @@ $this->menu = array(
     array('label' => '生成订单', 'url' => array('order/createBKOrder', 'bid' => $booking->id))
 );
 ?>
-<a href="<?php echo $this->createUrl('order/createBKOrder', array('bid' => $booking->id)) ?>" class="btn btn-primary">生成订单</a>
+<!--<a href="<?php echo $this->createUrl('order/createBKOrder', array('bid' => $booking->id)) ?>" class="btn btn-primary">生成订单</a>-->
 <div class="mt10">
     <h1>预约详情 #<?php echo $booking->refNo; ?></h1>
 </div>
@@ -33,7 +33,7 @@ $this->menu = array(
             <th>状态</th>
             <td>
                 <?php echo $booking->bkStatus; ?>
-                &nbsp;&nbsp;
+<!--                &nbsp;&nbsp;
                 <select id="bkstatus-select" class="select">
                     <option value="0">请选择</option>
                     <option value="1">待处理</option>
@@ -41,7 +41,7 @@ $this->menu = array(
                     <option value="8">已完成</option>
                 </select>
                 &nbsp;&nbsp;
-                <a id="bkstatusLink" class="btn-admin btn-default" href="<?php echo $urlChangeBookingStatus; ?>"  data-id="0">变更</a>
+                <a id="bkstatusLink" class="btn-admin btn-default" href="<?php echo $urlChangeBookingStatus; ?>"  data-id="0">变更</a>-->
             </td>
         </tr>
         <tr class="even">

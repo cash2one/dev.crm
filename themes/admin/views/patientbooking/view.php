@@ -28,8 +28,8 @@ $this->menu = array(
 $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array('id' => $booking->id, 'code' => ''));
 ?>
 
-<a href="<?php echo $this->createUrl('order/createPBOrder', array('bid' => $booking->id)) ?>" class="btn btn-primary">生成订单</a>
-<a href="<?php echo $this->createUrl('relateDoctor', array('bid' => $booking->id)) ?>" class="btn btn-primary">关联医生</a>
+<!--<a href="<?php echo $this->createUrl('order/createPBOrder', array('bid' => $booking->id)) ?>" class="btn btn-primary">生成订单</a>
+<a href="<?php echo $this->createUrl('relateDoctor', array('bid' => $booking->id)) ?>" class="btn btn-primary">关联医生</a>-->
 <div class="mt10">
     <h1>预约详情 - 医生端 #<?php echo $booking->refNo; ?></h1>
 </div>
@@ -73,7 +73,7 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
             <th>状态</th>
             <td>
                 <?php echo $booking->status; ?>
-                &nbsp;&nbsp;
+<!--                &nbsp;&nbsp;
                 <select id="bkstatus-select" class="select">
                     <option value="0">请选择</option>
                     <option value="1">待处理</option>
@@ -82,7 +82,7 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
                     <option value="8">已完成</option>
                 </select>
                 &nbsp;&nbsp;
-                <a id="bkstatusLink" class="btn-admin btn-default" href="<?php echo $urlChangeBookingStatus; ?>"  data-id="0">变更</a>
+                <a id="bkstatusLink" class="btn-admin btn-default" href="<?php echo $urlChangeBookingStatus; ?>"  data-id="0">变更</a>-->
             </td>
         </tr>
         <tr class="even">

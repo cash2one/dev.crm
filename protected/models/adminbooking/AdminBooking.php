@@ -444,9 +444,11 @@ class AdminBooking extends EActiveRecord {
     public static function getOptionsBookingStatus() {
         return array(
             StatCode::BK_STATUS_NEW => '待处理',
-            StatCode::BK_STATUS_PROCESSING => '跟进中',
+            StatCode::BK_STATUS_PROCESSING => '安排中',
 //            StatCode::BK_STATUS_CONFIRMED_DOCTOR => '专家已确认',
 //            StatCode::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
+            StatCode::BK_STATUS_SERVICE_UNPAID => '待支付服务费',
+            StatCode::BK_STATUS_SERVICE_PAIDED => '已支付服务费',
             StatCode::BK_STATUS_PROCESS_DONE => '跟进结束',
             StatCode::BK_STATUS_DONE => '已完成',
             StatCode::BK_STATUS_INVALID => '无效',

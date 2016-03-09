@@ -86,7 +86,7 @@
                                             <?php if (Yii::app()->user->checkAccess('Admin.Doctor.Admin')): ?>
                                                 <li><a href="<?php echo $this->createUrl('doctor/admin') ?>">搜索</a></li>
                                             <?php endif; ?>
-                                            <?php if (Yii::app()->user->checkAccess('Admin.Doctor.Create')): ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Doctor.CreateDoctor')): ?>
                                                 <li ><a href="<?php echo $this->createUrl('doctor/createDoctor') ?>">创建医生</a></li>
                                             <?php endif; ?>
                                         </ul>
@@ -109,7 +109,7 @@
                                     </div> 
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                            预约-患者
+                                            预约-患者端
                                             <span class="caret pull-right"></span>
                                         </div>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
@@ -122,7 +122,7 @@
                                     </div> 
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                            预约-手术直通车
+                                            预约-医生端
                                             <span class="caret pull-right"></span>
                                         </div>
 

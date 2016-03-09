@@ -76,7 +76,7 @@ class Doctor extends EActiveRecord {
             array('password', 'length', 'max' => 64),
             array('salt', 'length', 'max' => 40),
 //            array('honour', 'length', 'max' => 800),
-            array('reason_one, reason_two, reason_three, is_contracted, role, date_activated, date_verified, last_login_time, career_exp, date_created, date_updated, date_deleted', 'safe'),
+            array('reason_one, reason_two, reason_three, reason_four, is_contracted, role, date_activated, date_verified, last_login_time, career_exp, date_created, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, name, fullname, mobile, hospital_id, faculty, medical_title, academic_title, gender, state_id, city_id, disease_specialty, surgery_specialty, description, email,wechat, tel, display_order, date_activated, date_verified, last_login_time, career_exp', 'safe', 'on' => 'search'),

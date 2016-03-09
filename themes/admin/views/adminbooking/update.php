@@ -90,7 +90,7 @@ echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expect
             ?> 市
         </div>
         <div class="col-md-4">
-            <?php echo $form->textField($model, 'patient_address', array('class' => 'form-control w100')); ?>
+            <span class="tab-header">详细地址：</span><?php echo $form->textField($model, 'patient_address', array('class' => 'form-control w50')); ?>
         </div>
     </div>
     <div class="form-group">

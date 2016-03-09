@@ -16,6 +16,7 @@ $this->menu = array(
 <h1>Manage Sales Orders</h1>
 <?php
 $urlSearch = $this->createUrl('order/searchResult');
+$urlCountAmount = $this->createUrl('order/countAmount');
 $urlPatientBookingView = $this->createAbsoluteUrl('patientBooking/view');
 $urlBookingView = $this->createAbsoluteUrl('booking/view');
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datepicker.css");
@@ -110,7 +111,8 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
     </div>
 </div>
 <div class="clearfix"></div>
-<div id="searchResult">   
+<div id="countAmount"></div>
+<div id="searchResult" class="mt10">   
 </div>
 <style>
     #searchResult .table td{word-break: break-all; word-wrap:break-word;min-width: 5em;max-width: 50em;vertical-align: middle;}
@@ -141,18 +143,23 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
         var requestUrl = "<?php echo $urlSearch; ?>";
+        var countAmountUrl = "<?php echo $urlCountAmount; ?>";
         loadUserSearchResult(requestUrl + '?he=2', selectorSearchResult);
+        loadCountAmountResult(countAmountUrl + '?he=2');
 
         $("#btnSearch").click(function () {
             var searchUrl = requestUrl + '?he=2';
+            var countUrl = countAmountUrl + '?he=2';
             domForm.find("input,select").each(function () {
                 // trim
                 var value = $.trim($(this).val());
                 if (value !== '') {
                     searchUrl += '&' + $(this).attr('name') + '=' + value;
+                    countUrl += '&' + $(this).attr('name') + '=' + value;
                 }
             });
             loadUserSearchResult(searchUrl, selectorSearchResult);
+            loadCountAmountResult(countUrl);
         });
 
     });
@@ -168,7 +175,18 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             }
         });
     }
-
+    function loadCountAmountResult(requestUrl){
+        $.ajax({
+            url: requestUrl,
+            async: false,
+            success: function (data) {
+                $('#countAmount').html('<span class="color-red">总支付金额：'+data.amount+'</span>');
+            },
+            complete: function () {
+                // hide loading gif.
+            }
+        });
+    }
 </script>
 
 

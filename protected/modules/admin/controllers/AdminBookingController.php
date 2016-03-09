@@ -61,11 +61,17 @@ class AdminBookingController extends AdminController {
         $taskMr = new TaskManager;
         $adminTasks['adminTasksNotDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '0');
         $adminTasks['adminTasksDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '1');
+        //创建医生信息
+        $creator = null;
+        if (strIsEmpty($data->creator_doctor_id) === false) {
+            $creator = UserDoctorProfile::model()->getByUserId($data->creator_doctor_id);
+        }
         $this->render('view', array(
             'data' => $data,
             'model' => $form,
             'orderList' => $orderList,
-            'adminTasks' => $adminTasks
+            'adminTasks' => $adminTasks,
+            'creator' => $creator
         ));
     }
 
@@ -174,7 +180,7 @@ class AdminBookingController extends AdminController {
                 $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
                 $form->expected_hp_dept_name = $dept->getName();
             }
-            
+
             //给省市赋值
             $state = RegionState::model()->getById($form->state_id);
             $form->patient_state = $state->getName();
@@ -412,17 +418,26 @@ class AdminBookingController extends AdminController {
             $form = new AdminBookingForm();
             $adminbookingId = $value['id'];
             $model = $this->loadModel($adminbookingId);
+
             $form->attributes = $_POST['AdminBookingForm'];
             //booking status信息
             if (!strIsEmpty($form->booking_status)) {
                 $model->booking_status = $form->booking_status;
                 //如果设为无效的，则删除所有任务
-                if ($form->booking_status = StatCode::BK_STATUS_INVALID) {
+                if ($form->booking_status == StatCode::BK_STATUS_INVALID) {
                     $taskMgr = new TaskManager();
                     $taskMgr->deleteAdminTaskJoinByAdminBookingId($adminbookingId);
                 }
+                //修改原始的booking中的状态
+                if ($model->booking_type == AdminBooking::BK_TYPE_BK) {
+                    $booking = Booking::model()->getById($model->booking_id);
+                    $booking->bk_status = $form->booking_status;
+                } else if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
+                    $booking = PatientBooking::model()->getById($model->booking_id);
+                    $booking->status = $form->booking_status;
+                }
             }
-            if ($model->save()) {
+            if ($booking->save() && $model->save()) {
                 $this->redirect(array('view', 'id' => $adminbookingId));
             }
         }

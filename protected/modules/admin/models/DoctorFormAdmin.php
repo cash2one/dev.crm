@@ -30,6 +30,7 @@ class DoctorFormAdmin extends EFormModel {
     public $reason_one;
     public $reason_two;
     public $reason_three;
+    public $reason_four;
     public $is_contracted;
     public $role;
 
@@ -37,7 +38,7 @@ class DoctorFormAdmin extends EFormModel {
         return array(
             array('fullname, hospital_id, hp_dept_id, medical_title, academic_title, career_exp, is_contracted, role', 'required', 'message' => '请输入{attribute}'),
             array('description', 'length', 'max' => 200),
-            array('id, name, state_id, city_id, reason_one, reason_two, reason_three, hp_dept_name, hospital_name, honour', 'safe'),
+            array('id, name, state_id, city_id, reason_one, reason_two, reason_three, reason_four, hp_dept_name, hospital_name, honour', 'safe'),
             array("hospital_name", "validateHospitalName"),
         );
     }
@@ -68,6 +69,7 @@ class DoctorFormAdmin extends EFormModel {
             'reason_one' => '推荐理由1',
             'reason_two' => '推荐理由2',
             'reason_three' => '推荐理由3',
+            'reason_four' => '推荐理由4',
             'honour' => '荣誉(每条荣誉以#号隔开)',
             'is_contracted' => '是否签约',
             'role' => '是否是牛人榜',

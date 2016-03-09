@@ -181,6 +181,7 @@ class OrderController extends AdminController {
         $order->bk_type = $booking->booking_type;
         $order->bk_ref_no = $booking->ref_no;
         $order->user_id = $booking->patient_id;
+        $order->bd_code = $booking->bd_user_name;
         if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_PATIENT_GO) {
             $order->order_type = SalesOrder::ORDER_TYPE_SERVICE;
             $order->setAmount(1000.00);
