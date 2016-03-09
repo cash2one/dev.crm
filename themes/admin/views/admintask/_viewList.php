@@ -18,5 +18,5 @@ if($data->getRead(false) == AdminTaskJoin::NOT_READ && $data->getStatus(false) =
     <td><?php echo $data->getStatus(); ?></td>
     <td><?php echo $data->getDatePlan(); ?></td>
     <td><?php echo $data->getDateDone(); ?></td>
-    <td><a target="_blank" href="<?php echo $this->createUrl('adminTask/view', array('id' => $task->id)); ?>" >查看</a></td>
+    <td><a target="_blank" href="<?php echo $this->createUrl('admintask/view', array('id' => $task->id)); ?>" >查看</a></td>
 </tr>

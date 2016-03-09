@@ -50,10 +50,10 @@
                                         </div>
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu1">
                                             <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.List')): ?>
-                                                <li><a href="<?php echo $this->createUrl('adminTask/list') ?>">列表</a></li>
+                                                <li><a href="<?php echo $this->createUrl('admintask/list') ?>">列表</a></li>
                                             <?php endif; ?>
                                             <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Search')): ?>
-                                                <li><a href="<?php echo $this->createUrl('adminTask/search') ?>">搜索</a></li>
+                                                <li><a href="<?php echo $this->createUrl('admintask/search') ?>">搜索</a></li>
                                             <?php endif; ?>
                                         </ul>
                                     </div>
@@ -234,7 +234,7 @@
                 function ajaxGetAlert() {
                     var innerHtml = '';
                     $.ajax({
-                        url: '<?php echo $this->createUrl('adminTask/ajaxAlert'); ?>',
+                        url: '<?php echo $this->createUrl('admintask/ajaxAlert'); ?>',
                         success: function (data) {
                             innerHtml += '<span class="new">' + data.results.new + '</span>未读<span class="undown">' + data.results.undone + '</span>未完成';
                             $('#dropdownMenu1 .task').html(innerHtml);
@@ -244,7 +244,7 @@
                 //异步获取计划跟单并提醒
                 function ajaxGetPlan() {
                     $.ajax({
-                        url: '<?php echo $this->createUrl('adminTask/ajaxPlan'); ?>',
+                        url: '<?php echo $this->createUrl('admintask/ajaxPlan'); ?>',
                         success: function (data) {
                             setPlanHtml(data.results);
                         }

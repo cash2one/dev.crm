@@ -1,7 +1,7 @@
 <h1>任务搜索</h1>
 
 <?php
-$urlSearch = $this->createUrl('adminTask/searchResult');
+$urlSearch = $this->createUrl('admintask/searchResult');
 $urlUserView = $this->createAbsoluteUrl('adminTask/view');
 ?>
 

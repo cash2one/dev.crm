@@ -31,7 +31,7 @@ $adminTasksJoin = $model->adminTaskJoins[0];
 <script>
     $(document).ready(function () {
         $.ajax({
-            url: '<?php echo $this->createUrl('adminTask/ajaxReadTask', array('id' => $adminTasksJoin->id)); ?>'
+            url: '<?php echo $this->createUrl('admintask/ajaxReadTask', array('id' => $adminTasksJoin->id)); ?>'
         });
     });
 </script>

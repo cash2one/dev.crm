@@ -20,7 +20,7 @@ if ($data->booking_type == AdminBooking::BK_TYPE_CRM) {
 }
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
 $urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'bktype' => $data->booking_type));
-$deleteTaskUrl = $this->createUrl('adminTask/ajaxDeleteTask', array('id' => ''));
+$deleteTaskUrl = $this->createUrl('admintask/ajaxDeleteTask', array('id' => ''));
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
 $orderList = isset($orderList) ? $orderList : null;
 ?>
@@ -28,7 +28,7 @@ $orderList = isset($orderList) ? $orderList : null;
 <div class="mt30">
     <a href="<?php echo $urlUpdateAdminBooking; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改订单</a>
     <a id="createAdminBKOrder" href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>生成订单</a>
-    <a href="<?php echo $this->createUrl('adminBooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>关联医生</a>
+    <a href="<?php echo $this->createUrl('adminbooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>关联医生</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>授权KA/地推</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配业务员</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#updateStatusModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改预约状态</a>
@@ -188,7 +188,7 @@ if (is_null($creator) == false) {
                         <td><?php echo $bktask->admin_user; ?></td>
                         <td><?php echo $bktask->work_type; ?></td>
                         <td><?php echo $bktask->content; ?></td>
-                        <td><a class="completedTask" href="<?php echo $this->createUrl('adminTask/ajaxCompletedTask', array('id' => $bktask->taskJoinId)) ?>">完成任务</a></td>
+                        <td><a class="completedTask" href="<?php echo $this->createUrl('admintask/ajaxCompletedTask', array('id' => $bktask->taskJoinId)) ?>">完成任务</a></td>
                     </tr>
                     <?php
                 }
@@ -303,7 +303,7 @@ $this->renderPartial('updateStatusModal', array('model' => $model));
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
                     'id' => 'task-form',
-                    'htmlOptions' => array('class' => 'form-horizontal', 'data-action' => $this->createUrl('adminTask/ajaxCreate')),
+                    'htmlOptions' => array('class' => 'form-horizontal', 'data-action' => $this->createUrl('admintask/ajaxCreate')),
                     'enableAjaxValidation' => false,
                 ));
                 echo CHtml::hiddenField("task[booking_id]", $model->id);
@@ -444,7 +444,7 @@ if (isset($adminTasksNotDone) && arrayNotEmpty($adminTasksNotDone)) {
     //页面的跟单任务标记为已读
     function ajaxReadTaks(id) {
         $.ajax({
-            url: '<?php echo $this->createUrl('adminTask/ajaxReadTask', array('id' => '')); ?>/' + id
+            url: '<?php echo $this->createUrl('admintask/ajaxReadTask', array('id' => '')); ?>/' + id
         });
     }
     //加载图片
