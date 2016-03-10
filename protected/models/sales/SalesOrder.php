@@ -253,17 +253,23 @@ class SalesOrder extends EActiveRecord {
     public function checkBookingExists() {
         $bkRefNo = trim($this->bk_ref_no);
         if (strIsEmpty($bkRefNo) === false) {
-            $booking = Booking::model()->getByAttributes(array('ref_no' => $bkRefNo));
+            $booking = AdminBooking::model()->getByAttributes(array('ref_no' => $bkRefNo));
             if (isset($booking)) {
-                $this->setBkType(StatCode::TRANS_TYPE_BK);
+                $this->setBkType(StatCode::TRANS_TYPE_AB);
                 $this->setBkId($booking->id);
             } else {
-                $booking = PatientBooking::model()->getByAttributes(array('ref_no' => $bkRefNo));
+                $booking = Booking::model()->getByAttributes(array('ref_no' => $bkRefNo));
                 if (isset($booking)) {
-                    $this->setBkType(StatCode::TRANS_TYPE_PB);
+                    $this->setBkType(StatCode::TRANS_TYPE_BK);
                     $this->setBkId($booking->id);
                 } else {
-                    $this->addError('bk_ref_no', '预约号不存在');
+                    $booking = PatientBooking::model()->getByAttributes(array('ref_no' => $bkRefNo));
+                    if (isset($booking)) {
+                        $this->setBkType(StatCode::TRANS_TYPE_PB);
+                        $this->setBkId($booking->id);
+                    } else {
+                        $this->addError('bk_ref_no', '预约号不存在');
+                    }
                 }
             }
             $this->setBkRefNo($bkRefNo);
