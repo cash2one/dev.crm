@@ -32,8 +32,8 @@ if (!isset($profile)) {
 ?>
 
 <tr>
-    <td><?php echo $data->id; ?></td>
-    <td><?php echo $profileData->name; ?></td>
+    <td><a href="<?php echo $this->createUrl('user/view',array('id'=>$data->id))?>"><?php echo $data->id; ?></a></td>
+    <td><a href="<?php echo $this->createUrl('user/view',array('id'=>$data->id))?>"><?php echo $profileData->name; ?></a></td>
     <td><?php echo $profileData->mobile; ?></td>
     <td><?php echo $profileData->hospital_name; ?></td>
     <td><?php echo $profileData->hp_dept_name; ?></td>

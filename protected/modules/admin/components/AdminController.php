@@ -98,6 +98,10 @@ class AdminController extends RController {
             return null;
         }
     }
+    
+    public function getCurrentUserId() {
+        return Yii::app()->user->id;
+    }
 
     public function renderJsonOutput($data, $exit = true, $httpStatus = 200) {
         header('Content-Type: application/json; charset=utf-8');
