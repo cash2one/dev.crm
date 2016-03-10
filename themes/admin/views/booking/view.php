@@ -42,7 +42,7 @@ $this->menu = array(
                     <option value="<?php echo StatCode::BK_STATUS_DONE; ?>">已完成</option>
                 </select>
                 &nbsp;&nbsp;
-                <a id="bkstatusLink" class="btn-admin btn-default" href="<?php echo $urlChangeBookingStatus; ?>"  data-id="0">变更</a>
+                <a id="bkstatusLink" class="btn-admin btn-default" href="<?php echo $urlChangeBookingStatus; ?>"  data-id="">变更</a>
             </td>
         </tr>
         <tr class="even">
@@ -120,7 +120,7 @@ $this->menu = array(
         foreach ($files as $file):
             ?>
             <div class="col-sm-2 mt10">
-                <?php echo CHtml::image($file->tnUrl, '', array('class' => "img-responsive")); ?>
+                <?php echo CHtml::image($file->fileUrl, '', array('class' => "img-responsive")); ?>
             </div>
             <?php
         endforeach;
@@ -142,7 +142,7 @@ $this->menu = array(
         bkstatusLink.click(function (e) {
             e.preventDefault();
             var dataId = $(this).attr("data-id");
-            if (dataId == "0") {
+            if (dataId == "") {
                 alert("请选择状态");
             } else {
                 var url = bkstatusLink.attr('href');

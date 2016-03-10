@@ -82,7 +82,7 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
                     <option value="<?php echo StatCode::BK_STATUS_DONE; ?>">已完成</option>
                 </select>
                 &nbsp;&nbsp;
-                <a id="bkstatusLink" class="btn-admin btn-default" href="<?php echo $urlChangeBookingStatus; ?>"  data-id="0">变更</a>
+                <a id="bkstatusLink" class="btn-admin btn-default" href="<?php echo $urlChangeBookingStatus; ?>"  data-id="">变更</a>
             </td>
         </tr>
         <tr class="even">
@@ -205,7 +205,7 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
         bkstatusLink.click(function (e) {
             e.preventDefault();
             var dataId = $(this).attr("data-id");
-            if (dataId == "0") {
+            if (dataId == "") {
                 alert("请选择状态");
             } else {
                 var url = bkstatusLink.attr('href');

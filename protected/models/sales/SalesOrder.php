@@ -117,14 +117,14 @@ class SalesOrder extends EActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'ref_no' => 'Ref No',
+            'ref_no' => '订单号',
             'user_id' => '买家用户id',
-            'bk_ref_no' => 'Bk Ref No',
+            'bk_ref_no' => '预约单号',
             'bk_id' => '预约的id,来自多个不同表',
             'bk_type' => '订单种类，对应多个不同的订单表。1=booking, 2=patient_booking',
             'crm_no' => '客服CRM单号',
-            'subject' => 'Subject',
-            'description' => 'Description',
+            'subject' => '订单标题',
+            'description' => '订单描述',
             'ping_id' => 'Ping++ ID',
             'order_type' => 'deposit(订金),surgery(手术费),consultation(会诊费)',
             'is_paid' => '是否已付款',
