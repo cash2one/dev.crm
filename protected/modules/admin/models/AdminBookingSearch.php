@@ -45,9 +45,9 @@ class AdminBookingSearch extends ESearchModel {
                 $patient_city = $this->queryParams['patient_city'];
                 $this->criteria->addSearchCondition("patient_city", $patient_city);
             }
-            $userId = Yii::app()->user->id;
-            $this->criteria->compare('t.admin_user_id', $userId);
         }
+          $userId = Yii::app()->user->id;
+            $this->criteria->compare('t.admin_user_id', $userId);
     }
 
 }
