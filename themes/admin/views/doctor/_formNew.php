@@ -103,14 +103,14 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
         <div class="form-group col-sm-7">
             <?php echo $form->labelEx($model, 'career_exp'); ?>
             <div>
-                <?php echo $form->textarea($model, 'career_exp', array('rows' => 4, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
+                <?php echo $form->textarea($model, 'career_exp', array('rows' => 4, 'cols' => 80, 'maxlength' => 2000, 'class' => 'form-control')); ?>            
                 <div class="text-danger "> <?php echo $form->error($model, 'career_exp'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
             <?php echo $form->labelEx($model, 'honour'); ?>
             <div>
-                <?php echo $form->textarea($model, 'honour', array('rows' => 4, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
+                <?php echo $form->textarea($model, 'honour', array('rows' => 4, 'cols' => 80, 'maxlength' => 1500, 'class' => 'form-control')); ?>            
                 <div class="text-danger "> <?php echo $form->error($model, 'honour'); ?></div>
             </div>
         </div>
@@ -145,7 +145,7 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
         <div class="form-group col-sm-7">
             <?php echo $form->labelEx($model, 'description'); ?>
             <div>
-                <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
+                <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 500, 'class' => 'form-control')); ?>            
                 <div class="text-danger "> <?php echo $form->error($model, 'description'); ?></div>
             </div>
         </div>

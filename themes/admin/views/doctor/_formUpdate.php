@@ -3,6 +3,7 @@
 $urlAjaxLoadloadHospitalDept = $this->createUrl('doctor/ajaxLoadloadHospitalDept', array('hid' => ''));
 $urlSubmit = $this->createUrl('doctor/update', array('id' => $model->id));
 $hospitalId = $model->hospital_id;
+$deptId = $model->hp_dept_id;
 $urlSearchHospital = $this->createUrl('hospital/searchResult');
 ?>
 <div class="form">
@@ -107,14 +108,14 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
     <div class="mb15">
         <label > <?php echo $form->labelEx($model, 'career_exp'); ?></label>
         <div>
-            <?php echo $form->textarea($model, 'career_exp', array('rows' => 4, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
+            <?php echo $form->textarea($model, 'career_exp', array('rows' => 4, 'cols' => 80, 'maxlength' => 2000, 'class' => 'form-control')); ?>            
             <div class="text-danger "> <?php echo $form->error($model, 'career_exp'); ?></div>
         </div>
     </div>
     <div class="mb15">
         <label > <?php echo $form->labelEx($model, 'honour'); ?></label>
         <div>
-            <?php echo $form->textarea($model, 'honour', array('rows' => 4, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>            
+            <?php echo $form->textarea($model, 'honour', array('rows' => 4, 'cols' => 80, 'maxlength' => 1500, 'class' => 'form-control')); ?>            
             <div class="text-danger "> <?php echo $form->error($model, 'honour'); ?></div>
         </div>
     </div>
@@ -148,7 +149,7 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
     </div>
     <div class="mb15">
         <?php echo $form->labelEx($model, 'description'); ?>
-        <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 200, 'class' => 'form-control')); ?>
+        <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 500, 'class' => 'form-control')); ?>
         <?php echo $form->error($model, 'description'); ?>
     </div>
     <div class="mb15">
@@ -236,6 +237,7 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
         });
         //异步获取科室
         getHpDept('<?php echo $hospitalId; ?>');
+        
 //        $("select#hospital").change(function () {
 //            var hopitalId = $(this).val();
 //            getHpDept(hopitalId);
@@ -294,6 +296,7 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
             //dataType: "html",
             'success': function (data) {
                 $("select#DoctorFormAdmin_hp_dept_id").html(data);
+                initDept();
             },
             'error': function (data) {
             },
@@ -302,5 +305,14 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
             }
         });
         return false;
+    }
+    function initDept(){
+        var deptId = '<?php echo $deptId; ?>';
+        $('select#DoctorFormAdmin_hp_dept_id').find('option').each(function(){
+            var value = $(this).val();
+            if(deptId == value){
+                $(this).attr('selected',true);
+            }
+        });
     }
 </script>
