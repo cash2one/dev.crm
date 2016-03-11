@@ -70,13 +70,14 @@ class Doctor extends EActiveRecord {
             array('hospital_id, hp_dept_id, gender, role, display_order, state_id, city_id, expteam_id', 'numerical', 'integerOnly' => true),
             array('name, fullname, hospital_name, hp_dept_name, faculty, medical_title, academic_title, password_raw, wechat, tel', 'length', 'max' => 45),
             array('mobile', 'length', 'max' => 11),
-            array('disease_specialty, surgery_specialty,specialty, avatar_url', 'length', 'max' => 200),
+            array('disease_specialty, surgery_specialty, specialty, avatar_url', 'length', 'max' => 200),
             array('description', 'length', 'max' => 500),
+            array('honour', 'length', 'max' => 1500),
+            array('career_exp', 'length', 'max' => 2000),
             array('email, search_keywords', 'length', 'max' => 100),
             array('password', 'length', 'max' => 64),
             array('salt', 'length', 'max' => 40),
-//            array('honour', 'length', 'max' => 800),
-            array('reason_one, reason_two, reason_three, reason_four, is_contracted, role, date_activated, date_verified, last_login_time, career_exp, date_created, date_updated, date_deleted', 'safe'),
+            array('reason_one, reason_two, reason_three, reason_four, is_contracted, role, date_activated, date_verified, last_login_time, career_exp, honour, date_created, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, name, fullname, mobile, hospital_id, faculty, medical_title, academic_title, gender, state_id, city_id, disease_specialty, surgery_specialty, description, email,wechat, tel, display_order, date_activated, date_verified, last_login_time, career_exp', 'safe', 'on' => 'search'),
