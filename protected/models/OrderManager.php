@@ -79,6 +79,7 @@ class OrderManager {
             }
             $order->description = '预约号:' . $model->getRefNo() . '。' . $description . '!  订单号:' . $order->ref_no;
         } elseif ($model instanceof AdminBooking) {
+            $order->createRefNo($model->ref_no, $model->id, AdminBooking::BK_TYPE_CRM);
             $order->bk_type = AdminBooking::BK_TYPE_CRM;
             $order->patient_mobile = $model->patient_mobile;
             $order->patient_age = $model->patient_age;
@@ -95,8 +96,8 @@ class OrderManager {
             $order->creator_dept_name = $model->creator_dept_name;
             $order->admin_user_name = $model->admin_user_name;
             $order->bd_code = $model->bd_user_name;
-            $order->subject = $order->getOrderType(true) . '-' . $model->patient_name;
-            $order->description = '预约号:' . $model->ref_no . '。' . $model->getTravelType(true) . '所支付的' . $order->subject . '! 订单号:' . $order->ref_no;
+            $order->subject = $model->booking_detail;
+            $order->description = $model->disease_detail;
         } else {
             throw new CException('Unknown class');
         }
@@ -106,7 +107,6 @@ class OrderManager {
         $order->created_by = Yii::app()->user->id;
         $order->date_open = date('Y-m-d H:i:s');
         $order->setAmount($order->getOrderTypeDefaultAmount());
-        $order->createRefNo2($order->bk_ref_no);
         $order->save();
         return $order;
     }

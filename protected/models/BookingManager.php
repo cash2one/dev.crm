@@ -353,7 +353,7 @@ class BookingManager {
         return $output;
     }
 
-    public function createBookingFile($booking, $reportType) {
+    public function createBookingFile($booking) {
         $bookingId = $booking->getId();
         $userId = $booking->getUserId();
 
@@ -362,7 +362,7 @@ class BookingManager {
         $file = EUploadedFile::getInstanceByName($uploadField);
         if (isset($file)) {
             //文件储存
-            $output['filemodel'] = $this->saveBookingFile($file, $bookingId, $userId, $reportType);
+            $output['filemodel'] = $this->saveBookingFile($file, $bookingId, $userId);
         } else {
             $output['error'] = 'missing uploaded file in - ' . $uploadField;
         }
@@ -375,9 +375,9 @@ class BookingManager {
      * @param integer $bookingId Booking.id     
      * @return BookingFile 
      */
-    private function saveBookingFile($file, $bookingId, $userid, $reportType) {
+    private function saveBookingFile($file, $bookingId, $userid) {
         $bFile = new BookingFile();
-        $bFile->initModel($bookingId, $userid, $file, $reportType);
+        $bFile->initModel($bookingId, $userid, $file);
         $bFile->saveModel();
 
         return $bFile;
@@ -432,6 +432,121 @@ class BookingManager {
           return $model;
          * 
          */
+    }
+
+    /**
+     * 根据booking或者patientbooking创建adminbooking
+     * @param type $model
+     */
+    public function createAdminBooking($model) {
+        $adminBooking = new AdminBooking();
+        $cityId = null;
+        $stateId = null;
+        if ($model instanceof PatientBooking) {
+            $adminBooking->booking_type = AdminBooking::BK_TYPE_PB;
+            $adminBooking->patient_id = $model->patient_id;
+            $adminBooking->patient_name = $model->patient_name;
+            if (strIsEmpty($model->patient_id) === false) {
+                $patient = PatientInfo::model()->getById($model->patient_id);
+                if (isset($patient)) {
+                    $adminBooking->patient_mobile = $patient->mobile;
+                    $patientAgeStr = strIsEmpty($patient->age_month) ? '0' : $patient->age_month;
+                    $adminBooking->patient_age = $patient->age . '岁' . $patientAgeStr . '月';
+                    $adminBooking->patient_name = $patient->name;
+                    $adminBooking->patient_state = $patient->state_name;
+                    $adminBooking->patient_city = $patient->city_name;
+                    $adminBooking->disease_name = $patient->disease_name;
+                    $adminBooking->disease_detail = $patient->disease_detail;
+                    $adminBooking->booking_detail = $patient->name;
+                }
+            }
+            $adminBooking->travel_type = $model->travel_type;
+            $adminBooking->booking_status = $model->status;
+            //一开始创建时 只能以下级医生作为标准给其默认值
+            if (strIsEmpty($model->creator_id) === false) {
+                $doctor = UserDoctorProfile::model()->getByUserId($model->creator_id);
+                if (is_null($doctor) === false) {
+                    //推送医生信息补全
+                    $adminBooking->creator_doctor_id = $doctor->id;
+                    $adminBooking->creator_doctor_name = $doctor->name;
+                    $adminBooking->creator_hospital_name = $doctor->hospital_name;
+                    $adminBooking->creator_dept_name = $doctor->hp_dept_name;
+                    $cityId = $doctor->city_id;
+                    $stateId = $doctor->state_id;
+                }
+            }
+            $customer = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_CS);
+            $bd = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_BD);
+        } elseif ($model instanceof Booking) {
+            $adminBooking->booking_type = AdminBooking::BK_TYPE_BK;
+            $adminBooking->patient_id = $model->user_id;
+            $adminBooking->patient_name = $model->contact_name;
+            $adminBooking->booking_detail = $model->contact_name;
+            $adminBooking->patient_mobile = $model->mobile;
+            $adminBooking->booking_status = $model->bk_status;
+            if (strIsEmpty($model->expteam_id) == false) {
+                //根据团队id查询其leader
+                $team = ExpertTeam::model()->getById($model->expteam_id);
+                $adminBooking->expected_doctor_id = $team->leader_id;
+                $adminBooking->expected_doctor_name = $team->leader_name;
+            } else {
+                $adminBooking->expected_doctor_id = $model->doctor_id;
+                $adminBooking->expected_doctor_name = $model->doctor_name;
+            }
+            $adminBooking->expected_hospital_id = $model->hospital_id;
+            $adminBooking->expected_hospital_name = $model->hospital_name;
+            $adminBooking->expected_hp_dept_name = $model->hp_dept_id;
+            $adminBooking->expected_hp_dept_name = $model->hp_dept_name;
+            $adminBooking->disease_name = $model->disease_name;
+            $adminBooking->disease_detail = $model->disease_detail;
+            //根据提供的医院查询其所在城市再查询其地推人员与客服人员
+            if (strIsEmpty($model->doctor_id) === false) {
+                $doctor = Doctor::model()->getById($model->doctor_id);
+                $cityId = $doctor->city_id;
+                $stateId = $doctor->state_id;
+            } elseif (strIsEmpty($model->hospital_id) === false) {
+                $hostital = Hospital::model()->getById($model->hospital_id);
+                $cityId = $hostital->city_id;
+                $stateId = $hostital->state_id;
+            }
+            $customer = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_BK, AdminUser::ROLE_CS);
+            $bd = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_BK, AdminUser::ROLE_BD);
+        }
+        if (is_null($customer) == false) {
+            $adminBooking->admin_user_id = $customer->admin_user_id;
+            $adminBooking->admin_user_name = $customer->admin_user_name;
+        }
+        if (is_null($bd) == false) {
+            $adminBooking->bd_user_id = $bd->admin_user_id;
+            $adminBooking->bd_user_name = $bd->admin_user_name;
+        }
+        //共有字段
+        $adminBooking->booking_id = $model->id;
+        $adminBooking->ref_no = $model->ref_no;
+        $adminBooking->expected_time_start = $model->date_start;
+        $adminBooking->expected_time_end = $model->date_end;
+        $adminBooking->customer_agent = $model->user_agent;
+        $adminBooking->save();
+        return $adminBooking;
+    }
+
+    public function getAdminUser($cityId, $stateId, $bkType, $role) {
+        //若城市和省会为空 则找默认人员 因地推无默认 所以无需判断
+        if (strIsEmpty($cityId) && strIsEmpty($stateId)) {
+            return AdminUserRegionJoin::model()->getDefaultUser($bkType, $role);
+        }
+        //若城市和省会不为空的情况  查找顺序依次为城市 省会 默认 
+        $cityUser = AdminUserRegionJoin::model()->getByCityIdAndBookingTypeAndRole($cityId, $bkType, $role);
+        if (isset($cityUser)) {
+            return $cityUser;
+        } else {
+            $stateUser = AdminUserRegionJoin::model()->getByStateIdAndBookingTypeAndRole($stateId, $bkType, $role);
+            if (isset($stateUser)) {
+                return $stateUser;
+            } else {
+                return AdminUserRegionJoin::model()->getDefaultUser($bkType, $role);
+            }
+        }
     }
 
     /**
@@ -521,41 +636,6 @@ class BookingManager {
             }
         }
         return $model;
-    }
-
-    //crm
-    public function getAdminBookingById($id) {
-        return AdminBooking::model()->getById($id);
-    }
-
-    public function createAdminBookingFile($booking, $reportType) {
-        $bookingId = $booking->getId();
-        $userId = null;
-
-        //$uploadField = BookingFile::model()->file_upload_field;
-        $uploadField = 'file';
-        $file = EUploadedFile::getInstanceByName($uploadField);
-        if (isset($file)) {
-            //文件储存
-            $output['filemodel'] = $this->saveAdminBookingFile($file, $bookingId, $userId, $reportType);
-        } else {
-            $output['error'] = 'missing uploaded file in - ' . $uploadField;
-        }
-        return $output;
-    }
-
-    /**
-     * Get EUploadedFile from $_FILE. Create BookingFile model. Save file in filesystem. Save model in db.
-     * @param EUploadedFile $file EUploadedFile::getInstances()
-     * @param integer $bookingId Booking.id     
-     * @return BookingFile 
-     */
-    private function saveAdminBookingFile($file, $bookingId, $userid, $reportType) {
-        $bFile = new AdminBookingFile();
-        $bFile->initModel($bookingId, $userid, $file, $reportType);
-        $bFile->saveModel();
-
-        return $bFile;
     }
 
 }
