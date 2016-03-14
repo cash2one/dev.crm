@@ -101,6 +101,7 @@ class AdminBooking extends EActiveRecord {
     const CUS_AGENT_DOCTOR = 'doctor';
     const CUS_AGENT_BJ_OFFICE = 'bj_office';
     const CUS_AGENT_TUOSHI = 'tuoshi';
+    const CUS_AGENT_XIAONENG = 'xiaoneng';
     const DISEASE_CONFIRM_NO = 0;
     const DISEASE_CONFIRM_YES = 1;
     const ORDER_STATUS_NO = 0;
@@ -329,9 +330,9 @@ class AdminBooking extends EActiveRecord {
      */
     public function getOptionsBookingType() {
         return array(
-            self::BK_TYPE_BK => '患者端预约',
-            self::BK_TYPE_PB => '医生端预约',
-            self::BK_TYPE_CRM => '人工添加预约',
+            self::BK_TYPE_BK => '患者端',
+            self::BK_TYPE_PB => '医生端',
+            self::BK_TYPE_CRM => '系统端',
         );
     }
 
@@ -386,6 +387,7 @@ class AdminBooking extends EActiveRecord {
             self:: CUS_AGENT_DOCTOR => '下级医生',
             self:: CUS_AGENT_BJ_OFFICE => '北京办介绍',
             self:: CUS_AGENT_TUOSHI => '拓实企业用户',
+            self:: CUS_AGENT_XIAONENG => '在线小能',
         );
     }
 
@@ -458,7 +460,7 @@ class AdminBooking extends EActiveRecord {
         );
     }
 
-    public function getBookingStatue() {
+    public function getBookingStatus() {
         $options = self::getOptionsBookingStatus();
         if (isset($options[$this->booking_status])) {
             return $options[$this->booking_status];
@@ -513,6 +515,14 @@ class AdminBooking extends EActiveRecord {
         } else {
             $this->order_status;
         }
+    }
+
+    public function getAdminUserList() {
+        return CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_CS)), 'id', 'fullname');
+    }
+
+    public function getBdUserList() {
+        return CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_BD)), 'id', 'fullname');
     }
 
     public function setFinalDoctorId($id) {

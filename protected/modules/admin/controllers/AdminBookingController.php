@@ -33,7 +33,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate', 'updateBookingStatus'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'uploadPatientCaseFile', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -56,14 +56,14 @@ class AdminBookingController extends AdminController {
         $form->initModel($data);
 
         //salesorder for adminBooking
-        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_id' => $id, 'bk_type' => StatCode::TRANS_TYPE_AB));
+        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_id' => $id, 'bk_type' => $data->booking_type));
         //跟单任务
         $taskMr = new TaskManager;
         $adminTasks['adminTasksNotDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '0');
         $adminTasks['adminTasksDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '1');
         //创建医生信息
         $creator = null;
-        if (strIsEmpty($data->creator_doctor_id) === false) {
+        if (strIsEmpty($data->creator_doctor_id) == false) {
             $creator = UserDoctorProfile::model()->getByUserId($data->creator_doctor_id);
         }
         $this->render('view', array(
@@ -155,10 +155,17 @@ class AdminBookingController extends AdminController {
         $form = new AdminBookingForm();
         $model = $this->loadModel($id);
         $form->initModel($model);
+        //创建医生信息
+        $creator = null;
+        if (strIsEmpty($model->creator_doctor_id) == false) {
+            $creator = UserDoctorProfile::model()->getByUserId($model->creator_doctor_id);
+        }
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $this->render('update', array(
             'model' => $form,
+            'data' => $model,
+            'creator' => $creator
         ));
     }
 
@@ -312,6 +319,7 @@ class AdminBookingController extends AdminController {
     public function actionList() {
         $criteria = new CDbCriteria();
         $criteria->addCondition("t.date_deleted is NULL");
+        $criteria->addCondition("t.booking_status !=" . StatCode::BK_STATUS_INVALID);
         $criteria->order = "t.id DESC";
         $dataProvider = new CActiveDataProvider('AdminBooking', array(
             'criteria' => $criteria,
@@ -326,6 +334,10 @@ class AdminBookingController extends AdminController {
 
     public function actionUploadsummary() {
         $this->render('uploadSummary');
+    }
+
+    public function actionUploadPatientCaseFile() {
+        $this->render('uploadPatientCaseFile');
     }
 
     /**
@@ -507,6 +519,13 @@ class AdminBookingController extends AdminController {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function actionAjaxUpload() {
+        $url = 'http://192.168.31.119/file.myzd.com/api/tokentest';
+        $data = $this->send_get($url);
+        $output = array('uptoken' => $data->uploadToken);
+        $this->renderJsonOutput($output);
     }
 
 }

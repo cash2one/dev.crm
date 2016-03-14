@@ -2,9 +2,9 @@
 
 class AdminBookingForm extends EFormModel {
 
-    const admin_user_role_cs = '1';//客服
-    const admin_user_role_bd = '2';//地推/KA
-    const admin_user_role_accounting = '3';//财务
+    const ADMIN_USER_ROLE_CS = '1';//客服
+    const ADMIN_USER_ROLE_BD = '2';//地推/KA
+    const ADMIN_USER_ROLE_BD_ACCOUNTING = '3';//财务
 
     public $id;
     public $booking_id;
@@ -252,14 +252,14 @@ class AdminBookingForm extends EFormModel {
 
     public function loadOptionsAdminUser() {
         if (is_null($this->option_admin_user_id)) {
-            $this->option_admin_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::admin_user_role_cs)), 'id', 'fullname');
+            $this->option_admin_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::ADMIN_USER_ROLE_CS)), 'id', 'fullname');
         }
         return $this->option_admin_user_id;
     }
 
     public function loadOptionsBdUser() {
         if (is_null($this->option_bd_user_id)) {
-            $this->option_bd_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::admin_user_role_bd)), 'id', 'fullname');
+            $this->option_bd_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::ADMIN_USER_ROLE_BD)), 'id', 'fullname');
         }
         return $this->option_bd_user_id;
     }

@@ -7,9 +7,9 @@ jQuery(function () {
     var validator = domForm.validate({
         //focusInvalid: true,
         rules: {
-            'task[date_plan]': {
-                required: true
-            },
+//            'task[date_plan]': {
+//                required: true
+//            },
             'task[admin_user_id]': {
                 required: true
             },
@@ -21,9 +21,9 @@ jQuery(function () {
             }
         },
         messages: {
-            'task[date_plan]': {
-                required: "请填写计划跟单时间"
-            },
+//            'task[date_plan]': {
+//                required: "请填写计划跟单时间"
+//            },
             'task[admin_user_id]': {
                 required: "请选择跟单人员"
             },

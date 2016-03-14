@@ -19,6 +19,7 @@ if ($data->booking_type == AdminBooking::BK_TYPE_CRM) {
     $urlLoadDCFiles = $this->createUrl('booking/bookingFile', array('id' => $data->id, 'type' => 'dc'));
 }
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
+$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadPatientCaseFile', array('id' => $data->id));
 $urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'bktype' => $data->booking_type));
 $deleteTaskUrl = $this->createUrl('admintask/ajaxDeleteTask', array('id' => ''));
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
@@ -26,12 +27,12 @@ $orderList = isset($orderList) ? $orderList : null;
 ?>
 <h1 class="">预约</h1>
 <div class="mt30">
-    <a href="<?php echo $urlUpdateAdminBooking; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改订单</a>
-    <a id="createAdminBKOrder" href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>生成订单</a>
-    <a href="<?php echo $this->createUrl('adminbooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>关联医生</a>
-    <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>授权KA/地推</a>
-    <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配业务员</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#updateStatusModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改预约状态</a>
+    <a href="<?php echo $urlUpdateAdminBooking; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改订单</a>
+    <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>授权KA/地推</a>
+    <a id="createAdminBKOrder" href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>生成订单</a>
+    <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配业务员</a>
+    <a href="<?php echo $this->createUrl('adminbooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>关联医生</a>
     <a href="<?php echo $urlUploadSummary; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>上传出院小结</a>
 </div>
 <style>
@@ -44,7 +45,7 @@ $orderList = isset($orderList) ? $orderList : null;
     <div class="row">
         <div class="col-md-3 border-bottom">
             <span class="tab-header">预约状态：</span><?php
-            $bookingStatus = $data->getBookingStatue() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatue();
+            $bookingStatus = $data->getBookingStatus() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatus();
             echo $data->booking_status == StatCode::BK_STATUS_INVALID ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
             ?>
         </div>
@@ -73,7 +74,10 @@ $orderList = isset($orderList) ? $orderList : null;
         <div class="col-md-4 border-bottom">
             <span class="tab-header">年龄：</span><?php echo $data->patient_age == null ? '<span class="color-blue">未填写</span>' : $data->patient_age; ?>
         </div>
-        <div class="col-md-8 border-bottom">
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">性别：</span><span class="color-blue">未填写</span>
+        </div>
+        <div class="col-md-4 border-bottom">
             <span class="tab-header">身份证：</span><?php echo $data->patient_identity == null ? '<span class="color-blue">未填写</span>' : $data->patient_identity; ?>
         </div>
         <div class="col-md-12 border-bottom">
@@ -102,18 +106,46 @@ $bookingCreator = new stdClass();
 if (is_null($creator) == false) {
     $bookingCreator->name = $creator->name;
     $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>';
+    $bookingCreator->cTitle = $creator->clinical_title == null ? '无' : $creator->getClinicalTitle(true);
+    $bookingCreator->stateName = $creator->state_name == null ? '无' : $creator->state_name;
+    $bookingCreator->cityName = $creator->city_name == null ? '无' : $creator->city_name;
+    $bookingCreator->hpName = $creator->hospital_name == null ? '无' : $creator->hospital_name;
+    $bookingCreator->hpDeptName = $creator->hp_dept_name == null ? '无' : $creator->hp_dept_name;
 } else {
     $bookingCreator->name = '无';
     $bookingCreator->mobile = '无';
+    $bookingCreator->cTitle = '无';
+    $bookingCreator->stateName = '无';
+    $bookingCreator->cityName = '无';
+    $bookingCreator->hpName = '无';
+    $bookingCreator->hpDeptName = '无';
 }
 ?>
 <div class="mt30">
     <div class="row">
         <div class="col-md-4 border-bottom">
-            <span class="tab-header">推送医生：</span><?php echo $bookingCreator->name; ?>
+            <span class="tab-header">推送医生姓名：</span><?php echo $bookingCreator->name; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生手机：</span><?php echo $bookingCreator->mobile; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生临床职称：</span><?php echo $bookingCreator->cTitle; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生所在省市：</span><?php echo $bookingCreator->stateName == $bookingCreator->cityName ? $bookingCreator->stateName : $bookingCreator->stateName . ' ' . $bookingCreator->cityName; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生所在医院：</span><?php echo $bookingCreator->hpName; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生所在科室：</span><?php echo $bookingCreator->hpDeptName; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">就诊方式：</span><?php echo $data->getTravelType(true) == null ? '无' : $data->getTravelType(true); ?>
         </div>
         <div class="col-md-8 border-bottom">
-            <span class="tab-header">推送医生手机：</span><?php echo $bookingCreator->mobile; ?>
+            <span class="tab-header">预约详情：</span><?php echo $data->booking_detail == null ? '无' : $data->booking_detail; ?>
         </div>
         <div class="col-md-4 border-bottom">
             <span class="tab-header">理想科室：</span><?php echo $data->expected_hospital_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_hospital_name; ?>

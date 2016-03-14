@@ -59,7 +59,9 @@ class TaskManager {
                 throw new CException("Error saving adminTask");
             }
             $adminTaskJoin = new AdminTaskJoin();
-            $adminTaskJoin->date_plan = $values['date_plan'];
+            if(strIsEmpty($values['date_plan']) == false) {
+                $adminTaskJoin->date_plan = $values['date_plan'];
+            }
             $adminTaskJoin->admin_task_id = $adminTask->getId();
             $adminTaskJoin->admin_user_id = $values['admin_user_id'];
             $adminTaskJoin->work_type = $values['work_type'];

@@ -24,7 +24,7 @@ if ($model->booking_type == AdminBooking::BK_TYPE_CRM) {
     $urlLoadFiles = $this->createUrl('booking/bookingFile', array('id' => $model->id));
 }
 ?>
-<h1 class="">预约患者</h1>
+<h1 class="">修改预约</h1>
 <style>
     .border-bottom{border-bottom: 1px solid #ddd;margin-bottom: 5px;padding-bottom: 5px;}
     .tab-header{display: inline-block;min-width: 6em;}
@@ -48,11 +48,31 @@ echo CHtml::hiddenField("AdminBookingForm[patient_id]", $model->patient_id);
 echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id);
 echo CHtml::hiddenField("AdminBookingForm[travel_type]", $model->travel_type);
 echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expected_hospital_id);
+echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 ?>
+<div class="mt30">
+    <div class="row">
+        <div class="col-md-3 border-bottom">
+            <span class="tab-header">预约状态：</span><?php
+            $bookingStatus = $data->getBookingStatus() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatus();
+            echo $data->booking_status == StatCode::BK_STATUS_INVALID ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
+            ?>
+        </div>
+        <div class="col-sm-3 border-bottom">
+            <span>地推/KA：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
+        </div>
+        <div class="col-sm-3 border-bottom">
+            <span>业务员：</span><?php echo $data->admin_user_name == null ? '<span class="color-blue">未填写</span>' : $data->admin_user_name; ?>
+        </div>
+        <div class="col-sm-3 border-bottom">
+            <span>预约来源：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
+        </div>
+    </div>
+</div>
 <div class="mt30">
     <div class="form-group">
         <div class="col-md-4">
-            <span class="tab-header">客户编号：</span><?php echo $form->textField($model, 'ref_no', array('class' => 'form-control w50', 'disabled' => true)); ?>
+            <span class="tab-header">客户编号：</span><?php echo $model->ref_no; ?>
         </div>
         <div class="col-md-4">
             <span class="tab-header">患者姓名：</span><?php echo $form->textField($model, 'patient_name', array('class' => 'form-control w50')); ?>
@@ -143,8 +163,46 @@ echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expect
         </div>
     </div>
 </div>
+<?php
+$bookingCreator = new stdClass();
+if (is_null($creator) == false) {
+    $bookingCreator->name = $creator->name;
+    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>';
+    $bookingCreator->cTitle = $creator->clinical_title == null ? '无' : $creator->getClinicalTitle(true);
+    $bookingCreator->stateName = $creator->state_name == null ? '无' : $creator->state_name;
+    $bookingCreator->cityName = $creator->city_name == null ? '无' : $creator->city_name;
+    $bookingCreator->hpName = $creator->hospital_name == null ? '无' : $creator->hospital_name;
+    $bookingCreator->hpDeptName = $creator->hp_dept_name == null ? '无' : $creator->hp_dept_name;
+} else {
+    $bookingCreator->name = '无';
+    $bookingCreator->mobile = '无';
+    $bookingCreator->cTitle = '无';
+    $bookingCreator->stateName = '无';
+    $bookingCreator->cityName = '无';
+    $bookingCreator->hpName = '无';
+    $bookingCreator->hpDeptName = '无';
+}
+?>
 <div class="mt30">
     <div class="form-group">
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生姓名：</span><?php echo $bookingCreator->name; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生手机：</span><?php echo $bookingCreator->mobile; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生临床职称：</span><?php echo $bookingCreator->cTitle; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生所在省市：</span><?php echo $bookingCreator->stateName == $bookingCreator->cityName ? $bookingCreator->stateName : $bookingCreator->stateName . ' ' . $bookingCreator->cityName; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生所在医院：</span><?php echo $bookingCreator->hpName; ?>
+        </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">推送医生所在科室：</span><?php echo $bookingCreator->hpDeptName; ?>
+        </div>
         <div class="col-md-4">
             <span class="tab-header">理想医院：</span><?php
             echo $form->textField($model, 'expected_hospital_name', array('class' => 'form-control'));

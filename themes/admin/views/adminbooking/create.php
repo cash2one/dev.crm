@@ -35,12 +35,10 @@ echo CHtml::hiddenField("AdminBookingForm[booking_type]", $model->booking_type);
 echo CHtml::hiddenField("AdminBookingForm[patient_id]", $model->patient_id);
 echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
 echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expected_hospital_id);
+echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 ?>
 <div class="mt30">
     <div class="form-group">
-        <div class="col-md-4">
-            <span class="tab-header">客户编号：</span><?php echo $form->textField($model, 'ref_no', array('class' => 'form-control w50', 'readonly' => true)); ?>
-        </div>
         <div class="col-md-4">
             <span class="tab-header">患者姓名：</span><?php echo $form->textField($model, 'patient_name', array('class' => 'form-control w50')); ?>
         </div>

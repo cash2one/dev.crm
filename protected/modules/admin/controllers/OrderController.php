@@ -175,10 +175,9 @@ class OrderController extends AdminController {
     public function actionCreateAdminBKOrder($bid) {
         //  $booking = Booking::model()->getById($bid);
         $booking = $this->booking;
-
         $order = new SalesOrder();
         $order->bk_id = $booking->id;
-        $order->bk_type = $booking->booking_type;
+        $order->bk_type = AdminBooking::BK_TYPE_CRM;
         $order->bk_ref_no = $booking->ref_no;
         $order->user_id = $booking->patient_id;
         $order->bd_code = $booking->bd_user_name;
@@ -204,6 +203,7 @@ class OrderController extends AdminController {
 
             $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_AB);
             //$order->validate();
+            //var_dump($order);exit;
             if ($order->save()) {
                 $this->redirect(array('view', 'id' => $order->id));
             }
