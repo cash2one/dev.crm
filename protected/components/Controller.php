@@ -179,4 +179,13 @@ abstract class Controller extends CController {
         }
     }
 
+    /**
+     * 模拟get进行url请求
+     * @param string $url
+     */
+    function send_get($url) {
+        $result = file_get_contents($url, false);
+        return json_decode($result, true);
+    }
+
 }
