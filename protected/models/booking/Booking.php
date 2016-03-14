@@ -337,16 +337,14 @@ class Booking extends EActiveRecord {
      */
     private function getRefNumberPrefix() {
         switch ($this->bk_type) {
-            //case StatCode::BK_TYPE_FACULTY :
-            //     return "FC";
             case StatCode::BK_TYPE_DOCTOR :
                 return "DR";
             case StatCode::BK_TYPE_EXPERTTEAM :
                 return "ET";
-            //case self::BOOKING_TYPE_HOSPITAL :
-            //   return "HP";
             case StatCode::BK_TYPE_QUICKBOOK :
                 return "QB";
+            case StatCode::BK_TYPE_DEPT :
+                return "HP";
             default:
                 return "AA";
         }
