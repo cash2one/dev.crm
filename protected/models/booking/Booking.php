@@ -365,9 +365,9 @@ class Booking extends EActiveRecord {
     }
 
     public function getExpertNameBooked() {
-        if(!is_object($this->getExpertBooked())){
+        if (!is_object($this->getExpertBooked())) {
             return $this->getExpertBooked();
-        }elseif ($this->getExpertBooked() !== null) {
+        } elseif ($this->getExpertBooked() !== null) {
             return $this->getExpertBooked()->getName();
         } else {
             return '';
@@ -509,7 +509,7 @@ class Booking extends EActiveRecord {
     public function getCorpStaffRef() {
         return $this->corp_staff_rel;
     }
-    
+
     public function getUserAgent() {
         return $this->user_agent;
     }

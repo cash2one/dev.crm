@@ -290,7 +290,7 @@ class AdminBooking extends EActiveRecord {
     }
 
     private function createRefNumber() {
-        if ($this->isNewRecord) {
+        if (strIsEmpty($this->ref_no)) {
             $flag = true;
             while ($flag) {
                 $refNumber = $this->getRefNumberPrefix() . date("ymd") . str_pad(mt_rand(0, 999999), 6, "0", STR_PAD_LEFT);
@@ -317,6 +317,8 @@ class AdminBooking extends EActiveRecord {
                 return "QB";
             case StatCode::BK_TYPE_DEPT :
                 return "HP";
+            case self::BK_TYPE_CRM :
+                return "BK";
             default:
                 return "AA";
         }
