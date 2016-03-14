@@ -33,7 +33,7 @@ class UserController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'view', 'admin', 'listdoctors', 'verify', 'ajaxUserSearch', 'searchResult', 'search', 'ajaxUploadCert','delectDoctorCert'),
+                'actions' => array('index', 'view', 'admin', 'listdoctors', 'verify', 'ajaxUserSearch', 'searchResult', 'search', 'ajaxUploadCert', 'delectDoctorCert'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -71,7 +71,7 @@ class UserController extends AdminController {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $with = array('userDoctorProfile', 'userDoctorCerts'=>array('on'=>'userDoctorCerts.date_deleted is NULL'));
+        $with = array('userDoctorProfile', 'userDoctorCerts' => array('on' => 'userDoctorCerts.date_deleted is NULL'));
         $model = $this->loadModel($id, $with);
         $this->render('view', array(
             'model' => $model
@@ -259,10 +259,34 @@ class UserController extends AdminController {
     }
 
     //异步删除医生证明图片
-    public function actionDelectDoctorCert($id,$doctorId) {
+    public function actionDelectDoctorCert($id, $doctorId) {
         $userId = $this->getCurrentUserId();
         $userMgr = new UserManager();
         $output = $userMgr->delectDoctorCertByIdAndUserId($id, $doctorId);
+        $this->renderJsonOutput($output);
+    }
+
+    //保存七牛上传医生照片的数据
+    public function actionAjaxDoctorCert() {
+        $output = array('status' => 'no');
+        if (isset($_POST['cert'])) {
+            $values = $_POST['cert'];
+            $form = new UserDoctorCertForm();
+            $form->setAttributes($values, true);
+            $form->initModel();
+            if ($form->validate() === false) {
+                $userDoctorCert = new UserDoctorCert();
+                $userDoctorCert->setAttributes($form->attributes, true);
+                if ($userDoctorCert->save()) {
+                    $output['status'] = 'ok';
+                    $output['cert_id'] = $userDoctorCert->getId();
+                } else {
+                    $output['errors'] = $userDoctorCert->getErrors();
+                }
+            }
+        } else {
+            $output['errors'] = 'no data....';
+        }
         $this->renderJsonOutput($output);
     }
 

@@ -28,10 +28,12 @@ class UserDoctorCert extends EFileModel {
 
     public $file_upload_field = 'file'; // $_FILE['file'].   
 
+    const HAS_REMOTE = 1;
+    const HAS_NOTREMOTE = 0;
+
     /**
      * @return string the associated database table name
      */
-
     public function tableName() {
         return 'user_doctor_cert';
     }
@@ -44,12 +46,12 @@ class UserDoctorCert extends EFileModel {
         // will receive user inputs.
         return array(
             array('user_id, uid, file_ext, file_name, file_url', 'required'),
-            array('user_id, cert_type, file_size, display_order', 'numerical', 'integerOnly' => true),
+            array('user_id, cert_type, file_size, display_order, has_remote', 'numerical', 'integerOnly' => true),
             array('uid', 'length', 'max' => 32),
             array('file_ext', 'length', 'max' => 10),
             array('mime_type', 'length', 'max' => 20),
-            array('file_name, thumbnail_name', 'length', 'max' => 40),
-            array('file_url, thumbnail_url, base_url', 'length', 'max' => 255),
+            array('file_name, thumbnail_name, remote_file_key', 'length', 'max' => 40),
+            array('file_url, thumbnail_url, base_url, remote_domain ', 'length', 'max' => 255),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -132,29 +134,30 @@ class UserDoctorCert extends EFileModel {
             return false;
         }
     }
-    
+
     //查询医生文件
-    public function getDoctorFilesByUserId($userId,$attrbutes=null,$with=null){
-        return $this->getAllByAttributes(array('t.user_id'=>$userId), $with);
+    public function getDoctorFilesByUserId($userId, $attrbutes = null, $with = null) {
+        return $this->getAllByAttributes(array('t.user_id' => $userId), $with);
     }
 
     //Overwrites parent::getFileUploadRootPath().
     public function getFileUploadRootPath() {
         return Yii::app()->params['doctorFilePath'];
     }
-/*
-    public function getFileSystemUploadPath($folderName = null) {
-        return parent::getFileSystemUploadPath($folderName);
-    }
 
-    public function getFileUploadPath($folderName = null) {
-        return parent::getFileUploadPath($folderName);
-    }
+    /*
+      public function getFileSystemUploadPath($folderName = null) {
+      return parent::getFileSystemUploadPath($folderName);
+      }
 
-    public function deleteModel($absolute = true) {
-        return parent::deleteModel($absolute);
-    }
-*/
+      public function getFileUploadPath($folderName = null) {
+      return parent::getFileUploadPath($folderName);
+      }
+
+      public function deleteModel($absolute = true) {
+      return parent::deleteModel($absolute);
+      }
+     */
     /*     * ****** Accessors ****** */
 
     public function getUser() {
