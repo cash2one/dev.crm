@@ -203,6 +203,12 @@ if (is_null($creator) == false) {
         <div class="col-md-4 border-bottom">
             <span class="tab-header">推送医生所在科室：</span><?php echo $bookingCreator->hpDeptName; ?>
         </div>
+        <div class="col-md-4 border-bottom">
+            <span class="tab-header">就诊方式：</span><?php echo $data->getTravelType(true) == null ? '无' : $data->getTravelType(true); ?>
+        </div>
+        <div class="col-md-8 border-bottom">
+            <span class="tab-header">预约详情：</span><?php echo $data->booking_detail == null ? '无' : $data->booking_detail; ?>
+        </div>
         <div class="col-md-4">
             <span class="tab-header">理想医院：</span><?php
             echo $form->textField($model, 'expected_hospital_name', array('class' => 'form-control'));

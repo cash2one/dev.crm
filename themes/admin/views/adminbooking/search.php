@@ -36,9 +36,9 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         <div>
             <select name = 'bookingType' class="form-control col-sm-2">
                 <option value = ''>全部</option>
-                <option value = '0'>人工添加预约</option>
-                <option value = '1'>患者端预约</option>
-                <option value = '2'>医生端预约</option>
+                <option value = '0'>系统预约</option>
+                <option value = '1'>患者预约</option>
+                <option value = '2'>医生预约</option>
             </select>
         </div>
     </div>
