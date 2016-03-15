@@ -467,7 +467,7 @@ class BookingManager {
                 $doctor = UserDoctorProfile::model()->getByUserId($model->creator_id);
                 if (is_null($doctor) === false) {
                     //推送医生信息补全
-                    $adminBooking->creator_doctor_id = $doctor->id;
+                    $adminBooking->creator_doctor_id = $doctor->user_id;
                     $adminBooking->creator_doctor_name = $doctor->name;
                     $adminBooking->creator_hospital_name = $doctor->hospital_name;
                     $adminBooking->creator_dept_name = $doctor->hp_dept_name;

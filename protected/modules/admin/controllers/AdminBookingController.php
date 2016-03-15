@@ -305,6 +305,30 @@ class AdminBookingController extends AdminController {
         $this->renderJsonOutput($output);
     }
 
+    //保存文件信息
+    public function actionAjaxSaveAdminFile() {
+        $output = array('status' => 'no');
+        if (isset($_POST['admin'])) {
+            $values = $_POST['admin'];
+            $form = new AdminBookingFileForm();
+            $form->setAttributes($values, true);
+            $form->initModel();
+            if ($form->validate() === false) {
+                $adminfile = new AdminBookingFile();
+                $adminfile->setAttributes($form->attributes, true);
+                if ($adminfile->save()) {
+                    $output['status'] = 'ok';
+                    $output['file_id'] = $adminfile->getId();
+                } else {
+                    $output['errors'] = $userDoctorCert->getErrors();
+                }
+            }
+        } else {
+            $output['errors'] = 'no data....';
+        }
+        $this->renderJsonOutput($output);
+    }
+
     /**
      * 异步adminbooking加载图片
      * @param type $id
