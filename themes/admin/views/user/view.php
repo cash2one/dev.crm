@@ -2,6 +2,8 @@
 /* @var $this UserController */
 /* @var $model User */
 $urlUploadFile = $this->createUrl("user/ajaxUploadCert");
+$urlAjaxDoctorCert = $this->createUrl('user/ajaxDoctorCert');
+$urlAjaxLoadFiles = 'http://file.mingyizhudao.com/api/loaddrcert?userId=' . $model->getId();
 
 $this->breadcrumbs = array(
     '用户列表' => array('admin'),
@@ -88,54 +90,58 @@ $files = $model->getUserDoctorCerts();
 <div>
     <h3>证件：共 <?php echo count($files) ?>（份）</h3>
     <div class="form-wrapper">
-        <form id="doctor-form" data-url-uploadfile="<?php echo $urlUploadFile; ?>" data-url-return="<?php echo $urlReturn; ?>">
-            <input id="doctorId" type="hidden" name="doctor[id]" value="<?php echo $model->id; ?>" />                
+        <form id="doctor-form" data-url-uploadfile="<?php echo $urlAjaxDoctorCert; ?>" data-url-return="<?php echo $urlReturn; ?>" method="post">
+            <input id="doctorId" type="hidden" name="doctor[id]" value="<?php echo $model->id; ?>" />    
+            <input type="hidden" id="domain" value="http://7xrh6w.com2.z0.glb.qiniucdn.com"> 
+            <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('user/ajaxToken'); ?>">
         </form>
         <div class="mb20 row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <?php $this->renderPartial('_uploadFile'); ?>
             </div>
         </div>
     </div>
-    <?php
-    if (arrayNotEmpty($files)):
-        echo '<div class="row imglist">';
-        $i = 0;
-        foreach ($files as $file):
-            $i++;
-            ?>
-            <div class="col-sm-2 mt10 docImg">
-                <?php echo CHtml::image($file->getAbsFileUrl(), '', array('class' => "img-responsive")); ?>
-                <a class="delete" href="<?php echo $this->createUrl('user/delectDoctorCert', array('id' => $file->id, 'doctorId' => $model->id)); ?>">
-                    <div class="file-panel">删除</div>
-                </a>
-            </div>
-            <?php
-        endforeach;
-        echo '</div>';
-    endif;
-    ?>
+    
+    <div class="row imglist">
+
+    </div>
 </div>
 <script>
     $(document).ready(function () {
-        $('a.delete').click(function(e){
+        $('a.delete').click(function (e) {
             e.preventDefault();
             var deleteUrl = $(this).attr('href');
-            var docImg= $(this).parents('.docImg');
-            if(confirm('确定删除这种图片?')){
+            var docImg = $(this).parents('.docImg');
+            if (confirm('确定删除这种图片?')) {
                 $.ajax({
-                    url:deleteUrl,
-                    success:function(data){
-                        if(data.status == 'ok'){
+                    url: deleteUrl,
+                    success: function (data) {
+                        if (data.status == 'ok') {
                             docImg.remove();
                             alert('删除成功!');
                         }
                     },
-                    error:function(){
+                    error: function () {
                         alert('删除失败!');
                     }
                 });
             }
         });
+        $.ajax({
+            url: '<?php echo $urlAjaxLoadFiles; ?>',
+            success: function (data) {
+                setImgHtml(data.results);
+            }
+        });
     });
+    function setImgHtml(results) {
+        var innerHtml = '';
+        var files = results.files;
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            innerHtml += '<div class="col-sm-2 mt10 docImg"><img src=' + file.absFileUrl + '/>'+
+                    '<a class="delete" href="<?php echo $this->createUrl('user/delectDoctorCert'); ?>?id='+file.id+'&userId=<?php echo $model->id; ?>"><div class="file-panel">删除</div></a></div>';
+        }
+        $('.imglist').html(innerHtml);
+    }
 </script>

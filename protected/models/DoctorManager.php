@@ -339,8 +339,32 @@ class DoctorManager {
                 $dept = HospitalDepartment::model()->getById($form->hp_dept_id);
                 $form->hp_dept_name = $dept->getName();
             }
+            //判断是否有值，若无则赋值为null
+            if (strIsEmpty($form->description)) {
+                $form->description = null;
+            }
+            if (strIsEmpty($form->career_exp)) {
+                $form->career_exp = null;
+            }
+            if (strIsEmpty($form->reason_one)) {
+                $form->reason_one = null;
+            }
+            if (strIsEmpty($form->reason_two)) {
+                $form->reason_two = null;
+            }
+            if (strIsEmpty($form->reason_three)) {
+                $form->reason_three = null;
+            }
+            if (strIsEmpty($form->reason_four)) {
+                $form->reason_four = null;
+            }
+            if (strIsEmpty($form->honour)) {
+                $form->honour = null;
+            }
             $model->setAttributes($form->attributes);
-            $model->honour = $form->honour;//explode('#', $form->honour);
+            $model->honour = $form->honour; //explode('#', $form->honour);
+            
+            
             if ($model->save()) {
                 //保存成功 保存关联表
                 $join = HospitalDeptDoctorJoin::model()->getByDoctorIdAndDeptId($model->getId(), $deptId);

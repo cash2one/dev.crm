@@ -52,7 +52,7 @@ class UserDoctorCert extends EFileModel {
             array('mime_type', 'length', 'max' => 20),
             array('file_name, thumbnail_name, remote_file_key', 'length', 'max' => 40),
             array('file_url, thumbnail_url, base_url, remote_domain ', 'length', 'max' => 255),
-            array('date_updated, date_deleted', 'safe'),
+            array('file_size, remote_domain, remote_file_key, mime_type, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, user_id, cert_type, uid, file_ext, mime_type, file_name, file_url, file_size, thumbnail_name, thumbnail_url, base_url, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),

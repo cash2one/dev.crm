@@ -6,10 +6,8 @@
 
 $(function () {
     var num = 0;
-    var domForm = $('#booking-form'),
-            btnSubmit = $('#btnSubmitForm'),
-            returnUrl = domForm.attr('data-url-return'),
-            fileParam = {"id": "", "name": ""};
+    var domForm = $('#doctor-form'),
+            btnSubmit = $('#btnSubmit');
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'pickfiles',
@@ -59,8 +57,8 @@ $(function () {
             },
             'UploadComplete': function () {
                 $('#success').show();
-                btnSubmit.attr('disabled', false);
-                location.href = returnUrl;
+                location.reload();
+                btnSubmit.attr('disabled',false);
             },
             'FileUploaded': function (up, file, info) {
                 //单个文件上传成功所做的事情 
@@ -77,15 +75,14 @@ $(function () {
                 progress.setComplete(up, info);
                 var formdata = new FormData();
                 var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
-                formdata.append('admin[admin_booking_id]', fileParam.id);
-                formdata.append('admin[file_size]', file.size);
-                formdata.append('admin[report_type]', domForm.find('#reportType').val());
-                formdata.append('admin[mime_type]', file.type);
-                formdata.append('admin[file_name]', file.name);
-                formdata.append('admin[file_url]', file.name);
-                formdata.append('admin[file_ext]', fileExtension);
-                formdata.append('admin[remote_domain]', domForm.find('#domain').val());
-                formdata.append('admin[remote_file_key]', file.name);
+                formdata.append('cert[user_id]', $('#doctor-form').find('#doctorId').val());
+                formdata.append('cert[file_size]', file.size);
+                formdata.append('cert[mime_type]', file.type);
+                formdata.append('cert[file_name]', file.name);
+                formdata.append('cert[file_url]', file.name);
+                formdata.append('cert[file_ext]', fileExtension);
+                formdata.append('cert[remote_domain]', $('#doctor-form').find('#domain').val());
+                formdata.append('cert[remote_file_key]', file.name);
                 $.ajax({
                     url: domForm.attr('data-url-uploadfile'),
                     data: formdata,
@@ -101,6 +98,11 @@ $(function () {
                         alert('上传失败!');
                     }
                 });
+//                var infoJson = JSON.parse(info);
+//                domForm.append('<input name="file[size]" value="'+file.size+'" type="hidden">');
+//                domForm.append('<input name="file[type]" value="'+file.type+'" type="hidden">');
+//                domForm.append('<input name="file[remoteDomain]" value="'+domForm.find('#domain').val()+'" type="hidden">');
+//                domForm.append('<input name="file[remoteKey]" value="'+infoJson.key+'" type="hidden">');
             },
             'Error': function (up, err, errTip) {
                 $('table').show();
@@ -120,11 +122,12 @@ $(function () {
     uploader.bind('FileUploaded', function () {
         console.log('hello man,a file is uploaded');
     });
-
-    btnSubmit.click(function () {
-        domForm.submit();
+    
+    btnSubmit.click(function(){
+        btnSubmit.attr('disabled',true);
+        uploader.start();
     });
-
+    
     $('#container').on(
             'dragenter',
             function (e) {
@@ -274,176 +277,5 @@ $(function () {
         newImg.src = newUrl;
         return false;
     });
-//表单验证板块
-    var validator = domForm.validate({
-        rules: {
-            'AdminBookingForm[booking_id]': {
-                required: true
-            },
-            'AdminBookingForm[patient_name]': {
-                required: true
-            },
-            'AdminBookingForm[patient_mobile]': {
-                required: true
-            },
-            'AdminBookingForm[patient_age]': {
-                required: true,
-                max: 150
-            },
-            'AdminBookingForm[state_id]': {
-                required: true
-            },
-            'AdminBookingForm[city_id]': {
-                required: true
-            },
-            'AdminBookingForm[disease_name]': {
-                required: true,
-                maxlength: 50
-            },
-            'AdminBookingForm[disease_detail]': {
-                required: true,
-                maxlength: 1000
-            },
-            'AdminBookingForm[expected_time_start]': {
-                required: true
-            },
-            'AdminBookingForm[expected_time_end]': {
-                required: true
-            },
-            'AdminBookingForm[expected_hospital_id]': {
-                required: true
-            },
-            'AdminBookingForm[expected_hp_dept_id]': {
-                required: true
-            },
-//            'AdminBookingForm[experted_doctor_name]': {
-//                required: true
-//            },
-//            'AdminBookingForm[disease_confirm]': {
-//                required: true
-//            },
-//            'AdminBookingForm[customer_request]': {
-//                required: true
-//            },
-//            'AdminBookingForm[customer_diversion]': {
-//                required: true
-//            },
-//            'AdminBookingForm[customer_agent]': {
-//                required: true
-//            },
-            'AdminBookingForm[admin_user_id]': {
-                required: true
-            },
-        },
-        messages: {
-            'AdminBookingForm[booking_id]': {
-                required: '请填写预约ID'
-            },
-            'AdminBookingForm[patient_name]': {
-                required: '请填写患者姓名'
-            },
-            'AdminBookingForm[patient_mobile]': {
-                required: '请填写患者手机'
-            },
-            'AdminBookingForm[patient_age]': {
-                required: '请填写患者年龄',
-                max: '患者最大年龄为150岁'
-            },
-            'AdminBookingForm[state_id]': {
-                required: '请选择患者所在省'
-            },
-            'AdminBookingForm[city_id]': {
-                required: '请选择患者所在市'
-            },
-            'AdminBookingForm[disease_name]': {
-                required: '请填写病情诊断',
-                maxlength: '病情诊断最多50字'
-            },
-            'AdminBookingForm[disease_detail]': {
-                required: '请填写病情描述',
-                maxlength: '病情描述最多1000字'
-            },
-            'AdminBookingForm[expected_time_start]': {
-                required: '请选择期望手术时间开始'
-            },
-            'AdminBookingForm[expected_time_end]': {
-                required: '请选择期望手术时间结束'
-            },
-            'AdminBookingForm[expected_hospital_id]': {
-                required: '请选择理想医院'
-            },
-            'AdminBookingForm[expected_hp_dept_id]': {
-                required: '请选择理想科室'
-            },
-//            'AdminBookingForm[experted_doctor_name]': {
-//                required: '请填写理想专家'
-//            },
-//            'AdminBookingForm[disease_confirm]': {
-//                required: '请选择是否确诊'
-//            },
-//            'AdminBookingForm[customer_request]': {
-//                required: '请选择患者目的'
-//            },
-//            'AdminBookingForm[customer_diversion]': {
-//                required: '请选择导流来源'
-//            },
-//            'AdminBookingForm[customer_agent]': {
-//                required: '请选择客户来源'
-//            },
-            'AdminBookingForm[admin_user_id]': {
-                required: '请选择业务员'
-            },
-        },
-//        errorContainer: "div.error",
-//        errorLabelContainer: $("#booking-form div .error"),
-//        wrapper: "div",
-        errorElement: "div",
-        errorPlacement: function (error, element) {                             //错误信息位置设置方法  
-            element.parent().find("div.error").remove();
-            error.appendTo(element.parent());     //这里的element是录入数据的对象  
-        },
-        submitHandler: function () {
-            disabledBtn(btnSubmit);
-            //form插件的异步无刷新提交
-            actionUrl = domForm.attr('data-url-action');
-            //returnUrl = domForm.attr("data-url-return");
-            //alert("asdf");
-            //btnSubmit.button("disable");
-            //var formdata = domForm.serializeArray();
-            domForm.ajaxSubmit({
-                type: 'post',
-                url: actionUrl,
-                success: function (data) {
-                    //图片上传
-                    if (data.status == 'ok') {
-                        fileParam.id = data.booking.id;
-                        //基本数据插入成功  上传图片
-                        returnUrl = returnUrl + '/' + data.booking.id;
-                        uploader.start();
-                        enableBtn(btnSubmit);
-                    } else {
-                        domForm.find("div.error").remove();
-                        //append errorMsg
-                        isfocus = true;
-                        for (error in data.errors) {
-                            errerMsg = data.errors[error];
-                            inputKey = '#booking_' + error;
-                            $(inputKey).focus();
-                            $(inputKey).parent().after("<div class='error'>" + errerMsg + "</div> ");
-                        }
-                        enableBtn(btnSubmit);
-                    }
-                },
-                error: function (XmlHttpRequest, textStatus, errorThrown) {
-                    enableBtn(btnSubmit);
-                    console.log(XmlHttpRequest);
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                },
-                complete: function () {
 
-                }
-            });
-        }
-    });
 });

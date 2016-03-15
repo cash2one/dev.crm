@@ -77,7 +77,7 @@ class Doctor extends EActiveRecord {
             array('email, search_keywords', 'length', 'max' => 100),
             array('password', 'length', 'max' => 64),
             array('salt', 'length', 'max' => 40),
-            array('reason_one, reason_two, reason_three, reason_four, is_contracted, role, date_activated, date_verified, last_login_time, career_exp, honour, date_created, date_updated, date_deleted', 'safe'),
+            array('description,reason_one, reason_two, reason_three, reason_four, is_contracted, role, date_activated, date_verified, last_login_time, career_exp, honour, date_created, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, name, fullname, mobile, hospital_id, faculty, medical_title, academic_title, gender, state_id, city_id, disease_specialty, surgery_specialty, description, email,wechat, tel, display_order, date_activated, date_verified, last_login_time, career_exp', 'safe', 'on' => 'search'),
@@ -201,7 +201,7 @@ class Doctor extends EActiveRecord {
 
     //去掉不为空字段的空格
     protected function trimAttributes() {
-        return array('name', 'fullname', 'description');
+        return array('name', 'fullname');
     }
 
     /**

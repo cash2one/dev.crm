@@ -26,13 +26,14 @@ class UserSearch extends ESearchModel {
             }
 
             //Search User->userDoctorProfile when User->role = 2
-        if (isset($this->queryParams['role'])) {
+            if (isset($this->queryParams['role'])) {
                 $role = $this->queryParams['role'];
                 $this->criteria->compare("t.role", $role);
             }
             if ($role == StatCode::USER_ROLE_DOCTOR) {
                 $udpAlias = 'udp';
                 $this->criteria->with = array('userDoctorProfile' => array('alias' => $udpAlias));
+                $this->criteria->with = array('userDoctorCerts'=>array('on' => 'userDoctorCerts.date_deleted IS NULL'));
                 $this->criteria->distinct = true;
                 //医生姓名
                 if (isset($this->queryParams['name'])) {
@@ -80,18 +81,18 @@ class UserSearch extends ESearchModel {
                 //是否签约
                 if (isset($this->queryParams['isContracted'])) {
                     $str = '';
-                    if($this->queryParams['isContracted'] == 1){
+                    if ($this->queryParams['isContracted'] == 1) {
                         $str = 'NOT';
                     }
-                    $this->criteria->addCondition($udpAlias . '.date_contracted IS '.$str.' NULL');
+                    $this->criteria->addCondition($udpAlias . '.date_contracted IS ' . $str . ' NULL');
                 }
                 //是否认证
                 if (isset($this->queryParams['isVerified'])) {
                     $str = '';
-                    if($this->queryParams['isVerified'] == 1){
+                    if ($this->queryParams['isVerified'] == 1) {
                         $str = 'NOT';
                     }
-                    $this->criteria->addCondition($udpAlias . '.date_verified IS '.$str.' NULL');
+                    $this->criteria->addCondition($udpAlias . '.date_verified IS ' . $str . ' NULL');
                 }
             }
         }

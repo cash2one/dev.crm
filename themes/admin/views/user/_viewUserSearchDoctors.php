@@ -1,6 +1,7 @@
 
 <?php
 $profile = $data->getUserDoctorProfile();
+$certs = $data->getUserDoctorCerts();
 $profileData = new stdClass();
 if (!isset($profile)) {
     $profileData->name = '';
@@ -29,6 +30,9 @@ if (!isset($profile)) {
     $profileData->date_verified = $profile->getDateVerified();
     $profileData->verified_by = $profile->getVerifiedBy();
 }
+if(isset($certs)){
+    $doctorCerts = count($data->getUserDoctorCerts());
+}
 ?>
 
 <tr>
@@ -41,6 +45,7 @@ if (!isset($profile)) {
     <td><?php echo $profileData->academic_title; ?></td>
     <td><?php echo $profileData->verified; ?></td>
     <td><?php echo $profileData->contract; ?></td>
-    <td><a href="<?php echo $this->createUrl('user/view',array('id'=>$data->id))?>"><img src="/myzd/assets/9f55b493/gridview/view.png" alt="查看"></a></td>
+    <td><?php echo $doctorCerts; ?></td>
+    <td><a href="<?php echo $this->createUrl('user/view',array('id'=>$data->id))?>">查看</a></td>
 </tr>
 

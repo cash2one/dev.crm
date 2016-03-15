@@ -6,15 +6,13 @@
 
 $(function () {
     var num = 0;
-    var domForm = $('#booking-form'),
-            btnSubmit = $('#btnSubmit'),
-            returnUrl = domForm.attr('data-url-return');
     var uploader = Qiniu.uploader({
+        domForm:$('#booking-form'),
         runtimes: 'html5,flash,html4',
         browse_button: 'pickfiles',
         container: 'container',
         drop_element: 'container',
-        max_file_size: '10mb',
+        max_file_size: '1000mb',
         flash_swf_url: 'bower_components/plupload/js/Moxie.swf',
         dragdrop: true,
         chunk_size: '4mb',
@@ -22,7 +20,7 @@ $(function () {
         domain: $('#domain').val(),
         get_new_uptoken: false,
         // downtoken_url: '/downtoken',
-        //unique_names: true,
+        // unique_names: true,
         // save_key: true,
         // x_vars: {
         //     'id': '1234',
@@ -32,7 +30,7 @@ $(function () {
         //         return time;
         //     },
         // },
-        auto_start: false,
+        auto_start: true,
         log_level: 5,
         init: {
             'FilesAdded': function (up, files) {
@@ -58,8 +56,6 @@ $(function () {
             },
             'UploadComplete': function () {
                 $('#success').show();
-                btnSubmit.attr('disabled', false);
-                //location.href = returnUrl;
             },
             'FileUploaded': function (up, file, info) {
                 //单个文件上传成功所做的事情 
@@ -72,46 +68,16 @@ $(function () {
                 // var domain = up.getOption('domain');
                 // var res = parseJSON(info);
                 // var sourceLink = domain + res.key; 获取上传成功后的文件的Url
+
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 progress.setComplete(up, info);
-                var formdata = new FormData();
-                var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
-                formdata.append('admin[admin_booking_id]', domForm.find('#bookingId').val());
-                formdata.append('admin[file_size]', file.size);
-                formdata.append('admin[report_type]', domForm.find('#reportType').val());
-                formdata.append('admin[mime_type]', file.type);
-                formdata.append('admin[file_name]', file.name);
-                formdata.append('admin[file_url]', file.name);
-                formdata.append('admin[file_ext]', fileExtension);
-                formdata.append('admin[remote_domain]', domForm.find('#domain').val());
-                formdata.append('admin[remote_file_key]', file.name);
-                $.ajax({
-                    url: domForm.attr('data-url-uploadfile'),
-                    data: formdata,
-                    type: 'post',
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        if (data.status == 'no') {
-                            alert('上传失败!');
-                        }
-                    },
-                    error: function (data) {
-                        alert('上传失败!');
-                    }
-                });
-//                var infoJson = JSON.parse(info);
-//                domForm.append('<input name="file[size]" value="'+file.size+'" type="hidden">');
-//                domForm.append('<input name="file[type]" value="'+file.type+'" type="hidden">');
-//                domForm.append('<input name="file[remoteDomain]" value="'+domForm.find('#domain').val()+'" type="hidden">');
-//                domForm.append('<input name="file[remoteKey]" value="'+infoJson.key+'" type="hidden">');
+                var formmat
             },
             'Error': function (up, err, errTip) {
                 $('table').show();
                 var progress = new FileProgress(err.file, 'fsUploadProgress');
                 progress.setError();
                 progress.setStatus(errTip);
-                alert('上传失败!');
             }
             // ,
             // 'Key': function(up, file) {
@@ -121,15 +87,10 @@ $(function () {
             // }
         }
     });
+
     uploader.bind('FileUploaded', function () {
         console.log('hello man,a file is uploaded');
     });
-
-    btnSubmit.click(function () {
-        btnSubmit.attr('disabled', true);
-        uploader.start();
-    });
-
     $('#container').on(
             'dragenter',
             function (e) {

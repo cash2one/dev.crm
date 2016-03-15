@@ -33,7 +33,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'uploadPatientCaseFile', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'uploadPatientCaseFile', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -313,14 +313,14 @@ class AdminBookingController extends AdminController {
             $form = new AdminBookingFileForm();
             $form->setAttributes($values, true);
             $form->initModel();
-            if ($form->validate() === false) {
+            if ($form->validate()) {
                 $adminfile = new AdminBookingFile();
                 $adminfile->setAttributes($form->attributes, true);
                 if ($adminfile->save()) {
                     $output['status'] = 'ok';
                     $output['file_id'] = $adminfile->getId();
                 } else {
-                    $output['errors'] = $userDoctorCert->getErrors();
+                    $output['errors'] = $adminfile->getErrors();
                 }
             }
         } else {
@@ -546,9 +546,9 @@ class AdminBookingController extends AdminController {
     }
 
     public function actionAjaxUpload() {
-        $url = 'http://192.168.31.119/file.myzd.com/api/tokentest';
+        $url = 'http://file.mingyizhudao.com/api/tokenbookingmr';
         $data = $this->send_get($url);
-        $output = array('uptoken' => $data->uploadToken);
+        $output = array('uptoken' => $data['results']['uploadToken']);
         $this->renderJsonOutput($output);
     }
 

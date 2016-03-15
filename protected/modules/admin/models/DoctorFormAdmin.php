@@ -38,7 +38,7 @@ class DoctorFormAdmin extends EFormModel {
         return array(
             array('fullname, hospital_id, hp_dept_id, medical_title, academic_title, career_exp, is_contracted, role', 'required', 'message' => '请输入{attribute}'),
             array('description', 'length', 'max' => 200),
-            array('id, name, state_id, city_id, reason_one, reason_two, reason_three, reason_four, hp_dept_name, hospital_name, honour', 'safe'),
+            array('id, name, state_id, city_id, description, reason_one, reason_two, reason_three, reason_four, hp_dept_name, hospital_name, honour', 'safe'),
             array("hospital_name", "validateHospitalName"),
         );
     }

@@ -2,13 +2,17 @@
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/css/bootstrap-datepicker.css');
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerCssFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/webuploader/css/webuploader.css');
-Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/js/webuploader/css/webuploader.custom.css');
-Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/webuploader/js/webuploader.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/css/qiniu/highlight.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/css/qiniu/main.css');
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/plupload.full.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/zh_CN.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/ui.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/qiniu.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/highlight.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.form.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/adminBooking.js', CClientScript::POS_END);
-$urlUploadFile = $this->createUrl("adminbooking/ajaxUploadFile");
+$urlUploadFile = $this->createUrl("adminbooking/ajaxSaveAdminFile");//$this->createUrl("adminbooking/ajaxUploadFile");
 $urlAjaxLoadloadHospitalDept = $this->createUrl('doctor/ajaxLoadloadHospitalDept', array('hid' => ''));
 $urlReturn = $this->createUrl('adminbooking/view', array('id' => ''));
 $urlSubmit = $this->createUrl('adminbooking/ajaxCreate');
@@ -28,7 +32,7 @@ $user = $this->getCurrentUser();
 <?php
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'booking-form',
-    'htmlOptions' => array('class' => 'form-horizontal', 'data-bkType' => $model->booking_type, 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
+    'htmlOptions' => array('class' => 'form-horizontal', 'data-url-return' => $urlReturn, 'data-url-action' => $urlSubmit, 'data-url-uploadFile' => $urlUploadFile),
     'enableAjaxValidation' => false,
         ));
 echo CHtml::hiddenField("AdminBookingForm[booking_type]", $model->booking_type);
@@ -37,6 +41,9 @@ echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $user->id);
 echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expected_hospital_id);
 echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 ?>
+<input type="hidden" id="domain" value="http://7xq93p.com2.z0.glb.qiniucdn.com"> 
+<input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('adminbooking/ajaxUpload'); ?>">
+<input id="reportType" type="hidden" name="AdminBookingForm[report_type]" value="mr" />
 <div class="mt30">
     <div class="form-group">
         <div class="col-md-4">
@@ -95,32 +102,33 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 </div>
 <div class="mt30">
     <h3>病历附件&nbsp;&nbsp;&nbsp;</h3>
-    <div class="mb20 row">
-        <div class="col-sm-6">
-            <div id="uploaderBooking" class="mt20 uploader">
-                <div class="imglist">
-                    <ul class="filelist"></ul>
-                </div>
-                <div class="queueList">
-                    <div id="dndArea" class="placeholder">
-                        <div id="filePicker"></div>
-                    </div>
-                </div>
-                <div class="statusBar clearfix" style="display:none;">
-                    <div class="progress" style="display: none;">
-                        <span class="text">0%</span>
-                        <span class="percentage" style="width: 0%;"></span>
-                    </div>
-                    <div class="info">共0张（0B），已上传0张</div>
-                    <div class="">
-                        <!-- btn 继续添加 -->
-                        <div id="filePicker2" class=""></div>                          
-                    </div>
-                    <!--                    <div class="mt40 clearfix">
-                                            <button id="btnSubmit" class="statusBar uploadBtn btn btn-primary col-sm-4 col-sm-offset-1">提交</button>
-                                        </div>-->
-                </div>
+    <div class="body">
+        <div class="col-md-12">
+            <div id="container">
+                <a class="btn btn-default btn-lg " id="pickfiles" href="#" >
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>选择文件</span>
+                </a>
             </div>
+        </div>
+
+        <div style="display:none" id="success" class="col-md-12">
+            <div class="alert-success">
+                队列全部文件处理完毕
+            </div>
+        </div>
+        <div class="col-md-12 ">
+            <table class="table table-striped table-hover text-left"   style="margin-top:40px;display:none">
+                <thead>
+                    <tr>
+                        <th class="col-md-4">Filename</th>
+                        <th class="col-md-2">Size</th>
+                        <th class="col-md-6">Detail</th>
+                    </tr>
+                </thead>
+                <tbody id="fsUploadProgress">
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

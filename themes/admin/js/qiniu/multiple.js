@@ -4,148 +4,132 @@
 /*global hljs */
 
 
-$(function () {
-    var num = 0;
-    var domForm = $('#booking-form'),
-            btnSubmit = $('#btnSubmit'),
-            returnUrl = domForm.attr('data-url-return');
+$(function() {
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'pickfiles',
         container: 'container',
         drop_element: 'container',
-        max_file_size: '10mb',
-        flash_swf_url: 'bower_components/plupload/js/Moxie.swf',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
         dragdrop: true,
         chunk_size: '4mb',
         uptoken_url: $('#uptoken_url').val(),
         domain: $('#domain').val(),
-        get_new_uptoken: false,
-        // downtoken_url: '/downtoken',
-        //unique_names: true,
-        // save_key: true,
-        // x_vars: {
-        //     'id': '1234',
-        //     'time': function(up, file) {
-        //         var time = (new Date()).getTime();
-        //         // do something with 'time'
-        //         return time;
-        //     },
-        // },
-        auto_start: false,
-        log_level: 5,
+        auto_start: true,
         init: {
-            'FilesAdded': function (up, files) {
+            'FilesAdded': function(up, files) {
                 $('table').show();
                 $('#success').hide();
-                plupload.each(files, function (file) {
+                plupload.each(files, function(file) {
                     var progress = new FileProgress(file, 'fsUploadProgress');
                     progress.setStatus("等待...");
-                    progress.bindUploadCancel(up);
                 });
             },
-            'BeforeUpload': function (up, file) {
+            'BeforeUpload': function(up, file) {
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
                 if (up.runtime === 'html5' && chunk_size) {
                     progress.setChunkProgess(chunk_size);
                 }
             },
-            'UploadProgress': function (up, file) {
+            'UploadProgress': function(up, file) {
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+
                 progress.setProgress(file.percent + "%", file.speed, chunk_size);
             },
-            'UploadComplete': function () {
+            'UploadComplete': function() {
                 $('#success').show();
-                btnSubmit.attr('disabled', false);
-                //location.href = returnUrl;
             },
-            'FileUploaded': function (up, file, info) {
-                //单个文件上传成功所做的事情 
-                // 其中 info 是文件上传成功后，服务端返回的json，形式如
-                // {
-                //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
-                //    "key": "gogopher.jpg"
-                //  }
-                // 参考http://developer.qiniu.com/docs/v6/api/overview/up/response/simple-response.html
-                // var domain = up.getOption('domain');
-                // var res = parseJSON(info);
-                // var sourceLink = domain + res.key; 获取上传成功后的文件的Url
+            'FileUploaded': function(up, file, info) {
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 progress.setComplete(up, info);
-                var formdata = new FormData();
-                var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
-                formdata.append('admin[admin_booking_id]', domForm.find('#bookingId').val());
-                formdata.append('admin[file_size]', file.size);
-                formdata.append('admin[report_type]', domForm.find('#reportType').val());
-                formdata.append('admin[mime_type]', file.type);
-                formdata.append('admin[file_name]', file.name);
-                formdata.append('admin[file_url]', file.name);
-                formdata.append('admin[file_ext]', fileExtension);
-                formdata.append('admin[remote_domain]', domForm.find('#domain').val());
-                formdata.append('admin[remote_file_key]', file.name);
-                $.ajax({
-                    url: domForm.attr('data-url-uploadfile'),
-                    data: formdata,
-                    type: 'post',
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        if (data.status == 'no') {
-                            alert('上传失败!');
-                        }
-                    },
-                    error: function (data) {
-                        alert('上传失败!');
-                    }
-                });
-//                var infoJson = JSON.parse(info);
-//                domForm.append('<input name="file[size]" value="'+file.size+'" type="hidden">');
-//                domForm.append('<input name="file[type]" value="'+file.type+'" type="hidden">');
-//                domForm.append('<input name="file[remoteDomain]" value="'+domForm.find('#domain').val()+'" type="hidden">');
-//                domForm.append('<input name="file[remoteKey]" value="'+infoJson.key+'" type="hidden">');
             },
-            'Error': function (up, err, errTip) {
+            'Error': function(up, err, errTip) {
                 $('table').show();
                 var progress = new FileProgress(err.file, 'fsUploadProgress');
                 progress.setError();
                 progress.setStatus(errTip);
-                alert('上传失败!');
             }
-            // ,
-            // 'Key': function(up, file) {
-            //     var key = "";
-            //     // do something with key
-            //     return key
-            // }
         }
     });
-    uploader.bind('FileUploaded', function () {
+
+    uploader.bind('FileUploaded', function() {
         console.log('hello man,a file is uploaded');
     });
 
-    btnSubmit.click(function () {
-        btnSubmit.attr('disabled', true);
-        uploader.start();
+    var Q2 = new QiniuJsSDK();
+    var uploader2 = Q2.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'pickfiles2',
+        container: 'container2',
+        drop_element: 'container2',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        dragdrop: true,
+        chunk_size: '4mb',
+        uptoken_url: $('#uptoken_url').val(),
+        domain: $('#domain').val(),
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+                $('table').show();
+                $('#success').hide();
+                plupload.each(files, function(file) {
+                    var progress = new FileProgress(file, 'fsUploadProgress');
+                    progress.setStatus("等待...");
+                });
+            },
+            'BeforeUpload': function(up, file) {
+                var progress = new FileProgress(file, 'fsUploadProgress');
+                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+                if (up.runtime === 'html5' && chunk_size) {
+                    progress.setChunkProgess(chunk_size);
+                }
+            },
+            'UploadProgress': function(up, file) {
+                var progress = new FileProgress(file, 'fsUploadProgress');
+                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+
+                progress.setProgress(file.percent + "%", file.speed, chunk_size);
+            },
+            'UploadComplete': function() {
+                $('#success').show();
+            },
+            'FileUploaded': function(up, file, info) {
+                var progress = new FileProgress(file, 'fsUploadProgress');
+                progress.setComplete(up, info);
+            },
+            'Error': function(up, err, errTip) {
+                $('table').show();
+                var progress = new FileProgress(err.file, 'fsUploadProgress');
+                progress.setError();
+                progress.setStatus(errTip);
+            }
+        }
+    });
+
+    uploader2.bind('FileUploaded', function() {
+        console.log('hello man 2,a file is uploaded');
     });
 
     $('#container').on(
-            'dragenter',
-            function (e) {
-                e.preventDefault();
-                $('#container').addClass('draging');
-                e.stopPropagation();
-            }
-    ).on('drop', function (e) {
+        'dragenter',
+        function(e) {
+            e.preventDefault();
+            $('#container').addClass('draging');
+            e.stopPropagation();
+        }
+    ).on('drop', function(e) {
         e.preventDefault();
         $('#container').removeClass('draging');
         e.stopPropagation();
-    }).on('dragleave', function (e) {
+    }).on('dragleave', function(e) {
         e.preventDefault();
         $('#container').removeClass('draging');
         e.stopPropagation();
-    }).on('dragover', function (e) {
+    }).on('dragover', function(e) {
         e.preventDefault();
         $('#container').addClass('draging');
         e.stopPropagation();
@@ -153,20 +137,20 @@ $(function () {
 
 
 
-    $('#show_code').on('click', function () {
+    $('#show_code').on('click', function() {
         $('#myModal-code').modal();
-        $('pre code').each(function (i, e) {
+        $('pre code').each(function(i, e) {
             hljs.highlightBlock(e);
         });
     });
 
 
-    $('body').on('click', 'table button.btn', function () {
+    $('body').on('click', 'table button.btn', function() {
         $(this).parents('tr').next().toggle();
     });
 
 
-    var getRotate = function (url) {
+    var getRotate = function(url) {
         if (!url) {
             return 0;
         }
@@ -179,7 +163,7 @@ $(function () {
         return 0;
     };
 
-    $('#myModal-img .modal-body-footer').find('a').on('click', function () {
+    $('#myModal-img .modal-body-footer').find('a').on('click', function() {
         var img = $('#myModal-img').find('.modal-body img');
         var key = img.data('key');
         var oldUrl = img.attr('src');
@@ -214,7 +198,7 @@ $(function () {
             });
         }
 
-        $('#myModal-img .modal-body-footer').find('a.disabled').each(function () {
+        $('#myModal-img .modal-body-footer').find('a.disabled').each(function() {
 
             var watermark = $(this).data('watermark');
             var imageView = $(this).data('imageview');
@@ -272,7 +256,7 @@ $(function () {
 
         var newImg = new Image();
         img.attr('src', 'images/loading.gif');
-        newImg.onload = function () {
+        newImg.onload = function() {
             img.attr('src', newUrl);
             img.parent('a').attr('href', newUrl);
         };

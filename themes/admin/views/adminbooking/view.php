@@ -8,19 +8,14 @@ Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyun
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/custom/task.js", CClientScript::POS_END);
 
-if ($data->booking_type == AdminBooking::BK_TYPE_CRM) {
-    $urlLoadFiles = $this->createUrl('adminbooking/adminBookingFile', array('id' => $data->id));
-    $urlLoadDCFiles = $this->createUrl('adminbooking/adminBookingFile', array('id' => $data->id, 'type' => 'dc'));
-} else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
-    $urlLoadFiles = $this->createUrl('patientbooking/patientMRFiles', array('id' => $data->patient_id));
-    $urlLoadDCFiles = $this->createUrl('patientbooking/patientMRFiles', array('id' => $model->patient_id, 'type' => 'dc'));
-} else {
-    $urlLoadFiles = $this->createUrl('booking/bookingFile', array('id' => $data->id));
-    $urlLoadDCFiles = $this->createUrl('booking/bookingFile', array('id' => $data->id, 'type' => 'dc'));
-}
+
+$urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
+$urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
+$this->createUrl('booking/bookingFile', array('id' => $data->id, 'type' => 'dc'));
+
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
-$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadPatientCaseFile', array('id' => $data->id));
-$urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'bktype' => $data->booking_type));
+$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'mr'));
+$urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'dc'));
 $deleteTaskUrl = $this->createUrl('admintask/ajaxDeleteTask', array('id' => ''));
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
 $orderList = isset($orderList) ? $orderList : null;
@@ -33,6 +28,7 @@ $orderList = isset($orderList) ? $orderList : null;
     <a id="createAdminBKOrder" href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>生成订单</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配业务员</a>
     <a href="<?php echo $this->createUrl('adminbooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>关联医生</a>
+    <a href="<?php echo $urlUploadPatientCaseFile; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>上传病历图片</a>
     <a href="<?php echo $urlUploadSummary; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>上传出院小结</a>
 </div>
 <style>
@@ -56,7 +52,7 @@ $orderList = isset($orderList) ? $orderList : null;
             <span>业务员：</span><?php echo $data->admin_user_name == null ? '<span class="color-blue">未填写</span>' : $data->admin_user_name; ?>
         </div>
         <div class="col-sm-3 border-bottom">
-            <span>预约来源：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
+            <span>预约类型：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
         </div>
     </div>
 </div>
@@ -286,7 +282,7 @@ if (is_null($creator) == false) {
                 <?php
                 foreach ($orderList as $order):
                     ?>
-                    <?php if (isset($order)): ?>
+        <?php if (isset($order)): ?>
                         <tr class="odd">
                             <td><?php echo $order->getRefNo(); ?></td>
                             <td><?php echo $order->getPingId(); ?></td>
@@ -372,7 +368,7 @@ $this->renderPartial('updateStatusModal', array('model' => $model));
                     <button id='taskSubmit' type="button" class="btn btn-primary">保存任务</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
-                <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -495,7 +491,7 @@ if (isset($adminTasksNotDone) && arrayNotEmpty($adminTasksNotDone)) {
             var innerHtml = '';
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absThumbnailUrl + '"/><div class="mt5">' + file.dateCreated + '</div></div>';
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absFileUrl + '"/><div class="mt5">' + file.dateCreated + '</div></div>';
             }
         } else {
             var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';

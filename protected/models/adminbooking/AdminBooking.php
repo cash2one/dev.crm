@@ -89,7 +89,7 @@ class AdminBooking extends EActiveRecord {
     const CUS_DIVERSION_WELFARE = 'welfare';
     const CUS_AGENT_400 = 'phone400';
     const CUS_AGENT_BAIDU = 'baidu';
-    const CUS_AGENT_WEBSITE = 'web';
+    const CUS_AGENT_WEBSITE = 'website';
     const CUS_AGENT_WAP = 'wap';
     const CUS_AGENT_WEIXIN = 'weixin';
     const CUS_AGENT_APP_IOS = 'ios';
@@ -330,9 +330,9 @@ class AdminBooking extends EActiveRecord {
      */
     public function getOptionsBookingType() {
         return array(
-            self::BK_TYPE_BK => '患者端',
-            self::BK_TYPE_PB => '医生端',
-            self::BK_TYPE_CRM => '系统端',
+            self::BK_TYPE_BK => '患者端预约',
+            self::BK_TYPE_PB => '医生端预约',
+            self::BK_TYPE_CRM => '系统端预约',
         );
     }
 

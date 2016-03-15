@@ -2,9 +2,13 @@
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/css/bootstrap-datepicker.css');
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerCssFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/webuploader/css/webuploader.css');
-Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/js/webuploader/css/webuploader.custom.css');
-Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/webuploader/js/webuploader.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/css/qiniu/highlight.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/css/qiniu/main.css');
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/plupload.full.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/zh_CN.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/ui.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/qiniu.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/highlight.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.form.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/adminBooking.js', CClientScript::POS_END);
@@ -13,16 +17,9 @@ $urlAjaxLoadloadHospitalDept = $this->createUrl('doctor/ajaxLoadloadHospitalDept
 $urlReturn = $this->createUrl('adminbooking/view', array('id' => ''));
 $urlSubmit = $this->createUrl('adminbooking/ajaxUpdate');
 $urlLoadCity = $this->createUrl('region/loadCities');
-if ($model->booking_type == AdminBooking::BK_TYPE_CRM) {
-    $urlUploadFile = $this->createUrl("adminbooking/ajaxUploadFile");
-    $urlLoadFiles = $this->createUrl('adminbooking/adminBookingFile', array('id' => $model->id));
-} else if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
-    $urlUploadFile = $this->createUrl("patientbooking/ajaxUploadMRFile");
-    $urlLoadFiles = $this->createUrl('patientbooking/patientMRFiles', array('id' => $model->patient_id));
-} else {
-    $urlUploadFile = $this->createUrl("booking/ajaxUploadFile");
-    $urlLoadFiles = $this->createUrl('booking/bookingFile', array('id' => $model->id));
-}
+
+$urlUploadFile = $this->createUrl("adminbooking/ajaxSaveAdminFile"); //$this->createUrl("booking/ajaxUploadFile");
+$urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $model->id . '&reportType=mr'; //$this->createUrl('booking/bookingFile', array('id' => $model->id));
 ?>
 <h1 class="">修改预约</h1>
 <style>
@@ -50,6 +47,9 @@ echo CHtml::hiddenField("AdminBookingForm[travel_type]", $model->travel_type);
 echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expected_hospital_id);
 echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 ?>
+<input type="hidden" id="domain" value="http://7xq93p.com2.z0.glb.qiniucdn.com"> 
+<input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('adminbooking/ajaxUpload'); ?>">
+<input id="reportType" type="hidden" name="AdminBookingForm[report_type]" value="mr" />
 <div class="mt30">
     <div class="row">
         <div class="col-md-3 border-bottom">
@@ -65,7 +65,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
             <span>业务员：</span><?php echo $data->admin_user_name == null ? '<span class="color-blue">未填写</span>' : $data->admin_user_name; ?>
         </div>
         <div class="col-sm-3 border-bottom">
-            <span>预约来源：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
+            <span>预约类型：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
         </div>
     </div>
 </div>
@@ -134,31 +134,34 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
     <div class="row bookingImgList">
 
     </div>
-    <div class="mb20 row">
-        <div class="col-sm-6">
-            <div id="uploaderBooking" class="mt20 uploader">
-                <div class="imglist">
-                    <ul class="filelist"></ul>
+    <div class="mt10 mb20 row">
+        <div class="body">
+            <div class="col-md-12">
+                <div id="container">
+                    <a class="btn btn-default btn-lg " id="pickfiles" href="#" >
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>选择文件</span>
+                    </a>
                 </div>
-                <div class="queueList">
-                    <div id="dndArea" class="placeholder">
-                        <div id="filePicker"></div>
-                    </div>
+            </div>
+
+            <div style="display:none" id="success" class="col-md-12">
+                <div class="alert-success">
+                    队列全部文件处理完毕
                 </div>
-                <div class="statusBar clearfix" style="display:none;">
-                    <div class="progress" style="display: none;">
-                        <span class="text">0%</span>
-                        <span class="percentage" style="width: 0%;"></span>
-                    </div>
-                    <div class="info">共0张（0B），已上传0张</div>
-                    <div class="">
-                        <!-- btn 继续添加 -->
-                        <div id="filePicker2" class=""></div>                          
-                    </div>
-                    <!--                    <div class="mt40 clearfix">
-                                            <button id="btnSubmit" class="statusBar uploadBtn btn btn-primary col-sm-4 col-sm-offset-1">提交</button>
-                                        </div>-->
-                </div>
+            </div>
+            <div class="col-md-12 ">
+                <table class="table table-striped table-hover text-left"   style="margin-top:40px;display:none">
+                    <thead>
+                        <tr>
+                            <th class="col-md-4">Filename</th>
+                            <th class="col-md-2">Size</th>
+                            <th class="col-md-6">Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fsUploadProgress">
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -338,7 +341,7 @@ if (is_null($creator) == false) {
 <div class="mt30">
     <div class="buttons">
         <button id="btnSubmitForm" class="btn btn-primary" type="button" name="yt0">保存</button>
-        <?php //echo CHtml::submitButton('保存', array('class' => 'btn btn-primary'));  ?>
+        <?php //echo CHtml::submitButton('保存', array('class' => 'btn btn-primary'));   ?>
     </div>
 </div>
 <?php $this->endWidget(); ?>
@@ -451,7 +454,7 @@ $this->renderPartial('//doctor/searchHpModal');
             var files = results.files;
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absThumbnailUrl + '"/><div class="mt5">' + file.dateCreated + '</div></div>';
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absFileUrl + '"/><div class="mt5">' + file.dateCreated + '</div></div>';
             }
         } else {
             var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';

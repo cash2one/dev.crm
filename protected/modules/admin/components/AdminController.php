@@ -120,4 +120,12 @@ class AdminController extends RController {
         header('Content-Type: text/html; charset=utf-8');
     }
 
+    /**
+     * 模拟get进行url请求
+     * @param string $url
+     */
+    function send_get($url) {
+        $result = file_get_contents($url, false);
+        return json_decode($result, true);
+    }
 }
