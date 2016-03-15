@@ -51,6 +51,8 @@ class StatCode {
     const USER_AGENT_APP_IOS = 'ios';
     const APP_NAME_MYZD = 'myzd'; // 患者版
     const APP_NAME_MOBILEDOCTOR = 'md';   // 医生版
+    const HAS_REMOTE = 1;   //已上传至七牛
+    const HAS_NOTREMOTE = 0; //已上传至七牛 未上传至七牛
 
     // gender.
 
