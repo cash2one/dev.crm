@@ -59,7 +59,7 @@ $(function () {
             'UploadComplete': function () {
                 $('#success').show();
                 btnSubmit.attr('disabled', false);
-                //location.href = returnUrl;
+                location.href = returnUrl;
             },
             'FileUploaded': function (up, file, info) {
                 //单个文件上传成功所做的事情 
