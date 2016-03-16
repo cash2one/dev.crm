@@ -57,13 +57,17 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
     <div class="mt15 w10">
         <label >患者性别</label>
         <div>
-            <input class="form-control" name = 'patientGender' value = ''>
+            <select name="patientGender" class="form-control">
+                <option value="">选择</option>
+                <option value="1">男</option>
+                <option value="0">女</option>
+            </select>
         </div>
     </div>
     <div class="mt15 w10">
         <label >跟进状态</label>
         <div>
-            <select name="booking_status" class="form-control">
+            <select name="bookingStatus" class="form-control">
                 <option value="">选择</option>
                 <?php
                 $bookingStatus = AdminBooking::getOptionsBookingStatus();

@@ -11,7 +11,7 @@ class AdminBookingSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType','customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
+        return array('bookingType', 'refNo', 'patientName', 'patientMobile','patientGender','bookingStatus', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType','customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
     }
 
     public function addQueryConditions() {
@@ -42,6 +42,17 @@ class AdminBookingSearch extends ESearchModel {
                 $patientMobile = $this->queryParams['patientMobile'];
                 $this->criteria->addSearchCondition("t.patient_mobile", $patientMobile);
             }
+            
+            if (isset($this->queryParams['patientGender'])) {
+                $patientGender = $this->queryParams['patientGender'];
+                $this->criteria->addSearchCondition("t.patient_gender", $patientGender);
+            }
+            
+            if (isset($this->queryParams['bookingStatus'])) {
+                $bookingStatus = $this->queryParams['bookingStatus'];
+                $this->criteria->addSearchCondition("t.booking_status", $bookingStatus);
+            }
+            
             if (isset($this->queryParams['stateId'])) {
                 $stateId = $this->queryParams['stateId'];
                 $this->criteria->addSearchCondition("t.state_id", $stateId);

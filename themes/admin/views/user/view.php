@@ -57,7 +57,7 @@ $files = $model->getUserDoctorCerts();
     .imglist img{height: 160px;width: 100%;}
     .delete .file-panel{padding: 5px;text-align: center;background-color: #f00;color: #fff;}
 </style>
-<h1>查看 #<?php echo $model->username; ?></h1>
+<h1>查看 #<?php echo $model->id; ?></h1>
 
 <table class="table table-info mt20" id="yw0">
     <tbody>
