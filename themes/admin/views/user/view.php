@@ -92,7 +92,7 @@ $files = $model->getUserDoctorCerts();
     <div class="form-wrapper">
         <form id="doctor-form" data-url-uploadfile="<?php echo $urlAjaxDoctorCert; ?>" data-url-return="<?php echo $urlReturn; ?>" method="post">
             <input id="doctorId" type="hidden" name="doctor[id]" value="<?php echo $model->id; ?>" />    
-            <input type="hidden" id="domain" value="http://7xrh6w.com2.z0.glb.qiniucdn.com"> 
+            <input type="hidden" id="domain" value="http://7xrgsh.com2.z0.glb.qiniucdn.com"> 
             <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('user/ajaxToken'); ?>">
         </form>
         <div class="mb20 row">
