@@ -139,7 +139,7 @@ $files = $model->getUserDoctorCerts();
         var files = results.files;
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
-            innerHtml += '<div class="col-sm-2 mt10 docImg"><img src=' + file.absFileUrl + '/><div>' + file.dateCreated + '</div>' +
+            innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absFileUrl + '"/><div>' + file.dateCreated + '</div>' +
                     //'<a class="delete" href="<?php echo $this->createUrl('user/delectDoctorCert'); ?>?id='+file.id+'&userId=<?php echo $model->id; ?>"><div class="file-panel">删除</div></a>'+
                     '</div>';
         }
