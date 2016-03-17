@@ -63,10 +63,13 @@ if (arrayNotEmpty($payments)) {
     </td>
 
     <td>
-        <?php echo CHtml::encode($payment->bill_amount . $payment->bill_currency); ?>
+        <?php echo CHtml::encode($payment->bill_amount); ?>
     </td>
 
-
+    <td>
+        <?php echo CHtml::encode($payment->bill_currency); ?>
+    </td>
+    
     <?php /*
       <b><?php echo CHtml::encode($data->getAttributeLabel('is_paid')); ?>:</b>
       <?php echo CHtml::encode($data->is_paid); ?>

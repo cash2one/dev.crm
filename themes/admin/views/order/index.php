@@ -12,7 +12,8 @@ $this->menu = array(
 );
 ?>
 <style>
-    .data-list .table td{word-break: break-all; word-wrap:break-word;min-width: 5em;max-width: 50em;vertical-align: middle;}
+    .data-list .table td{word-break: break-all; word-wrap:break-word;min-width: 5.5em;max-width: 50em;vertical-align: middle;}
+    .data-list .table thead{color: #fff;}
 </style>
 <h1>Sales Orders</h1>
 <div class="data-list mt10">
@@ -29,6 +30,7 @@ $this->menu = array(
                 <td>pingID</td>
                 <td>支付来源</td>
                 <td>支付金额</td>
+                <td>交易货币</td>
             </tr>
         </thead>
         <tbody>
