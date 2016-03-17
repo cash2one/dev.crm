@@ -73,7 +73,7 @@ class PatientbookingController extends AdminController {
         $userDoctorModel = UserDoctorProfile::model()->getByAttributes(array('user_id' => $pbModel->doctor_id));
 
         //salesorder for patientBooking
-        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_id' => $pbId, 'bk_type' => StatCode::TRANS_TYPE_PB));
+        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_ref_no' => $output->booking->refNo));
 
         if ($output->status == 'ok') {
             $this->render('view', array(

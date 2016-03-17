@@ -70,7 +70,7 @@ class BookingController extends AdminController {
 
         $bkId = $output->booking->id;
         //salesorders for booking
-        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_id' => $bkId, 'bk_type' => StatCode::TRANS_TYPE_BK));
+        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_ref_no' => $output->booking->refNo));
 
         if ($output->status == 'ok') {
             $this->render('view', array(

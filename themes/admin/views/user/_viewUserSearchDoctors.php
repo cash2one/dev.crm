@@ -46,6 +46,7 @@ if(isset($certs)){
     <td><?php echo $profileData->verified; ?></td>
     <td><?php echo $profileData->contract; ?></td>
     <td><?php echo $doctorCerts; ?></td>
+    <td><?php echo $data->date_created; ?></td>
     <td><a href="<?php echo $this->createUrl('user/view',array('id'=>$data->id))?>">查看</a></td>
 </tr>
 

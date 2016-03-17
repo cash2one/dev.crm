@@ -56,7 +56,7 @@ class AdminBookingController extends AdminController {
         $form->initModel($data);
 
         //salesorder for adminBooking
-        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_id' => $id, 'bk_type' => $data->booking_type));
+        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_ref_no' => $data->ref_no));
         //跟单任务
         $taskMr = new TaskManager;
         $adminTasks['adminTasksNotDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '0');
