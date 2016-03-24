@@ -33,7 +33,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'uploadPatientCaseFile', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser','addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -345,6 +345,8 @@ class AdminBookingController extends AdminController {
         $criteria->addCondition("t.date_deleted is NULL");
         $criteria->addCondition("t.booking_status !=" . StatCode::BK_STATUS_INVALID);
         $criteria->order = "t.id DESC";
+        $userId = Yii::app()->user->id;
+        $criteria->compare('t.admin_user_id', $userId);
         $dataProvider = new CActiveDataProvider('AdminBooking', array(
             'criteria' => $criteria,
             'pagination' => array(
@@ -360,10 +362,6 @@ class AdminBookingController extends AdminController {
         $this->render('uploadSummary');
     }
 
-    public function actionUploadPatientCaseFile() {
-        $this->render('uploadPatientCaseFile');
-    }
-
     /**
      * Manages all models.
      */
@@ -375,7 +373,6 @@ class AdminBookingController extends AdminController {
         if (isset($_GET['AdminBookingSearchForm'])) {
             $values = $_GET['AdminBookingSearchForm'];
         } else if (isset($_GET['AdminBooking'])) {
-
             $values = $_GET['AdminBooking'];
         }
 
@@ -401,8 +398,6 @@ class AdminBookingController extends AdminController {
 
     //分配业务员
     public function actionAddAdminUser() {
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
         if (isset($_POST['AdminBookingForm'])) {
             $value = $_POST['AdminBookingForm'];
             $form = new AdminBookingForm();
@@ -432,7 +427,7 @@ class AdminBookingController extends AdminController {
             $adminbookingId = $value['id'];
             $model = $this->loadModel($adminbookingId);
             $form->attributes = $_POST['AdminBookingForm'];
-            //业务员信息
+            //地推/KA信息
             if (!strIsEmpty($form->bd_user_id)) {
                 $model->bd_user_id = $form->bd_user_id;
                 $adminUser = AdminUser::model()->getById($form->bd_user_id);
@@ -445,6 +440,28 @@ class AdminBookingController extends AdminController {
         //$this->renderJsonOutput($output);
     }
 
+    //分配对接人
+    public function actionAddContactUser() {
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+        if (isset($_POST['AdminBookingForm'])) {
+            $value = $_POST['AdminBookingForm'];
+            $form = new AdminBookingForm();
+            $adminbookingId = $value['id'];
+            $model = $this->loadModel($adminbookingId);
+            $form->attributes = $_POST['AdminBookingForm'];
+            //对接人信息
+            if (!strIsEmpty($form->admin_user_id)) {
+                $adminUser = AdminUser::model()->getById($form->admin_user_id);
+                $model->contact_name = $adminUser->fullname;
+            }
+            if ($model->save()) {
+                $this->redirect(array('view', 'id' => $adminbookingId));
+            }
+        }
+        //$this->renderJsonOutput($output);
+    }
+    
     //修改booking status
     public function actionUpdateBookingStatus() {
         // Uncomment the following line if AJAX validation is needed

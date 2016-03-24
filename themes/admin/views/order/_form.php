@@ -19,26 +19,26 @@
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
-<div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
+    <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
     <div class="form-horizontal">
         <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'bk_ref_no'); ?></label>
             <div>
-<?php echo $form->textField($model, 'bk_ref_no', array('size' => 16, 'maxlength' => 20, 'class' => 'form-control')); ?>                
+                <?php echo $form->textField($model, 'bk_ref_no', array('size' => 16, 'maxlength' => 20, 'class' => 'form-control')); ?>                
                 <div class="text-danger"><?php echo $form->error($model, 'bk_ref_no'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'crm_no'); ?></label>
             <div>
-<?php echo $form->textField($model, 'crm_no', array('size' => 16, 'maxlength' => 50, 'class' => 'form-control')); ?>                
+                <?php echo $form->textField($model, 'crm_no', array('size' => 16, 'maxlength' => 50, 'class' => 'form-control')); ?>                
                 <div class="text-danger"><?php echo $form->error($model, 'crm_no'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'subject'); ?></label>
             <div>
-<?php echo $form->textField($model, 'subject', array('size' => 50, 'maxlength' => 100, 'class' => 'form-control')); ?>                
+                <?php echo $form->textField($model, 'subject', array('size' => 50, 'maxlength' => 100, 'class' => 'form-control')); ?>                
                 <div class="text-danger"><?php echo $form->error($model, 'subject'); ?></div>
             </div>
         </div>
@@ -46,22 +46,29 @@
         <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'description'); ?></label>
             <div>
-<?php echo $form->textarea($model, 'description', array('rows' => 15, 'maxlength' => 1000, 'class' => 'form-control')); ?>                
+                <?php echo $form->textarea($model, 'description', array('rows' => 15, 'maxlength' => 1000, 'class' => 'form-control')); ?>                
                 <div class="text-danger"><?php echo $form->error($model, 'description'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'final_amount'); ?></label>
             <div>
-<?php echo $form->textField($model, 'final_amount', array('size' => 10, 'maxlength' => 10, 'class' => 'form-control')); ?>                
+                <?php echo $form->textField($model, 'final_amount', array('size' => 10, 'maxlength' => 10, 'class' => 'form-control')); ?>                
                 <div class="text-danger"><?php echo $form->error($model, 'final_amount'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'bd_code'); ?></label>
             <div>
-<?php echo $form->textField($model, 'bd_code', array('size' => 10, 'maxlength' => 20, 'class' => 'form-control')); ?>                
+                <?php echo $form->textField($model, 'bd_code', array('size' => 10, 'maxlength' => 20, 'class' => 'form-control')); ?>                
                 <div class="text-danger"><?php echo $form->error($model, 'bd_code'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($model, 'cash_back'); ?></label>
+            <div>
+                <?php echo $form->textField($model, 'cash_back', array('size' => 10, 'maxlength' => 20, 'class' => 'form-control')); ?>                
+                <div class="text-danger"><?php echo $form->error($model, 'cash_back'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
@@ -69,6 +76,6 @@
         </div>
 
 
-<?php $this->endWidget(); ?>
+        <?php $this->endWidget(); ?>
     </div>
 </div><!-- form -->

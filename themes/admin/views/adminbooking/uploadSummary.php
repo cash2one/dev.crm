@@ -17,10 +17,10 @@ $urlUploadFile = $this->createUrl("adminbooking/ajaxSaveAdminFile");
 $urlReturn = $this->createUrl('adminbooking/view', array('id' => $bookingId));
 ?>
 <?php
-if($type == 'mr'){
-    echo '<h1>上传病历图片</h1>';
-}else{
+if ($type == 'dc') {
     echo '<h1>上传出院小结</h1>';
+} else {
+    echo '<h1>上传病历图片</h1>';
 }
 ?>
 

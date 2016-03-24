@@ -59,7 +59,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
             ?>
         </div>
         <div class="col-sm-3 border-bottom">
-            <span>地推/KA：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
+            <span>线下推广人员：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
         </div>
         <div class="col-sm-3 border-bottom">
             <span>业务员：</span><?php echo $data->admin_user_name == null ? '<span class="color-blue">未填写</span>' : $data->admin_user_name; ?>
@@ -115,7 +115,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <span class="tab-header">疾病诊断：</span><?php echo $form->textField($model, 'disease_name', array('class' => 'form-control w50')); ?>
+            <span class="tab-header">疾病名称：</span><?php echo $form->textField($model, 'disease_name', array('class' => 'form-control w50')); ?>
         </div>
     </div>
     <div class="form-group">
@@ -265,11 +265,13 @@ if (is_null($creator) == false) {
 <div class="mt30">
     <div class="form-group">
         <div class="col-sm-2">
-            <span>是否确诊：</span><select class="form-control" name="AdminBookingForm[disease_confirm]" id="AdminBookingForm_disease_confirm">
-                <option value="">--选择--</option>
-                <option value="1">是</option>
-                <option value="0">否</option>
-            </select>
+            <span>是否确诊：</span><?php
+            echo $form->dropDownList($model, 'disease_confirm', $model->loadOptionsDiseaseConfirm(), array(
+                'name' => 'AdminBookingForm[disease_confirm]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
+            ?>
         </div>
         <div class="col-sm-2">
             <span>患者目的：</span><?php
@@ -289,8 +291,8 @@ if (is_null($creator) == false) {
             ));
             ?>
         </div>
-        <div class="col-sm-2">
-            <span>客户来源：</span><?php
+        <div class="col-sm-2 pl0 pr0">
+            <span>平台渠道来源：</span><?php
             echo $form->dropDownList($model, 'customer_agent', $model->loadOptionsCustomerAgent(), array(
                 'name' => 'AdminBookingForm[customer_agent]',
                 'prompt' => '选择',
@@ -299,7 +301,7 @@ if (is_null($creator) == false) {
             ?>
         </div>
         <div class="col-sm-2">
-            <span>客户意向：</span><?php
+            <span>客户满意度：</span><?php
             echo $form->dropDownList($model, 'customer_intention', $model->loadOptionsCustomerIntention(), array(
                 'name' => 'AdminBookingForm[customer_intention]',
                 'prompt' => '选择',
@@ -316,9 +318,27 @@ if (is_null($creator) == false) {
             ));
             ?>
         </div>
-
     </div>
-
+    <div class="form-group">
+        <div class="col-sm-2">
+            <span>公益项目：</span><?php
+            echo $form->dropDownList($model, 'is_commonweal', $model->loadOptionIsCommonweal(), array(
+                'name' => 'AdminBookingForm[is_commonweal]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+        <div class="col-sm-2">
+            <span>B端：</span><?php
+            echo $form->dropDownList($model, 'business_partner', $model->loadOptionBusinessPartner(), array(
+                'name' => 'AdminBookingForm[business_partner]',
+                'prompt' => '选择',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+    </div>
     <div class="form-group">
         <div class="col-sm-12">
             <span>特殊备注：</span><?php echo $form->textArea($model, 'remark', array('class' => 'form-control w50', 'maxlength' => 1000)); ?>

@@ -85,7 +85,7 @@ class SalesOrder extends EActiveRecord {
             array('user_id, bk_id, bk_type, is_paid, discount_percent', 'numerical', 'integerOnly' => true),
             array('ref_no', 'length', 'max' => 16),
             array('bk_ref_no, order_type', 'length', 'max' => 20),
-            array('crm_no, created_by, bd_code, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, expected_doctor_name, expected_hospital_name, expected_hp_dept_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, final_doctor_hospital, final_time, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, travel_type, admin_user_name', 'length', 'max' => 50),
+            array('crm_no, created_by, bd_code, cash_back, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, expected_doctor_name, expected_hospital_name, expected_hp_dept_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, final_doctor_hospital, final_time, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, travel_type, admin_user_name', 'length', 'max' => 50),
             array('subject, disease_name', 'length', 'max' => 100),
             array('description', 'length', 'max' => 500),
             array('ping_id', 'length', 'max' => 30),
@@ -137,6 +137,7 @@ class SalesOrder extends EActiveRecord {
             'final_amount' => '最终交易金额',
             'currency' => '交易货币',
             'bd_code' => '地推',
+            'cash_back' => '返款人',
             'patient_name' => '病人姓名',
             'patient_mobile' => '病人手机号码',
             'patient_age' => '病人年龄',
@@ -466,6 +467,14 @@ class SalesOrder extends EActiveRecord {
 
     public function setBdCode($v) {
         $this->bd_code = $v;
+    }
+
+    public function getCashBack() {
+        return $this->cash_back;
+    }
+
+    public function setCashBack($v) {
+        $this->cash_back = $v;
     }
 
     public function getPingId() {

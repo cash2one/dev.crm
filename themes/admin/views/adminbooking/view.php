@@ -24,9 +24,10 @@ $orderList = isset($orderList) ? $orderList : null;
 <div class="mt30">
     <a class="btn btn-primary" data-toggle="modal" data-target="#updateStatusModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改预约状态</a>
     <a href="<?php echo $urlUpdateAdminBooking; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改订单</a>
-    <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>授权KA/地推</a>
+    <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>线下推广人员</a>
     <a id="createAdminBKOrder" href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>生成订单</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配业务员</a>
+    <a class="btn btn-primary" data-toggle="modal" data-target="#addContactUserModal" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配对接人</a>
     <a href="<?php echo $this->createUrl('adminbooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>关联医生</a>
     <a href="<?php echo $urlUploadPatientCaseFile; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>上传病历图片</a>
     <a href="<?php echo $urlUploadSummary; ?>" class="btn btn-primary" <?php echo $data->booking_status == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>上传出院小结</a>
@@ -39,19 +40,22 @@ $orderList = isset($orderList) ? $orderList : null;
 </style>
 <div class="mt30">
     <div class="row">
-        <div class="col-md-3 border-bottom">
+        <div class="col-md-2 border-bottom">
             <span class="tab-header">预约状态：</span><?php
             $bookingStatus = $data->getBookingStatus() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatus();
             echo $data->booking_status == StatCode::BK_STATUS_INVALID ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
             ?>
         </div>
-        <div class="col-sm-3 border-bottom">
-            <span>地推/KA：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
+        <div class="col-sm-2 border-bottom">
+            <span>线下推广人员：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
         </div>
-        <div class="col-sm-3 border-bottom">
+        <div class="col-sm-2 border-bottom">
+            <span>对接人：</span><?php echo $data->contact_name == null ? '<span class="color-blue">未填写</span>' : $data->contact_name; ?>
+        </div>
+        <div class="col-sm-2 border-bottom">
             <span>业务员：</span><?php echo $data->admin_user_name == null ? '<span class="color-blue">未填写</span>' : $data->admin_user_name; ?>
         </div>
-        <div class="col-sm-3 border-bottom">
+        <div class="col-sm-4 border-bottom">
             <span>预约类型：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
         </div>
     </div>
@@ -80,7 +84,7 @@ $orderList = isset($orderList) ? $orderList : null;
             <span class="tab-header">地址：</span><?php echo $data->patient_state; ?> 省/市 <?php echo $data->patient_city; ?> 市 <?php echo $data->patient_address; ?>
         </div>
         <div class="col-md-12 border-bottom">
-            <span class="tab-header">疾病诊断：</span><?php echo $data->disease_name == null ? '<span class="color-blue">未填写</span>' : $data->disease_name; ?>
+            <span class="tab-header">疾病名称：</span><?php echo $data->disease_name == null ? '<span class="color-blue">未填写</span>' : $data->disease_name; ?>
         </div>
         <div class="col-md-12 border-bottom">
             <span class="tab-header">病情描述：</span><?php echo $data->disease_detail == null ? '<span class="color-blue">未填写</span>' : $data->disease_detail; ?>
@@ -165,27 +169,31 @@ if (is_null($creator) == false) {
 </div>
 <div class="mt30">
     <div class="row">
+        <div class="col-sm-2 border-bottom">
+            <span>是否确诊：</span><?php echo $data->getDiseaseConfirm() == null ? '<span class="color-blue">未填写</span>' : $data->getDiseaseConfirm(); ?>
+        </div>
+        <div class="col-sm-2 border-bottom">
+            <span>患者目的：</span><?php echo $data->getCustomerRequest() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerRequest(); ?>
+        </div>
+        <div class="col-sm-2 border-bottom">
+            <span>导流来源：</span><?php echo $data->getCustomerDiversion() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerDiversion(); ?>
+        </div>
+        <div class="col-sm-2 border-bottom">
+            <span>平台渠道来源：</span><?php echo $data->getCustomerAgent() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerAgent(); ?>
+        </div>
+        <div class="col-sm-2 border-bottom">
+            <span>客户满意度：</span><?php echo $data->getCustomerIntention() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerIntention(); ?>
+        </div>
+        <div class="col-sm-2 border-bottom">
+            <span>客户类型：</span><?php echo $data->getCustomerType() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerType(); ?>
+        </div>
+        <div class="col-sm-2 border-bottom">
+            <span>公益项目：</span><?php echo $data->getIsCommonweal() == null ? '<span class="color-blue">未填写</span>' : $data->getIsCommonweal(); ?>
+        </div>
+        <div class="col-sm-10 border-bottom">
+            <span>B端：</span><?php echo $data->getBusinessPartner() == null ? '<span class="color-blue">未填写</span>' : $data->getBusinessPartner(); ?>
+        </div>
         <div class="col-sm-12 border-bottom">
-            <div class="with20">
-                <span>是否确诊：</span><?php echo $data->getDiseaseConfirm() == null ? '<span class="color-blue">未填写</span>' : $data->getDiseaseConfirm(); ?>
-            </div>
-            <div class="with20">
-                <span>患者目的：</span><?php echo $data->getCustomerRequest() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerRequest(); ?>
-            </div>
-            <div class="with20">
-                <span>客户意向：</span><?php echo $data->getCustomerIntention() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerIntention(); ?>
-            </div>
-            <div class="with20">
-                <span>客户类型：</span><?php echo $data->getCustomerType() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerType(); ?>
-            </div>
-            <div class="with20">
-                <span>导流来源：</span><?php echo $data->getCustomerDiversion() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerDiversion(); ?>
-            </div>
-        </div>
-        <div class="col-sm-4 border-bottom">
-            <span>客户来源：</span><?php echo $data->getCustomerAgent() == null ? '<span class="color-blue">未填写</span>' : $data->getCustomerAgent(); ?>
-        </div>
-        <div class="col-sm-8 border-bottom">
             <span>录入日期：</span><?php echo $data->date_created; ?>
         </div>
         <div class="col-sm-12 border-bottom">
@@ -200,7 +208,7 @@ if (is_null($creator) == false) {
             <tr class="odd">
                 <td class="w10"><input type="checkbox" class="checkAll"> 全选</td>
                 <td>待跟单时间</td>
-                <td>跟单人员</td>
+                <td>客服</td>
                 <td>跟单方式</td>
                 <td>跟单任务</td>
                 <td>操作</td>
@@ -234,7 +242,7 @@ if (is_null($creator) == false) {
             <tr class="odd">
                 <td class="w10"><input type="checkbox" class="checkAll"> 全选</td>
                 <td>跟单时间</td>
-                <td>跟单人员</td>
+                <td>客服</td>
                 <td>跟单方式</td>
                 <td>跟单任务</td>
                 <td>完成时间</td>
@@ -282,7 +290,7 @@ if (is_null($creator) == false) {
                 <?php
                 foreach ($orderList as $order):
                     ?>
-        <?php if (isset($order)): ?>
+                    <?php if (isset($order)): ?>
                         <tr class="odd">
                             <td><?php echo $order->getRefNo(); ?></td>
                             <td><?php echo $order->getPingId(); ?></td>
@@ -315,6 +323,7 @@ if (is_null($creator) == false) {
 <?php
 $this->renderPartial('addAdminUserModal', array('model' => $model));
 $this->renderPartial('addBdUserModal', array('model' => $model));
+$this->renderPartial('addContactUserModal', array('model' => $model));
 $this->renderPartial('updateStatusModal', array('model' => $model));
 ?>
 <style>
@@ -341,7 +350,7 @@ $this->renderPartial('updateStatusModal', array('model' => $model));
                     <div class="col-sm-2 pl0 pr0">
                         <input type="text" id='task_date_plan' name='task[date_plan]' class="form-control" placeholder="计划跟单时间">
                     </div>
-                    <label for="inputUser" class="col-sm-2 control-label">跟单人员</label>
+                    <label for="inputUser" class="col-sm-2 control-label">客服</label>
                     <div class="col-sm-2">
                         <?php
                         echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
@@ -368,7 +377,7 @@ $this->renderPartial('updateStatusModal', array('model' => $model));
                     <button id='taskSubmit' type="button" class="btn btn-primary">保存任务</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
-<?php $this->endWidget(); ?>
+                <?php $this->endWidget(); ?>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

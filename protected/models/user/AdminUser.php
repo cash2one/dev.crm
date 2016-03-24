@@ -32,6 +32,9 @@ class AdminUser extends EActiveRecord {
     const ROLE_BD = 2;
     const ROLE_ACCOUNTING = 3;
 
+    const LEVEL_USER_SUPER = 1;
+    const LEVEL_USER_NORMAL = 0;
+
     /**
      * @return string the associated database table name
      */

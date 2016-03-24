@@ -40,21 +40,21 @@
                 <div class="text-danger"><?php echo $form->error($model, 'ref_no'); ?></div>
             </div>
         </div>
-        <div class="form-group col-sm-7">
+        <div class="form-group col-sm-7 hide">
             <label ><?php echo $form->labelEx($model, 'user_id'); ?></label>
             <div>
                 <?php echo '<div>' . $model->user_id . '</div>'; ?>          
                 <div class="text-danger"><?php echo $form->error($model, 'user_id'); ?></div>
             </div>
         </div>
-        <div class="form-group col-sm-7">
+        <div class="form-group col-sm-7 hide">
             <label ><?php echo $form->labelEx($model, 'bk_id'); ?></label>
             <div>
                 <?php echo '<div>' . $model->bk_id . '</div>'; ?>          
                 <div class="text-danger"><?php echo $form->error($model, 'bk_id'); ?></div>
             </div>
         </div>
-        <div class="form-group col-sm-7">
+        <div class="form-group col-sm-7 hide">
             <label ><?php echo $form->labelEx($model, 'bk_type'); ?></label>
             <div>
                 <?php echo '<div>' . $model->bk_type . '</div>'; ?>          
@@ -78,11 +78,24 @@
         <div class="form-group col-sm-7">
             <label >  <?php echo '订单描述<br>'; ?></label>
             <div>
-                <?php echo $form->textArea($model, 'description', array('class' => 'form-control', 'name' => 'order[description]', 'rows' => 15, 'cols' => 50, 'maxlength' => 1000)); ?>     
+                <?php echo $form->textArea($model, 'description', array('class' => 'form-control', 'name' => 'order[description]', 'rows' => 3, 'cols' => 50, 'maxlength' => 1000)); ?>     
                 <div class="text-danger"><?php echo $form->error($model, 'description'); ?></div>
             </div>
         </div>
-
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($model, 'bd_code'); ?></label>
+            <div>
+                <?php echo $form->textField($model, 'bd_code', array('size' => 10, 'name' => 'order[bd_code]', 'maxlength' => 20, 'class' => 'form-control')); ?>                
+                <div class="text-danger"><?php echo $form->error($model, 'bd_code'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <label > <?php echo $form->labelEx($model, 'cash_back'); ?></label>
+            <div>
+                <?php echo $form->textField($model, 'cash_back', array('size' => 10, 'name' => 'order[cash_back]', 'maxlength' => 20, 'class' => 'form-control')); ?>                
+                <div class="text-danger"><?php echo $form->error($model, 'cash_back'); ?></div>
+            </div>
+        </div>
         <div class="form-group col-sm-7">
             <input type="submit" class="btn btn-primary" name="yt0" value="<?php echo $model->isNewRecord ? 'Create' : 'Save'; ?>">
         </div>

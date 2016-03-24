@@ -77,13 +77,14 @@ class AdminBooking extends EActiveRecord {
     const CUS_REQUEST_WENZHEN = 'wenzhen';
     const CUS_REQUEST_MENZHEN = 'menzhen';
     const CUS_REQUEST_HUIZHEN = 'huizhen';
+    const CUS_INTENTION_NOTIDEAL = '4';
     const CUS_INTENTION_NORMAL = '1';
     const CUS_INTENTION_GOOD = '2';
     const CUS_INTENTION_GREAT = '3';
     const CUS_TYPE_UNSURE = 1;
     const CUS_TYPE_VALIDITY = 2;
     const CUS_TYPE_INVALID = 3;
-    const CUS_DIVERSION_baidu = 'baidu';
+    const CUS_DIVERSION_BAIDU = 'baidu';
     const CUS_DIVERSION_FRIEND = 'friend';
     const CUS_DIVERSION_DOCTOR = 'doctor';
     const CUS_DIVERSION_WELFARE = 'welfare';
@@ -101,11 +102,20 @@ class AdminBooking extends EActiveRecord {
     const CUS_AGENT_DOCTOR = 'doctor';
     const CUS_AGENT_BJ_OFFICE = 'bj_office';
     const CUS_AGENT_TUOSHI = 'tuoshi';
-    const CUS_AGENT_XIAONENG = 'xiaoneng';
+    const CUS_AGENT_XIAONENG_MSG = 'xiaoneng_msg';
+    const CUS_AGENT_XIAONENG_OL = 'xiaoneng_ol';
     const DISEASE_CONFIRM_NO = 0;
     const DISEASE_CONFIRM_YES = 1;
     const ORDER_STATUS_NO = 0;
     const ORDER_STATUS_YES = 1;
+    const IS_COMMONWEAL_NO = 0;
+    const IS_COMMONWEAL_YES = 1;
+    const BUSINESS_PARTNER_160 = '160';
+    const BUSINESS_PARTNER_TUISHI = 'tuoshi';
+    const BUSINESS_PARTNER_ALI = 'ali';
+    const BUSINESS_PARTNER_DIDI = 'didi';
+    const BUSINESS_PARTNER_TIANMAO = 'tianmao';
+    const BUSINESS_PARTNER_OTHER = 'other';
 
     /**
      * @return array validation rules for model attributes.
@@ -123,7 +133,7 @@ class AdminBooking extends EActiveRecord {
             array('disease_name, final_hospital_name', 'length', 'max' => 100),
             array('expected_hospital_name, expected_hp_dept_name, expected_doctor_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('expected_time_start, expected_time_end, final_time, date_updated, date_deleted', 'safe'),
+            array('business_partner, is_commonweal, contact_name, contact_name, expected_time_start, expected_time_end, final_time, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, state_id, city_id, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, expected_doctor_id, expected_doctor_name, creator_doctor_id, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_id, final_doctor_name, final_hospital_id, final_hospital_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -182,10 +192,10 @@ class AdminBooking extends EActiveRecord {
             'final_time' => '最终手术时间',
             'disease_confirm' => '是否确诊',
             'customer_request' => '客户需求',
-            'customer_intention' => '客户意向',
+            'customer_intention' => '客户满意度',
             'customer_type' => '客户类型',
             'customer_diversion' => '客户导流',
-            'customer_agent' => '客户来源',
+            'customer_agent' => '平台渠道来源',
             'booking_status' => '预约状态',
             'order_status' => '付费状态',
             'order_amount' => '付费金额',
@@ -348,9 +358,10 @@ class AdminBooking extends EActiveRecord {
 
     public function getOptionsCustomerIntention() {
         return array(
+            self::CUS_INTENTION_GREAT => '优质',
+            self::CUS_INTENTION_GOOD => '良好',
             self::CUS_INTENTION_NORMAL => '一般',
-            self::CUS_INTENTION_GOOD => '很好',
-            self::CUS_INTENTION_GREAT => '特别好',
+            self::CUS_INTENTION_NOTIDEAL => '不理想',
         );
     }
 
@@ -364,10 +375,10 @@ class AdminBooking extends EActiveRecord {
 
     public function getOptionsCustomerDiversion() {
         return array(
-            self:: CUS_DIVERSION_baidu => '百度搜索',
+            self:: CUS_DIVERSION_BAIDU => '百度搜索',
             self:: CUS_DIVERSION_FRIEND => '熟人推荐',
             self:: CUS_DIVERSION_DOCTOR => '医生推荐',
-            self:: CUS_DIVERSION_WELFARE => '公益项目',
+                //self:: CUS_DIVERSION_WELFARE => '公益项目',
         );
     }
 
@@ -387,8 +398,29 @@ class AdminBooking extends EActiveRecord {
             self:: CUS_AGENT_DOCTOR => '下级医生',
             self:: CUS_AGENT_BJ_OFFICE => '北京办介绍',
             self:: CUS_AGENT_TUOSHI => '拓实企业用户',
-            self:: CUS_AGENT_XIAONENG => '在线小能',
+            self:: CUS_AGENT_XIAONENG_MSG => '在线小能留言',
+            self:: CUS_AGENT_XIAONENG_OL => '在线小能在线',
         );
+    }
+
+    public function getOptionBusinessPartner() {
+        return array(
+            self:: BUSINESS_PARTNER_160 => '就医160',
+            self:: BUSINESS_PARTNER_TUISHI => '拓实医疗',
+            self:: BUSINESS_PARTNER_ALI => '阿里健康',
+            self:: BUSINESS_PARTNER_DIDI => '滴滴出行',
+            self:: BUSINESS_PARTNER_TIANMAO => '天猫医药馆',
+            self:: BUSINESS_PARTNER_OTHER => '其它B端合作',
+        );
+    }
+
+    public function getBusinessPartner() {
+        $options = self::getOptionBusinessPartner();
+        if (isset($options[$this->business_partner])) {
+            return $options[$this->business_partner];
+        } else {
+            return null;
+        }
     }
 
     public function getBookingType() {
@@ -517,8 +549,36 @@ class AdminBooking extends EActiveRecord {
         }
     }
 
+    public static function getOptionsIsCommonweal() {
+        return array(
+            self::IS_COMMONWEAL_NO => '否',
+            self::IS_COMMONWEAL_YES => '是',
+        );
+    }
+
+    public function getIsCommonweal($v = true) {
+        if ($v) {
+            $options = self::getOptionsIsCommonweal();
+            if (isset($options[$this->is_commonweal])) {
+                return $options[$this->is_commonweal];
+            } else {
+                return null;
+            }
+        } else {
+            $this->is_commonweal;
+        }
+    }
+
     public function getAdminUserList() {
-        return CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_CS)), 'id', 'fullname');
+        $adminUsers = AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_CS));
+        $adminUserOptions = array();
+        foreach ($adminUsers as $value) {
+            $std = new stdClass();
+            $std->id = $value->id;
+            $std->fullname = strIsEmpty($value->title) ? $value->fullname : $value->title . ' ' . $value->fullname;
+            $adminUserOptions[] = $std;
+        }
+        return CHtml::listData($adminUserOptions, 'id', 'fullname');
     }
 
     public function getBdUserList() {

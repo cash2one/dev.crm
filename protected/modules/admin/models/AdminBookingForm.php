@@ -2,9 +2,9 @@
 
 class AdminBookingForm extends EFormModel {
 
-    const ADMIN_USER_ROLE_CS = '1';//客服
-    const ADMIN_USER_ROLE_BD = '2';//地推/KA
-    const ADMIN_USER_ROLE_BD_ACCOUNTING = '3';//财务
+    const ADMIN_USER_ROLE_CS = '1'; //客服
+    const ADMIN_USER_ROLE_BD = '2'; //地推/KA
+    const ADMIN_USER_ROLE_BD_ACCOUNTING = '3'; //财务
 
     public $id;
     public $booking_id;
@@ -41,6 +41,8 @@ class AdminBookingForm extends EFormModel {
     public $customer_type;
     public $customer_diversion;
     public $customer_agent;
+    public $business_partner;
+    public $is_commonweal;
     public $booking_status;
     public $order_status;
     public $order_amount;
@@ -51,6 +53,7 @@ class AdminBookingForm extends EFormModel {
     public $remark;
     public $display_order;
     public $travel_type;
+    public $option_disease_confirm;
     public $option_customer_request;
     public $option_patient_state;
     public $option_patient_city;
@@ -64,6 +67,8 @@ class AdminBookingForm extends EFormModel {
     public $option_admin_user_id;
     public $option_bd_user_id;
     public $option_expected_dept_id;
+    public $option_business_partner;
+    public $option_is_commonweal;
 
     /**
      * @return array validation rules for model attributes.
@@ -83,7 +88,7 @@ class AdminBookingForm extends EFormModel {
             array('disease_name', 'length', 'max' => 100),
             array('admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('id, travel_type, state_id, city_id, expected_time_start, expected_time_end, final_time, final_hospital_id, final_hospital_name, patient_state,patient_city, customer_request, customer_diversion, customer_agent, bd_user_id, bd_user_name', 'safe'),
+            array('business_partner, is_commonweal, id, travel_type, state_id, city_id, expected_time_start, expected_time_end, final_time, final_hospital_id, final_hospital_name, patient_state,patient_city, customer_request, customer_diversion, customer_agent, bd_user_id, bd_user_name', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, experted_doctor_id, experted_doctor_name, final_doctor_id, final_doctor_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -208,6 +213,13 @@ class AdminBookingForm extends EFormModel {
         return $this->option_final_doctor_id;
     }
 
+    public function loadOptionsDiseaseConfirm() {
+        if (is_null($this->option_disease_confirm)) {
+            $this->option_disease_confirm = AdminBooking::model()->getOptionsDiseaseConfirm();
+        }
+        return $this->option_disease_confirm;
+    }
+    
     public function loadOptionsCustomerRequest() {
         if (is_null($this->option_customer_request)) {
             $this->option_customer_request = AdminBooking::model()->getOptionsCustomerRequest();
@@ -264,4 +276,17 @@ class AdminBookingForm extends EFormModel {
         return $this->option_bd_user_id;
     }
 
+    public function loadOptionBusinessPartner() {
+        if (is_null($this->option_business_partner)) {
+            $this->option_business_partner = AdminBooking::model()->getOptionBusinessPartner();
+        }
+        return $this->option_business_partner;
+    }
+    
+    public function loadOptionIsCommonweal() {
+        if (is_null($this->option_is_commonweal)) {
+            $this->option_is_commonweal = AdminBooking::model()->getOptionsIsCommonweal();
+        }
+        return $this->option_is_commonweal;
+    }
 }

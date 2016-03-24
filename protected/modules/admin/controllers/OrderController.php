@@ -115,6 +115,8 @@ class OrderController extends AdminController {
         $order->bk_type = StatCode::TRANS_TYPE_BK;
         $order->bk_ref_no = $booking->getRefNo();
         $order->user_id = $booking->getUserId();
+        $order->subject = $booking->contact_name;
+        $order->description = $booking->disease_detail;
         //$this->performAjaxValidation($order);
 
         if (isset($_POST['order'])) {
@@ -123,6 +125,8 @@ class OrderController extends AdminController {
             $order->setAmount($values['final_amount']);
             $order->setSubject($values['subject']);
             $order->setDescription($values['description']);
+            $order->setBdCode($values['bd_code']);
+            $order->setCashBack($values['cash_back']);
             $order->setIsPaid(0);
             $order->setDateOpen(new CDbExpression('NOW()'));
             $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_BK);
@@ -145,6 +149,8 @@ class OrderController extends AdminController {
         $order->bk_type = StatCode::TRANS_TYPE_PB;
         $order->bk_ref_no = $booking->getRefNo();
         $order->user_id = $booking->getPatientId();
+        $order->subject = $booking->patient_name;
+        $order->description = $booking->detail;
         if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_PATIENT_GO) {
             $order->order_type = SalesOrder::ORDER_TYPE_SERVICE;
             $order->setAmount(1000.00);
@@ -159,6 +165,8 @@ class OrderController extends AdminController {
             $order->setAmount($values['final_amount']);
             $order->setSubject($values['subject']);
             $order->setDescription($values['description']);
+            $order->setBdCode($values['bd_code']);
+            $order->setCashBack($values['cash_back']);
             $order->setIsPaid(0);
             $order->setDateOpen(new CDbExpression('NOW()'));
             $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_PB);
@@ -180,7 +188,10 @@ class OrderController extends AdminController {
         $order->bk_type = AdminBooking::BK_TYPE_CRM;
         $order->bk_ref_no = $booking->ref_no;
         $order->user_id = $booking->patient_id;
+        $order->subject = $booking->patient_name;
+        $order->description = $booking->disease_detail;
         $order->bd_code = $booking->bd_user_name;
+        $order->cash_back = $booking->bd_user_name;
         if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_PATIENT_GO) {
             $order->order_type = SalesOrder::ORDER_TYPE_SERVICE;
             $order->setAmount(1000.00);
@@ -198,9 +209,11 @@ class OrderController extends AdminController {
             $order->setAmount($values['final_amount']);
             $order->setSubject($values['subject']);
             $order->setDescription($values['description']);
+            $order->setBdCode($values['bd_code']);
+            $order->setCashBack($values['cash_back']);
             $order->setIsPaid(0);
             $order->setDateOpen(new CDbExpression('NOW()'));
-
+            
             $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_AB);
             //$order->validate();
             //var_dump($order);exit;

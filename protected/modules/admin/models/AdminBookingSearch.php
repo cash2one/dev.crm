@@ -11,7 +11,7 @@ class AdminBookingSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('bookingType', 'refNo', 'patientName', 'patientMobile','patientGender','bookingStatus', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType','customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
+        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
     }
 
     public function addQueryConditions() {
@@ -20,8 +20,12 @@ class AdminBookingSearch extends ESearchModel {
         $this->criteria->join .= 'LEFT JOIN sales_order s ON (t.`id` = s.`bk_id` AND s.`bk_type` = 0)';
         $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_doctor_id` = u.`user_id`)';
         $this->criteria->addCondition('t.date_deleted is NULL');
+        //如果客服level是普通客服，则只能查到与自己有关的信息
         $userId = Yii::app()->user->id;
-        $this->criteria->compare('t.admin_user_id', $userId);
+        $user = AdminUser::model()->getById($userId);
+        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
+            $this->criteria->compare('t.admin_user_id', $userId);
+        }
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['bookingType'])) {
                 $bookingType = $this->queryParams['bookingType'];
@@ -42,17 +46,17 @@ class AdminBookingSearch extends ESearchModel {
                 $patientMobile = $this->queryParams['patientMobile'];
                 $this->criteria->addSearchCondition("t.patient_mobile", $patientMobile);
             }
-            
+
             if (isset($this->queryParams['patientGender'])) {
                 $patientGender = $this->queryParams['patientGender'];
                 $this->criteria->addSearchCondition("t.patient_gender", $patientGender);
             }
-            
+
             if (isset($this->queryParams['bookingStatus'])) {
                 $bookingStatus = $this->queryParams['bookingStatus'];
                 $this->criteria->addSearchCondition("t.booking_status", $bookingStatus);
             }
-            
+
             if (isset($this->queryParams['stateId'])) {
                 $stateId = $this->queryParams['stateId'];
                 $this->criteria->addSearchCondition("t.state_id", $stateId);
