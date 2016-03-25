@@ -106,6 +106,11 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
         <div class="clearfix"></div>
     </div>
     <div class="mb15">
+        <?php echo $form->labelEx($model, 'description'); ?>
+        <?php echo $form->textarea($model, 'description', array('rows' => 4, 'cols' => 80, 'maxlength' => 500, 'class' => 'form-control')); ?>
+        <?php echo $form->error($model, 'description'); ?>
+    </div>
+    <div class="mb15">
         <label > <?php echo $form->labelEx($model, 'career_exp'); ?></label>
         <div>
             <?php echo $form->textarea($model, 'career_exp', array('rows' => 4, 'cols' => 80, 'maxlength' => 2000, 'class' => 'form-control')); ?>            
@@ -147,11 +152,7 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
             <div class="text-danger "> <?php echo $form->error($model, 'reason_four'); ?></div>
         </div>
     </div>
-    <div class="mb15">
-        <?php echo $form->labelEx($model, 'description'); ?>
-        <?php echo $form->textarea($model, 'description', array('rows' => 8, 'cols' => 80, 'maxlength' => 500, 'class' => 'form-control')); ?>
-        <?php echo $form->error($model, 'description'); ?>
-    </div>
+    
     <div class="mb15">
         <?php echo $form->labelEx($model, 'is_contracted'); ?>
         <?php echo $form->checkBox($model, 'is_contracted', array('class' => '')); ?>    
@@ -201,40 +202,40 @@ $urlSearchHospital = $this->createUrl('hospital/searchResult');
             $(this).parents('.form-select').find('label').removeClass('error');
         });
         //推荐理由填写规则
-        $('#DoctorFormAdmin_reason_two').focus(function () {
-            var reson_one = $('#DoctorFormAdmin_reason_one').val();
-            if (!reson_one) {
-                $('#DoctorFormAdmin_reason_one').focus();
-                alert('请先填写推荐理由1');
-            }
-        });
-        $('#DoctorFormAdmin_reason_three').focus(function () {
-            var reson_two = $('#DoctorFormAdmin_reason_two').val();
-            var reson_one = $('#DoctorFormAdmin_reason_one').val();
-            if (!reson_one) {
-                $('#DoctorFormAdmin_reason_one').focus();
-                alert('请先填写推荐理由1');
-            } else if (!reson_two) {
-                $('#DoctorFormAdmin_reason_two').focus();
-                alert('请先填写推荐理由2');
-            }
-        });
-        $('#DoctorFormAdmin_reason_four').focus(function () {
-            var reson_three = $('#DoctorFormAdmin_reason_three').val();
-            var reson_two = $('#DoctorFormAdmin_reason_two').val();
-            var reson_one = $('#DoctorFormAdmin_reason_one').val();
-            if (!reson_one) {
-                $('#DoctorFormAdmin_reason_one').focus();
-                alert('请先填写推荐理由1');
-            } else if (!reson_two) {
-                $('#DoctorFormAdmin_reason_two').focus();
-                alert('请先填写推荐理由2');
-            }
-            else if (!reson_three) {
-                $('#DoctorFormAdmin_reason_three').focus();
-                alert('请先填写推荐理由3');
-            }
-        });
+//        $('#DoctorFormAdmin_reason_two').focus(function () {
+//            var reson_one = $('#DoctorFormAdmin_reason_one').val();
+//            if (!reson_one) {
+//                $('#DoctorFormAdmin_reason_one').focus();
+//                alert('请先填写推荐理由1');
+//            }
+//        });
+//        $('#DoctorFormAdmin_reason_three').focus(function () {
+//            var reson_two = $('#DoctorFormAdmin_reason_two').val();
+//            var reson_one = $('#DoctorFormAdmin_reason_one').val();
+//            if (!reson_one) {
+//                $('#DoctorFormAdmin_reason_one').focus();
+//                alert('请先填写推荐理由1');
+//            } else if (!reson_two) {
+//                $('#DoctorFormAdmin_reason_two').focus();
+//                alert('请先填写推荐理由2');
+//            }
+//        });
+//        $('#DoctorFormAdmin_reason_four').focus(function () {
+//            var reson_three = $('#DoctorFormAdmin_reason_three').val();
+//            var reson_two = $('#DoctorFormAdmin_reason_two').val();
+//            var reson_one = $('#DoctorFormAdmin_reason_one').val();
+//            if (!reson_one) {
+//                $('#DoctorFormAdmin_reason_one').focus();
+//                alert('请先填写推荐理由1');
+//            } else if (!reson_two) {
+//                $('#DoctorFormAdmin_reason_two').focus();
+//                alert('请先填写推荐理由2');
+//            }
+//            else if (!reson_three) {
+//                $('#DoctorFormAdmin_reason_three').focus();
+//                alert('请先填写推荐理由3');
+//            }
+//        });
         //异步获取科室
         getHpDept('<?php echo $hospitalId; ?>');
         

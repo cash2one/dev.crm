@@ -36,8 +36,10 @@ class DoctorFormAdmin extends EFormModel {
 
     public function rules() {
         return array(
-            array('fullname, hospital_id, hp_dept_id, medical_title, academic_title, career_exp, is_contracted, role', 'required', 'message' => '请输入{attribute}'),
-            array('description', 'length', 'max' => 200),
+            array('fullname, hospital_id, hp_dept_id, medical_title, academic_title, career_exp, is_contracted, role, description', 'required', 'message' => '请输入{attribute}'),
+            array('description', 'length', 'max' => 500),
+            array('honour', 'length', 'max' => 1500),
+            array('career_exp', 'length', 'max' => 2000),
             array('id, name, state_id, city_id, description, reason_one, reason_two, reason_three, reason_four, hp_dept_name, hospital_name, honour', 'safe'),
             array("hospital_name", "validateHospitalName"),
         );
@@ -64,8 +66,8 @@ class DoctorFormAdmin extends EFormModel {
             'hp_dept_name' => '所属科室',
             'medical_title' => '临床职称',
             'academic_title' => '学术职称',
-            'description' => '描述',
-            'career_exp' => '职业经历',
+            'description' => '擅长手术',
+            'career_exp' => '执业经历',
             'reason_one' => '推荐理由1',
             'reason_two' => '推荐理由2',
             'reason_three' => '推荐理由3',

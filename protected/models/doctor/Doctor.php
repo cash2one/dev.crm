@@ -201,7 +201,7 @@ class Doctor extends EActiveRecord {
 
     //去掉不为空字段的空格
     protected function trimAttributes() {
-        return array('name', 'fullname');
+        return array('name', 'fullname', 'reason_one', 'reason_two', 'reason_three', 'reason_four');
     }
 
     /**
@@ -224,6 +224,18 @@ class Doctor extends EActiveRecord {
         if (is_array($this->honour)) {
             // convert array to json string.
             //$this->honour = CJSON::encode($this->honour);
+        }
+        if (strIsEmpty($this->reason_one)) {
+            $this->reason_one = null;
+        }
+        if (strIsEmpty($this->reason_two)) {
+            $this->reason_two = null;
+        }
+        if (strIsEmpty($this->reason_three)) {
+            $this->reason_three = null;
+        }
+        if (strIsEmpty($this->reason_four)) {
+            $this->reason_four = null;
         }
         return parent::beforeSave();
     }
