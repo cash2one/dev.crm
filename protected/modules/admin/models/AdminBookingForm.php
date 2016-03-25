@@ -274,14 +274,30 @@ class AdminBookingForm extends EFormModel {
 
     public function loadOptionsAdminUser() {
         if (is_null($this->option_admin_user_id)) {
-            $this->option_admin_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::ADMIN_USER_ROLE_CS)), 'id', 'fullname');
+            $adminUsers = AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_CS));
+            $adminUserOptions = array();
+            foreach ($adminUsers as $value) {
+                $std = new stdClass();
+                $std->id = $value->id;
+                $std->fullname = strIsEmpty($value->title) ? $value->fullname : $value->title . ' ' . $value->fullname;
+                $adminUserOptions[] = $std;
+            }
+            $this->option_admin_user_id = CHtml::listData($adminUserOptions, 'id', 'fullname');
         }
         return $this->option_admin_user_id;
     }
 
     public function loadOptionsBdUser() {
         if (is_null($this->option_bd_user_id)) {
-            $this->option_bd_user_id = CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => self::ADMIN_USER_ROLE_BD)), 'id', 'fullname');
+            $adminUsers = AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_BD));
+            $adminUserOptions = array();
+            foreach ($adminUsers as $value) {
+                $std = new stdClass();
+                $std->id = $value->id;
+                $std->fullname = strIsEmpty($value->title) ? $value->fullname : $value->title . ' ' . $value->fullname;
+                $adminUserOptions[] = $std;
+            }
+            $this->option_bd_user_id = CHtml::listData($adminUserOptions, 'id', 'fullname');
         }
         return $this->option_bd_user_id;
     }

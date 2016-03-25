@@ -616,7 +616,16 @@ class AdminBooking extends EActiveRecord {
     }
 
     public function getBdUserList() {
-        return CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_BD)), 'id', 'fullname');
+        $adminUsers = AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_BD));
+        $adminUserOptions = array();
+        foreach ($adminUsers as $value) {
+            $std = new stdClass();
+            $std->id = $value->id;
+            $std->fullname = strIsEmpty($value->title) ? $value->fullname : $value->title . ' ' . $value->fullname;
+            $adminUserOptions[] = $std;
+        }
+        return CHtml::listData($adminUserOptions, 'id', 'fullname');
+        //return CHtml::listData(AdminUser::model()->getAllByAttributes(array('role' => AdminBookingForm::ADMIN_USER_ROLE_BD)), 'id', 'fullname');
     }
 
     public function setFinalDoctorId($id) {
