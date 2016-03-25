@@ -88,6 +88,12 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
         <div class="col-md-4">
             <span class="tab-header">身份证：</span><?php echo $form->textField($model, 'patient_identity', array('class' => 'form-control w50')); ?>
         </div>
+        <div class="col-md-4">
+            <span class="">性别：</span>
+            <input type='radio' name='AdminBookingForm[patient_gender]' id='AdminBookingForm_patient_gender_male' value='1'/><label for='AdminBookingForm_patient_gender_male'>&nbsp;男</label>
+            &nbsp;&nbsp;
+            <input type='radio' name='AdminBookingForm[patient_gender]' id='AdminBookingForm_patient_gender_female' value='2'/><label for='AdminBookingForm_patient_gender_female'>&nbsp;女</label>
+        </div>
     </div>
     <div class="form-group">
         <div class="col-md-4">
@@ -248,7 +254,7 @@ if (is_null($creator) == false) {
             ?>
         </div>
         <div class="col-md-4">
-            <span class="tab-header">最终手术的医生：</span><?php
+            <span class="tab-header">最终手术的专家：</span><?php
             echo $form->textField($model, 'final_doctor_name', array('class' => 'form-control'));
 //            echo $form->dropDownList($model, 'final_doctor_id', $model->loadOptionsDoctorProfile(), array(
 //                'name' => 'AdminBookingForm[final_doctor_id]',
@@ -314,7 +320,7 @@ if (is_null($creator) == false) {
             echo $form->dropDownList($model, 'customer_type', $model->loadOptionsCustomerType(), array(
                 'name' => 'AdminBookingForm[customer_type]',
                 'prompt' => '选择',
-                'class' => 'form-control',
+                'class' => 'form-control w50',
             ));
             ?>
         </div>
@@ -333,7 +339,7 @@ if (is_null($creator) == false) {
             <span>B端：</span><?php
             echo $form->dropDownList($model, 'business_partner', $model->loadOptionBusinessPartner(), array(
                 'name' => 'AdminBookingForm[business_partner]',
-                'prompt' => '选择',
+                'prompt' => '否',
                 'class' => 'form-control',
             ));
             ?>
@@ -455,18 +461,18 @@ $this->renderPartial('//doctor/searchHpModal');
         });
     });
     function initForm() {
-        var disease_confirm = '<?php echo $model->disease_confirm; ?>';
         var order_status = '<?php echo $model->order_status; ?>';
-        $('select#AdminBookingForm_disease_confirm>option').each(function () {
-            if ($(this).val() == disease_confirm) {
-                $(this).attr('selected', 'selected');
-            }
-        });
+        var patient_gender = '<?php echo $model->patient_gender; ?>';
         $('select#AdminBookingForm_order_status>option').each(function () {
             if ($(this).val() == order_status) {
                 $(this).attr('selected', 'selected');
             }
         });
+        if(patient_gender == 1){
+            $('#AdminBookingForm_patient_gender_male').prop('checked', true);
+        }else if(patient_gender == 2){
+            $('#AdminBookingForm_patient_gender_female').prop('checked', true);
+        }
     }
     function setFileHtml(results) {
         if (results) {

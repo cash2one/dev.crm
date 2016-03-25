@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>订单号</th>
+            <th>支付单号</th>
             <th>名医交易号</th>
             <th>Ping++ ID</th>
             <th>第三方交易号</th>

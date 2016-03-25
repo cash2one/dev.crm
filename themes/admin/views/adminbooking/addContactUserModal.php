@@ -16,8 +16,8 @@
                 echo CHtml::hiddenField("AdminBookingForm[id]", $model->id);
                 ?>
                 <div class="form-group">
-                    <span>业务员：&nbsp;&nbsp;&nbsp;</span><?php
-                    echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
+                    <span>对接人：&nbsp;&nbsp;&nbsp;</span><?php
+                    echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsBdUser(), array(
                         'name' => 'AdminBookingForm[admin_user_id]',
                         'prompt' => '选择',
                         'class' => 'form-control',

@@ -21,11 +21,11 @@ class AdminBookingSearch extends ESearchModel {
         $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_doctor_id` = u.`user_id`)';
         $this->criteria->addCondition('t.date_deleted is NULL');
         //如果客服level是普通客服，则只能查到与自己有关的信息
-        $userId = Yii::app()->user->id;
-        $user = AdminUser::model()->getById($userId);
-        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
-            $this->criteria->compare('t.admin_user_id', $userId);
-        }
+//        $userId = Yii::app()->user->id;
+//        $user = AdminUser::model()->getById($userId);
+//        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
+//            $this->criteria->compare('t.admin_user_id', $userId);
+//        }
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['bookingType'])) {
                 $bookingType = $this->queryParams['bookingType'];

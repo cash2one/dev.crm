@@ -75,7 +75,7 @@ $orderList = isset($orderList) ? $orderList : null;
             <span class="tab-header">年龄：</span><?php echo $data->patient_age == null ? '<span class="color-blue">未填写</span>' : $data->patient_age; ?>
         </div>
         <div class="col-md-4 border-bottom">
-            <span class="tab-header">性别：</span><span class="color-blue">未填写</span>
+            <span class="tab-header">性别：</span><?php echo $data->getPatientGender() == null ? '<span class="color-blue">未填写</span>' : $data->getPatientGender(); ?>
         </div>
         <div class="col-md-4 border-bottom">
             <span class="tab-header">身份证：</span><?php echo $data->patient_identity == null ? '<span class="color-blue">未填写</span>' : $data->patient_identity; ?>
@@ -160,7 +160,7 @@ if (is_null($creator) == false) {
             <span class="tab-header">最终手术的医院：</span><?php echo $data->final_hospital_name == null ? '<span class="color-blue">未填写</span>' : $data->final_hospital_name; ?>
         </div>
         <div class="col-md-4 border-bottom">
-            <span class="tab-header">最终手术的医生：</span><?php echo $data->final_doctor_name == null ? '<span class="color-blue">未填写</span>' : $data->final_doctor_name; ?>
+            <span class="tab-header">最终手术的专家：</span><?php echo $data->final_doctor_name == null ? '<span class="color-blue">未填写</span>' : $data->final_doctor_name; ?>
         </div>
         <div class="col-md-4 border-bottom">
             <span class="tab-header">最终手术时间：</span><?php echo $data->final_time == null ? '<span class="color-blue">未填写</span>' : $data->final_time; ?>
