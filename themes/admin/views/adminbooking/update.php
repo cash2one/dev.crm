@@ -52,19 +52,22 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 <input id="reportType" type="hidden" name="AdminBookingForm[report_type]" value="mr" />
 <div class="mt30">
     <div class="row">
-        <div class="col-md-3 border-bottom">
+        <div class="col-md-2 border-bottom">
             <span class="tab-header">预约状态：</span><?php
             $bookingStatus = $data->getBookingStatus() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatus();
             echo $data->booking_status == StatCode::BK_STATUS_INVALID ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
             ?>
         </div>
-        <div class="col-sm-3 border-bottom">
+        <div class="col-sm-2 border-bottom">
             <span>线下推广人员：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
         </div>
-        <div class="col-sm-3 border-bottom">
+        <div class="col-sm-2 border-bottom">
+            <span>对接人：</span><?php echo $data->contact_name == null ? '<span class="color-blue">未填写</span>' : $data->contact_name; ?>
+        </div>
+        <div class="col-sm-2 border-bottom">
             <span>业务员：</span><?php echo $data->admin_user_name == null ? '<span class="color-blue">未填写</span>' : $data->admin_user_name; ?>
         </div>
-        <div class="col-sm-3 border-bottom">
+        <div class="col-sm-4 border-bottom">
             <span>预约类型：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
         </div>
     </div>

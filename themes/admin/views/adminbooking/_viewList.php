@@ -19,7 +19,11 @@
     <td>
         <?php echo CHtml::encode($data->patient_mobile); ?>
     </td>
-
+    
+    <td>
+        <?php echo $data->getBookingStatus(); ?>
+    </td>
+    
     <td>
         <?php echo CHtml::encode($data->patient_state); ?>
     </td>
