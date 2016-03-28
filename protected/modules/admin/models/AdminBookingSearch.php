@@ -11,7 +11,7 @@ class AdminBookingSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
+        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType','isCommonweal','businessPartner', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
     }
 
     public function addQueryConditions() {
@@ -88,6 +88,14 @@ class AdminBookingSearch extends ESearchModel {
             if (isset($this->queryParams['customerType'])) {
                 $customerType = $this->queryParams['customerType'];
                 $this->criteria->addSearchCondition("t.customer_type", $customerType);
+            }
+            if (isset($this->queryParams['isCommonweal'])) {
+                $isCommonweal = $this->queryParams['isCommonweal'];
+                $this->criteria->addSearchCondition("t.is_commonweal", $isCommonweal);
+            }
+            if (isset($this->queryParams['businessPartner'])) {
+                $businessPartner = $this->queryParams['businessPartner'];
+                $this->criteria->addSearchCondition("t.business_partner", $businessPartner);
             }
             if (isset($this->queryParams['customerRequest'])) {
                 $customerRequest = $this->queryParams['customerRequest'];
@@ -182,5 +190,4 @@ class AdminBookingSearch extends ESearchModel {
             }
         }
     }
-
 }
