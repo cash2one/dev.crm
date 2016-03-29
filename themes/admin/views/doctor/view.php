@@ -31,86 +31,23 @@ $urlAvatar = $model->base_url . $model->avatar_url;
 <div>
     <img src="<?php echo $urlAvatar; ?>"/>
 </div>
-<?php
-$this->widget('zii.widgets.CDetailView', array(
-    'data' => $model,
-    'attributes' => array(
-        'id',
-        'name',
-        //'fullname',
-        array(
-            'name' => 'medical_title',
-            'value' => CHtml::encode($model->getMedicalTitle())
-        ),
-        array(
-            'name' => 'academic_title',
-            'value' => CHtml::encode($model->getAcademicTitle())
-        ),
-        array(
-            'name' => 'hospital_id',
-            'value' => CHtml::encode($model->getHospitalName())
-        ),
-        array(
-            'name' => 'hp_dept_id',
-            'value' => CHtml::encode($model->getHpDeptName())
-        ),
-    /*
-      'faculty',
-      array(
-      'name' => 'disease_specialty',
-      'type' => 'ntext',
-      'value' => CHtml::encode($model->disease_specialty)
-      ),
-      array(
-      'name' => 'surgery_specialty',
-      'type' => 'ntext',
-      'value' => CHtml::encode($model->surgery_specialty)
-      ),
-
-      array(
-      'name' => 'description',
-      'type' => 'ntext',
-      'value' => CHtml::encode($model->description)
-      ),
-      array(
-      'name' => 'search_keywords',
-      'type' => 'ntext',
-      'value' => CHtml::encode($model->search_keywords)
-      ),
-      'mobile',
-      'tel',
-      'wechat',
-      'email',
-      array(
-      'name' => 'Image Url',
-      'value' => $model->getAbsUrlAvatar(false)
-      ),
-      array(
-      'name' => 'Thumbnail Url',
-      'value' => $model->getAbsUrlAvatar()
-      )
-     * 
-     */
-    ),
-));
-?>
-
-
-
-
-<?php
-//$model Hospital model.
-//$listModel array of Faculty model.
-//$showControl boolean.
-$team = $model->getDoctorExpertTeam();
-if (is_null($team) === false) {
-    echo '<h3>相关团队</h3>';
-    echo '<div class="view department">';
-    echo '关联团队: ' . $team->getName();
-    echo '</div>';
-}
-?>
-<br />
+<table class="table mt10" id="yw0">
+    <tbody>
+        <tr class="odd"><th class="tab-title">ID</th><td><?php echo $model->id; ?></td></tr>
+        <tr class="even"><th class="tab-title">姓名（展示）</th><td><?php echo $model->name; ?></td></tr>
+        <tr class="odd"><th class="tab-title">临床职称</th><td><?php echo $model->getMedicalTitle(); ?></td></tr>
+        <tr class="even"><th class="tab-title">学术职称</th><td><?php echo $model->getAcademicTitle(); ?></td></tr>
+        <tr class="odd"><th class="tab-title">所属医院</th><td><?php echo $model->getHospitalName(); ?></td></tr>
+        <tr class="even"><th class="tab-title">所属科室</th><td><?php echo $model->getHpDeptName(); ?></td></tr>
+        <tr class="odd"><th class="tab-title">擅长</th><td><?php echo !is_null($model->description) ? $model->description : '未填写'; ?></td></tr>
+        <tr class="even"><th class="tab-title">执业经历</th><td><?php echo !is_null($model->career_exp) ? $model->career_exp : '未填写'; ?></td></tr>
+        <tr class="odd"><th class="tab-title">荣誉</th><td><?php echo !is_null($model->getHonourList()) ? $model->getHonourList() : '未填写'; ?></td></tr>
+        <tr class="even"><th class="tab-title">推荐理由1</th><td><?php echo !is_null($model->reason_one) ? $model->reason_one : '未填写'; ?></td></tr>
+        <tr class="even"><th class="tab-title">推荐理由2</th><td><?php echo !is_null($model->reason_two) ? $model->reason_two : '未填写'; ?></td></tr>
+        <tr class="even"><th class="tab-title">推荐理由3</th><td><?php echo !is_null($model->reason_three) ? $model->reason_three : '未填写'; ?></td></tr>
+        <tr class="even"><th class="tab-title">推荐理由4</th><td><?php echo !is_null($model->reason_four) ? $model->reason_four : '未填写'; ?></td></tr>
+    </tbody>
+</table>
 <?php
 $this->renderPartial('_viewDoctorDepartment', array('model' => $model, 'listModel' => $model->getDoctorDiseases(), 'showControl' => true));
 ?>
