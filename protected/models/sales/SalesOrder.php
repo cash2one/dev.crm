@@ -129,7 +129,7 @@ class SalesOrder extends EActiveRecord {
             'order_type' => 'deposit(订金),surgery(手术费),consultation(会诊费)',
             'is_paid' => '是否已付款',
             'date_open' => '开始日期',
-            'date_closed' => '完结日期',
+            'date_closed' => '支付日期',
             'created_by' => '创建者用户名',
             'total_amount' => '总金额',
             'discount_percent' => '折扣百分比',

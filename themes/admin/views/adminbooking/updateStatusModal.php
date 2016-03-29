@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title text-center">修改预约状态</h4>
+                <h4 class="modal-title text-center">修改状态</h4>
             </div>
             <div class="modal-body">
                 <?php
@@ -17,8 +17,8 @@
                 ?>
                 <div class="form-group">
                     <span>预约状态：&nbsp;&nbsp;&nbsp;</span><?php
-                    echo $form->dropDownList($model, 'booking_status', $model->loadOptionsBookingStatus(), array(
-                        'name' => 'AdminBookingForm[booking_status]',
+                    echo $form->dropDownList($model, 'work_schedule', $model->loadOptionsBookingStatus(), array(
+                        'name' => 'AdminBookingForm[work_schedule]',
                         'prompt' => '选择',
                         'class' => 'form-control',
                     ));

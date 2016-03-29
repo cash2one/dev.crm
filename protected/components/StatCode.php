@@ -23,10 +23,13 @@ class StatCode {
     const BK_STATUS_PATIENT_ACCEPTED = 4;   // 患者已接受
     const BK_STATUS_SERVICE_UNPAID = 5;      // 待支付服务费（确定手术时间）
     const BK_STATUS_SERVICE_PAIDED = 6;      // 已支付服务费（入院手术）
-    const BK_STATUS_PROCESS_DONE = 7;   // 跟进结束
+    //const BK_STATUS_PROCESS_DONE = 7;   // 跟进结束
     const BK_STATUS_DONE = 8;         // 已完成
     const BK_STATUS_CANCELLED = 9;   // 已取消
-    const BK_STATUS_INVALID = 0;      // 失效的
+    //const BK_STATUS_INVALID = 0;      // 失效的
+    const BK_STATUS_PROCESS_DONE = 11;         // 跟进结束（提交出院小结）
+    const BK_STATUS_CHECKOUT = 12;   // 已结账（返款）
+    const BK_STATUS_INVALID = 13;   // 失效的
     const DR_C_TITLE_ZHUREN = 1;        // 主任
     const DR_C_TITLE_ZHUREN_ASSOC = 2;  // 副主任
     const DR_C_TITLE_ZHUZHI = 3;        // 主治
@@ -121,10 +124,13 @@ class StatCode {
             self::BK_STATUS_PROCESSING => '跟进中',
             self::BK_STATUS_CONFIRMED_DOCTOR => '专家已确认',
             self::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
+            self::BK_STATUS_SERVICE_UNPAID => '待支付服务费', // 待支付服务费（确定手术时间）
+            self::BK_STATUS_SERVICE_PAIDED => '已支付服务费', // 已支付服务费（入院手术）
             self::BK_STATUS_PROCESS_DONE => '跟进结束',
             self::BK_STATUS_INVALID => '跟进无效',
             self::BK_STATUS_DONE => '已完成',
-            self::BK_STATUS_CANCELLED => '已取消'
+            self::BK_STATUS_CANCELLED => '已取消',
+            self::BK_STATUS_CHECKOUT => '已结账'
         );
     }
 

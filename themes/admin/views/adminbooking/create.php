@@ -191,7 +191,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
             <span>是否确诊：</span><?php
             echo $form->dropDownList($model, 'disease_confirm', $model->loadOptionsDiseaseConfirm(), array(
                 'name' => 'AdminBookingForm[disease_confirm]',
-                'prompt' => '选择',
+                //'prompt' => '选择',
                 'class' => 'form-control',
             ));
             ?>
@@ -247,7 +247,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
             <span>公益项目：</span><?php
             echo $form->dropDownList($model, 'is_commonweal', $model->loadOptionIsCommonweal(), array(
                 'name' => 'AdminBookingForm[is_commonweal]',
-                'prompt' => '选择',
+                //'prompt' => '选择',
                 'class' => 'form-control',
             ));
             ?>
@@ -315,10 +315,11 @@ $this->renderPartial('//doctor/searchHpModal');
             $('#AdminBookingForm_expected_hospital_name').focus();
         });
         $(".datepicker").datepicker({
-            startDate: "+1d",
-            todayBtn: true,
+            startDate: "+0d",
+           // todayBtn: true,
             autoclose: true,
-            maxView: 3,
+            maxView: 2,
+            todayHighlight: true,
             format: "yyyy-mm-dd",
             language: "zh-CN"
         });

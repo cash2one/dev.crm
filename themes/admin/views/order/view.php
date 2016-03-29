@@ -22,7 +22,7 @@ $this->menu = array(
         <tr><th>ID</th><td><?php echo $model->id; ?></td><th>订单号</th><td><?php echo $model->ref_no; ?></td></tr>
         <tr><th>订单标题</th><td><?php echo $model->subject; ?></td><th>订单详情</th><td><?php echo $model->description; ?></a></td></tr>
         <tr><th>支付情况</th><td><?php echo $model->is_paid == 1 ? '已支付' : '未支付'; ?></td><th>订单创建时间</th><td><?php echo $model->date_open; ?></td></tr>
-        <tr><th>订单关闭时间</th><td><?php echo $model->date_closed == null ? '未设置' : $model->date_closed; ?></td><th>ping++付款ID</th><td><?php echo $model->ping_id == null ? '未设置' : $model->ping_id; ?></td></tr>
+        <tr><th>订单支付时间</th><td><?php echo $model->date_closed == null ? '未设置' : $model->date_closed; ?></td><th>ping++付款ID</th><td><?php echo $model->ping_id == null ? '未设置' : $model->ping_id; ?></td></tr>
         <tr><th>金额</th><td><?php echo $model->final_amount; ?></td><th>货币</th><td><?php echo $model->currency; ?></td></tr>
         <tr><th>地推</th><td><?php echo $model->bd_code == null ? '未设置' : $model->bd_code; ?></td><th>返款人</th><td><?php echo $model->cash_back == null ? '未设置' : $model->cash_back; ?></td></tr>
     </tbody>

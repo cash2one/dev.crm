@@ -1,6 +1,6 @@
 <?php
 
-class AdminBookingController extends AdminController {
+class AdminbookingController extends AdminController {
 
     public $bid;
 
@@ -33,7 +33,7 @@ class AdminBookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser','addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -343,10 +343,14 @@ class AdminBookingController extends AdminController {
     public function actionList() {
         $criteria = new CDbCriteria();
         $criteria->addCondition("t.date_deleted is NULL");
-        $criteria->addCondition("t.booking_status !=" . StatCode::BK_STATUS_INVALID);
+        //$criteria->addCondition("t.work_schedule !=" . StatCode::BK_STATUS_INVALID);
         $criteria->order = "t.id DESC";
+        //如果客服level是普通客服，则只能查到与自己有关的信息
         $userId = Yii::app()->user->id;
-        $criteria->compare('t.admin_user_id', $userId);
+        $user = AdminUser::model()->getById($userId);
+        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
+            $criteria->compare('t.admin_user_id', $userId);
+        }
         $dataProvider = new CActiveDataProvider('AdminBooking', array(
             'criteria' => $criteria,
             'pagination' => array(
@@ -461,7 +465,7 @@ class AdminBookingController extends AdminController {
         }
         //$this->renderJsonOutput($output);
     }
-    
+
     //修改booking status
     public function actionUpdateBookingStatus() {
         // Uncomment the following line if AJAX validation is needed
@@ -474,23 +478,28 @@ class AdminBookingController extends AdminController {
 
             $form->attributes = $_POST['AdminBookingForm'];
             //booking status信息
-            if (!strIsEmpty($form->booking_status)) {
-                $model->booking_status = $form->booking_status;
+            if (!strIsEmpty($form->work_schedule)) {
+                $model->work_schedule = $form->work_schedule;
+                
                 //如果设为无效的，则删除所有任务
-                if ($form->booking_status == StatCode::BK_STATUS_INVALID) {
+                if ($form->work_schedule == StatCode::BK_STATUS_INVALID) {
                     $taskMgr = new TaskManager();
                     $taskMgr->deleteAdminTaskJoinByAdminBookingId($adminbookingId);
                 }
-                //修改原始的booking中的状态
-                if ($model->booking_type == AdminBooking::BK_TYPE_BK) {
-                    $booking = Booking::model()->getById($model->booking_id);
-                    $booking->bk_status = $form->booking_status;
-                } else if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
-                    $booking = PatientBooking::model()->getById($model->booking_id);
-                    $booking->status = $form->booking_status;
-                }
-                if (isset($booking)) {
-                    $booking->save();
+                //若work_schedule<10则修改booking_status
+                if ($model->work_schedule < StatCode::BK_STATUS_PROCESS_DONE) {
+                    $model->booking_status = $form->work_schedule;
+                    //修改原始的booking中的状态
+                    if ($model->booking_type == AdminBooking::BK_TYPE_BK) {
+                        $booking = Booking::model()->getById($model->booking_id);
+                        $booking->bk_status = $form->work_schedule;
+                    } else if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
+                        $booking = PatientBooking::model()->getById($model->booking_id);
+                        $booking->status = $form->work_schedule;
+                    }
+                    if (isset($booking)) {
+                        $booking->save();
+                    }
                 }
             }
             if ($model->save()) {

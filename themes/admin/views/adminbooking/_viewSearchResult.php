@@ -1,5 +1,6 @@
 <?php
 $pbOrder = isset($data->pbOrder) ? $data->pbOrder : null;
+$doctorMobile = isset($data->bkOwner)?$data->bkOwner->username : '无';
 ?>
 <?php if (count($pbOrder) == 0) { ?>
     <tr>
@@ -8,7 +9,7 @@ $pbOrder = isset($data->pbOrder) ? $data->pbOrder : null;
         <td ><?php echo $data->patient_mobile; ?></td>
         <td ><?php echo $data->disease_name; ?></td>
         <td ><?php echo $data->date_created; ?></td>
-        <td ><?php echo $data->getBookingStatus(); ?></td>
+        <td ><?php echo $data->getWorkSchedule(); ?></td>
         <td ><?php echo $data->admin_user_name; ?></td>
         <td ><?php echo $data->creator_doctor_name; ?></td>
         <td ><?php echo $data->getCustomerAgent(); ?></td>
@@ -17,7 +18,7 @@ $pbOrder = isset($data->pbOrder) ? $data->pbOrder : null;
         <td ><?php echo $data->getCustomerIntention(); ?></td>
         <td ><?php echo $data->expected_doctor_name; ?></td>
         <td ><?php echo $data->expected_hospital_name; ?></td>
-        <td ><?php echo '无'; ?></td>
+        <td ><?php echo $doctorMobile; ?></td>
         <td ><?php echo $data->getCustomerDiversion(); ?></td>
         <td ><?php echo $data->final_time; ?></td>
         <td colspan="2" class="text-center">暂无支付单信息</td>

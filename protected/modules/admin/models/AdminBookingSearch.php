@@ -26,6 +26,7 @@ class AdminBookingSearch extends ESearchModel {
 //        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
 //            $this->criteria->compare('t.admin_user_id', $userId);
 //        }
+        $this->criteria->distinct = true;
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['bookingType'])) {
                 $bookingType = $this->queryParams['bookingType'];

@@ -43,6 +43,12 @@ class AdminTaskSearch extends ESearchModel {
 
             if (isset($this->queryParams['type'])) {
                 $type = $this->queryParams['type'];
+                if($type == '4'){
+                    $this->criteria->addCondition('t.date_plan is NOT NULL');
+                    $type = AdminTaskJoin::TASK_TYPE_BK;
+                }else{
+                    $this->criteria->addCondition('t.date_plan is NULL');
+                }
                 $this->criteria->compare('t.type', $type, false);
             }
 

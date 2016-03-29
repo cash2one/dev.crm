@@ -161,6 +161,8 @@ class AdminBooking extends EActiveRecord {
         return array(
             'adminBookingFiles' => array(self::HAS_MANY, 'AdminBookingFile', 'admin_booking_id'),
             'adminTaskBkJoins' => array(self::HAS_MANY, 'AdminTaskBkJoin', 'admin_booking_id'),
+            //'pbOrder' => array(self::HAS_MANY, 'SalesOrder', 'bk_id'),
+            'bkOwner' => array(self::BELONGS_TO, 'User', 'creator_doctor_id'),
         );
     }
 
@@ -443,7 +445,7 @@ class AdminBooking extends EActiveRecord {
             } else {
                 return null;
             }
-        }else{
+        } else {
             return $this->patient_gender;
         }
     }
@@ -518,18 +520,28 @@ class AdminBooking extends EActiveRecord {
 //            StatCode::BK_STATUS_CONFIRMED_DOCTOR => '专家已确认',
 //            StatCode::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
             StatCode::BK_STATUS_SERVICE_UNPAID => '待支付服务费',
-            StatCode::BK_STATUS_SERVICE_PAIDED => '已支付服务费',
+            StatCode::BK_STATUS_SERVICE_PAIDED => '已完成（支付完服务费）',
             StatCode::BK_STATUS_PROCESS_DONE => '跟进结束',
-            StatCode::BK_STATUS_DONE => '已完成',
+            //StatCode::BK_STATUS_DONE => '已完成',
+            StatCode::BK_STATUS_CHECKOUT => '已结账',
             StatCode::BK_STATUS_INVALID => '无效',
-//            StatCode::BK_STATUS_CANCELLED => '已取消'
+                //StatCode::BK_STATUS_CANCELLED => '已取消'
         );
     }
 
     public function getBookingStatus() {
-        $options = self::getOptionsBookingStatus();
+        $options = StatCode::getOptionsBookingStatus();
         if (isset($options[$this->booking_status])) {
             return $options[$this->booking_status];
+        } else {
+            return null;
+        }
+    }
+
+    public function getWorkSchedule() {
+        $options = StatCode::getOptionsBookingStatus();
+        if (isset($options[$this->work_schedule])) {
+            return $options[$this->work_schedule];
         } else {
             return null;
         }

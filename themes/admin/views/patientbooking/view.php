@@ -50,7 +50,24 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
             </tr>
             <tr class="odd">
                 <th>性别</th><td><?php echo $patient->gender; ?></td>
-                <th>年龄</th><td><?php echo $patient->age; ?></td>
+                <?php
+                $yearly = $patient->age;
+                $yearlyText = '';
+                $monthly = "";
+                if ($yearly == 0 && $patient->ageMonth >= 0) {
+                    $yearlyText = '';
+                    $monthly = $patient->ageMonth . '个月';
+                } else if ($yearly <= 5 && $patient->ageMonth > 0) {
+                    $yearlyText = $yearly . '岁';
+                    $monthly = $patient->ageMonth . '个月';
+                } else if ($yearly > 5 && $patient->ageMonth > 0) {
+                    $yearly++;
+                    $yearlyText = $yearly . '岁';
+                } else {
+                    $yearlyText = $yearly . '岁';
+                }
+                ?>
+                <th>年龄</th><td><?php echo $yearlyText; ?></td>
             </tr>
             <tr class="odd">
                 <th>省份</th><td><?php echo $patient->placeState; ?></td>

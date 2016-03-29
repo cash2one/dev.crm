@@ -21,7 +21,7 @@
     </td>
     
     <td>
-        <?php echo $data->getBookingStatus(); ?>
+        <?php echo $data->getWorkSchedule(); ?>
     </td>
     
     <td>

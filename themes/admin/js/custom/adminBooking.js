@@ -288,7 +288,7 @@ $(function () {
             },
             'AdminBookingForm[patient_age]': {
                 required: true,
-                max: 150
+                //max: 150
             },
             'AdminBookingForm[state_id]': {
                 required: true
@@ -347,7 +347,7 @@ $(function () {
             },
             'AdminBookingForm[patient_age]': {
                 required: '请填写患者年龄',
-                max: '患者最大年龄为150岁'
+                //max: '患者最大年龄为150岁'
             },
             'AdminBookingForm[state_id]': {
                 required: '请选择患者所在省'

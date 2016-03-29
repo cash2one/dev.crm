@@ -58,6 +58,11 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
             echo $data->booking_status == StatCode::BK_STATUS_INVALID ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
             ?>
         </div>
+        <div class="col-md-2 border-bottom">
+            <span class="tab-header">工作进度：</span><?php
+            echo $data->getWorkSchedule() == null ? '<span class="color-blue">未填写</span>' : $data->getWorkSchedule();
+            ?>
+        </div>
         <div class="col-sm-2 border-bottom">
             <span>线下推广人员：</span><?php echo $data->bd_user_name == null ? '<span class="color-blue">未填写</span>' : $data->bd_user_name; ?>
         </div>
@@ -67,7 +72,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
         <div class="col-sm-2 border-bottom">
             <span>业务员：</span><?php echo $data->admin_user_name == null ? '<span class="color-blue">未填写</span>' : $data->admin_user_name; ?>
         </div>
-        <div class="col-sm-4 border-bottom">
+        <div class="col-sm-2 border-bottom">
             <span>预约类型：</span><?php echo $data->getBookingType() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingType(); ?>
         </div>
     </div>
@@ -277,7 +282,7 @@ if (is_null($creator) == false) {
             <span>是否确诊：</span><?php
             echo $form->dropDownList($model, 'disease_confirm', $model->loadOptionsDiseaseConfirm(), array(
                 'name' => 'AdminBookingForm[disease_confirm]',
-                'prompt' => '选择',
+                //'prompt' => '选择',
                 'class' => 'form-control',
             ));
             ?>
@@ -333,7 +338,7 @@ if (is_null($creator) == false) {
             <span>公益项目：</span><?php
             echo $form->dropDownList($model, 'is_commonweal', $model->loadOptionIsCommonweal(), array(
                 'name' => 'AdminBookingForm[is_commonweal]',
-                'prompt' => '选择',
+                //'prompt' => '选择',
                 'class' => 'form-control',
             ));
             ?>
@@ -402,10 +407,11 @@ $this->renderPartial('//doctor/searchHpModal');
             $('#AdminBookingForm_expected_hospital_name').focus();
         });
         $(".datepicker").datepicker({
-            startDate: "+1d",
-            todayBtn: true,
+            startDate: "+0d",
+            //todayBtn: true,
             autoclose: true,
-            maxView: 3,
+            maxView: 2,
+            todayHighlight: true,
             format: "yyyy-mm-dd",
             language: "zh-CN"
         });

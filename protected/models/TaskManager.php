@@ -145,7 +145,7 @@ class TaskManager {
 
         $adminTask->subject = '上传照片';
         $adminTask->content = $model->name . ':' . $model->hospital_name . '-' . $model->hp_dept_name;
-        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id' => $model->getId()));
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id' => $model->getUserId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {

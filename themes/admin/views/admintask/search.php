@@ -26,6 +26,7 @@ $urlUserView = $this->createAbsoluteUrl('adminTask/view');
                 <option value = '1'>预约</option>
                 <option value = '2'>医生用户</option>
                 <option value = '3'>订单</option>
+                <option value = '4'>追单</option>
             </select>
         </div>
     </div>
