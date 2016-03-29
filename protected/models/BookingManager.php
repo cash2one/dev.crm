@@ -457,9 +457,11 @@ class BookingManager {
                     $adminBooking->patient_city = $patient->city_name;
                     $adminBooking->disease_name = $patient->disease_name;
                     $adminBooking->disease_detail = $patient->disease_detail;
-                    $adminBooking->booking_detail = $patient->name;
+                    $adminBooking->city_id = $patient->city_id;
+                    $adminBooking->state_id = $patient->state_id;
                 }
             }
+            $adminBooking->booking_detail = $model->detail;
             $adminBooking->travel_type = $model->travel_type;
             $adminBooking->booking_status = $model->status;
             //一开始创建时 只能以下级医生作为标准给其默认值
@@ -471,12 +473,10 @@ class BookingManager {
                     $adminBooking->creator_doctor_name = $doctor->name;
                     $adminBooking->creator_hospital_name = $doctor->hospital_name;
                     $adminBooking->creator_dept_name = $doctor->hp_dept_name;
-                    $cityId = $doctor->city_id;
-                    $stateId = $doctor->state_id;
                 }
             }
-            $customer = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_CS);
-            $bd = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_BD);
+            $customer = $this->getAdminUser($adminBooking->city_id, $adminBooking->state_id, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_CS);
+            $bd = $this->getAdminUser($adminBooking->city_id, $adminBooking->state_id, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_BD);
         } elseif ($model instanceof Booking) {
             $adminBooking->booking_type = AdminBooking::BK_TYPE_BK;
             $adminBooking->patient_id = $model->user_id;
