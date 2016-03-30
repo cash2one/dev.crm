@@ -80,6 +80,7 @@ $(function () {
                 formdata.append('admin[admin_booking_id]', domForm.find('#bookingId').val());
                 formdata.append('admin[booking_id]', domForm.find('#bookingId').val());
                 formdata.append('admin[patient_id]', domForm.find('#patientId').val());
+                formdata.append('admin[user_id]', domForm.find('#patientId').val());
                 formdata.append('admin[creator_id]', domForm.find('#creatorId').val());
                 formdata.append('admin[file_size]', file.size);
                 formdata.append('admin[report_type]', domForm.find('#reportType').val());

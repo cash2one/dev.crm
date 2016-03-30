@@ -189,7 +189,7 @@ class OrderController extends AdminController {
         $order->bk_ref_no = $booking->ref_no;
         $order->user_id = $booking->patient_id;
         $order->subject = $booking->patient_name;
-        $order->description = $booking->disease_detail;
+        $order->description = $booking->booking_detail;
         $order->bd_code = $booking->bd_user_name;
         $order->cash_back = $booking->bd_user_name;
         if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_PATIENT_GO) {
