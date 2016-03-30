@@ -49,7 +49,7 @@ class PatientMRFile extends EFileModel {
             array('mime_type', 'length', 'max' => 20),
             array('file_name, thumbnail_name', 'length', 'max' => 40),
             array('file_url, thumbnail_url, base_url', 'length', 'max' => 255),
-            array('date_created, date_updated, date_deleted', 'safe'),
+            array('remote_file_key, remote_domain, has_remote, date_created, date_updated, date_deleted', 'safe'),
         );
     }
 

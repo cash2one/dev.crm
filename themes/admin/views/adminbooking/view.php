@@ -8,14 +8,22 @@ Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyun
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/custom/task.js", CClientScript::POS_END);
 
+if ($data->booking_type == AdminBooking::BK_TYPE_BK) {
+    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
+    $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id. '&reportType=dc';
+} else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
+    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
+    $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=dc';
+} else {
+    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
+    $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
+}
 
-$urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
-$urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
 $this->createUrl('booking/bookingFile', array('id' => $data->id, 'type' => 'dc'));
 
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
-$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'mr'));
-$urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'dc'));
+$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'mr', 'booking_type' => $data->booking_type));
+$urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'dc', 'booking_type' => $data->booking_type));
 $deleteTaskUrl = $this->createUrl('admintask/ajaxDeleteTask', array('id' => ''));
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
 $orderList = isset($orderList) ? $orderList : null;

@@ -121,7 +121,7 @@ class StatCode {
     public static function getOptionsBookingStatus() {
         return array(
             self::BK_STATUS_NEW => '待处理',
-            self::BK_STATUS_PROCESSING => '跟进中',
+            self::BK_STATUS_PROCESSING => '安排中',
             self::BK_STATUS_CONFIRMED_DOCTOR => '专家已确认',
             self::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
             self::BK_STATUS_SERVICE_UNPAID => '待支付服务费', // 待支付服务费（确定手术时间）

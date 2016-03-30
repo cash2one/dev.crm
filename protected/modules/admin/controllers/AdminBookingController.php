@@ -308,19 +308,34 @@ class AdminbookingController extends AdminController {
     //保存文件信息
     public function actionAjaxSaveAdminFile() {
         $output = array('status' => 'no');
+        $bookingTyoe = $_POST['booking_type'];
+        $form = null;
+        $bookingfile = null;
+        switch ($bookingTyoe) {
+            case AdminBooking::BK_TYPE_CRM:
+                $form = new AdminBookingFileForm();
+                $bookingfile = new AdminBookingFile();
+                break;
+            case AdminBooking::BK_TYPE_BK:
+                $form = new BookingFileForm();
+                $bookingfile = new BookingFile();
+                break;
+            case AdminBooking::BK_TYPE_PB:
+                $form = new PatientMRFileForm();
+                $bookingfile = new PatientMRFile();
+                break;
+        }
         if (isset($_POST['admin'])) {
             $values = $_POST['admin'];
-            $form = new AdminBookingFileForm();
             $form->setAttributes($values, true);
             $form->initModel();
             if ($form->validate()) {
-                $adminfile = new AdminBookingFile();
-                $adminfile->setAttributes($form->attributes, true);
-                if ($adminfile->save()) {
+                $bookingfile->setAttributes($form->attributes, true);
+                if ($bookingfile->save()) {
                     $output['status'] = 'ok';
-                    $output['file_id'] = $adminfile->getId();
+                    $output['file_id'] = $bookingfile->getId();
                 } else {
-                    $output['errors'] = $adminfile->getErrors();
+                    $output['errors'] = $bookingfile->getErrors();
                 }
             }
         } else {
@@ -362,8 +377,11 @@ class AdminbookingController extends AdminController {
         ));
     }
 
-    public function actionUploadsummary() {
-        $this->render('uploadSummary');
+    public function actionUploadsummary($id, $type = 'mr') {
+        $data = $this->loadModel($id);
+        $this->render('uploadSummary', array(
+            'data' => $data
+        ));
     }
 
     /**
@@ -480,7 +498,7 @@ class AdminbookingController extends AdminController {
             //booking status信息
             if (!strIsEmpty($form->work_schedule)) {
                 $model->work_schedule = $form->work_schedule;
-                
+
                 //如果设为无效的，则删除所有任务
                 if ($form->work_schedule == StatCode::BK_STATUS_INVALID) {
                     $taskMgr = new TaskManager();

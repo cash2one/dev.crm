@@ -9,6 +9,7 @@ $files = $data->mrfiles;
 
 $urlDoctor = $this->createAbsoluteUrl('user/view', array('id' => $creator->id));
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
+$urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $creator->id . '&patientId=' . $patient->id . '&reportType=mr';
 
 $this->breadcrumbs = array(
     '预约列表' => array('admin'),
@@ -192,20 +193,26 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
 </div>
 <div>
     <h3>病历报告：共 <?php echo count($files) ?>（份）</h3>
+    <div class="row bookingImgList">
+
+    </div>
     <?php
-    if (arrayNotEmpty($files)):
-        echo '<div class="row">';
-        foreach ($files as $file):
-            ?>
+//    if (arrayNotEmpty($files)):
+//        echo '<div class="row">';
+//        foreach ($files as $file):
+//            
+    ?>
+    <!--
             <div class="col-sm-2">
                 <div class="">
-                    <?php echo CHtml::image($file->fileUrl, '', array('class' => "img-responsive")); ?>
+    <?php //echo CHtml::image($file->fileUrl, '', array('class' => "img-responsive"));  ?>
                 </div>
             </div>
-            <?php
-        endforeach;
-        echo '</div>';
-    endif;
+    -->
+    <?php
+//        endforeach;
+//        echo '</div>';
+//    endif;
     ?>
 </div>
 
@@ -230,5 +237,30 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
             }
             return false;
         });
+        var urlLoadFiles = '<?php echo $urlLoadFiles; ?>';
+        ajaxLoadFiles(urlLoadFiles, $('.bookingImgList'));
     });
+    //加载图片
+    function ajaxLoadFiles(urlLoadFiles, fileDom) {
+        $.ajax({
+            url: urlLoadFiles,
+            success: function (data) {
+                if (data.status == 'ok') {
+                    setFileHtml(data.results.files, fileDom);
+                }
+            }
+        });
+    }
+    function setFileHtml(files, fileDom) {
+        if (files && files.length > 0) {
+            var innerHtml = '';
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absFileUrl + '"/><div class="mt5">' + file.dateCreated + '</div></div>';
+            }
+        } else {
+            var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';
+        }
+        fileDom.html(innerHtml);
+    }
 </script>

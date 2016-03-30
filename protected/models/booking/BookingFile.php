@@ -50,7 +50,7 @@ class BookingFile extends EFileModel {
             array('mime_type', 'length', 'max' => 20),
             array('file_name, thumbnail_name', 'length', 'max' => 40),
             array('file_url, thumbnail_url, base_url', 'length', 'max' => 255),
-            array('date_created, date_updated, date_deleted', 'safe'),
+            array('remote_file_key, remote_domain, has_remote, date_created, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, uid, booking_id, user_id, file_ext, mime_type, file_name, file_url, file_size, thumbnail_name, thumbnail_url, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),

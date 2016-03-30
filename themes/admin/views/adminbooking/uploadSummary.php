@@ -9,12 +9,15 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/q
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/uploadsummary.js', CClientScript::POS_END);
 
 
-$bookingId = Yii::app()->request->getQuery('id', '');
 $type = Yii::app()->request->getQuery('type', 'mr');
-
+if($data->booking_type == AdminBooking::BK_TYPE_CRM){
+    $bookingId = $data->id;
+}else{
+    $bookingId = $data->booking_id;
+}
 $urlUploadFile = $this->createUrl("adminbooking/ajaxSaveAdminFile");
 
-$urlReturn = $this->createUrl('adminbooking/view', array('id' => $bookingId));
+$urlReturn = $this->createUrl('adminbooking/view', array('id' => $data->id));
 ?>
 <?php
 if ($type == 'dc') {
@@ -26,8 +29,11 @@ if ($type == 'dc') {
 
 <div class="form-wrapper mt20">
     <form id="booking-form" data-url-uploadfile="<?php echo $urlUploadFile; ?>" data-url-return="<?php echo $urlReturn; ?>">
-        <input id="bookingId" type="hidden" name="AdminBooking[id]" value="<?php echo $bookingId; ?>" />             
+        <input id="bookingId" type="hidden" name="AdminBooking[id]" value="<?php echo $bookingId; ?>" />
+        <input id="patientId" type="hidden" name="AdminBooking[patient_id]" value="<?php echo $data->patient_id; ?>" />
+        <input id="creatorId" type="hidden" name="AdminBooking[creator_id]" value="<?php echo $data->creator_doctor_id; ?>" />
         <input id="reportType" type="hidden" name="AdminBooking[report_type]" value="<?php echo $type; ?>" />
+        <input id="bookingType" type="hidden" name="booking_type" value="<?php echo $data->booking_type; ?>" />
         <input type="hidden" id="domain" value="http://7xq93p.com2.z0.glb.qiniucdn.com"> 
         <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('adminbooking/ajaxUpload'); ?>">
     </form>
