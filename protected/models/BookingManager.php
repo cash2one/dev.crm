@@ -472,6 +472,8 @@ class BookingManager {
                     $adminBooking->creator_doctor_id = $doctor->user_id;
                     $adminBooking->creator_doctor_name = $doctor->name;
                     $adminBooking->creator_hospital_name = $doctor->hospital_name;
+                    //$adminBooking->final_hospital_id = $doctor->hospital_id;
+                    $adminBooking->final_hospital_name = $doctor->hospital_name;
                     $adminBooking->creator_dept_name = $doctor->hp_dept_name;
                 }
             }
