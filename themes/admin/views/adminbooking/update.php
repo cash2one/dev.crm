@@ -11,7 +11,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/q
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/highlight.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.form.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/adminBooking.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/adminBooking.js?v=' . time(), CClientScript::POS_END);
 
 $urlAjaxLoadloadHospitalDept = $this->createUrl('doctor/ajaxLoadloadHospitalDept', array('hid' => ''));
 $urlReturn = $this->createUrl('adminbooking/view', array('id' => ''));
@@ -19,7 +19,14 @@ $urlSubmit = $this->createUrl('adminbooking/ajaxUpdate');
 $urlLoadCity = $this->createUrl('region/loadCities');
 
 $urlUploadFile = $this->createUrl("adminbooking/ajaxSaveAdminFile"); //$this->createUrl("booking/ajaxUploadFile");
-$urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $model->id . '&reportType=mr'; //$this->createUrl('booking/bookingFile', array('id' => $model->id));
+//$urlLoadFiles = 'http://localhost/file.myzd.com/api/loadadminmr?abId=' . $model->id . '&reportType=mr'; //$this->createUrl('booking/bookingFile', array('id' => $model->id));
+if ($data->booking_type == AdminBooking::BK_TYPE_BK) {
+    $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
+} else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
+    $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
+} else {
+    $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
+}
 ?>
 <h1 class="">修改预约</h1>
 <style>
@@ -149,37 +156,6 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
     <h3>病历附件&nbsp;&nbsp;&nbsp;</h3>
     <div class="row bookingImgList">
 
-    </div>
-    <div class="mt10 mb20 row">
-        <div class="body">
-            <div class="col-md-12">
-                <div id="container">
-                    <a class="btn btn-default btn-lg " id="pickfiles" href="#" >
-                        <i class="glyphicon glyphicon-plus"></i>
-                        <span>选择文件</span>
-                    </a>
-                </div>
-            </div>
-
-            <div style="display:none" id="success" class="col-md-12">
-                <div class="alert-success">
-                    队列全部文件处理完毕
-                </div>
-            </div>
-            <div class="col-md-12 ">
-                <table class="table table-striped table-hover text-left"   style="margin-top:40px;display:none">
-                    <thead>
-                        <tr>
-                            <th class="col-md-4">Filename</th>
-                            <th class="col-md-2">Size</th>
-                            <th class="col-md-6">Detail</th>
-                        </tr>
-                    </thead>
-                    <tbody id="fsUploadProgress">
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 </div>
 <?php
@@ -479,9 +455,9 @@ $this->renderPartial('//doctor/searchHpModal');
                 $(this).attr('selected', 'selected');
             }
         });
-        if(patient_gender == 1){
+        if (patient_gender == 1) {
             $('#AdminBookingForm_patient_gender_male').prop('checked', true);
-        }else if(patient_gender == 2){
+        } else if (patient_gender == 2) {
             $('#AdminBookingForm_patient_gender_female').prop('checked', true);
         }
     }

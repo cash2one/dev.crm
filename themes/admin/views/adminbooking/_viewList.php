@@ -1,6 +1,14 @@
 <?php
 /* @var $this BookingController */
 /* @var $data Booking */
+$creator = $data->getCreator();
+if (is_null($creator) == false) {
+    $creatorName = $creator->getUserDoctorProfile() !== null ? $creator->getUserDoctorProfile()->getName() : '无';
+    $creatorMobile = $creator->getMobile();
+} else {
+    $creatorName = '无';
+    $creatorMobile = '无';
+}
 ?>
 <tr class="view">
 
@@ -19,11 +27,11 @@
     <td>
         <?php echo CHtml::encode($data->patient_mobile); ?>
     </td>
-    
+
     <td>
         <?php echo $data->getWorkSchedule(); ?>
     </td>
-    
+
     <td>
         <?php echo CHtml::encode($data->patient_state); ?>
     </td>
@@ -33,9 +41,17 @@
     </td>
 
     <td>
-        <?php echo CHtml::encode($data->disease_name); ?>
+        <?php echo CHtml::encode($data->patient_age); ?>
+    </td>
+    
+    <td>
+        <?php echo CHtml::encode($creatorName); ?>
     </td>
 
+    <td>
+        <?php echo CHtml::encode($creatorMobile); ?>
+    </td>
+    
     <td>
         <?php echo CHtml::encode($data->getCustomerAgent() == '' ? '未填写' : $data->getCustomerAgent()); ?>
     </td>

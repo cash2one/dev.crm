@@ -163,6 +163,7 @@ class AdminBooking extends EActiveRecord {
             'adminTaskBkJoins' => array(self::HAS_MANY, 'AdminTaskBkJoin', 'admin_booking_id'),
             //'pbOrder' => array(self::HAS_MANY, 'SalesOrder', 'bk_id'),
             'bkOwner' => array(self::BELONGS_TO, 'User', 'creator_doctor_id'),
+            'pbUserDoctorProfile' => array(self::BELONGS_TO, 'UserDoctorProfile', 'creator_doctor_id'),
         );
     }
 
@@ -309,6 +310,21 @@ class AdminBooking extends EActiveRecord {
         return parent::model($className);
     }
 
+    //去掉不为空字段的空格
+    protected function trimAttributes() {
+        return array('expected_time_start', 'expected_time_end');
+    }
+    
+    public function beforeSave() {
+        if (strIsEmpty($this->expected_time_start)) {
+            $this->expected_time_start = null;
+        }
+        if (strIsEmpty($this->expected_time_end)) {
+            $this->expected_time_end = null;
+        }
+        return parent::beforeSave();
+    }
+    
     public function beforeValidate() {
         $this->createRefNumber();
         return parent::beforeValidate();
@@ -327,6 +343,10 @@ class AdminBooking extends EActiveRecord {
         }
     }
 
+    public function getCreator() {
+        return $this->bkOwner;
+    }
+    
     /**
      * Return ref_no prefix charactor based on bk_type
      * default 'AA' is an eception charactor

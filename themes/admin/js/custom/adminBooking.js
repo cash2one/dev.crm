@@ -107,7 +107,7 @@ $(function () {
                 var progress = new FileProgress(err.file, 'fsUploadProgress');
                 progress.setError();
                 progress.setStatus(errTip);
-                alert('上传失败!');
+                //alert('上传失败!');
             }
             // ,
             // 'Key': function(up, file) {
@@ -277,45 +277,45 @@ $(function () {
 //表单验证板块
     var validator = domForm.validate({
         rules: {
-            'AdminBookingForm[booking_id]': {
-                required: true
-            },
-            'AdminBookingForm[patient_name]': {
-                required: true
-            },
-            'AdminBookingForm[patient_mobile]': {
-                required: true
-            },
-            'AdminBookingForm[patient_age]': {
-                required: true,
-                //max: 150
-            },
-            'AdminBookingForm[state_id]': {
-                required: true
-            },
-            'AdminBookingForm[city_id]': {
-                required: true
-            },
-            'AdminBookingForm[disease_name]': {
-                required: true,
-                maxlength: 50
-            },
-            'AdminBookingForm[disease_detail]': {
-                required: true,
-                maxlength: 1000
-            },
-            'AdminBookingForm[expected_time_start]': {
-                required: true
-            },
-            'AdminBookingForm[expected_time_end]': {
-                required: true
-            },
-            'AdminBookingForm[expected_hospital_id]': {
-                required: true
-            },
-            'AdminBookingForm[expected_hp_dept_id]': {
-                required: true
-            },
+//            'AdminBookingForm[booking_id]': {
+//                required: true
+//            },
+//            'AdminBookingForm[patient_name]': {
+//                required: true
+//            },
+//            'AdminBookingForm[patient_mobile]': {
+//                required: true
+//            },
+//            'AdminBookingForm[patient_age]': {
+//                required: true,
+//                //max: 150
+//            },
+//            'AdminBookingForm[state_id]': {
+//                required: true
+//            },
+//            'AdminBookingForm[city_id]': {
+//                required: true
+//            },
+//            'AdminBookingForm[disease_name]': {
+//                required: true,
+//                maxlength: 50
+//            },
+//            'AdminBookingForm[disease_detail]': {
+//                required: true,
+//                maxlength: 1000
+//            },
+//            'AdminBookingForm[expected_time_start]': {
+//                required: true
+//            },
+//            'AdminBookingForm[expected_time_end]': {
+//                required: true
+//            },
+//            'AdminBookingForm[expected_hospital_id]': {
+//                required: true
+//            },
+//            'AdminBookingForm[expected_hp_dept_id]': {
+//                required: true
+//            },
 //            'AdminBookingForm[experted_doctor_name]': {
 //                required: true
 //            },
@@ -331,9 +331,9 @@ $(function () {
 //            'AdminBookingForm[customer_agent]': {
 //                required: true
 //            },
-            'AdminBookingForm[admin_user_id]': {
-                required: true
-            },
+//            'AdminBookingForm[admin_user_id]': {
+//                required: true
+//            },
         },
         messages: {
             'AdminBookingForm[booking_id]': {

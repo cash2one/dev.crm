@@ -110,11 +110,11 @@ class AdminbookingController extends AdminController {
                 $form->final_hospital_name = $hospital->getName();
             }
             //给省市赋值
-            if (!is_null($form->state_id)) {
+            if (!strIsEmpty($form->state_id)) {
                 $state = RegionState::model()->getById($form->state_id);
                 $form->patient_state = $state->getName();
             }
-            if (!is_null($form->city_id)) {
+            if (!strIsEmpty($form->city_id)) {
                 $city = RegionCity::model()->getById($form->city_id);
                 $form->patient_city = $city->getName();
             }
@@ -187,14 +187,17 @@ class AdminbookingController extends AdminController {
                 $dept = HospitalDepartment::model()->getById($form->expected_hp_dept_id);
                 $form->expected_hp_dept_name = $dept->getName();
             }
-
             //给省市赋值
-            $state = RegionState::model()->getById($form->state_id);
-            $form->patient_state = $state->getName();
-            $city = RegionCity::model()->getById($form->city_id);
-            $form->patient_city = $city->getName();
+            if (!strIsEmpty($form->state_id)) {
+                $state = RegionState::model()->getById($form->state_id);
+                $form->patient_state = $state->getName();
+            }
+            if (!strIsEmpty($form->city_id)) {
+                $city = RegionCity::model()->getById($form->city_id);
+                $form->patient_city = $city->getName();
+            }
             //给最终手术专家赋值
-            if (!is_null($form->final_doctor_id) && !strIsEmpty($form->final_doctor_id)) {
+            if (!strIsEmpty($form->final_doctor_id) && !strIsEmpty($form->final_doctor_id)) {
                 $userDoctorProfile = UserDoctorProfile::model()->getByUserId($form->final_doctor_id);
                 $form->final_doctor_name = $userDoctorProfile->getName();
             }

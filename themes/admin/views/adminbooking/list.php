@@ -24,7 +24,9 @@ $this->menu = array(
                 <td>跟进状态</td>
                 <td>患者所在省</td>
                 <td>患者所在市</td>
-                <td>病情诊断</td>
+                <td>患者年龄</td>
+                <td>创建医生</td>
+                <td>创建医生手机</td>
                 <td>预约来源</td>
                 <td>业务员</td>
                 <td>创建日期</td>
