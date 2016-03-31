@@ -156,7 +156,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
             ?>
         </div>
         <div class="col-md-4">
-            <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'experted_doctor_name', array('class' => 'form-control')); ?>
+            <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'expected_doctor_name', array('class' => 'form-control')); ?>
         </div>
     </div>
     <div class="form-group">

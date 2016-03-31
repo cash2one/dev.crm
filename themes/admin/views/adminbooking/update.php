@@ -43,6 +43,8 @@ echo CHtml::hiddenField("AdminBookingForm[booking_type]", $model->booking_type);
 echo CHtml::hiddenField("AdminBookingForm[booking_status]", $model->booking_status);
 echo CHtml::hiddenField("AdminBookingForm[patient_id]", $model->patient_id);
 echo CHtml::hiddenField("AdminBookingForm[admin_user_id]", $model->admin_user_id);
+echo CHtml::hiddenField("AdminBookingForm[bd_user_id]", $model->bd_user_id);
+echo CHtml::hiddenField("AdminBookingForm[bd_user_name]", $model->bd_user_name);
 echo CHtml::hiddenField("AdminBookingForm[travel_type]", $model->travel_type);
 echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expected_hospital_id);
 echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
@@ -247,7 +249,7 @@ if (is_null($creator) == false) {
             ?>
         </div>
         <div class="col-md-4">
-            <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'experted_doctor_name', array('class' => 'form-control')); ?>
+            <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'expected_doctor_name', array('class' => 'form-control')); ?>
         </div>
     </div>
     <div class="form-group">

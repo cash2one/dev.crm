@@ -145,7 +145,7 @@ class AdminBooking extends EActiveRecord {
             array('disease_name, final_hospital_name', 'length', 'max' => 100),
             array('expected_hospital_name, expected_hp_dept_name, expected_doctor_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('business_partner, is_commonweal, contact_name, contact_name, patient_gender, expected_time_start, expected_time_end, final_time, date_updated, date_deleted', 'safe'),
+            array('business_partner, is_commonweal, contact_name, contact_name, patient_gender, expected_time_start, expected_time_end, final_time, date_updated, date_deleted, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_gender, patient_identity, state_id, city_id, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, expected_doctor_id, expected_doctor_name, creator_doctor_id, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_id, final_doctor_name, final_hospital_id, final_hospital_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, order_status, order_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -557,8 +557,8 @@ class AdminBooking extends EActiveRecord {
 
     public static function getOptionsDiseaseConfirm() {
         return array(
-            self::DISEASE_CONFIRM_NO => '否',
             self::DISEASE_CONFIRM_YES => '是',
+            self::DISEASE_CONFIRM_NO => '否',
         );
     }
 

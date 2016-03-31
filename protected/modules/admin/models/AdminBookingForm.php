@@ -29,10 +29,12 @@ class AdminBookingForm extends EFormModel {
     public $expected_hospital_name;
     public $expected_hp_dept_id;
     public $expected_hp_dept_name;
-    public $experted_doctor_id;
-    public $experted_doctor_name;
+    public $expected_doctor_id;
+    public $expected_doctor_name;
+    public $expected_doctor_mobile;
     public $final_doctor_id;
     public $final_doctor_name;
+    public $final_doctor_mobile;
     public $final_hospital_id;
     public $final_hospital_name;
     public $final_time;
@@ -80,8 +82,8 @@ class AdminBookingForm extends EFormModel {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('booking_id, booking_type, patient_id, patient_age, expected_hospital_id, expected_hp_dept_id, experted_doctor_id, final_doctor_id, disease_confirm, customer_intention, customer_type, booking_status, work_schedule, order_status, admin_user_id, display_order', 'numerical', 'integerOnly' => true),
-            array('ref_no, patient_name, expected_hospital_name, expected_hp_dept_name, experted_doctor_name, final_doctor_name, order_amount', 'length', 'max' => 20),
+            array('booking_id, booking_type, patient_id, patient_age, expected_hospital_id, expected_hp_dept_id, expected_doctor_id, final_doctor_id, disease_confirm, customer_intention, customer_type, booking_status, work_schedule, order_status, admin_user_id, display_order', 'numerical', 'integerOnly' => true),
+            array('ref_no, patient_name, expected_hospital_name, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile, order_amount', 'length', 'max' => 20),
             array('patient_mobile', 'length', 'max' => 11, 'message' => '请填写正确的11位中国手机号码'),
             array('patient_mobile', 'numerical', 'integerOnly' => true, 'message' => '请填写正确的11位中国手机号码'),
             array('patient_identity', 'length', 'max' => 18),
@@ -91,10 +93,10 @@ class AdminBookingForm extends EFormModel {
             array('disease_name', 'length', 'max' => 100),
             array('admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('business_partner, is_commonweal, patient_gender, id, travel_type, state_id, city_id, expected_time_start, expected_time_end, final_time, final_hospital_id, final_hospital_name, patient_state,patient_city, customer_request, customer_diversion, customer_agent, bd_user_id, bd_user_name', 'safe'),
+            array('business_partner, is_commonweal, patient_gender, id, travel_type, state_id, city_id, expected_time_start, expected_time_end, final_time, final_hospital_id, final_hospital_name, patient_state,patient_city, customer_request, customer_diversion, customer_agent, bd_user_id, bd_user_name, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, experted_doctor_id, experted_doctor_name, final_doctor_id, final_doctor_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, work_schedule, order_status, order_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, expected_doctor_id, expected_doctor_name, final_doctor_id, final_doctor_name, expected_doctor_mobile, final_doctor_mobile, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, work_schedule, order_status, order_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -124,10 +126,12 @@ class AdminBookingForm extends EFormModel {
             'expected_hospital_name' => '理想医院',
             'expected_hp_dept_id' => '理想科室ID',
             'expected_hp_dept_name' => '理想科室',
-            'experted_doctor_id' => '理想专家ID',
-            'experted_doctor_name' => '理想专家',
+            'expected_doctor_id' => '理想专家ID',
+            'expected_doctor_name' => '理想专家',
+            'expected_doctor_mobile' => '理想专家电话',
             'final_doctor_id' => '手术医生ID',
             'final_doctor_name' => '手术医生',
+            'final_doctor_mobile' => '手术医生电话',
             'final_time' => '最终手术时间',
             'disease_confirm' => '是否确诊',
             'customer_request' => '客户需求',
