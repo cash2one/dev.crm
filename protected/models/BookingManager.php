@@ -444,6 +444,8 @@ class BookingManager {
         $stateId = null;
         if ($model instanceof PatientBooking) {
             $adminBooking->booking_type = AdminBooking::BK_TYPE_PB;
+            //添加期望医生
+            //$adminBooking->expected_doctor_name = $model->expected_doctor;
             $adminBooking->patient_id = $model->patient_id;
             $adminBooking->patient_name = $model->patient_name;
             if (strIsEmpty($model->patient_id) === false) {
@@ -455,15 +457,21 @@ class BookingManager {
                     $adminBooking->patient_name = $patient->name;
                     $adminBooking->patient_state = $patient->state_name;
                     $adminBooking->patient_city = $patient->city_name;
-                    $adminBooking->disease_name = $patient->disease_name;
-                    $adminBooking->disease_detail = $patient->disease_detail;
+                    $adminBooking->patient_gender = $patient->gender;
                     $adminBooking->city_id = $patient->city_id;
                     $adminBooking->state_id = $patient->state_id;
+                    $adminBooking->disease_name = $patient->disease_name;
+                    $adminBooking->disease_detail = $patient->disease_detail;
+                    $cityId = $patient->city_id;
+                    $stateId = $patient->state_id;
                 }
             }
+
             $adminBooking->booking_detail = $model->detail;
             $adminBooking->travel_type = $model->travel_type;
             $adminBooking->booking_status = $model->status;
+            $adminBooking->creator_doctor_id = $model->creator_id;
+            $adminBooking->creator_doctor_name = $model->creator_name;
             //一开始创建时 只能以下级医生作为标准给其默认值
             if (strIsEmpty($model->creator_id) === false) {
                 $doctor = UserDoctorProfile::model()->getByUserId($model->creator_id);
@@ -475,10 +483,12 @@ class BookingManager {
                     //$adminBooking->final_hospital_id = $doctor->hospital_id;
                     $adminBooking->final_hospital_name = $doctor->hospital_name;
                     $adminBooking->creator_dept_name = $doctor->hp_dept_name;
+                    $cityId = $doctor->city_id;
+                    $stateId = $doctor->state_id;
                 }
             }
-            $customer = $this->getAdminUser($adminBooking->city_id, $adminBooking->state_id, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_CS);
-            $bd = $this->getAdminUser($adminBooking->city_id, $adminBooking->state_id, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_BD);
+            $customer = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_CS);
+            $bd = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_BD);
         } elseif ($model instanceof Booking) {
             $adminBooking->booking_type = AdminBooking::BK_TYPE_BK;
             $adminBooking->patient_id = $model->user_id;
