@@ -299,7 +299,7 @@ img{max-width: 100%;}
 .w10{width: 10%;}
 .strong{font-weight: bold;}
 .mt100{margin-top: 100px;}
-.docImg>img{height: 100px;}
+.docImg img{height: 100px;}
 .task{font-size: 12px;}
 .task>.new,.task>.undown{background-color: #fff;color: #f00;border-radius: 50%;min-width: 1.9em;display: inline-block;text-align: center;padding: 2px;margin-right: 1px;}
 .task>.undown{margin-left: 3px;}

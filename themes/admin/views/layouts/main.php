@@ -136,6 +136,17 @@
                                         </ul>
                                     </div> 
                                     <div class="dropdown mt20" >
+                                        <div class="dropdown-toggle color-white"  id="dropdownMenu10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            其他配置
+                                            <span class="caret pull-right"></span>
+                                        </div>
+                                        <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu10">
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Set.Index')): ?>
+                                                <li><a href="<?php echo $this->createUrl('set/index') ?>">修改省市分配</a></li>   
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+                                    <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             订单
                                             <span class="caret pull-right"></span>

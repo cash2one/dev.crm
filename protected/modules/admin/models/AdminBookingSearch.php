@@ -11,13 +11,13 @@ class AdminBookingSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType','isCommonweal','businessPartner', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
+        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType', 'isCommonweal', 'businessPartner', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
     }
 
     public function addQueryConditions() {
         $udpAlias = 's';
         $udpAlias2 = 'u';
-        $this->criteria->join .= 'LEFT JOIN sales_order s ON (t.`id` = s.`bk_id` AND s.`bk_type` = 0)';
+        $this->criteria->join .= 'LEFT JOIN sales_order s ON (t.`ref_no` = s.`bk_ref_no`)'; //(t.`id` = s.`bk_id` AND s.`bk_type` = 0)'
         $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_doctor_id` = u.`user_id`)';
         $this->criteria->addCondition('t.date_deleted is NULL');
         //如果客服level是普通客服，则只能查到与自己有关的信息
@@ -55,7 +55,7 @@ class AdminBookingSearch extends ESearchModel {
 
             if (isset($this->queryParams['bookingStatus'])) {
                 $bookingStatus = $this->queryParams['bookingStatus'];
-                $this->criteria->addSearchCondition("t.booking_status", $bookingStatus);
+                $this->criteria->addSearchCondition("t.work_schedule", $bookingStatus);
             }
 
             if (isset($this->queryParams['stateId'])) {
@@ -191,4 +191,5 @@ class AdminBookingSearch extends ESearchModel {
             }
         }
     }
+
 }

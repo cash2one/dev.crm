@@ -1,8 +1,11 @@
 <?php
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/css/adminbooking.css");
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/colorbox/colorbox.css");
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datetimepicker.css");
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.zh-CN.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/colorbox/jquery.colorbox.custom.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/colorbox/wheelzoom.js', CClientScript::POS_END);
 
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.form.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
@@ -10,7 +13,8 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/c
 
 if ($data->booking_type == AdminBooking::BK_TYPE_BK) {
     $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
-    $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id. '&reportType=dc';
+    //$urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id. '&reportType=dc';
+    $urlLoadDCFiles = '';
 } else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
     $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
     $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=dc';
@@ -19,11 +23,9 @@ if ($data->booking_type == AdminBooking::BK_TYPE_BK) {
     $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
 }
 
-$this->createUrl('booking/bookingFile', array('id' => $data->id, 'type' => 'dc'));
-
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
-$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'mr', 'booking_type' => $data->booking_type));
-$urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'dc', 'booking_type' => $data->booking_type));
+$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'mr'));
+$urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'dc'));
 $deleteTaskUrl = $this->createUrl('admintask/ajaxDeleteTask', array('id' => ''));
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
 $orderList = isset($orderList) ? $orderList : null;
@@ -513,11 +515,31 @@ if (isset($adminTasksNotDone) && arrayNotEmpty($adminTasksNotDone)) {
             var innerHtml = '';
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absFileUrl + '"/><div class="mt5">' + file.dateCreated + '</div></div>';
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><a class="showImg" href="' + file.absFileUrl + '"><img src="' + file.absFileUrl + '"/></a><div class="fileDate mt5">' + file.dateCreated + '</div></div>';
             }
         } else {
             var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';
         }
         fileDom.html(innerHtml);
+        fileDom.find(".showImg").click(function (e) {
+            e.preventDefault();
+            $(this).colorbox({
+                overlayClose: false,
+                date: function () {
+                    return "\u65e5\u671f：" + $(this).parents(".docImg").find(".fileDate").text();
+                }, //日期
+                rel: "img-data",
+                transition: "none",
+                width: "90%",
+                height: "100%",
+                onComplete: function () {
+                    wheelzoom(document.querySelector("#colorbox .cboxPhoto"));
+                },
+                onClosed: function () {
+                    $(this).colorbox.remove();
+                }
+            });
+
+        });
     }
 </script>

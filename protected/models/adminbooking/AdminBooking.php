@@ -161,7 +161,7 @@ class AdminBooking extends EActiveRecord {
         return array(
             'adminBookingFiles' => array(self::HAS_MANY, 'AdminBookingFile', 'admin_booking_id'),
             'adminTaskBkJoins' => array(self::HAS_MANY, 'AdminTaskBkJoin', 'admin_booking_id'),
-            //'pbOrder' => array(self::HAS_MANY, 'SalesOrder', 'bk_id'),
+            'orderAdminbooking' => array(self::HAS_MANY, 'SalesOrder', 'admin_booking_id'),
             'bkOwner' => array(self::BELONGS_TO, 'User', 'creator_doctor_id'),
             'pbUserDoctorProfile' => array(self::BELONGS_TO, 'UserDoctorProfile', 'creator_doctor_id'),
         );

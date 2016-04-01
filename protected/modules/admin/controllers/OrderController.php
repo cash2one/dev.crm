@@ -185,7 +185,8 @@ class OrderController extends AdminController {
         $booking = $this->booking;
         $order = new SalesOrder();
         $order->bk_id = $booking->id;
-        $order->bk_type = AdminBooking::BK_TYPE_CRM;
+        $order->admin_booking_id = $booking->id;
+        $order->bk_type = $booking->booking_type;
         $order->bk_ref_no = $booking->ref_no;
         $order->user_id = $booking->patient_id;
         $order->subject = $booking->patient_name;

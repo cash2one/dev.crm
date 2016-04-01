@@ -21,11 +21,11 @@ $urlLoadCity = $this->createUrl('region/loadCities');
 $urlUploadFile = $this->createUrl("adminbooking/ajaxSaveAdminFile"); //$this->createUrl("booking/ajaxUploadFile");
 //$urlLoadFiles = 'http://localhost/file.myzd.com/api/loadadminmr?abId=' . $model->id . '&reportType=mr'; //$this->createUrl('booking/bookingFile', array('id' => $model->id));
 if ($data->booking_type == AdminBooking::BK_TYPE_BK) {
-    $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
+    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
 } else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
-    $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
+    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
 } else {
-    $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
+    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
 }
 ?>
 <h1 class="">修改预约</h1>
@@ -156,6 +156,42 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
     <h3>病历附件&nbsp;&nbsp;&nbsp;</h3>
     <div class="row bookingImgList">
 
+    </div>
+    <div class="mb20 row hide">
+        <div class="col-sm-12">
+            <div class="body">
+                <div class="col-md-12">
+                    <div id="container">
+                        <a class="btn btn-default btn-lg " id="pickfiles" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div style="display:none" id="success" class="col-md-12">
+                    <div class="alert-success">
+                        队列全部文件处理完毕
+                    </div>
+                </div>
+                <div class="col-md-12 ">
+                    <table class="table table-striped table-hover text-left"   style="margin-top:40px;display:none">
+                        <thead>
+                            <tr>
+                                <th class="col-md-4">Filename</th>
+                                <th class="col-md-2">Size</th>
+                                <th class="col-md-6">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fsUploadProgress">
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <button id="btnSubmit" class="btn btn-primary">上传</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <?php
