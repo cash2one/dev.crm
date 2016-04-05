@@ -138,12 +138,12 @@ class AdminBooking extends EActiveRecord {
         return array(
             array('booking_id, booking_type, patient_id, state_id, city_id, expected_hospital_id, expected_hp_dept_id, expected_doctor_id, creator_doctor_id, final_doctor_id, final_hospital_id, disease_confirm, customer_intention, customer_type, booking_status, order_status, admin_user_id, bd_user_id, display_order', 'numerical', 'integerOnly' => true),
             array('ref_no, patient_name, order_amount, patient_age, bd_user_name', 'length', 'max' => 20),
-            array('patient_mobile, customer_request, customer_diversion, customer_agent', 'length', 'max' => 11),
+            array('patient_mobile', 'length', 'max' => 11),
             array('patient_identity', 'length', 'max' => 18),
             array('patient_state, patient_city', 'length', 'max' => 10),
             array('patient_address, disease_detail', 'length', 'max' => 200),
             array('disease_name, final_hospital_name', 'length', 'max' => 100),
-            array('expected_hospital_name, expected_hp_dept_name, expected_doctor_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, admin_user_name', 'length', 'max' => 50),
+            array('expected_hospital_name, expected_hp_dept_name, expected_doctor_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, admin_user_name, customer_request, customer_diversion, customer_agent', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
             array('business_partner, is_commonweal, contact_name, contact_name, patient_gender, expected_time_start, expected_time_end, final_time, date_updated, date_deleted, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile', 'safe'),
             // The following rule is used by search().
