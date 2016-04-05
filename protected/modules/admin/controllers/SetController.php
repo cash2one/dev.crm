@@ -1,7 +1,6 @@
 <?php
 
 class SetController extends AdminController {
-
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -92,9 +91,9 @@ class SetController extends AdminController {
         $this->renderJsonOutput($output);
     }
 
-    public function actionAjaxLoadAllStateIds($type) {
+    public function actionAjaxLoadAllStateIds($type, $admin_user_role) {
         $setMgr = new SetManager();
-        $output = $setMgr->getAllStateIdsByBookingType($type);
+        $output = $setMgr->getAllStateIdsByBookingTypeAndRole($type, $admin_user_role);
         $this->renderJsonOutput($output);
     }
 

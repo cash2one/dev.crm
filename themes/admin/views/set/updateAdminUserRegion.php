@@ -8,7 +8,7 @@ $this->breadcrumbs = array(
 );
 $bookingType = Yii::app()->request->getQuery('booking_type', '');
 $urlAjaxLoadStateIds = $this->createUrl('set/ajaxLoadStateIds', array('type' => $bookingType, 'adminUserId' => ''));
-$urlAjaxLoadAllStateIdsByBookingType = $this->createUrl('set/ajaxLoadAllStateIds', array('type' => $bookingType));
+$urlAjaxLoadAllStateIdsByBookingType = $this->createUrl('set/ajaxLoadAllStateIds', array('type' => $bookingType, 'admin_user_role' => 1));
 ?>
 <style>
     .errorMessage{display: none;}
@@ -40,7 +40,7 @@ echo CHtml::hiddenField("AdminUserRegionJoinForm[booking_type]", $bookingType);
         echo '<div class="col-sm-2 mt10"><label class="radio-inline"><input class="adminUser" type="radio" name="AdminUserRegionJoinForm[admin_user_id]" id="' . $key . '" value="' . $key . '"> ' . $value . '</label></div>';
     }
     ?>
-    
+
 </div>
 <div class="clearfix mt10 adminuser-error errorMessage">请选择客服人员</div>
 <br>
@@ -74,9 +74,9 @@ echo CHtml::hiddenField("AdminUserRegionJoinForm[booking_type]", $bookingType);
                     adminUser = true;
                 }
             });
-            if(adminUser){
+            if (adminUser) {
                 $('#adminuser-form').submit();
-            }else{
+            } else {
                 $('.adminuser-error').show();
             }
         });

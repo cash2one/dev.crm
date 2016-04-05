@@ -131,8 +131,8 @@ class AdminUserRegionJoin extends EActiveRecord {
         return $this->getAllByAttributes(array('admin_user_id' => $adminUserId, 'booking_type' => $type));
     }
 
-    public function getAllStateByBookingType($type) {
-        return $this->getAllByAttributes(array('booking_type' => $type));
+    public function getAllStateByBookingTypeAndRole($type, $admin_user_role) {
+        return $this->getAllByAttributes(array('booking_type' => $type, 'admin_user_role' => $admin_user_role));
     }
 
     public function deleteAllByAdminUserIdAndStateIds($adminUserId, $stateIds) {

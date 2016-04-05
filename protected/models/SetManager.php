@@ -55,9 +55,9 @@ class SetManager {
         return $output;
     }
 
-    public function getAllStateIdsByBookingType($type) {
+    public function getAllStateIdsByBookingTypeAndRole($type, $admin_user_role) {
         $output = array('status' => 'no');
-        $adminUserRegionJoin = AdminUserRegionJoin::model()->getAllStateByBookingType($type);
+        $adminUserRegionJoin = AdminUserRegionJoin::model()->getAllStateByBookingTypeAndRole($type, $admin_user_role);
         if (isset($adminUserRegionJoin)) {
             $stateIds = array();
             foreach ($adminUserRegionJoin as $value) {
@@ -72,7 +72,7 @@ class SetManager {
     public function getDefaultAdminUserByBookingTypeAndAdminUserRole($type, $adminUserRole) {
         $output = array('status' => 'no');
         $adminUserRegionJoin = AdminUserRegionJoin::model()->getDefaultAdminUserByBookingTypeAndAdminUserRole($type, $adminUserRole);
-        if(isset($adminUserRegionJoin)){
+        if (isset($adminUserRegionJoin)) {
             $output['status'] = 'ok';
             $output['admin_user_id'] = $adminUserRegionJoin->admin_user_id;
             $output['admin_user_name'] = $adminUserRegionJoin->admin_user_name;
