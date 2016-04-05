@@ -26,6 +26,7 @@ class SetManager {
                         $adminUserRegionJoin->booking_type = $form->booking_type;
                         $adminUserRegionJoin->admin_user_role = 1;
                         $adminUserRegionJoin->state_id = $v;
+                        $adminUserRegionJoin->default = 0;
                         $adminUserRegionJoin->admin_user_name = AdminUser::model()->getById($adminUserId)->fullname;
                         $adminUserRegionJoin->save();
                     }

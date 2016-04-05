@@ -421,7 +421,7 @@ $this->renderPartial('//doctor/searchHpModal');
             $('#AdminBookingForm_expected_hospital_name').focus();
         });
         $(".datepicker").datepicker({
-            startDate: "+0d",
+            //startDate: "+0d",
             //todayBtn: true,
             autoclose: true,
             maxView: 2,
