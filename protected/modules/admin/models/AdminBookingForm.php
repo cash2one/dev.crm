@@ -83,9 +83,9 @@ class AdminBookingForm extends EFormModel {
         // will receive user inputs.
         return array(
             array('booking_id, booking_type, patient_id, patient_age, expected_hospital_id, expected_hp_dept_id, expected_doctor_id, final_doctor_id, disease_confirm, customer_intention, customer_type, booking_status, work_schedule, order_status, admin_user_id, display_order', 'numerical', 'integerOnly' => true),
-            array('ref_no, patient_name, expected_hospital_name, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile, order_amount', 'length', 'max' => 20),
-            array('patient_mobile', 'length', 'max' => 11, 'message' => '请填写正确的11位中国手机号码'),
-            array('patient_mobile', 'numerical', 'integerOnly' => true, 'message' => '请填写正确的11位中国手机号码'),
+            array('ref_no, patient_name, expected_hospital_name, expected_hp_dept_name, expected_doctor_name, final_doctor_name, order_amount', 'length', 'max' => 20),
+            array('patient_mobile, expected_doctor_mobile, final_doctor_mobile', 'length', 'max' => 11, 'message' => '请填写正确的11位中国手机号码'),
+            array('patient_mobile, expected_doctor_mobile, final_doctor_mobile', 'numerical', 'integerOnly' => true, 'message' => '请填写正确的11位中国手机号码'),
             array('patient_identity', 'length', 'max' => 18),
             array('expected_time_start, expected_time_end, final_time', 'type', 'dateFormat' => 'yyyy-mm-dd', 'type' => 'date'),
             array('patient_state, patient_city', 'length', 'max' => 10),

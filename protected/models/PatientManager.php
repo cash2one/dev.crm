@@ -348,4 +348,9 @@ class PatientManager {
         $smsMgr->sendSmsBookingSubmit($mobile, $data);
     }
 
+    //根据患者手机号查询所有的patient
+    public function loadAllPatientByPatientMobile($mobile) {
+        return PatientInfo::model()->getAllByAttributes(array('mobile' => $mobile), array('patientBookings', 'patientCreator'));
+    }
+
 }

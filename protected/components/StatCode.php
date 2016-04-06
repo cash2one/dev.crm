@@ -27,6 +27,8 @@ class StatCode {
     const BK_STATUS_DONE = 8;         // 已完成
     const BK_STATUS_CANCELLED = 9;   // 已取消
     //const BK_STATUS_INVALID = 0;      // 失效的
+    const BK_STATUS_REFUNDING = 7;//申请退款
+    const BK_STATUS_REFUNDED = 10;//已退款
     const BK_STATUS_PROCESS_DONE = 11;         // 跟进结束（提交出院小结）
     const BK_STATUS_CHECKOUT = 12;   // 已结账（返款）
     const BK_STATUS_INVALID = 13;   // 失效的
@@ -130,7 +132,9 @@ class StatCode {
             self::BK_STATUS_INVALID => '跟进无效',
             self::BK_STATUS_DONE => '已完成',
             self::BK_STATUS_CANCELLED => '已取消',
-            self::BK_STATUS_CHECKOUT => '已结账'
+            self::BK_STATUS_CHECKOUT => '已结账',
+            self::BK_STATUS_REFUNDING =>'申请退款',
+            self::BK_STATUS_REFUNDED =>'已退款',
         );
     }
 

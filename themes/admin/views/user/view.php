@@ -5,6 +5,7 @@ $urlUploadFile = $this->createUrl("user/ajaxUploadCert");
 $urlAjaxDoctorCert = $this->createUrl('user/ajaxDoctorCert');
 $urlAjaxLoadFiles = 'http://file.mingyizhudao.com/api/loaddrcert?userId=' . $model->getId();
 
+$urlUserBookingList = $this->createUrl('user/bookinglist',array('id'=>$model->getId()));
 $this->breadcrumbs = array(
     '用户列表' => array('admin'),
     $model->username,
@@ -58,7 +59,7 @@ $files = $model->getUserDoctorCerts();
     .delete .file-panel{padding: 5px;text-align: center;background-color: #f00;color: #fff;}
 </style>
 <h1>查看 #<?php echo $model->id; ?></h1>
-
+<a href="<?php echo $urlUserBookingList; ?>" class="btn btn-primary">查看医生提交预约</a>
 <table class="table table-info mt20" id="yw0">
     <tbody>
         <tr class="odd">

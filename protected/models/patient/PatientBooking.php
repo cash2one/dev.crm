@@ -245,14 +245,25 @@ class PatientBooking extends EActiveRecord {
 
     public function getOptionsBkStatus() {
         return array(
-            self::BK_STATUS_NEW => '待处理',
-            self::BK_STATUS_PROCESSING => '处理中',
-            self::BK_STATUS_CONFIRMED_DOCTOR => '已确认专家',
-            //    self::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
-            self::BK_STATUS_SURGER_DONE => '已完成手术',
-            self::BK_STATUS_DC_ACCEPTED => '收到出院小结',
-            self::BK_STATUS_CANCELLED => '已取消',
-            self::BK_STATUS_INVALID => '失效的'
+//            self::BK_STATUS_NEW => '待处理',
+//            self::BK_STATUS_PROCESSING => '处理中',
+//            self::BK_STATUS_CONFIRMED_DOCTOR => '已确认专家',
+//            //    self::BK_STATUS_PATIENT_ACCEPTED => '患者已接受',
+//            self::BK_STATUS_SURGER_DONE => '已完成手术',
+//            self::BK_STATUS_DC_ACCEPTED => '收到出院小结',
+//            self::BK_STATUS_CANCELLED => '已取消',
+//            self::BK_STATUS_INVALID => '失效的'
+            StatCode::BK_STATUS_NEW => '待处理',
+            StatCode::BK_STATUS_PROCESSING => '安排中',
+            StatCode::BK_STATUS_SERVICE_UNPAID => '待支付服务费',
+            StatCode::BK_STATUS_SERVICE_PAIDED => '已完成（支付完服务费）',
+            StatCode::BK_STATUS_PROCESS_DONE => '跟进结束',
+            StatCode::BK_STATUS_DONE => '已完成',
+            StatCode::BK_STATUS_CHECKOUT => '已结账',
+            StatCode::BK_STATUS_INVALID => '无效',
+            StatCode::BK_STATUS_CANCELLED => '已取消',
+            StatCode::BK_STATUS_REFUNDING =>'申请退款',
+            StatCode::BK_STATUS_REFUNDED =>'已退款',
         );
     }
 

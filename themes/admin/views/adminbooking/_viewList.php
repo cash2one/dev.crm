@@ -25,7 +25,7 @@ if (is_null($creator) == false) {
     </td>
 
     <td>
-        <?php echo CHtml::encode($data->patient_mobile); ?>
+        <?php echo CHtml::link(CHtml::encode($data->patient_mobile), array('patient/view', 'mobile' => $data->patient_mobile), array('target' => '_blank')); ?>
     </td>
 
     <td>

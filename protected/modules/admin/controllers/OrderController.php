@@ -184,7 +184,7 @@ class OrderController extends AdminController {
         //  $booking = Booking::model()->getById($bid);
         $booking = $this->booking;
         $order = new SalesOrder();
-        $order->bk_id = $booking->id;
+        $order->bk_id = $booking->booking_id;
         $order->admin_booking_id = $booking->id;
         $order->bk_type = $booking->booking_type;
         $order->bk_ref_no = $booking->ref_no;
