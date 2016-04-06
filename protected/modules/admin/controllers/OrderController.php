@@ -219,6 +219,32 @@ class OrderController extends AdminController {
             //$order->validate();
             //var_dump($order);exit;
             if ($order->save()) {
+
+                if($booking->booking_type == StatCode::TRANS_TYPE_BK){
+                    $bookingModel = Booking::model()->getById($booking->booking_id);
+                    //往160推送消息
+                    if($bookingModel->vendor_id == VendorRest::VENDOR_ID_160){
+                        $values = array(
+                            'order_no'=>$order->ref_no,
+                            'yuyue_no'=>$booking->ref_no,
+                            'order_status'=>StatCode::BK_STATUS_SERVICE_UNPAID,
+                            'phone'=>$booking->patient_mobile,
+                            'true_name'=>$booking->patient_name,
+                            'doctor'=> isset($booking->final_doctor_name) ? $booking->final_doctor_name : '',
+                            'hospital'=>isset($booking->final_hospital_name) ? $booking->final_hospital_name : '',
+                            'dep'=>isset($booking->expected_hp_dept_name) ? $booking->expected_hp_dept_name : '',
+                            'diagnosis'=>$booking->disease_name,
+                            'surgery_start_time'=>isset($booking->expected_time_start) ? $booking->expected_time_start : '',
+                            'surgery_end_time'=>isset($booking->expected_time_end) ? $booking->expected_time_end : '',
+                            'pay_money'=>$values['final_amount'],
+                            'surgery_time'=>time(),
+                            'treat_remark'=>'',
+                        );
+//                        var_dump($values);die;
+                        $result = VendorRest::send(VendorRest::VENDOR_ID_160, $values, VendorRest::SERVICE_160);
+
+                    }
+                }
                 $this->redirect(array('view', 'id' => $order->id));
             }
         }
