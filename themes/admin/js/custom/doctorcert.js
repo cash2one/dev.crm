@@ -71,6 +71,7 @@ $(function () {
                 // var domain = up.getOption('domain');
                 // var res = parseJSON(info);
                 // var sourceLink = domain + res.key; 获取上传成功后的文件的Url
+                var infoJson = eval('(' + info + ')'); 
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 progress.setComplete(up, info);
                 var formdata = new FormData();
@@ -82,7 +83,7 @@ $(function () {
                 formdata.append('cert[file_url]', file.name);
                 formdata.append('cert[file_ext]', fileExtension);
                 formdata.append('cert[remote_domain]', $('#doctor-form').find('#domain').val());
-                formdata.append('cert[remote_file_key]', file.name);
+                formdata.append('cert[remote_file_key]', infoJson.key);
                 $.ajax({
                     url: domForm.attr('data-url-uploadfile'),
                     data: formdata,
@@ -111,12 +112,12 @@ $(function () {
                 progress.setStatus(errTip);
                 alert('上传失败!');
             }
-            // ,
-            // 'Key': function(up, file) {
-            //     var key = "";
-            //     // do something with key
-            //     return key
-            // }
+            ,
+             'Key': function(up, file) {
+                 var key = Date.parse(new Date())+''+Math.floor(Math.random()*100);
+                 // do something with key
+                 return key;
+             }
         }
     });
     uploader.bind('FileUploaded', function () {

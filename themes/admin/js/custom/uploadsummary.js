@@ -73,6 +73,7 @@ $(function () {
                 // var res = parseJSON(info);
                 // var sourceLink = domain + res.key; 获取上传成功后的文件的Url
                 var progress = new FileProgress(file, 'fsUploadProgress');
+                var infoJson = eval('(' + info + ')'); 
                 progress.setComplete(up, info);
                 var formdata = new FormData();
                 var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
@@ -89,7 +90,7 @@ $(function () {
                 formdata.append('admin[file_url]', file.name);
                 formdata.append('admin[file_ext]', fileExtension);
                 formdata.append('admin[remote_domain]', domForm.find('#domain').val());
-                formdata.append('admin[remote_file_key]', file.name);
+                formdata.append('admin[remote_file_key]', infoJson.key);
                 $.ajax({
                     url: domForm.attr('data-url-uploadfile'),
                     data: formdata,
@@ -118,12 +119,12 @@ $(function () {
                 progress.setStatus(errTip);
                 alert('上传失败!');
             }
-            // ,
-            // 'Key': function(up, file) {
-            //     var key = "";
-            //     // do something with key
-            //     return key
-            // }
+            ,
+             'Key': function(up, file) {
+                 var key = Date.parse(new Date())+''+Math.floor(Math.random()*100);
+                 // do something with key
+                 return key;
+             }
         }
     });
     uploader.bind('FileUploaded', function () {

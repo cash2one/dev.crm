@@ -311,10 +311,10 @@ class AdminbookingController extends AdminController {
     //保存文件信息
     public function actionAjaxSaveAdminFile() {
         $output = array('status' => 'no');
-        $bookingTyoe = $_POST['booking_type'];
+        $bookingType = $_POST['booking_type'];
         $form = null;
         $bookingfile = null;
-        switch ($bookingTyoe) {
+        switch ($bookingType) {
             case AdminBooking::BK_TYPE_CRM:
                 $form = new AdminBookingFileForm();
                 $bookingfile = new AdminBookingFile();
