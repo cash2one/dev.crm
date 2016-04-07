@@ -8,7 +8,7 @@ $doctorMobile = isset($data->bkOwner)?$data->bkOwner->username : '无';
     <tr>
         <td ><a target="_blank" href="<?php echo $this->createUrl('view', array('id' => $data->id)) ?>" ><?php echo $data->ref_no; ?></a></td>
         <td ><?php echo $data->patient_name; ?></td>
-        <td ><?php echo $data->patient_mobile; ?></td>
+        <td ><a href="<?php echo $this->createUrl('patient/view',array('mobile'=>$data->patient_mobile)); ?>" target="_blank"><?php echo $data->patient_mobile; ?></a></td>
         <td ><?php echo $data->disease_name; ?></td>
         <td ><?php echo $data->date_created; ?></td>
         <td ><?php echo $data->getWorkSchedule(); ?></td>
@@ -33,7 +33,7 @@ $doctorMobile = isset($data->bkOwner)?$data->bkOwner->username : '无';
             <?php if ($key == 0) { ?>
                 <td rowspan="<?php echo count($pbOrder); ?>"><a target="_blank" href="<?php echo $this->createUrl('view', array('id' => $data->id)) ?>" ><?php echo $data->ref_no; ?></a></td>
                 <td rowspan="<?php echo count($pbOrder); ?>"><?php echo $data->patient_name; ?></td>
-                <td rowspan="<?php echo count($pbOrder); ?>"><?php echo $data->patient_mobile; ?></td>
+                <td rowspan="<?php echo count($pbOrder); ?>"><a href="<?php echo $this->createUrl('patient/view',array('mobile'=>$data->patient_mobile)); ?>" target="_blank"><?php echo $data->patient_mobile; ?></a></td>
                 <td rowspan="<?php echo count($pbOrder); ?>"><?php echo $data->disease_name; ?></td>
                 <td rowspan="<?php echo count($pbOrder); ?>"><?php echo $data->date_created; ?></td>
                 <td rowspan="<?php echo count($pbOrder); ?>"><?php echo $data->getWorkSchedule(); ?></td>

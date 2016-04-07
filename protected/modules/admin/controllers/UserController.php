@@ -33,7 +33,7 @@ class UserController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'view', 'admin', 'listdoctors', 'verify', 'ajaxUserSearch', 'searchResult', 'search', 'ajaxUploadCert', 'delectDoctorCert','ajaxToken','ajaxDoctorCert'),
+                'actions' => array('index', 'view', 'admin', 'listdoctors', 'verify', 'ajaxUserSearch', 'searchResult', 'search', 'ajaxUploadCert', 'delectDoctorCert', 'ajaxToken', 'ajaxDoctorCert', 'bookinglist'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -277,7 +277,7 @@ class UserController extends AdminController {
             if ($form->validate()) {
                 $userDoctorCert = new UserDoctorCert();
                 $userDoctorCert->setAttributes($form->attributes, true);
-                
+
                 if ($userDoctorCert->save()) {
                     $output['status'] = 'ok';
                     $output['cert_id'] = $userDoctorCert->getId();
@@ -296,6 +296,13 @@ class UserController extends AdminController {
         $data = $this->send_get($url);
         $output = array('uptoken' => $data['results']['uploadToken']);
         $this->renderJsonOutput($output);
+    }
+
+    public function actionBookinglist($id) {
+        $model = PatientBooking::model()->getAllByAttributes(array('t.creator_id' => $id), array('pbPatient'), array('order' => 't.date_created DESC'));
+        $this->render('bookinglist', array(
+            'data' => $model
+        ));
     }
 
 }

@@ -650,4 +650,9 @@ class BookingManager {
         return $model;
     }
 
+    //根据患者手机号查询所有的booking
+    public function loadAllBookingByMobile($mobile) {
+        return Booking::model()->getAllByAttributes(array('mobile' => $mobile), null, array('order' => 'date_created DESC'));
+    }
+
 }

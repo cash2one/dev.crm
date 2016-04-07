@@ -162,22 +162,28 @@ if (is_null($creator) == false) {
         <div class="col-md-8 border-bottom">
             <span class="tab-header">预约详情：</span><?php echo $data->booking_detail == null ? '无' : $data->booking_detail; ?>
         </div>
-        <div class="col-md-4 border-bottom">
+        <div class="col-md-3 border-bottom">
             <span class="tab-header">理想医院：</span><?php echo $data->expected_hospital_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_hospital_name; ?>
         </div>
-        <div class="col-md-4 border-bottom">
+        <div class="col-md-3 border-bottom">
             <span class="tab-header">理想科室：</span><?php echo $data->expected_hp_dept_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_hp_dept_name; ?>
         </div>
-        <div class="col-md-4 border-bottom">
+        <div class="col-md-3 border-bottom">
             <span class="tab-header">理想专家：</span><?php echo $data->expected_doctor_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_doctor_name; ?>
         </div>
-        <div class="col-md-4 border-bottom">
+        <div class="col-md-3 border-bottom">
+            <span class="tab-header">理想专家电话：</span><?php echo $data->expected_doctor_mobile == null ? '<span class="color-blue">未填写</span>' : $data->expected_doctor_mobile; ?>
+        </div>
+        <div class="col-md-3 border-bottom">
             <span class="tab-header">最终手术的医院：</span><?php echo $data->final_hospital_name == null ? '<span class="color-blue">未填写</span>' : $data->final_hospital_name; ?>
         </div>
-        <div class="col-md-4 border-bottom">
+        <div class="col-md-3 border-bottom">
             <span class="tab-header">最终手术的专家：</span><?php echo $data->final_doctor_name == null ? '<span class="color-blue">未填写</span>' : $data->final_doctor_name; ?>
         </div>
-        <div class="col-md-4 border-bottom">
+        <div class="col-md-3 border-bottom">
+            <span class="tab-header">最终手术的专家：</span><?php echo $data->final_doctor_mobile == null ? '<span class="color-blue">未填写</span>' : $data->final_doctor_mobile; ?>
+        </div>
+        <div class="col-md-3 border-bottom">
             <span class="tab-header">最终手术时间：</span><?php echo $data->final_time == null ? '<span class="color-blue">未填写</span>' : $data->final_time; ?>
         </div>
     </div>

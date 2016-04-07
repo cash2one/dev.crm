@@ -240,7 +240,7 @@ if (is_null($creator) == false) {
         <div class="col-md-8 border-bottom">
             <span class="tab-header">预约详情：</span><?php echo $data->booking_detail == null ? '无' : $data->booking_detail; ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="tab-header">理想医院：</span><?php
             echo $form->textField($model, 'expected_hospital_name', array('class' => 'form-control'));
 //            echo $form->dropDownList($model, 'expected_hospital_id', $model->loadOptionsHospital(), array(
@@ -249,8 +249,9 @@ if (is_null($creator) == false) {
 //                'class' => 'form-control w50',
 //            ));
             ?>
+            <span><a data-toggle="modal" data-target="#hospitalSearchModal">搜索</a></span>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="tab-header">理想科室：</span><?php
             echo $form->textField($model, 'expected_hp_dept_name', array('class' => 'form-control'));
 //            echo $form->dropDownList($model, 'expected_hp_dept_id', $model->loadOptionsDepartment(), array(
@@ -260,12 +261,15 @@ if (is_null($creator) == false) {
 //            ));
             ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'expected_doctor_name', array('class' => 'form-control')); ?>
+        </div>
+        <div class="col-md-3">
+            <span class="tab-header">理想专家电话：</span><?php echo $form->textField($model, 'expected_doctor_mobile', array('class' => 'form-control')); ?>
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="tab-header">最终手术的医院：</span><?php
             echo $form->textField($model, 'final_hospital_name', array('class' => 'form-control'));
 //            echo $form->dropDownList($model, 'final_hospital_id', $model->loadOptionsHospital(), array(
@@ -275,7 +279,7 @@ if (is_null($creator) == false) {
 //            ));
             ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="tab-header">最终手术的专家：</span><?php
             echo $form->textField($model, 'final_doctor_name', array('class' => 'form-control'));
 //            echo $form->dropDownList($model, 'final_doctor_id', $model->loadOptionsDoctorProfile(), array(
@@ -285,7 +289,10 @@ if (is_null($creator) == false) {
 //            ));
             ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3 pr0 pl0">
+            <span class="tab-header">最终手术的专家电话：</span><?php echo $form->textField($model, 'final_doctor_mobile', array('class' => 'form-control')); ?>
+        </div>
+        <div class="col-md-3">
             <span class="tab-header">最终手术时间：</span><?php echo $form->textField($model, 'final_time', array('class' => 'form-control datepicker', 'data-format' => 'yyyy-mm-dd', 'readonly' => true)); ?>
         </div>
     </div>
@@ -401,11 +408,11 @@ $this->renderPartial('//doctor/searchHpModal');
     $(document).ready(function () {
         initForm();
         //搜索医院弹框
-        $('#AdminBookingForm_expected_hospital_name').click(function () {
-            $('#hospitalSearchModal').modal();
-        }).keyup(function () {
-            $('#AdminBookingForm_expected_hospital_id').val('');
-        });
+//        $('#AdminBookingForm_expected_hospital_name').click(function () {
+//            $('#hospitalSearchModal').modal();
+//        }).keyup(function () {
+//            $('#AdminBookingForm_expected_hospital_id').val('');
+//        });
         $('#searchHp').click(function () {
             ajaxLoadHospital();
         });
@@ -417,9 +424,9 @@ $this->renderPartial('//doctor/searchHpModal');
             }
         });
         //隐藏搜索医院弹框后，医院获得焦点
-        $('#hospitalSearchModal').on('hidden.bs.modal', function () {
-            $('#AdminBookingForm_expected_hospital_name').focus();
-        });
+//        $('#hospitalSearchModal').on('hidden.bs.modal', function () {
+//            $('#AdminBookingForm_expected_hospital_name').focus();
+//        });
         $(".datepicker").datepicker({
             //startDate: "+0d",
             //todayBtn: true,
@@ -515,7 +522,7 @@ $this->renderPartial('//doctor/searchHpModal');
             var hpId = $(this).attr('data-id');
             var hpName = $(this).attr('data-hpName');
             $('#AdminBookingForm_expected_hospital_name').val(hpName);
-            $('#AdminBookingForm_expected_hospital_id').val(hpId);
+            //$('#AdminBookingForm_expected_hospital_id').val(hpId);
             $('#hospitalSearchModal').modal('hide');
             //ajaxLoadHpDept(hpId);
         });

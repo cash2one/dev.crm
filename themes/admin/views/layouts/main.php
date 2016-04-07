@@ -141,7 +141,7 @@
                                             <span class="caret pull-right"></span>
                                         </div>
                                         <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu10">
-                                            <?php if (Yii::app()->user->checkAccess('Admin.Set.Index')): ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Set.*')): ?>
                                                 <li><a href="<?php echo $this->createUrl('set/index') ?>">修改省市分配</a></li>   
                                             <?php endif; ?>
                                         </ul>
