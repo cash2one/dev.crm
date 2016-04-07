@@ -1,11 +1,11 @@
-<?php 
+<?php
 $task = $data->adminTask;
-if($data->getRead(false) == AdminTaskJoin::NOT_READ && $data->getStatus(false) == AdminTaskJoin::STATUS_NO){
-    $class='strong';
-}else if($data->getRead(false) == AdminTaskJoin::IS_READ & $data->getStatus(false) == AdminTaskJoin::STATUS_NO){
-    $class='color-red';
-}else{
-    $class='';
+if ($data->getRead(false) == AdminTaskJoin::NOT_READ && $data->getStatus(false) == AdminTaskJoin::STATUS_NO) {
+    $class = 'strong';
+} else if ($data->getRead(false) == AdminTaskJoin::IS_READ & $data->getStatus(false) == AdminTaskJoin::STATUS_NO) {
+    $class = 'color-red';
+} else {
+    $class = '';
 }
 ?>
 <tr class="<?php echo $class; ?>">
@@ -17,7 +17,16 @@ if($data->getRead(false) == AdminTaskJoin::NOT_READ && $data->getStatus(false) =
     <td><?php echo $data->getStatus(); ?></td>
     <td><?php echo $data->getDatePlan(); ?></td>
     <td><?php echo $data->getDateDone(); ?></td>
-    <td><a target="_blank" href="<?php echo $this->createUrl('admintask/view', array('id' => $task->id)); ?>" >查看</a></td>
+    <td>
+        <a target="_blank" href="<?php echo $this->createUrl('admintask/view', array('id' => $task->id)); ?>" >查看</a>
+        &nbsp;&nbsp;
+        <?php
+        if ($data->status == AdminTaskJoin::STATUS_NO) {
+            ?>
+            <a class="ajaxCompletedTask" target="_blank" href="<?php echo $this->createUrl('admintask/ajaxCompletedTask', array('id' => $data->id)); ?>" >完成</a></td>
+            <?php
+        }
+        ?>
 </tr>
 
 

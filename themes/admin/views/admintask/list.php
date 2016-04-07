@@ -25,7 +25,7 @@ $this->menu = array(
                 <th>完成情况</th>
                 <th>计划跟单时间</th>
                 <th>跟单完成时间</th>
-                <th>跟单详情</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>

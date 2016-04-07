@@ -1,6 +1,6 @@
 <?php
 
-class AdminTaskController extends AdminController {
+class AdmintaskController extends AdminController {
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -297,6 +297,11 @@ class AdminTaskController extends AdminController {
         date_default_timezone_set("Asia/Shanghai");
         $model->date_done = date('Y-m-d H:i:s');
         $model->status = AdminTaskJoin::STATUS_OK;
+        //如果任务未读;则完成时设置为已读
+        if ($model->is_read == AdminTaskJoin::NOT_READ) {
+            $model->is_read = AdminTaskJoin::IS_READ;
+            $model->date_read = date('Y-m-d H:i:s');
+        }
         if ($model->save()) {
             $output['status'] = 'ok';
             $output['taskJoin']['id'] = $model->id;

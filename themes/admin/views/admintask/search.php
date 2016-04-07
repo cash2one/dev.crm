@@ -79,7 +79,7 @@ $urlUserView = $this->createAbsoluteUrl('adminTask/view');
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
         var requestUrl = "<?php echo $urlSearch; ?>";
-
+        loadUserSearchResult(requestUrl, selectorSearchResult);
 
         $("#btnSearch").click(function () {
             var searchUrl = requestUrl + '?first=1';
