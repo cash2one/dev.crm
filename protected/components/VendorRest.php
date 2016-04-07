@@ -29,7 +29,7 @@ class VendorRest {
     public static function getData($values, $type, $key){
         ksort($values, SORT_STRING);
         $requestString = self::getRequestString($values);
-        $time = 1459909856;
+        $time = time();
         $sign = self::getSign($requestString, $time, $key);
 
         $fields = json_encode($values);
