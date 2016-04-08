@@ -502,8 +502,8 @@ class AdminbookingController extends AdminController {
             if (!strIsEmpty($form->work_schedule)) {
                 $model->work_schedule = $form->work_schedule;
 
-                //如果设为无效的，则删除所有任务
-                if ($form->work_schedule == StatCode::BK_STATUS_INVALID) {
+                //如果设为作废，则删除所有任务
+                if ($form->work_schedule == StatCode::BK_STATUS_NULLIFY) {
                     $taskMgr = new TaskManager();
                     $taskMgr->deleteAdminTaskJoinByAdminBookingId($adminbookingId);
                 }

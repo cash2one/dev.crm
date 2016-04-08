@@ -33,14 +33,14 @@ $orderList = isset($orderList) ? $orderList : null;
 <h1 class="">预约</h1>
 <div class="mt30">
     <a class="btn btn-primary" data-toggle="modal" data-target="#updateStatusModal">修改状态</a>
-    <a href="<?php echo $urlUpdateAdminBooking; ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>修改订单</a>
-    <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal" <?php echo $data->work_schedule == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>线下推广人员</a>
-    <a id="createAdminBKOrder" href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>生成订单</a>
-    <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal" <?php echo $data->work_schedule == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配业务员</a>
-    <a class="btn btn-primary" data-toggle="modal" data-target="#addContactUserModal" <?php echo $data->work_schedule == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>分配对接人</a>
-    <a href="<?php echo $this->createUrl('adminbooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>关联医生</a>
-    <a href="<?php echo $urlUploadPatientCaseFile; ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>上传病历图片</a>
-    <a href="<?php echo $urlUploadSummary; ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_INVALID ? 'disabled' : ''; ?>>上传出院小结</a>
+    <a href="<?php echo $urlUpdateAdminBooking; ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>修改订单</a>
+    <a class="btn btn-primary" data-toggle="modal" data-target="#addBdUserModal" <?php echo $data->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>线下推广人员</a>
+    <a id="createAdminBKOrder" href="<?php echo $this->createUrl('order/createAdminBKOrder', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>生成订单</a>
+    <a class="btn btn-primary" data-toggle="modal" data-target="#addAdminUserModal" <?php echo $data->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>分配业务员</a>
+    <a class="btn btn-primary" data-toggle="modal" data-target="#addContactUserModal" <?php echo $data->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>分配对接人</a>
+    <a href="<?php echo $this->createUrl('adminbooking/relateDoctor', array('bid' => $data->id)); ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>关联医生</a>
+    <a href="<?php echo $urlUploadPatientCaseFile; ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>上传病历图片</a>
+    <a href="<?php echo $urlUploadSummary; ?>" class="btn btn-primary" <?php echo $data->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>上传出院小结</a>
 </div>
 <style>
     .border-bottom{border-bottom: 1px solid #ddd;margin-bottom: 5px;padding-bottom: 5px;}
@@ -53,7 +53,7 @@ $orderList = isset($orderList) ? $orderList : null;
         <div class="col-md-2 border-bottom">
             <span class="tab-header">预约状态：</span><?php
             $bookingStatus = $data->getBookingStatus() == null ? '<span class="color-blue">未填写</span>' : $data->getBookingStatus();
-            echo $data->booking_status == StatCode::BK_STATUS_INVALID ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
+            echo $data->booking_status == StatCode::BK_STATUS_NULLIFY ? '<span class="color-red">' . $bookingStatus . '</span>' : $bookingStatus;
             ?>
         </div>
         <div class="col-md-2 border-bottom">

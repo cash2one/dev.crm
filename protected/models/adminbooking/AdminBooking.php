@@ -556,7 +556,8 @@ class AdminBooking extends EActiveRecord {
             StatCode::BK_STATUS_PROCESS_DONE => '跟进结束',
             //StatCode::BK_STATUS_DONE => '已完成',
             StatCode::BK_STATUS_CHECKOUT => '已结账',
-            StatCode::BK_STATUS_INVALID => '无效',
+            StatCode::BK_STATUS_INVALID => '跟进无效',
+            StatCode::BK_STATUS_NULLIFY => '作废',
             //StatCode::BK_STATUS_CANCELLED => '已取消'
             StatCode::BK_STATUS_REFUNDING => '申请退款',
             StatCode::BK_STATUS_REFUNDED => '已退款',
