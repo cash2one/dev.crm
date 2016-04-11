@@ -138,14 +138,23 @@ class TaskManager {
     }
 
     /**
-     * md端 医生上传照片
+     * md端 医生资料更新
      */
-    public function createTaskDoctor(UserDoctorProfile $model) {
+    public function createTaskDoctor(UserDoctorProfile $model, $type) {
         $adminTask = new AdminTask();
-
-        $adminTask->subject = '上传照片';
+        switch($type){
+            case self::USER_DOCTOR_CERT :
+                $adminTask->subject = '医生资料 - 上传认证照片';
+                break;
+            case self::USER_DOCTOR_PROFILE_NEW :
+                $adminTask->subject = '医生资料 - 新医生用户';
+                break;
+            case self::USER_DOCTOR_PROFILE_UPDATE :
+                $adminTask->subject = '医生资料 - 基本信息修改';
+                break;
+        }
         $adminTask->content = $model->name . ':' . $model->hospital_name . '-' . $model->hp_dept_name;
-        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id' => $model->getUserId()));
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id' => $model->getId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {
@@ -155,8 +164,8 @@ class TaskManager {
 
             $adminTaskJoin = new AdminTaskJoin();
             $adminTaskJoin->admin_task_id = $adminTask->getId();
-            $adminUser = $this->getAdminUser($model->city_id, $model->state_id, AdminBooking::bk_type_pb, AdminUser::ROLE_CS);
-            $adminTaskJoin->admin_user_id = $adminUser->admin_user_id;
+            //$adminUser = $this->getAdminUser($model->city_id, $model->state_id, AdminBooking::bk_type_pb, AdminUser::ROLE_CS);
+            $adminTaskJoin->admin_user_id = 13;
             $adminTaskJoin->work_type = AdminTaskJoin::WORK_TYPE_TEL;
             $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_USER_DR;
             if ($adminTaskJoin->save() === false) {
