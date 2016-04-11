@@ -6,7 +6,9 @@
  * @author haley
  */
 class TaskManager {
-
+    const USER_DOCTOR_CERT = 1;
+    const USER_DOCTOR_PROFILE_NEW = 2;
+    const USER_DOCTOR_PROFILE_UPDATE = 3;
     public function createTaskBooking(AdminBooking $model) {
         $adminTask = new AdminTask();
 
