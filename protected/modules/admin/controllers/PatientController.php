@@ -26,7 +26,7 @@ class PatientController extends AdminController {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('view'),
+                'actions' => array('view','deletepatientmr'),
 //                'users' => array('test'),
             ),
             array('deny', // deny all users
@@ -41,5 +41,11 @@ class PatientController extends AdminController {
         $this->render('view',array(
             'data'=>$output
         ));
+    }
+    
+    public function actionDeletepatientmr($id) {
+        $patientMgr =  new PatientManager();
+        $output = $patientMgr->delectPatientMRFileById($id);
+        $this->renderJsonOutput($output);
     }
 }

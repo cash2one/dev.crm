@@ -121,7 +121,8 @@ $(function () {
             }
             ,
              'Key': function(up, file) {
-                 var key = Date.parse(new Date())+''+Math.floor(Math.random()*100);
+                 var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
+                 var key = (new Date()).getTime()+''+Math.floor(Math.random()*100)+'.'+fileExtension;
                  // do something with key
                  return key;
              }

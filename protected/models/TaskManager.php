@@ -249,4 +249,16 @@ class TaskManager {
         }
     }
 
+     public function createChangeAdminUserTask(AdminBooking $adminbooking, $oldUserId, $newUserId) {
+        $values = array();
+        $oldUser = AdminUser::model()->getById($oldUserId);
+        $newUser = AdminUser::model()->getById($newUserId);
+        $operatorId = Yii::app()->user->id;
+        $operator = AdminUser::model()->getById($operatorId);
+        $values['content'] = $operator->fullname . '将' . $oldUser->fullname . '的订单分配给' . $newUser->fullname;
+        $values['admin_user_id'] = $newUser->id;
+        $values['work_type'] = AdminTaskJoin::WORK_TYPE_TEL;
+        $values['date_plan'] = null;
+        $this->createTaskPlan($adminbooking, $values);
+    }
 }

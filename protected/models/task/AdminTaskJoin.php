@@ -130,23 +130,37 @@ class AdminTaskJoin extends EActiveRecord {
     /**
      * 获取新任务
      */
-    public function getNewTask($adminUserId) {
-        $models = $this->getAllByAttributes(array('admin_user_id' => $adminUserId, 'is_read' => 0));
-        return $models;
+    public function getNewTask($adminUserId, $count=0) {
+        $criteria = new CDbCriteria();
+        $criteria->addCondition("t.date_deleted is NULL");
+        $criteria->compare("t.is_read", self::NOT_READ);
+        $criteria->addCondition("t.admin_user_id=:adminUserId");
+        if($count > 0){
+            $criteria->offset = $count;
+        }
+        $criteria->limit = 99;
+        $criteria->params[":adminUserId"] = $adminUserId;
+
+        return $this->findAll($criteria);
     }
 
     /**
      * 获取未完成任务
      */
-    public function getUndoneTask($adminUserId) {
+    public function getUndoneTask($adminUserId, $count=0) {
         $criteria = new CDbCriteria();
         $criteria->addCondition("t.date_deleted is NULL");
         $criteria->addCondition("t.date_done is NULL");
         $criteria->addCondition("t.admin_user_id=:adminUserId");
+        if($count > 0){
+            $criteria->offset = $count;
+        }
+        $criteria->limit = 99;
         $criteria->params[":adminUserId"] = $adminUserId;
 
         return $this->findAll($criteria);
     }
+
 
     /**
      * 获取推送任务

@@ -33,7 +33,7 @@ class BookingController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('create', 'update', 'delete', 'admin', 'search', 'index', 'view', 'list', 'changeStatus', 'searchResult', 'bookingFile', 'ajaxUploadFile'),
+                'actions' => array('create', 'update', 'delete', 'admin', 'search', 'index', 'view', 'list', 'changeStatus', 'searchResult', 'bookingFile', 'ajaxUploadFile','deleteBookingFile'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -341,4 +341,9 @@ class BookingController extends AdminController {
         }
     }
 
+    public function actionDeleteBookingFile($id) {
+        $bookingMgr = new BookingManager();
+        $output = $bookingMgr->deleteBookingFileById($id);
+        $this->renderJsonOutput($output);
+    }
 }

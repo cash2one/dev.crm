@@ -248,9 +248,9 @@ class AdmintaskController extends AdminController {
     /**
      * ajax 获取提醒任务
      */
-    public function actionAjaxAlert() {
-        $new = AdminTaskJoin::model()->getNewTask(Yii::app()->user->id);
-        $undone = AdminTaskJoin::model()->getUndoneTask(Yii::app()->user->id);
+    public function actionAjaxAlert($newNum=0, $undoneNum=0) {
+        $new = AdminTaskJoin::model()->getNewTask(Yii::app()->user->id, $newNum);
+        $undone = AdminTaskJoin::model()->getUndoneTask(Yii::app()->user->id, $undoneNum);
         $output = array(
             'status' => 'ok',
             'errorCode' => 0,
@@ -262,6 +262,7 @@ class AdmintaskController extends AdminController {
         );
         $this->renderJsonOutput($output);
     }
+
 
     /**
      * ajax 获取计划跟单

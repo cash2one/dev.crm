@@ -11,16 +11,39 @@ Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyun
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/custom/task.js", CClientScript::POS_END);
 
+//设置订单creater信息
+$bookingCreator = new stdClass();
+if (is_null($creator) == false) {
+    $bookingCreator->name = $creator->name;
+    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>';
+    $bookingCreator->cTitle = $creator->clinical_title == null ? '无' : $creator->getClinicalTitle(true);
+    $bookingCreator->stateName = $creator->state_name == null ? '无' : $creator->state_name;
+    $bookingCreator->cityName = $creator->city_name == null ? '无' : $creator->city_name;
+    $bookingCreator->hpName = $creator->hospital_name == null ? '无' : $creator->hospital_name;
+    $bookingCreator->hpDeptName = $creator->hp_dept_name == null ? '无' : $creator->hp_dept_name;
+} else {
+    $bookingCreator->name = '无';
+    $bookingCreator->mobile = '无';
+    $bookingCreator->cTitle = '无';
+    $bookingCreator->stateName = '无';
+    $bookingCreator->cityName = '无';
+    $bookingCreator->hpName = '无';
+    $bookingCreator->hpDeptName = '无';
+}
+
 if ($data->booking_type == AdminBooking::BK_TYPE_BK) {
     $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
     //$urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id. '&reportType=dc';
     $urlLoadDCFiles = '';
+    $urlDeleteFile = $this->createUrl('booking/deleteBookingFile', array('id' => ''));
 } else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
     $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
     $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=dc';
+    $urlDeleteFile = $this->createUrl('patient/deletepatientmr', array('id' => '')); //add file_id;
 } else {
     $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
     $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
+    $urlDeleteFile = $this->createUrl('adminbooking/ajaxDeleteAdminFile', array('id' => '')); //add file_id;
 }
 
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
@@ -116,26 +139,7 @@ $orderList = isset($orderList) ? $orderList : null;
 
     </div>
 </div>
-<?php
-$bookingCreator = new stdClass();
-if (is_null($creator) == false) {
-    $bookingCreator->name = $creator->name;
-    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>';
-    $bookingCreator->cTitle = $creator->clinical_title == null ? '无' : $creator->getClinicalTitle(true);
-    $bookingCreator->stateName = $creator->state_name == null ? '无' : $creator->state_name;
-    $bookingCreator->cityName = $creator->city_name == null ? '无' : $creator->city_name;
-    $bookingCreator->hpName = $creator->hospital_name == null ? '无' : $creator->hospital_name;
-    $bookingCreator->hpDeptName = $creator->hp_dept_name == null ? '无' : $creator->hp_dept_name;
-} else {
-    $bookingCreator->name = '无';
-    $bookingCreator->mobile = '无';
-    $bookingCreator->cTitle = '无';
-    $bookingCreator->stateName = '无';
-    $bookingCreator->cityName = '无';
-    $bookingCreator->hpName = '无';
-    $bookingCreator->hpDeptName = '无';
-}
-?>
+
 <div class="mt30">
     <div class="row">
         <div class="col-md-4 border-bottom">
@@ -181,7 +185,7 @@ if (is_null($creator) == false) {
             <span class="tab-header">最终手术的专家：</span><?php echo $data->final_doctor_name == null ? '<span class="color-blue">未填写</span>' : $data->final_doctor_name; ?>
         </div>
         <div class="col-md-3 border-bottom">
-            <span class="tab-header">最终手术的专家：</span><?php echo $data->final_doctor_mobile == null ? '<span class="color-blue">未填写</span>' : $data->final_doctor_mobile; ?>
+            <span class="tab-header">手术专家电话：</span><?php echo $data->final_doctor_mobile == null ? '<span class="color-blue">未填写</span>' : $data->final_doctor_mobile; ?>
         </div>
         <div class="col-md-3 border-bottom">
             <span class="tab-header">最终手术时间：</span><?php echo $data->final_time == null ? '<span class="color-blue">未填写</span>' : $data->final_time; ?>
@@ -211,8 +215,11 @@ if (is_null($creator) == false) {
         <div class="col-sm-2 border-bottom">
             <span>公益项目：</span><?php echo $data->getIsCommonweal() == null ? '<span class="color-blue">未填写</span>' : $data->getIsCommonweal(); ?>
         </div>
-        <div class="col-sm-10 border-bottom">
+        <div class="col-sm-2 border-bottom">
             <span>B端：</span><?php echo $data->getBusinessPartner() == null ? '<span class="color-blue">未填写</span>' : $data->getBusinessPartner(); ?>
+        </div>
+        <div class="col-sm-8 border-bottom">
+            <span>是否购买保险：</span><?php echo $data->getIsBuyInsurance() == null ? '<span class="color-blue">未填写</span>' : $data->getIsBuyInsurance(); ?>
         </div>
         <div class="col-sm-12 border-bottom">
             <span>录入日期：</span><?php echo $data->date_created; ?>
@@ -295,6 +302,12 @@ if (is_null($creator) == false) {
     <?php
     if (arrayNotEmpty($orderList)) {
         ?>
+        <div class="row mt10 mb10">
+            <div class="col-sm-3">定金总额：<?php echo $data->deposit_total; ?></div>
+            <div class="col-sm-3">已支付定金：<?php echo $data->deposit_paid; ?></div>
+            <div class="col-sm-3">服务费总额：<?php echo $data->service_total; ?></div>
+            <div class="col-sm-3">已支付服务费：<?php echo $data->service_paid; ?></div>
+        </div>
         <table class="table" id="yw0">
             <tbody>
                 <tr class="odd">
@@ -521,7 +534,7 @@ if (isset($adminTasksNotDone) && arrayNotEmpty($adminTasksNotDone)) {
             var innerHtml = '';
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                innerHtml += '<div class="col-sm-2 mt10 docImg"><a class="showImg" href="' + file.absFileUrl + '"><img src="' + file.absFileUrl + '"/></a><div class="fileDate mt5">' + file.dateCreated + '</div></div>';
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><a class="showImg" href="' + file.absFileUrl + '"><img src="' + file.absFileUrl + '"/></a><div><a class="deleteFile" href="<?php echo $urlDeleteFile; ?>/' + file.id + '">删除图片</a></div><div class="fileDate mt5">' + file.dateCreated + '</div></div>';
             }
         } else {
             var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';
@@ -545,7 +558,25 @@ if (isset($adminTasksNotDone) && arrayNotEmpty($adminTasksNotDone)) {
                     $(this).colorbox.remove();
                 }
             });
-
+        });
+        $('.deleteFile').click(function (e) {
+            e.preventDefault();
+            var deleteUrl = $(this).attr('href');
+            if (confirm('确定删除这张图片?')) {
+                ajaxDeleteFile(deleteUrl);
+            }
+        });
+    }
+    function ajaxDeleteFile(deleteUrl) {
+        $.ajax({
+            url: deleteUrl,
+            success: function (data) {
+                if (data.status == 'ok') {
+                    location.reload();
+                } else {
+                    alert('删除失败!');
+                }
+            }
         });
     }
 </script>

@@ -655,4 +655,37 @@ class BookingManager {
         return Booking::model()->getAllByAttributes(array('mobile' => $mobile), null, array('order' => 'date_created DESC'));
     }
 
+    //异步删除adminbooking图片
+    public function deleteAdminBookingFileById($id, $absolute = false) {
+        $output = array('status' => 'no');
+        $model = AdminBookingFile::model()->getById($id);
+        if (isset($model)) {
+            if ($model->deleteModel($absolute)) {
+                $output['status'] = 'ok';
+            } else {
+                $output['errors'] = $model->getErrors();
+            }
+        } else {
+            $output['errorMsg'] = 'no data';
+        }
+        $output = (object) $output;
+        return $output;
+    }
+    
+    //异步删除booking图片
+    public function deleteBookingFileById($id, $absolute = false) {
+        $output = array('status' => 'no');
+        $model = BookingFile::model()->getById($id);
+        if (isset($model)) {
+            if ($model->deleteModel($absolute)) {
+                $output['status'] = 'ok';
+            } else {
+                $output['errors'] = $model->getErrors();
+            }
+        } else {
+            $output['errorMsg'] = 'no data';
+        }
+        $output = (object) $output;
+        return $output;
+    }
 }

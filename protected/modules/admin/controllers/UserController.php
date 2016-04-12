@@ -260,7 +260,6 @@ class UserController extends AdminController {
 
     //异步删除医生证明图片
     public function actionDelectDoctorCert($id, $doctorId) {
-        $userId = $this->getCurrentUserId();
         $userMgr = new UserManager();
         $output = $userMgr->delectDoctorCertByIdAndUserId($id, $doctorId);
         $this->renderJsonOutput($output);

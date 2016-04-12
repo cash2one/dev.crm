@@ -311,3 +311,4 @@ img{max-width: 100%;}
 .taskplan .taskplan-footer{position: absolute;bottom: 10px;right: 10px;}
 .color-red{color: #f00;}
 .color-blue{color: #00f;}
+ul.yiiPager .first,ul.yiiPager .last{display:inline;}

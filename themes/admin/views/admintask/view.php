@@ -21,7 +21,7 @@ $adminTasksJoin = $model->adminTaskJoins[0];
 <table class="table table-info mt10" id="yw0">    
     <tbody>
         <tr><th>标题</th><td><?php echo $model->subject; ?></td><th>创建时间</th><td><?php echo $model->date_created; ?></td></tr>
-        <tr><th>客服</th><td><?php echo $adminUser->username; ?></td><th>任务类型</th><td><?php echo $adminTasksJoin->getType() == null ? '未设置' : $adminTasksJoin->getType(); ?></tr>
+        <tr><th>客服</th><td><?php echo $adminUser->fullname; ?></td><th>任务类型</th><td><?php echo $adminTasksJoin->getType() == null ? '未设置' : $adminTasksJoin->getType(); ?></tr>
         <tr><th>跟单方式</th><td><?php echo $adminTasksJoin->getWorkType() == null ? '未设置' : $adminTasksJoin->getWorkType(); ?></td><th>计划跟单时间</th><td><?php echo $adminTasksJoin->date_plan == null ? '未设置' : $adminTasksJoin->date_plan; ?></tr>
         <tr><th>完成情况</th><td><?php echo $adminTasksJoin->getStatus(); ?></td><th></th><td></td></tr>
         <tr><th>内容</th><td><?php echo $model->content; ?></td><th></th><td></td></tr>

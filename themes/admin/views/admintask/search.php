@@ -24,9 +24,9 @@ $urlUserView = $this->createAbsoluteUrl('adminTask/view');
             <select name = 'type' class="form-control">
                 <option value = ''>全部</option>
                 <option value = '1'>预约</option>
+                <option value = '4'>跟单</option>
                 <option value = '2'>医生用户</option>
                 <option value = '3'>订单</option>
-                <option value = '4'>追单</option>
             </select>
         </div>
     </div>

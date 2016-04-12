@@ -260,6 +260,7 @@ if (is_null($creator) == false) {
 //                'class' => 'form-control w50',
 //            ));
             ?>
+            <a data-toggle="modal" data-target="#commonDeptModal">常用科室</a>
         </div>
         <div class="col-md-3">
             <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'expected_doctor_name', array('class' => 'form-control')); ?>
@@ -373,6 +374,14 @@ if (is_null($creator) == false) {
             ));
             ?>
         </div>
+        <div class="col-sm-2">
+            <span>是否购买保险：</span><?php
+            echo $form->dropDownList($model, 'is_buy_insurance', $model->loadOptionIsBuyInsurance(), array(
+                'name' => 'AdminBookingForm[is_buy_insurance]',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
     </div>
     <div class="form-group">
         <div class="col-sm-12">
@@ -403,16 +412,11 @@ if (is_null($creator) == false) {
 <?php
 //搜索医院modal
 $this->renderPartial('//doctor/searchHpModal');
+$this->renderPartial('commonDept');
 ?>
 <script>
     $(document).ready(function () {
         initForm();
-        //搜索医院弹框
-//        $('#AdminBookingForm_expected_hospital_name').click(function () {
-//            $('#hospitalSearchModal').modal();
-//        }).keyup(function () {
-//            $('#AdminBookingForm_expected_hospital_id').val('');
-//        });
         $('#searchHp').click(function () {
             ajaxLoadHospital();
         });
@@ -423,10 +427,6 @@ $this->renderPartial('//doctor/searchHpModal');
                 ajaxLoadHospital();
             }
         });
-        //隐藏搜索医院弹框后，医院获得焦点
-//        $('#hospitalSearchModal').on('hidden.bs.modal', function () {
-//            $('#AdminBookingForm_expected_hospital_name').focus();
-//        });
         $(".datepicker").datepicker({
             //startDate: "+0d",
             //todayBtn: true,
@@ -491,18 +491,18 @@ $this->renderPartial('//doctor/searchHpModal');
         });
     });
     function initForm() {
-        var order_status = '<?php echo $model->order_status; ?>';
         var patient_gender = '<?php echo $model->patient_gender; ?>';
-        $('select#AdminBookingForm_order_status>option').each(function () {
-            if ($(this).val() == order_status) {
-                $(this).attr('selected', 'selected');
-            }
-        });
+        var expected_hp_dept_name = '<?php echo $model->expected_hp_dept_name; ?>';
         if (patient_gender == 1) {
             $('#AdminBookingForm_patient_gender_male').prop('checked', true);
         } else if (patient_gender == 2) {
             $('#AdminBookingForm_patient_gender_female').prop('checked', true);
         }
+        $('#AdminBookingForm_expected_hp_dept_name>option').each(function () {
+            if ($(this).val() == expected_hp_dept_name) {
+                $(this).attr('selected', 'selected');
+            }
+        });
     }
     function setFileHtml(results) {
         if (results) {
@@ -524,27 +524,6 @@ $this->renderPartial('//doctor/searchHpModal');
             $('#AdminBookingForm_expected_hospital_name').val(hpName);
             //$('#AdminBookingForm_expected_hospital_id').val(hpId);
             $('#hospitalSearchModal').modal('hide');
-            //ajaxLoadHpDept(hpId);
         });
-    }
-    function ajaxLoadHpDept(hopitalId) {
-        $("select#AdminBookingForm_expected_hp_dept_id").attr("disabled", true);
-        //var hopitalId = $(this).val();
-        var actionUrl = "<?php echo $urlAjaxLoadloadHospitalDept; ?>/" + hopitalId;// + hopitalId + "&prompt=选择城市";
-        $.ajax({
-            type: 'get',
-            url: actionUrl,
-            //cache: false,
-            //dataType: "html",
-            'success': function (data) {
-                $("select#AdminBookingForm_expected_hp_dept_id").html(data);
-            },
-            'error': function (data) {
-            },
-            complete: function () {
-                $("select#AdminBookingForm_expected_hp_dept_id").attr("disabled", false);
-            }
-        });
-        return false;
     }
 </script> 

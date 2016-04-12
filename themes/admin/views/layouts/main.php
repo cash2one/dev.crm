@@ -232,22 +232,26 @@
                 </div>
             </div>
             <script>
+                var newTask = 0, undoneTask = 0;
                 $(document).ready(function () {
-                    ajaxGetAlert();
-                    ajaxGetPlan();
-                    //30s获取一次任务提醒条数
-                    setInterval('ajaxGetAlert()', 30000);
-                    //1min获取一次计划跟单并提醒
-                    setInterval('ajaxGetPlan()', 60000);
-
+                    <?php if (!Yii::app()->user->isGuest): ?>
+                        ajaxGetAlert(newTask, undoneTask);
+                        ajaxGetPlan();
+                        //30s获取一次任务提醒条数
+                        setInterval('ajaxGetAlert(newTask, undoneTask)', 30000);
+                        //1min获取一次计划跟单并提醒
+                        setInterval('ajaxGetPlan()', 60000);
+                    <?php endif; ?>
                 });
                 //异步获取任务提醒条数
                 function ajaxGetAlert() {
                     var innerHtml = '';
                     $.ajax({
-                        url: '<?php echo $this->createUrl('admintask/ajaxAlert'); ?>',
+                        url: '<?php echo $this->createUrl('admintask/ajaxAlert'); ?>?newNum=' + newTask + '&undoneNum=' + undoneTask,
                         success: function (data) {
-                            innerHtml += '<span class="new">' + data.results.new + '</span>未读<span class="undown">' + data.results.undone + '</span>未完成';
+                            newTask += data.results.new;
+                            undoneTask += data.results.undone;
+                            innerHtml += '<span class="new">' + newTask + '</span>未读<span class="undown">' + undoneTask + '</span>未完成';
                             $('#dropdownMenu1 .task').html(innerHtml);
                         }
                     });

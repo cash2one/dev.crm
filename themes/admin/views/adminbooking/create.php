@@ -155,6 +155,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
             <span class="tab-header">理想科室：</span><?php
             echo $form->textField($model, 'expected_hp_dept_name', array('class' => 'form-control'));
             ?>
+            <a data-toggle="modal" data-target="#commonDeptModal">常用科室</a>
         </div>
         <div class="col-md-3">
             <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'expected_doctor_name', array('class' => 'form-control')); ?>
@@ -268,6 +269,14 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
             ));
             ?>
         </div>
+        <div class="col-sm-2">
+            <span>是否购买保险：</span><?php
+            echo $form->dropDownList($model, 'is_buy_insurance', $model->loadOptionIsBuyInsurance(), array(
+                'name' => 'AdminBookingForm[is_buy_insurance]',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
     </div>
     <div class="form-group">
         <div class="col-sm-12">
@@ -298,6 +307,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 <?php
 //搜索医院modal
 $this->renderPartial('//doctor/searchHpModal');
+$this->renderPartial('commonDept');
 ?>
 <script>
     $(document).ready(function () {

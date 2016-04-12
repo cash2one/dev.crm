@@ -33,7 +33,7 @@ class AdminbookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile','ajaxDeleteAdminFile'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -431,6 +431,11 @@ class AdminbookingController extends AdminController {
             $form->attributes = $_POST['AdminBookingForm'];
             //业务员信息
             if (!strIsEmpty($form->admin_user_id)) {
+                //若业务员改变;则提醒被分配的业务员
+                if($form->admin_user_id != $model->admin_user_id){
+                    $taskMrg = new TaskManager();
+                    $taskMrg->createChangeAdminUserTask($model, $model->admin_user_id, $form->admin_user_id);
+                }
                 $model->admin_user_id = $form->admin_user_id;
                 $adminUser = AdminUser::model()->getById($form->admin_user_id);
                 $model->admin_user_name = $adminUser->fullname;
@@ -599,4 +604,9 @@ class AdminbookingController extends AdminController {
         $this->renderJsonOutput($output);
     }
 
+    public function actionAjaxDeleteAdminFile($id) {
+        $bookingMgr = new BookingManager();
+        $output = $bookingMgr->deleteAdminBookingFileById($id);
+        $this->renderJsonOutput($output);
+    }
 }

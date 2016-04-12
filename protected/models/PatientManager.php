@@ -353,4 +353,21 @@ class PatientManager {
         return PatientInfo::model()->getAllByAttributes(array('mobile' => $mobile), array('patientBookings', 'patientCreator'));
     }
 
+    //异步删除患者病历图片
+    public function delectPatientMRFileById($id, $absolute = false) {
+        $output = array('status' => 'no');
+        $model = PatientMRFile::model()->getById($id);
+        if (isset($model)) {
+            if ($model->deleteModel($absolute)) {
+                $output['status'] = 'ok';
+            } else {
+                $output['errors'] = $model->getErrors();
+            }
+        } else {
+            $output['errorMsg'] = 'no data';
+        }
+        $output = (object) $output;
+        return $output;
+    }
+
 }

@@ -300,6 +300,20 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
+    <div class="mt15 w10">
+        <label >是否购买保险</label>
+        <div>
+            <select name="isBuyInsurance" class="form-control">
+                <option value="">选择</option>
+                <?php
+                $IsBuyInsurance = AdminBooking::getOptionsIsBuyInsurance();
+                foreach ($IsBuyInsurance as $key => $value) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                }
+                ?>
+            </select>
+        </div>
+    </div>
     <div class="clearfix"></div>
     <div class="mt15 w10">
         <label >推送医生</label>

@@ -1,11 +1,14 @@
 <?php
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/colorbox/colorbox.css");
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/colorbox/jquery.colorbox.custom.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/colorbox/wheelzoom.js', CClientScript::POS_END);
 /* @var $this UserController */
 /* @var $model User */
 $urlUploadFile = $this->createUrl("user/ajaxUploadCert");
 $urlAjaxDoctorCert = $this->createUrl('user/ajaxDoctorCert');
-$urlAjaxLoadFiles = 'http://file.mingyizhudao.com/api/loaddrcert?userId=' . $model->getId();
+$urlAjaxLoadFiles = 'http://localhost/file.myzd.com/api/loaddrcert?userId=' . $model->getId();
 
-$urlUserBookingList = $this->createUrl('user/bookinglist',array('id'=>$model->getId()));
+$urlUserBookingList = $this->createUrl('user/bookinglist', array('id' => $model->getId()));
 $this->breadcrumbs = array(
     '用户列表' => array('admin'),
     $model->username,
@@ -109,25 +112,7 @@ $files = $model->getUserDoctorCerts();
 </div>
 <script>
     $(document).ready(function () {
-        $('a.delete').click(function (e) {
-            e.preventDefault();
-            var deleteUrl = $(this).attr('href');
-            var docImg = $(this).parents('.docImg');
-            if (confirm('确定删除这种图片?')) {
-                $.ajax({
-                    url: deleteUrl,
-                    success: function (data) {
-                        if (data.status == 'ok') {
-                            docImg.remove();
-                            alert('删除成功!');
-                        }
-                    },
-                    error: function () {
-                        alert('删除失败!');
-                    }
-                });
-            }
-        });
+
         $.ajax({
             url: '<?php echo $urlAjaxLoadFiles; ?>',
             success: function (data) {
@@ -140,10 +125,53 @@ $files = $model->getUserDoctorCerts();
         var files = results.files;
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
-            innerHtml += '<div class="col-sm-2 mt10 docImg"><img src="' + file.absFileUrl + '"/><div>' + file.dateCreated + '</div>' +
-                    //'<a class="delete" href="<?php echo $this->createUrl('user/delectDoctorCert'); ?>?id='+file.id+'&userId=<?php echo $model->id; ?>"><div class="file-panel">删除</div></a>'+
+            innerHtml += '<div class="col-sm-2 mt10 docImg"><a class="showImg" href="' + file.absFileUrl + '"><img src="' + file.absFileUrl + '"/></a><div>' + file.dateCreated + '</div>' +
+                    '<a class="delete" href="<?php echo $this->createUrl('user/delectDoctorCert'); ?>?id=' + file.id + '&doctorId=<?php echo $model->id; ?>"><div class="file-panel">删除</div></a>' +
                     '</div>';
         }
         $('.imglist').html(innerHtml);
+        initDelete();
+        initColorBox();
+    }
+    function initDelete() {
+        $('a.delete').click(function (e) {
+            e.preventDefault();
+            var deleteUrl = $(this).attr('href');
+            if (confirm('确定删除这张图片?')) {
+                $.ajax({
+                    url: deleteUrl,
+                    success: function (data) {
+                        if (data.status == 'ok') {
+                            alert('删除成功!');
+                            location.reload();
+                        }
+                    },
+                    error: function () {
+                        alert('删除失败!');
+                    }
+                });
+            }
+        });
+    }
+    function initColorBox() {
+        $('.imglist').find(".showImg").click(function (e) {
+            e.preventDefault();
+            $(this).colorbox({
+                overlayClose: false,
+                date: function () {
+                    return "\u65e5\u671f：" + $(this).parents(".docImg").find(".fileDate").text();
+                }, //日期
+                rel: "img-data",
+                transition: "none",
+                width: "90%",
+                height: "100%",
+                onComplete: function () {
+                    wheelzoom(document.querySelector("#colorbox .cboxPhoto"));
+                },
+                onClosed: function () {
+                    $(this).colorbox.remove();
+                }
+            });
+        });
     }
 </script>
