@@ -12,6 +12,7 @@ $bookings = $data->results['bookings'];
     <thead>
         <tr>
             <th>患者姓名</th>
+            <th>患者手机</th>
             <th>患者所在省市</th>
             <th>患者年龄</th>
             <th>患者性别</th>
@@ -38,6 +39,7 @@ $bookings = $data->results['bookings'];
                 ?>
                 <tr>
                     <td><?php echo $patient->name; ?></td>
+                    <td><?php echo $mobile; ?></td>
                     <td><?php echo $patient->getStateName() == $patient->getCityName() ? $patient->getStateName() : $patient->getStateName() . ' ' . $patient->getCityName(); ?></td>
                     <td><?php echo $patient->getAge(); ?></td>
                     <td><?php echo $patient->getGender(); ?></td>
@@ -48,7 +50,7 @@ $bookings = $data->results['bookings'];
             } else {
                 foreach ($patientBookings as $key => $booking) {
                     $urlBooking = $this->createUrl('patientbooking/view', array('id' => $booking->id));
-                    $creatorProfile = $booking->pbCreator->userDoctorProfile;
+                    $creatorProfile = $patient->patientCreator->userDoctorProfile;
                     if (isset($creatorProfile)) {
                         $creatorName = $creatorProfile->getName();
                         $creatorHp = $creatorProfile->getHospitalName();
@@ -62,6 +64,7 @@ $bookings = $data->results['bookings'];
                     <tr>
                         <?php if ($key == 0) { ?>
                             <td rowspan="<?php echo count($patientBookings); ?>"><?php echo $patient->name; ?></td>
+                            <td rowspan="<?php echo count($patientBookings); ?>"><?php echo $mobile; ?></td>
                             <td rowspan="<?php echo count($patientBookings); ?>"><?php echo $patient->getStateName() == $patient->getCityName() ? $patient->getStateName() : $patient->getStateName() . ' ' . $patient->getCityName(); ?></td>
                             <td rowspan="<?php echo count($patientBookings); ?>"><?php echo $patient->getAge(); ?></td>
                             <td rowspan="<?php echo count($patientBookings); ?>"><?php echo $patient->getGender(); ?></td>
@@ -94,6 +97,7 @@ $bookings = $data->results['bookings'];
                 }
                 ?>
                 <td><?php echo $booking->patientName; ?></td>
+                <td><?php echo $mobile; ?></td>
                 <td><?php echo $booking->state == $booking->city ? $booking->state : $booking->state . ' ' . $booking->city; ?></td>
                 <td><?php echo $booking->age; ?></td>
                 <td><?php echo $booking->gender; ?></td>

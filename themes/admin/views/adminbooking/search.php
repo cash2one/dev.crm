@@ -65,12 +65,26 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         </div>
     </div>
     <div class="mt15 w10">
-        <label >跟进状态</label>
+        <label >预约状态</label>
         <div>
             <select name="bookingStatus" class="form-control">
                 <option value="">选择</option>
                 <?php
                 $bookingStatus = AdminBooking::getOptionsBookingStatus();
+                foreach ($bookingStatus as $key => $value) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="mt15 w10">
+        <label >工作进度</label>
+        <div>
+            <select name="workSchedule" class="form-control">
+                <option value="">选择</option>
+                <?php
+                //$bookingStatus = AdminBooking::getOptionsBookingStatus();
                 foreach ($bookingStatus as $key => $value) {
                     echo '<option value="' . $key . '">' . $value . '</option>';
                 }
@@ -149,7 +163,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         </div>
     </div>
     <div class="mt15 w10">
-        <label >客户意向</label>
+        <label >客户满意度</label>
         <div>
             <select name="customerIntention" class="form-control">
                 <option value="">选择</option>
@@ -211,15 +225,45 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         </div>
     </div>
     <div class="mt15 w10">
-        <label >录入日期</label>
+        <label >是否是公益项目</label>
         <div>
-            <input class="form-control dateOpen inline-block" name = 'dateCreatedStart' value = '' placeholder="开始时间">
+            <select name="isCommonweal" class="form-control">
+                <option value="">选择</option>
+                <?php
+                $isCommonweal = AdminBooking::model()->getOptionsIsCommonweal();
+                foreach ($isCommonweal as $key => $value) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                }
+                ?>
+            </select>
         </div>
-    </div> 
+    </div>
     <div class="mt15 w10">
-        <label >&nbsp;</label>
+        <label >B端</label>
         <div>
-            <input class="form-control dateClosed inline-block" name = 'dateCreatedEnd' value = '' placeholder="结束时间">
+            <select name="businessPartner" class="form-control">
+                <option value="">选择</option>
+                <?php
+                $businessPartner = AdminBooking::model()->getOptionBusinessPartner();
+                foreach ($businessPartner as $key => $value) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="mt15 w10">
+        <label >是否购买保险</label>
+        <div>
+            <select name="isBuyInsurance" class="form-control">
+                <option value="">选择</option>
+                <?php
+                $IsBuyInsurance = AdminBooking::getOptionsIsBuyInsurance();
+                foreach ($IsBuyInsurance as $key => $value) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                }
+                ?>
+            </select>
         </div>
     </div>
     <div class="mt15 w10">
@@ -273,45 +317,15 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         </div>
     </div>
     <div class="mt15 w10">
-        <label >是否是公益项目</label>
+        <label >录入日期</label>
         <div>
-            <select name="isCommonweal" class="form-control">
-                <option value="">选择</option>
-                <?php
-                $isCommonweal = AdminBooking::model()->getOptionsIsCommonweal();
-                foreach ($isCommonweal as $key => $value) {
-                    echo '<option value="' . $key . '">' . $value . '</option>';
-                }
-                ?>
-            </select>
+            <input class="form-control dateOpen inline-block" name = 'dateCreatedStart' value = '' placeholder="开始时间">
         </div>
-    </div>
+    </div> 
     <div class="mt15 w10">
-        <label >B端</label>
+        <label >&nbsp;</label>
         <div>
-            <select name="businessPartner" class="form-control">
-                <option value="">选择</option>
-                <?php
-                $businessPartner = AdminBooking::model()->getOptionBusinessPartner();
-                foreach ($businessPartner as $key => $value) {
-                    echo '<option value="' . $key . '">' . $value . '</option>';
-                }
-                ?>
-            </select>
-        </div>
-    </div>
-    <div class="mt15 w10">
-        <label >是否购买保险</label>
-        <div>
-            <select name="isBuyInsurance" class="form-control">
-                <option value="">选择</option>
-                <?php
-                $IsBuyInsurance = AdminBooking::getOptionsIsBuyInsurance();
-                foreach ($IsBuyInsurance as $key => $value) {
-                    echo '<option value="' . $key . '">' . $value . '</option>';
-                }
-                ?>
-            </select>
+            <input class="form-control dateClosed inline-block" name = 'dateCreatedEnd' value = '' placeholder="结束时间">
         </div>
     </div>
     <div class="clearfix"></div>
@@ -442,7 +456,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             <input class="form-control dateClosed" name = 'dateClosed' value = ''>
         </div>
     </div>
-    
+
     <div class="clearfix"></div>
     <div class="mt15 w10">
         <button id = 'btnSearch' type="submit" class="btn btn-primary">搜索</button>
@@ -522,7 +536,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             });
             return false;
         });
-        
+
         $("select#creatorDoctorStateId").change(function () {
             $("select#creatorDoctorCityId").attr("disabled", true);
             var stateId = $(this).val();

@@ -37,7 +37,6 @@ class PatientBooking extends EActiveRecord {
     const BK_STATUS_INVALID = 7;        // 失效的
     const BK_STATUS_SURGER_DONE = 8;        // 已完成手术
     const BK_STATUS_DC_ACCEPTED = 9;          // 已收到出院小结
-    
     const BK_STATUS_CANCELLED = 99;   // 已取消
 
     /**
@@ -78,7 +77,7 @@ class PatientBooking extends EActiveRecord {
             'pbPatient' => array(self::BELONGS_TO, 'PatientInfo', 'patient_id'),
             'pbCreator' => array(self::BELONGS_TO, 'User', 'creator_id'),
             'pbDoctor' => array(self::BELONGS_TO, 'User', 'doctor_id'),
-            'pbOrder' => array(self::HAS_MANY, 'SalesOrder', 'bk_id'),
+            'pbOrder' => array(self::HAS_MANY, 'SalesOrder', 'bk_id', 'on' => 'pbOrder.bk_type=2'),
             'pbUserDoctorProfile' => array(self::BELONGS_TO, 'UserDoctorProfile', 'creator_id'),
         );
     }
@@ -262,8 +261,8 @@ class PatientBooking extends EActiveRecord {
             StatCode::BK_STATUS_CHECKOUT => '已结账',
             StatCode::BK_STATUS_INVALID => '无效',
             StatCode::BK_STATUS_CANCELLED => '已取消',
-            StatCode::BK_STATUS_REFUNDING =>'申请退款',
-            StatCode::BK_STATUS_REFUNDED =>'已退款',
+            StatCode::BK_STATUS_REFUNDING => '申请退款',
+            StatCode::BK_STATUS_REFUNDED => '已退款',
         );
     }
 

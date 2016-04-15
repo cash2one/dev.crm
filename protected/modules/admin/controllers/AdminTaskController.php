@@ -95,7 +95,7 @@ class AdmintaskController extends AdminController {
         if (isset($_POST['task'])) {
             $values = $_POST['task'];
             $adminBookingModel = AdminBooking::model()->getById($values['booking_id']);
-            $taskMrg->createTaskPlan($adminBookingModel, $values);
+            $taskMrg->createAndCompletedTaskPlan($adminBookingModel, $values);
             $output['status'] = 'ok';
             $output['errorCode'] = 0;
             $output['errorMsg'] = 'success';

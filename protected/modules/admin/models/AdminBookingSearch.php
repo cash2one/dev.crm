@@ -11,14 +11,14 @@ class AdminBookingSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType', 'isCommonweal', 'businessPartner', 'isBuyInsurance', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
+        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus','workSchedule', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType', 'isCommonweal', 'businessPartner', 'isBuyInsurance', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
     }
 
     public function addQueryConditions() {
         $udpAlias = 's';
         $udpAlias2 = 'u';
-        $this->criteria->join .= 'LEFT JOIN sales_order s ON (t.`ref_no` = s.`bk_ref_no`)'; //(t.`id` = s.`bk_id` AND s.`bk_type` = 0)'
-        $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_doctor_id` = u.`user_id`)';
+//        $this->criteria->join .= 'LEFT JOIN sales_order s ON (t.`ref_no` = s.`bk_ref_no`)'; //(t.`id` = s.`bk_id` AND s.`bk_type` = 0)'
+//        $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_doctor_id` = u.`user_id`)';
         $this->criteria->addCondition('t.date_deleted is NULL');
         //如果客服level是普通客服，则只能查到与自己有关的信息
 //        $userId = Yii::app()->user->id;
@@ -26,8 +26,16 @@ class AdminBookingSearch extends ESearchModel {
 //        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
 //            $this->criteria->compare('t.admin_user_id', $userId);
 //        }
+        $this->criteria->with = array('bkOwner','orderAdminbooking');
         $this->criteria->distinct = true;
         if ($this->hasQueryParams()) {
+            if(isset($this->queryParams['orderRefNo'])||isset($this->queryParams['orderType'])||isset($this->queryParams['finalAmount'])||isset($this->queryParams['dateOpen'])||isset($this->queryParams['dateClosed'])){
+                $this->criteria->join .= 'LEFT JOIN sales_order s ON (t.`ref_no` = s.`bk_ref_no`)'; 
+            }
+            if(isset($this->queryParams['creatorDoctorTel'])||isset($this->queryParams['creatorDoctorcTitle'])||isset($this->queryParams['creatorDoctorStateId'])||isset($this->queryParams['creatorDoctorCityId'])||isset($this->queryParams['creatorDoctorHp'])||isset($this->queryParams['creatorDoctorHpDept'])){
+                $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_doctor_id` = u.`user_id`)';
+            }
+            
             if (isset($this->queryParams['bookingType'])) {
                 $bookingType = $this->queryParams['bookingType'];
                 $this->criteria->compare('t.booking_type', $bookingType);
@@ -55,9 +63,14 @@ class AdminBookingSearch extends ESearchModel {
 
             if (isset($this->queryParams['bookingStatus'])) {
                 $bookingStatus = $this->queryParams['bookingStatus'];
-                $this->criteria->compare("t.work_schedule", $bookingStatus);
+                $this->criteria->compare("t.booking_status", $bookingStatus);
             }
 
+            if (isset($this->queryParams['workSchedule'])) {
+                $workSchedule = $this->queryParams['workSchedule'];
+                $this->criteria->compare("t.work_schedule", $workSchedule);
+            }
+            
             if (isset($this->queryParams['stateId'])) {
                 $stateId = $this->queryParams['stateId'];
                 $this->criteria->compare("t.state_id", $stateId);
@@ -181,10 +194,6 @@ class AdminBookingSearch extends ESearchModel {
             if (isset($this->queryParams['creatorDoctorCityId'])) {
                 $creatorDoctorCityId = $this->queryParams['creatorDoctorCityId'];
                 $this->criteria->compare($udpAlias2 . ".city_id", $creatorDoctorCityId);
-            }
-            if (isset($this->queryParams['creatorDoctorStateId'])) {
-                $creatorDoctorStateId = $this->queryParams['creatorDoctorStateId'];
-                $this->criteria->compare($udpAlias2 . ".state_id", $creatorDoctorStateId);
             }
             if (isset($this->queryParams['creatorDoctorHp'])) {
                 $creatorDoctorHp = $this->queryParams['creatorDoctorHp'];

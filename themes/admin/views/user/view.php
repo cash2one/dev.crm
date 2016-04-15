@@ -6,7 +6,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/c
 /* @var $model User */
 $urlUploadFile = $this->createUrl("user/ajaxUploadCert");
 $urlAjaxDoctorCert = $this->createUrl('user/ajaxDoctorCert');
-$urlAjaxLoadFiles = 'http://localhost/file.myzd.com/api/loaddrcert?userId=' . $model->getId();
+$urlAjaxLoadFiles = 'http://file.mingyizhudao.com/api/loaddrcert?userId=' . $model->getId();
 
 $urlUserBookingList = $this->createUrl('user/bookinglist', array('id' => $model->getId()));
 $this->breadcrumbs = array(

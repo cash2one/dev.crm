@@ -214,7 +214,7 @@ class OrderController extends AdminController {
             $order->setCashBack($values['cash_back']);
             $order->setIsPaid(0);
             $order->setDateOpen(new CDbExpression('NOW()'));
-
+            $order->order_type = $values['order_type'];
             $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_AB);
             //$order->validate();
             //var_dump($order);exit;

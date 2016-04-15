@@ -17,6 +17,7 @@ class SalesOrderSearch extends ESearchModel {
 
     public function addQueryConditions() {
         $this->criteria->join = 'left join sales_payment s on (t.`id`=s.`order_id` and s.payment_status = ' . StatCode::PAY_SUCCESS . ')';
+        $this->criteria->with = array('salesPayments');
         //外键关联 不是支付成功的不
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['refNo'])) {

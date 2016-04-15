@@ -142,7 +142,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
     <div class="form-group">
         <div class="col-md-3">
             <span class="tab-header">理想医院：</span><?php
-            echo $form->textField($model, 'expected_hospital_name', array('class' => 'form-control'));
+            echo $form->textField($model, 'expected_hospital_name', array('class' => 'form-control w50'));
 //            echo $form->dropDownList($model, 'expected_hospital_id', $model->loadOptionsHospital(), array(
 //                'name' => 'AdminBookingForm[expected_hospital_id]',
 //                'prompt' => '选择医院',
@@ -153,12 +153,13 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
         </div>
         <div class="col-md-3">
             <span class="tab-header">理想科室：</span><?php
-            echo $form->textField($model, 'expected_hp_dept_name', array('class' => 'form-control'));
+            echo $form->textField($model, 'expected_hp_dept_name', array('class' => 'form-control w50'));
             ?>
             <a data-toggle="modal" data-target="#commonDeptModal">常用科室</a>
         </div>
         <div class="col-md-3">
-            <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'expected_doctor_name', array('class' => 'form-control')); ?>
+            <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'expected_doctor_name', array('class' => 'form-control w50')); ?>
+            <a data-toggle="modal" data-target="#searchDoctorModal">搜医生</a>
         </div>
         <div class="col-md-3">
             <span class="tab-header">理想专家电话：</span><?php echo $form->textField($model, 'expected_doctor_mobile', array('class' => 'form-control')); ?>
@@ -308,6 +309,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 //搜索医院modal
 $this->renderPartial('//doctor/searchHpModal');
 $this->renderPartial('commonDept');
+$this->renderPartial('searchDoctorModal');
 ?>
 <script>
     $(document).ready(function () {

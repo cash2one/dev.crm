@@ -83,6 +83,18 @@
             </div>
         </div>
         <div class="form-group col-sm-7">
+            <label >  <?php echo '订单类型<br>'; ?></label>
+            <div>
+                <?php
+            echo $form->dropDownList($model, 'order_type', $model->getOptionsOrderType(), array(
+                'name' => 'order[order_type]',
+                'class' => 'form-control w50',
+            ));
+            ?>
+                <div class="text-danger"><?php echo $form->error($model, 'order_type'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
             <label > <?php echo $form->labelEx($model, 'bd_code'); ?></label>
             <div>
                 <?php echo $form->textField($model, 'bd_code', array('size' => 10, 'name' => 'order[bd_code]', 'maxlength' => 20, 'class' => 'form-control')); ?>                

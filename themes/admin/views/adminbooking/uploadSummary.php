@@ -6,13 +6,13 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/q
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/ui.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/qiniu.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/highlight.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/uploadsummary.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/uploadsummary.js?v=' . time(), CClientScript::POS_END);
 
 
 $type = Yii::app()->request->getQuery('type', 'mr');
-if($data->booking_type == AdminBooking::BK_TYPE_CRM){
+if ($data->booking_type == AdminBooking::BK_TYPE_CRM) {
     $bookingId = $data->id;
-}else{
+} else {
     $bookingId = $data->booking_id;
 }
 $urlUploadFile = $this->createUrl("adminbooking/ajaxSaveAdminFile");

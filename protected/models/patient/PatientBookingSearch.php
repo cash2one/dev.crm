@@ -19,6 +19,7 @@ class PatientBookingSearch extends ESearchModel {
         $udpAlias2 = 'u';
         $this->criteria->join = 'LEFT JOIN sales_order s ON (t.`id` = s.`bk_id` AND s.`bk_type` =2)';
         $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_id` = u.`user_id`)';
+        $this->criteria->with = array('pbOrder','pbUserDoctorProfile');
         $this->criteria->distinct = true;
         if ($this->hasQueryParams()) {
             //patientBooking的参数

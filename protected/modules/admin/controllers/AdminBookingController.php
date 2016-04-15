@@ -133,6 +133,7 @@ class AdminbookingController extends AdminController {
             //设置booking type 为 bk_type_crm
             $form->booking_type = AdminBooking::BK_TYPE_CRM;
             $form->booking_status = StatCode::BK_STATUS_NEW;
+            $form->work_schedule = StatCode::BK_STATUS_NEW;
             $model = new AdminBooking();
             $model->setAttributes($form->attributes);
             if ($model->save()) {

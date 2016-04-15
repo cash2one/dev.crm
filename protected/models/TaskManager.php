@@ -6,9 +6,11 @@
  * @author haley
  */
 class TaskManager {
+
     const USER_DOCTOR_CERT = 1;
     const USER_DOCTOR_PROFILE_NEW = 2;
     const USER_DOCTOR_PROFILE_UPDATE = 3;
+
     public function createTaskBooking(AdminBooking $model) {
         $adminTask = new AdminTask();
 
@@ -61,7 +63,7 @@ class TaskManager {
                 throw new CException("Error saving adminTask");
             }
             $adminTaskJoin = new AdminTaskJoin();
-            if(strIsEmpty($values['date_plan']) == false) {
+            if (strIsEmpty($values['date_plan']) == false) {
                 $adminTaskJoin->date_plan = $values['date_plan'];
             }
             $adminTaskJoin->admin_task_id = $adminTask->getId();
@@ -69,6 +71,57 @@ class TaskManager {
             $adminTaskJoin->work_type = $values['work_type'];
             $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_BK;
 
+            if ($adminTaskJoin->save() === false) {
+
+                throw new CException("Error saving adminTask");
+            }
+
+            $adminTaskBkJoin = new AdminTaskBkJoin();
+            $adminTaskBkJoin->admin_task_join_id = $adminTaskJoin->getId();
+            $adminTaskBkJoin->admin_booking_id = $model->getId();
+            if ($adminTaskBkJoin->save() === false) {
+                throw new CException("Error saving adminTaskBkJoin");
+            }
+            $dbTran->commit();
+        } catch (CDbException $cdbex) {
+            $dbTran->rollback();
+            return false;
+        } catch (CException $cex) {
+            $dbTran->rollback();
+            return false;
+        }
+
+        return true;
+    }
+
+    public function createAndCompletedTaskPlan(AdminBooking $model, $values) {
+        $adminTask = new AdminTask();
+
+        $adminTask->subject = '您有一条新的任务，预约编号：' . $model->ref_no;
+        $adminTask->content = $values['content'];
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/adminBooking/view', array('id' => $model->getId()));
+
+        $dbTran = Yii::app()->db->beginTransaction();
+        try {
+            if ($adminTask->save() === false) {
+
+                throw new CException("Error saving adminTask");
+            }
+            $adminTaskJoin = new AdminTaskJoin();
+            if (strIsEmpty($values['date_plan']) == false) {
+                $adminTaskJoin->date_plan = $values['date_plan'];
+            } else {
+                //若没有计划时间则自动完成任务
+                date_default_timezone_set("Asia/Shanghai");
+                $adminTaskJoin->date_done = date('Y-m-d H:i:s');
+                $adminTaskJoin->status = AdminTaskJoin::STATUS_OK;
+                $adminTaskJoin->is_read = AdminTaskJoin::IS_READ;
+                $adminTaskJoin->date_read = date('Y-m-d H:i:s');
+            }
+            $adminTaskJoin->admin_task_id = $adminTask->getId();
+            $adminTaskJoin->admin_user_id = $values['admin_user_id'];
+            $adminTaskJoin->work_type = $values['work_type'];
+            $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_BK;
             if ($adminTaskJoin->save() === false) {
 
                 throw new CException("Error saving adminTask");
@@ -140,23 +193,14 @@ class TaskManager {
     }
 
     /**
-     * md端 医生资料更新
+     * md端 医生上传照片
      */
-    public function createTaskDoctor(UserDoctorProfile $model, $type) {
+    public function createTaskDoctor(UserDoctorProfile $model) {
         $adminTask = new AdminTask();
-        switch($type){
-            case self::USER_DOCTOR_CERT :
-                $adminTask->subject = '医生资料 - 上传认证照片';
-                break;
-            case self::USER_DOCTOR_PROFILE_NEW :
-                $adminTask->subject = '医生资料 - 新医生用户';
-                break;
-            case self::USER_DOCTOR_PROFILE_UPDATE :
-                $adminTask->subject = '医生资料 - 基本信息修改';
-                break;
-        }
+
+        $adminTask->subject = '上传认证照片';
         $adminTask->content = $model->name . ':' . $model->hospital_name . '-' . $model->hp_dept_name;
-        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id' => $model->getId()));
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id' => $model->getUserId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
         try {
@@ -167,7 +211,7 @@ class TaskManager {
             $adminTaskJoin = new AdminTaskJoin();
             $adminTaskJoin->admin_task_id = $adminTask->getId();
             //$adminUser = $this->getAdminUser($model->city_id, $model->state_id, AdminBooking::bk_type_pb, AdminUser::ROLE_CS);
-            $adminTaskJoin->admin_user_id = 13;
+            $adminTaskJoin->admin_user_id = Yii::app()->params['doctorVerifyAdminUserId'];
             $adminTaskJoin->work_type = AdminTaskJoin::WORK_TYPE_TEL;
             $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_USER_DR;
             if ($adminTaskJoin->save() === false) {
@@ -189,6 +233,128 @@ class TaskManager {
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * md端 医生资料更新
+     */
+    public function createTaskDoctorCert(UserDoctorProfile $model, $type) {
+        if ($type == self::USER_DOCTOR_PROFILE_NEW) {
+            return true;
+        }
+        $adminTask = new AdminTask();
+        switch ($type) {
+            case self::USER_DOCTOR_CERT :
+                $adminTask->subject = '医生资料 - 上传认证照片';
+                break;
+            case self::USER_DOCTOR_PROFILE_NEW :
+                $adminTask->subject = '医生资料 - 新医生用户';
+                break;
+            case self::USER_DOCTOR_PROFILE_UPDATE :
+                $adminTask->subject = '医生资料 - 基本信息修改';
+                break;
+        }
+
+        if ($type == self::USER_DOCTOR_CERT) {
+            $doctorMgr = new DoctorManager();
+            $certs = $doctorMgr->loadDoctorsCert($model->getUserId());
+            if (arrayNotEmpty($certs)) {
+                $date = $certs[0]->getDateCreated('Y-m-d h:i:s');
+                $num = time() - strtotime($date);
+                if ($num <= 120) {
+                    return true;
+                }
+            }
+        }
+
+        $adminTask->content = $model->name . ':' . $model->hospital_name . '-' . $model->hp_dept_name;
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/user/view', array('id' => $model->getUserId()));
+
+        $dbTran = Yii::app()->db->beginTransaction();
+        try {
+            if ($adminTask->save() === false) {
+                throw new CException("Error saving adminTask");
+            }
+
+            $adminTaskJoin = new AdminTaskJoin();
+            $adminTaskJoin->admin_task_id = $adminTask->getId();
+            //$adminUser = $this->getAdminUser($model->city_id, $model->state_id, AdminBooking::bk_type_pb, AdminUser::ROLE_CS);
+            $adminTaskJoin->admin_user_id = Yii::app()->params['doctorVerifyAdminUserId'];
+            $adminTaskJoin->work_type = AdminTaskJoin::WORK_TYPE_TEL;
+            $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_USER_DR;
+            if ($adminTaskJoin->save() === false) {
+                throw new CException("Error saving adminTask");
+            }
+
+            $adminTaskDoctorJoin = new AdminTaskDoctorJoin();
+            $adminTaskDoctorJoin->admin_task_join_id = $adminTaskJoin->getId();
+            $adminTaskDoctorJoin->doctor_id = $model->getId();
+            if ($adminTaskDoctorJoin->save() === false) {
+                throw new CException("Error saving adminTaskBkJoin");
+            }
+            $dbTran->commit();
+        } catch (CDbException $cdbex) {
+            $dbTran->rollback();
+            return false;
+        } catch (CException $cex) {
+            $dbTran->rollback();
+            return false;
+        }
+        return true;
+    }
+
+    public function createTaskPatientFile(PatientBooking $model) {
+        $patientMgr = new PatientManager();
+        $filelist = $patientMgr->loadPatientFile($model->getPatientId());
+        if (arrayNotEmpty($filelist)) {
+            //var_dump($filelist[0]);            exit();
+            $date = $filelist[0]->getDateCreated('Y-m-d h:i:s');
+            $num = time() - strtotime($date);
+            if ($num <= 120) {
+                return true;
+            }
+        }
+        $adminTask = new AdminTask();
+        $adminTask->subject = '医生端预约影像资料变更,预约编号：' . $model->ref_no;
+        $adminTask->content = $model->getCreatorName() . '医生变更了患者' . $model->getPatientName() . '的影像资料';
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/patientbooking/view', array('id' => $model->getId()));
+        $dbTran = Yii::app()->db->beginTransaction();
+        try {
+            if ($adminTask->save() === false) {
+                throw new CException("Error saving adminTask");
+            }
+            $adminTaskJoin = new AdminTaskJoin();
+            $adminTaskJoin->admin_task_id = $adminTask->getId();
+            $profile = $model->pbUserDoctorProfile;
+            $cityId = null;
+            $stateId = null;
+            if (isset($profile)) {
+                $cityId = $profile->city_id;
+                $stateId = $profile->state_id;
+            }
+            $adminUser = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_CS);
+            $adminTaskJoin->admin_user_id = $adminUser->admin_user_id;
+            $adminTaskJoin->work_type = AdminTaskJoin::WORK_TYPE_TEL;
+            $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_USER_DR;
+            if ($adminTaskJoin->save() === false) {
+                throw new CException("Error saving adminTask");
+            }
+
+            $adminTaskDoctorJoin = new AdminTaskDoctorJoin();
+            $adminTaskDoctorJoin->admin_task_join_id = $adminTaskJoin->getId();
+            $adminTaskDoctorJoin->doctor_id = $model->getCreatorId();
+            if ($adminTaskDoctorJoin->save() === false) {
+                throw new CException("Error saving adminTaskBkJoin");
+            }
+            $dbTran->commit();
+        } catch (CDbException $cdbex) {
+            $dbTran->rollback();
+            return false;
+        } catch (CException $cex) {
+            $dbTran->rollback();
+            return false;
+        }
         return true;
     }
 
@@ -249,7 +415,7 @@ class TaskManager {
         }
     }
 
-     public function createChangeAdminUserTask(AdminBooking $adminbooking, $oldUserId, $newUserId) {
+    public function createChangeAdminUserTask(AdminBooking $adminbooking, $oldUserId, $newUserId) {
         $values = array();
         $oldUser = AdminUser::model()->getById($oldUserId);
         $newUser = AdminUser::model()->getById($newUserId);
@@ -261,4 +427,5 @@ class TaskManager {
         $values['date_plan'] = null;
         $this->createTaskPlan($adminbooking, $values);
     }
+
 }
