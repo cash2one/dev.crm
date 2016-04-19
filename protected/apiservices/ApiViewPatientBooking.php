@@ -158,6 +158,7 @@ class ApiViewPatientBooking extends EApiViewService {
         $data->dateCreated = $model->getDateCreated();
         $data->dateUpdated = $model->getDateUpdated('Y年m月d日 h:i');
         $data->dateNow = date('Y-m-d H:i', time());
+        $data->expectedDoctor = $model->expected_doctor;
         $this->booking = $data;
     }
 

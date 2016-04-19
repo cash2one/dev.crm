@@ -1,61 +1,123 @@
-<h1>关联医生 </h1>
+<style>.button-column a.delete{display:none;}.button-column a.update{display:none;}</style>
 <?php
-/* @var $this PatientbookingController */
-/* @var $model PatientBooking */
-
-//$urlAddDoctorToBooking= $this->createUrl('admin/patientbooking/relate', array('bid'=>$bid));
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#patient-booking-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
+/* @var $this UserController */
+/* @var $model User */
 ?>
 
+<h1>关联医生</h1>
+
 <?php
-
-$this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'patient-booking-grid',
-    'dataProvider' => $model->search(),
-    'filter' => $model,
-    'columns' => array(
-        'user_id',
-        'name',
-        'hospital_name',
-        'hp_dept_name',
-//        array(
-//            'class' => 'CButtonColumn',
-//            'template' => '{relate}',
-//            'buttons' => array(
-//                'relate' => array(
-//                    'label' => '[选择]',
-//                    'url'=>'Yii::app()->createUrl("admin/patientbooking/relate", array("userid"=>$data->user_id))',
-//                ),
-//            ),
-//        ),
-        array(
-            'class'=>'CLinkColumn',
-            'labelExpression' => '"选择"',
-           'urlExpression' => 'array("adminBooking/relate", "bid" =>'. $bid .', "userid" => $data->user_id, "name" => $data->name)',
-//            'url'=>"javascript:addDoctorToBooking(<?php echo $data->user_id;);"
-        ),
-    ),
-));
-
+$urlSearch = $this->createUrl('adminbooking/userSearchResult');
+$urlUserView = $this->createAbsoluteUrl('user/view');
 ?>
-<!--<script type="text/javascript">
-function addDoctorToBooking($userid){
-    var r = confirm("确定关联这个医生吗？");
-    if (r == true){
-        var url = "<php echo $urlAddDoctorToBooking;>" + "?userid="+$userid;
-        window.location.href = url;
+
+<div id='searchForm'>
+    <div class="form-group col-sm-2">
+        <label >姓名</label>
+        <div>
+            <input class="form-control" name = 'name' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >手机</label>
+        <div>
+            <input class="form-control" name = 'mobile' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >医院</label>
+        <div>
+            <input class="form-control" name = 'hpName' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >科室</label>
+        <div>
+            <input class="form-control" name = 'hpDeptName' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >临床职称</label>
+        <div>
+            <select name='cTitle' class="form-control">
+                <option value=''>全部</option>
+                <option value='1'>主任医师</option>
+                <option value='2'>副主任医师</option>
+                <option value='3'>主治医师</option>
+                <option value='4'>住院医师</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >学术职称</label>
+        <div>
+            <select name='aTitle' class="form-control">
+                <option value=''>全部</option>
+                <option value='1'>教授</option>
+                <option value='2'>副教授</option>
+                <option value='9'>无</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >是否认证</label>
+        <div>
+            <select name='isVerified' class="form-control">
+                <option value=''>全部</option>
+                <option value='1'>是</option>
+                <option value='0'>否</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >是否签约</label>
+        <div>
+            <select name='isContracted' class="form-control">
+                <option value=''>全部</option>
+                <option value='1'>是</option>
+                <option value='0'>否</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group col-sm-2 mt24">
+        <button id = 'btnSearch' type="button" class="btn btn-primary">搜索</button>
+    </div> 
+    <div class="clearfix"></div>
+</div>
+<div id="searchResult">   
+</div>
+<script>
+    $(document).ready(function () {
+        var selectorSearchResult = '#searchResult';
+        var domForm = $("#searchForm");
+        var requestUrl = "<?php echo $urlSearch; ?>";
+        var bid = '<?php echo $bid; ?>';
+        loadUserSearchResult(requestUrl + '?bid=' + bid + '&role=2', selectorSearchResult);
+
+        $("#btnSearch").click(function () {
+            var searchUrl = requestUrl + '?role=2';
+            domForm.find("input,select").each(function () {
+                // trim
+                var value = $.trim($(this).val());
+                if (value !== '') {
+                    searchUrl += '&' + $(this).attr('name') + '=' + value;
+                }
+            });
+            loadUserSearchResult(searchUrl, selectorSearchResult);
+        });
+
+    });
+    function loadUserSearchResult(requestUrl, selectorSearchResult) {
+        $.ajax({
+            url: requestUrl,
+            async: false,
+            success: function (data) {
+                $(selectorSearchResult).html(data);
+            },
+            complete: function () {
+                // hide loading gif.
+            }
+        });
     }
-}
-</script>-->
+</script>

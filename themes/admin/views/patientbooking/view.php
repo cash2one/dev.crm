@@ -109,7 +109,7 @@ $urlChangeBookingStatus = $this->createUrl('patientbooking/changeStatus', array(
         </tr>
         <tr class="even">
             <th>就诊方式</th><td><?php echo $booking->travelType; ?></td>
-            <th></th><td></td>
+            <th>理想专家</th><td><?php echo $booking->expectedDoctor; ?></td>
         </tr>
         <tr class="even">
             <th>最早</th><td><?php echo $booking->dateStart; ?></td>

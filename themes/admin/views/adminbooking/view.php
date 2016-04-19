@@ -1,11 +1,8 @@
 <?php
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/css/adminbooking.css");
-Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/colorbox/colorbox.css");
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datetimepicker.css");
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.zh-CN.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/colorbox/jquery.colorbox.custom.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/colorbox/wheelzoom.js', CClientScript::POS_END);
 
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.form.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
@@ -218,8 +215,11 @@ $orderList = isset($orderList) ? $orderList : null;
         <div class="col-sm-2 border-bottom">
             <span>B端：</span><?php echo $data->getBusinessPartner() == null ? '<span class="color-blue">未填写</span>' : $data->getBusinessPartner(); ?>
         </div>
-        <div class="col-sm-8 border-bottom">
+        <div class="col-sm-2 border-bottom">
             <span>是否购买保险：</span><?php echo $data->getIsBuyInsurance() == null ? '<span class="color-blue">未填写</span>' : $data->getIsBuyInsurance(); ?>
+        </div>
+        <div class="col-sm-6 border-bottom">
+            <span>是否成单：</span><?php echo $data->getIsDeal() == null ? '<span class="color-blue">未填写</span>' : $data->getIsDeal(); ?>
         </div>
         <div class="col-sm-2 border-bottom">销售总额：<?php echo $data->total_amount == null ? '无' : $data->total_amount; ?></div>
         <div class="col-sm-10 border-bottom">实际总收款：<?php echo $data->order_amount == null ? '无' : $data->order_amount; ?></div>
@@ -362,6 +362,7 @@ $this->renderPartial('addBdUserModal', array('model' => $model));
 $this->renderPartial('addContactUserModal', array('model' => $model));
 $this->renderPartial('updateStatusModal', array('model' => $model));
 $this->renderPartial('addTaskPlanModal', array('model' => $model));
+$this->renderPartial('//user/_showImgModal');
 ?>
 
 <script>
@@ -482,31 +483,12 @@ if (isset($adminTasksNotDone) && arrayNotEmpty($adminTasksNotDone)) {
             var innerHtml = '';
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                innerHtml += '<div class="col-sm-2 mt10 docImg"><a class="showImg" href="' + file.absFileUrl + '"><img src="' + file.absFileUrl + '"/></a><div><a class="deleteFile" href="<?php echo $urlDeleteFile; ?>/' + file.id + '">删除图片</a></div><div class="fileDate mt5">' + file.dateCreated + '</div></div>';
+                innerHtml += '<div class="col-sm-2 mt10 docImg"><a data-toggle="modal" data-target="#showImgModal" data-src="' + file.absFileUrl + '"><img src="' + file.absFileUrl + '"/></a><div><a class="deleteFile" href="<?php echo $urlDeleteFile; ?>/' + file.id + '">删除图片</a></div><div class="fileDate mt5">' + file.dateCreated + '</div></div>';
             }
         } else {
             var innerHtml = '<div class="col-sm-12 mt10">未上传图片</div>';
         }
         fileDom.html(innerHtml);
-        fileDom.find(".showImg").click(function (e) {
-            e.preventDefault();
-            $(this).colorbox({
-                overlayClose: false,
-                date: function () {
-                    return "\u65e5\u671f：" + $(this).parents(".docImg").find(".fileDate").text();
-                }, //日期
-                rel: "img-data",
-                transition: "none",
-                width: "90%",
-                height: "100%",
-                onComplete: function () {
-                    wheelzoom(document.querySelector("#colorbox .cboxPhoto"));
-                },
-                onClosed: function () {
-                    $(this).colorbox.remove();
-                }
-            });
-        });
         $('.deleteFile').click(function (e) {
             e.preventDefault();
             var deleteUrl = $(this).attr('href');

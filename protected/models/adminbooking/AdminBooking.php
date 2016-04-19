@@ -126,6 +126,8 @@ class AdminBooking extends EActiveRecord {
     const IS_COMMONWEAL_YES = 1;
     const IS_BUY_INSURANCE_NO = 0;
     const IS_BUY_INSURANCE_YES = 1;
+    const IS_DEAL_NO = 0;
+    const IS_DEAL_YES = 1;
     const BUSINESS_PARTNER_160 = '160';
     const BUSINESS_PARTNER_TUISHI = 'tuoshi';
     const BUSINESS_PARTNER_ALI = 'ali';
@@ -150,7 +152,7 @@ class AdminBooking extends EActiveRecord {
             array('disease_name, final_hospital_name', 'length', 'max' => 100),
             array('expected_hospital_name, expected_hp_dept_name, expected_doctor_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, admin_user_name, customer_request, customer_diversion, customer_agent', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('deposit_total, deposit_paid, service_total, service_paid, business_partner, is_commonweal, is_buy_insurance, contact_name, contact_name, patient_gender, expected_time_start, expected_time_end, final_time, date_updated, date_deleted, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile', 'safe'),
+            array('deposit_total, deposit_paid, service_total, service_paid, business_partner, is_commonweal, is_buy_insurance, is_deal, contact_name, contact_name, patient_gender, expected_time_start, expected_time_end, final_time, date_updated, date_deleted, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_gender, patient_identity, state_id, city_id, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, expected_doctor_id, expected_doctor_name, creator_doctor_id, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_id, final_doctor_name, final_hospital_id, final_hospital_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, work_schedule, order_status, order_amount, total_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, display_order, deposit_total, deposit_paid, service_total, service_paid, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -665,6 +667,13 @@ class AdminBooking extends EActiveRecord {
         );
     }
 
+    public static function getOptionsIsDeal() {
+        return array(
+            self::IS_DEAL_NO => '否',
+            self::IS_DEAL_YES => '是',
+        );
+    }
+
     public function getIsBuyInsurance($v = true) {
         if ($v) {
             $options = self::getOptionsIsBuyInsurance();
@@ -675,6 +684,19 @@ class AdminBooking extends EActiveRecord {
             }
         } else {
             $this->is_buy_insurance;
+        }
+    }
+
+    public function getIsDeal($v = true) {
+        if ($v) {
+            $options = self::getOptionsIsDeal();
+            if (isset($options[$this->is_deal])) {
+                return $options[$this->is_deal];
+            } else {
+                return null;
+            }
+        } else {
+            $this->is_deal;
         }
     }
 

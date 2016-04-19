@@ -258,8 +258,22 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             <select name="isBuyInsurance" class="form-control">
                 <option value="">选择</option>
                 <?php
-                $IsBuyInsurance = AdminBooking::getOptionsIsBuyInsurance();
-                foreach ($IsBuyInsurance as $key => $value) {
+                $isBuyInsurance = AdminBooking::getOptionsIsBuyInsurance();
+                foreach ($isBuyInsurance as $key => $value) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="mt15 w10">
+        <label >是否成单</label>
+        <div>
+            <select name="isDeal" class="form-control">
+                <option value="">选择</option>
+                <?php
+                $isDeal = AdminBooking::getOptionsIsDeal();
+                foreach ($isDeal as $key => $value) {
                     echo '<option value="' . $key . '">' . $value . '</option>';
                 }
                 ?>

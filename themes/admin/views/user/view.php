@@ -1,7 +1,4 @@
 <?php
-Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/colorbox/colorbox.css");
-Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/colorbox/jquery.colorbox.custom.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/colorbox/wheelzoom.js', CClientScript::POS_END);
 /* @var $this UserController */
 /* @var $model User */
 $urlUploadFile = $this->createUrl("user/ajaxUploadCert");
@@ -105,14 +102,15 @@ $files = $model->getUserDoctorCerts();
             </div>
         </div>
     </div>
-
     <div class="row imglist">
 
     </div>
 </div>
+<?php
+$this->renderPartial('_showImgModal');
+?>
 <script>
     $(document).ready(function () {
-
         $.ajax({
             url: '<?php echo $urlAjaxLoadFiles; ?>',
             success: function (data) {
@@ -125,7 +123,7 @@ $files = $model->getUserDoctorCerts();
         var files = results.files;
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
-            innerHtml += '<div class="col-sm-2 mt10 docImg"><a class="showImg" href="' + file.absFileUrl + '"><img src="' + file.absFileUrl + '"/></a><div>' + file.dateCreated + '</div>' +
+            innerHtml += '<div class="col-sm-2 mt10 docImg"><a data-toggle="modal" data-target="#showImgModal" data-src="' + file.absFileUrl + '"><img src="' + file.absFileUrl + '"/></a><div>' + file.dateCreated + '</div>' +
                     '<a class="delete" href="<?php echo $this->createUrl('user/delectDoctorCert'); ?>?id=' + file.id + '&doctorId=<?php echo $model->id; ?>"><div class="file-panel">删除</div></a>' +
                     '</div>';
         }
@@ -151,27 +149,6 @@ $files = $model->getUserDoctorCerts();
                     }
                 });
             }
-        });
-    }
-    function initColorBox() {
-        $('.imglist').find(".showImg").click(function (e) {
-            e.preventDefault();
-            $(this).colorbox({
-                overlayClose: false,
-                date: function () {
-                    return "\u65e5\u671f：" + $(this).parents(".docImg").find(".fileDate").text();
-                }, //日期
-                rel: "img-data",
-                transition: "none",
-                width: "90%",
-                height: "100%",
-                onComplete: function () {
-                    wheelzoom(document.querySelector("#colorbox .cboxPhoto"));
-                },
-                onClosed: function () {
-                    $(this).colorbox.remove();
-                }
-            });
         });
     }
 </script>

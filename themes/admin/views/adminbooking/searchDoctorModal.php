@@ -69,7 +69,7 @@ $urlSearchHospital = $this->createUrl('doctor/searchDoctor', array('name' => '')
     }
     function initDoctorClick() {
         $('.determineDoctor').click(function () {
-            var doctorMobile = $(this).attr('data-mobile') == null ? '' : $(this).attr('data-mobile');
+            var doctorMobile = $(this).attr('data-mobile') == 'null' ? '' : $(this).attr('data-mobile');
             var doctorName = $(this).attr('data-doctorName');
             $('#AdminBookingForm_expected_doctor_name').val(doctorName);
             $('#AdminBookingForm_expected_doctor_mobile').val(doctorMobile);

@@ -389,6 +389,14 @@ if (is_null($creator) == false) {
             echo $form->numberField($model, 'total_amount', array('class' => 'form-control w50'));
             ?>
         </div>
+        <div class="col-sm-2">
+            <span>是否成单：</span><?php
+            echo $form->dropDownList($model, 'is_deal', $model->loadOptionIsDeal(), array(
+                'name' => 'AdminBookingForm[is_deal]',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
     </div>
     <div class="form-group">
         <div class="col-sm-12">

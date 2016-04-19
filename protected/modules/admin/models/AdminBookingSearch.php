@@ -11,7 +11,7 @@ class AdminBookingSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus','workSchedule', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType', 'isCommonweal', 'businessPartner', 'isBuyInsurance', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
+        return array('bookingType', 'refNo', 'patientName', 'patientMobile', 'patientGender', 'bookingStatus', 'workSchedule', 'stateId', 'cityId', 'adminUserId', 'bdUserId', 'customerAgent', 'diseaseConfirm', 'customerIntention', 'customerType', 'isCommonweal', 'isDeal', 'businessPartner', 'isBuyInsurance', 'customerRequest', 'travelType', 'diseaseName', 'expectHp', 'expectDept', 'expectDoctor', 'dateCreatedStart', 'dateCreatedEnd', 'creatorDoctorName', 'orderRefNo', 'orderType', 'finalAmount', 'dateOpen', 'dateClosed', 'creatorDoctorTel', 'creatorDoctorcTitle', 'creatorDoctorStateId', 'creatorDoctorCityId', 'creatorDoctorHp', 'creatorDoctorHpDept');
     }
 
     public function addQueryConditions() {
@@ -26,16 +26,16 @@ class AdminBookingSearch extends ESearchModel {
 //        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
 //            $this->criteria->compare('t.admin_user_id', $userId);
 //        }
-        $this->criteria->with = array('bkOwner','orderAdminbooking');
+        $this->criteria->with = array('bkOwner', 'orderAdminbooking');
         $this->criteria->distinct = true;
         if ($this->hasQueryParams()) {
-            if(isset($this->queryParams['orderRefNo'])||isset($this->queryParams['orderType'])||isset($this->queryParams['finalAmount'])||isset($this->queryParams['dateOpen'])||isset($this->queryParams['dateClosed'])){
-                $this->criteria->join .= 'LEFT JOIN sales_order s ON (t.`ref_no` = s.`bk_ref_no`)'; 
+            if (isset($this->queryParams['orderRefNo']) || isset($this->queryParams['orderType']) || isset($this->queryParams['finalAmount']) || isset($this->queryParams['dateOpen']) || isset($this->queryParams['dateClosed'])) {
+                $this->criteria->join .= 'LEFT JOIN sales_order s ON (t.`ref_no` = s.`bk_ref_no`)';
             }
-            if(isset($this->queryParams['creatorDoctorTel'])||isset($this->queryParams['creatorDoctorcTitle'])||isset($this->queryParams['creatorDoctorStateId'])||isset($this->queryParams['creatorDoctorCityId'])||isset($this->queryParams['creatorDoctorHp'])||isset($this->queryParams['creatorDoctorHpDept'])){
+            if (isset($this->queryParams['creatorDoctorTel']) || isset($this->queryParams['creatorDoctorcTitle']) || isset($this->queryParams['creatorDoctorStateId']) || isset($this->queryParams['creatorDoctorCityId']) || isset($this->queryParams['creatorDoctorHp']) || isset($this->queryParams['creatorDoctorHpDept'])) {
                 $this->criteria->join .= 'LEFT JOIN user_doctor_profile u ON (t.`creator_doctor_id` = u.`user_id`)';
             }
-            
+
             if (isset($this->queryParams['bookingType'])) {
                 $bookingType = $this->queryParams['bookingType'];
                 $this->criteria->compare('t.booking_type', $bookingType);
@@ -70,11 +70,10 @@ class AdminBookingSearch extends ESearchModel {
                 $workSchedule = $this->queryParams['workSchedule'];
                 $this->criteria->compare("t.work_schedule", $workSchedule);
             }
-            
+
             if (isset($this->queryParams['stateId'])) {
                 $stateId = $this->queryParams['stateId'];
                 $this->criteria->compare("t.state_id", $stateId);
-                
             }
             if (isset($this->queryParams['cityId'])) {
                 $cityId = $this->queryParams['cityId'];
@@ -107,6 +106,10 @@ class AdminBookingSearch extends ESearchModel {
             if (isset($this->queryParams['isCommonweal'])) {
                 $isCommonweal = $this->queryParams['isCommonweal'];
                 $this->criteria->addSearchCondition("t.is_commonweal", $isCommonweal);
+            }
+            if (isset($this->queryParams['isDeal'])) {
+                $isDeal = $this->queryParams['isDeal'];
+                $this->criteria->addSearchCondition("t.is_deal", $isDeal);
             }
             if (isset($this->queryParams['businessPartner'])) {
                 $businessPartner = $this->queryParams['businessPartner'];

@@ -33,7 +33,7 @@ class AdminbookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile','ajaxDeleteAdminFile'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile', 'ajaxDeleteAdminFile', 'userSearchResult'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -433,7 +433,7 @@ class AdminbookingController extends AdminController {
             //业务员信息
             if (!strIsEmpty($form->admin_user_id)) {
                 //若业务员改变;则提醒被分配的业务员
-                if($form->admin_user_id != $model->admin_user_id){
+                if ($form->admin_user_id != $model->admin_user_id) {
                     $taskMrg = new TaskManager();
                     $taskMrg->createChangeAdminUserTask($model, $model->admin_user_id, $form->admin_user_id);
                 }
@@ -560,6 +560,12 @@ class AdminbookingController extends AdminController {
             $model = $this->loadModel($bid);
             $model->setFinalDoctorId($userid);
             $model->setFinalDoctorName($name);
+            $patientBooking = PatientBooking::model()->getById($model->booking_id);
+            if (isset($patientBooking)) {
+                $patientBooking->setDoctorId($userid);
+                $patientBooking->setDoctorName($name);
+                $patientBooking->save();
+            }
             if ($model->save()) {
                 $user = User::model()->getById($userid);
                 $sendMgs = new SmsManager();
@@ -610,4 +616,21 @@ class AdminbookingController extends AdminController {
         $output = $bookingMgr->deleteAdminBookingFileById($id);
         $this->renderJsonOutput($output);
     }
+
+    public function actionUserSearchResult() {
+        $this->headerUTF8();
+        $userSearch = new UserSearch($_GET);
+        $criteria = $userSearch->criteria;
+        $dataProvider = new CActiveDataProvider('User', array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+        ));
+
+        $this->renderPartial('userSearchResult', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
 }
