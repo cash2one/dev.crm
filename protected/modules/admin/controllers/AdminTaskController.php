@@ -35,7 +35,7 @@ class AdmintaskController extends AdminController {
 //				'users'=>array('@'),
 //			),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask', 'ajaxReadTask', 'list'),
+                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask', 'ajaxReadTask', 'list', 'adminList'),
 //				'users'=>array('admin'),
             ),
             array('deny', // deny all users
@@ -248,7 +248,7 @@ class AdmintaskController extends AdminController {
     /**
      * ajax 获取提醒任务
      */
-    public function actionAjaxAlert($newNum=0, $undoneNum=0) {
+    public function actionAjaxAlert($newNum = 0, $undoneNum = 0) {
         $new = AdminTaskJoin::model()->getNewTask(Yii::app()->user->id, $newNum);
         $undone = AdminTaskJoin::model()->getUndoneTask(Yii::app()->user->id, $undoneNum);
         $output = array(
@@ -262,7 +262,6 @@ class AdmintaskController extends AdminController {
         );
         $this->renderJsonOutput($output);
     }
-
 
     /**
      * ajax 获取计划跟单
@@ -339,6 +338,21 @@ class AdmintaskController extends AdminController {
             }
             $this->renderJsonOutput($output);
         }
+    }
+
+    //高级客服查看所有客服任务
+    public function actionAdminList() {
+        //如果客服level是普通客服，则没有信息
+        $userId = Yii::app()->user->id;
+        $user = AdminUser::model()->getById($userId);
+        $output = null;
+        if ($user->level != AdminUser::LEVEL_USER_NORMAL) {
+            $apisevc = new ApiViewAdminTaskList();
+            $output = $apisevc->loadApiViewData();
+        }
+        $this->render('adminList', array(
+            'data' => $output
+        ));
     }
 
 }

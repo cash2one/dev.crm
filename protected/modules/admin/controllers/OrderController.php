@@ -70,6 +70,7 @@ class OrderController extends AdminController {
             'bkContext + createBKOrder',
             'pbContext + createPBOrder',
             'adminBKContext + createAdminBKOrder',
+            'adminBKContext + createOfflineOrder',
             'rights',
         );
     }
@@ -92,7 +93,7 @@ class OrderController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'search', 'searchResult', 'createAdminBKOrder', 'countAmount'),
+                'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'search', 'searchResult', 'createAdminBKOrder', 'countAmount', 'deleteOrder', 'createOfflineOrder'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -256,6 +257,85 @@ class OrderController extends AdminController {
         $this->render('createAdminBKOrder', array(
             'model' => $order
         ));
+    }
+
+    public function actionCreateOfflineOrder($bid) {
+        //  $booking = Booking::model()->getById($bid);
+        $booking = $this->booking;
+        $order = new SalesOrder();
+        $order->bk_id = $booking->booking_id;
+        $order->admin_booking_id = $booking->id;
+        $order->bk_type = $booking->booking_type;
+        $order->bk_ref_no = $booking->ref_no;
+        $order->user_id = $booking->patient_id;
+        $order->subject = $booking->patient_name;
+        $order->description = $booking->booking_detail;
+        $order->bd_code = $booking->bd_user_name;
+        $order->cash_back = $booking->bd_user_name;
+        if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_PATIENT_GO) {
+            $order->order_type = SalesOrder::ORDER_TYPE_SERVICE;
+            $order->setAmount(1000.00);
+        } else if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_DOCTOR_COME) {
+            $order->order_type = SalesOrder::ORDER_TYPE_DEPOSIT;
+            $order->setAmount(500.00);
+        } else {
+            $order->order_type = SalesOrder::ORDER_TYPE_SERVICE;
+        }
+        //$this->performAjaxValidation($order);
+        if (isset($_POST['order'])) {
+            $output = array('status' => 'no');
+            $values = $_POST['order'];
+
+            $order->setAmount($values['final_amount']);
+            $order->setSubject($values['subject']);
+            $order->setDescription($values['description']);
+            $order->setBdCode($values['bd_code']);
+            $order->setCashBack($values['cash_back']);
+            $order->order_type = $values['order_type'];
+            $order->setIsPaid(SalesOrder::ORDER_PAIDED);
+            $order->setDateOpen($values['date_closed']);
+            $order->setDateClosed($values['date_closed']);
+            $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_AB);
+            //$order->validate();
+
+            if ($order->save()) {
+                //订单保存成功;修改adminbooking的支付金额
+                if ($order->order_type == SalesOrder::ORDER_TYPE_DEPOSIT) {
+                    $booking->addDepositTotal($order->getFinalAmount());
+                    $booking->addDepositPaid($order->getFinalAmount());
+                } else {
+                    $booking->addServiceTotal($order->getFinalAmount());
+                    $booking->addServicePaid($order->getFinalAmount());
+                }
+                $booking->save();
+                //生成payment
+                $salesMgr = new SalesManager();
+                $offlineOrder = $salesMgr->createPaymentByOfflinSalseOrder($order, $values);
+                if ($offlineOrder) {
+                    $output['status'] = 'ok';
+                    $output['orderId'] = $order->id;
+                } else {
+                    $output['errors'] = $offlineOrder->getErrors();
+                }
+            } else {
+                $output['errors'] = $order->getErrors();
+            }
+            $this->renderJsonOutput($output);
+        } else {
+            $this->render('createOfflineOrder', array(
+                'model' => $order
+            ));
+        }
+    }
+
+    public function actionDeleteOrder($id) {
+        $output = array('status' => 'no');
+        $model = SalesOrder::model()->getById($id);
+        if ($model->delete(false)) {
+            $output['status'] = 'ok';
+            $output['refNo'] = $model->getRefNo();
+        }
+        $this->renderJsonOutput($output);
     }
 
     public function loadModelById($id, $with = null) {

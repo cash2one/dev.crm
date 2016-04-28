@@ -1,27 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "admin_task_bk_join".
+ * This is the model class for table "booking_service_doctor_join".
  *
- * The followings are the available columns in table 'admin_task_bk_join':
+ * The followings are the available columns in table 'booking_service_doctor_join':
  * @property integer $id
- * @property integer $admin_task_join_id
- * @property integer $admin_booking_id
+ * @property integer $doctor_id
+ * @property integer $booking_service_id
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
  *
  * The followings are the available model relations:
- * @property AdminBooking $adminBooking
- * @property AdminTaskJoin $adminTaskJoin
+ * @property Doctor $doctor
  */
-class AdminTaskBkJoin extends EActiveRecord {
+class BookingServiceDoctorJoin extends EActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'admin_task_bk_join';
+        return 'booking_service_doctor_join';
     }
 
     /**
@@ -31,12 +30,12 @@ class AdminTaskBkJoin extends EActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('admin_task_join_id, date_created', 'required'),
-            array('admin_task_join_id, admin_booking_id', 'numerical', 'integerOnly' => true),
+            array('date_created', 'required'),
+            array('doctor_id, booking_service_id', 'numerical', 'integerOnly' => true),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, admin_task_join_id, admin_booking_id, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, doctor_id, booking_service_id, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -47,8 +46,7 @@ class AdminTaskBkJoin extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'adminBooking' => array(self::BELONGS_TO, 'AdminBooking', 'admin_booking_id'),
-            'adminTaskJoin' => array(self::BELONGS_TO, 'AdminTaskJoin', 'admin_task_join_id'),
+            'doctor' => array(self::BELONGS_TO, 'Doctor', 'doctor_id'),
         );
     }
 
@@ -58,8 +56,8 @@ class AdminTaskBkJoin extends EActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'admin_task_join_id' => 'admin_task_join.id',
-            'admin_booking_id' => 'admin_booking.id',
+            'doctor_id' => 'Doctor',
+            'booking_service_id' => 'Booking Service',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
             'date_deleted' => 'Date Deleted',
@@ -84,8 +82,8 @@ class AdminTaskBkJoin extends EActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('admin_task_join_id', $this->admin_task_join_id);
-        $criteria->compare('admin_booking_id', $this->admin_booking_id);
+        $criteria->compare('doctor_id', $this->doctor_id);
+        $criteria->compare('booking_service_id', $this->booking_service_id);
         $criteria->compare('date_created', $this->date_created, true);
         $criteria->compare('date_updated', $this->date_updated, true);
         $criteria->compare('date_deleted', $this->date_deleted, true);
@@ -99,36 +97,14 @@ class AdminTaskBkJoin extends EActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return AdminTaskBkJoin the static model class
+     * @return BookingServiceDoctorJoin the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
-    /**
-     * 获取跟单任务
-     */
-    public function loadllAdminBkJoinByAdminBookingId($adminbookingId, $isDone) {
-        $criteria = new CDbCriteria();
-        $criteria->addCondition('t.date_deleted is NULL');
-        $criteria->addCondition('adminTaskJoin.date_deleted is NULL');
-        if ($isDone == 1) {
-            $criteria->addCondition('adminTaskJoin.date_done is NOT NULL');
-        } else {
-            $criteria->addCondition('adminTaskJoin.date_done is NULL');
-        }
-        $criteria->compare('admin_booking_id', $adminbookingId);
-        $criteria->with = array('adminBooking', 'adminTaskJoin');
-        $criteria->order = 't.date_created DESC';
-        return $this->findAll($criteria);
-    }
-
-    public function getAdminBooking() {
-        return $this->adminBooking;
-    }
-
-    public function getAdminTaskJoin() {
-        return $this->adminTaskJoin;
+    public function getByDoctorIdAndBookingServiceId($doctorId, $serviceId) {
+        return $this->getByAttributes(array('doctor_id' => $doctorId, 'booking_service_id' => $serviceId));
     }
 
 }

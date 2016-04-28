@@ -69,7 +69,7 @@ class SalesOrder extends EActiveRecord {
     //表示预约定金
     const ORDER_TYPE_DEPOSIT = 'deposit';   // 预约金
     const ORDER_TYPE_SERVICE = 'service';   // 服务费
-    const ORDER_AMOUNT_DEPOSIT = 1000;
+    const ORDER_AMOUNT_DEPOSIT = 200;
     const ORDER_AMOUNT_SERVICE = 1000;
     const ORDER_UNPAIDED = 0;
     const ORDER_PAIDED = 1;
@@ -87,11 +87,12 @@ class SalesOrder extends EActiveRecord {
             array('bk_ref_no, order_type', 'length', 'max' => 20),
             array('crm_no, created_by, bd_code, cash_back, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, expected_doctor_name, expected_hospital_name, expected_hp_dept_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, final_doctor_hospital, final_time, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, travel_type, admin_user_name', 'length', 'max' => 50),
             array('subject, disease_name', 'length', 'max' => 100),
-            array('description', 'length', 'max' => 500),
+            array('description', 'length', 'max' => 1000),
             array('ping_id', 'length', 'max' => 30),
             array('total_amount, discount_amount, final_amount', 'length', 'max' => 10),
             array('currency', 'length', 'max' => 3),
-            array('patient_adress, disease_detail', 'length', 'max' => 200),
+            array('patient_adress', 'length', 'max' => 200),
+            array('disease_detail', 'length', 'max' => 1000),
             array('date_closed, date_created, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -417,8 +418,8 @@ class SalesOrder extends EActiveRecord {
 
     public function getOptionsOrderType() {
         return array(
-            self::ORDER_TYPE_DEPOSIT => '预约金',
             self::ORDER_TYPE_SERVICE => '服务费',
+            self::ORDER_TYPE_DEPOSIT => '预约金',
         );
     }
 

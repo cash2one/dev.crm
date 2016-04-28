@@ -472,6 +472,9 @@ class BookingManager {
             $adminBooking->booking_status = $model->status;
             $adminBooking->creator_doctor_id = $model->creator_id;
             $adminBooking->creator_doctor_name = $model->creator_name;
+            $adminBooking->is_deal = AdminBooking::IS_DEAL_YES;
+            //医生端预约的导流来源，默认为“医生推荐”
+            $adminBooking->customer_diversion = AdminBooking::CUS_DIVERSION_DOCTOR;
             //一开始创建时 只能以下级医生作为标准给其默认值
             if (strIsEmpty($model->creator_id) === false) {
                 $doctor = UserDoctorProfile::model()->getByUserId($model->creator_id);
@@ -511,6 +514,8 @@ class BookingManager {
             $adminBooking->expected_hp_dept_name = $model->hp_dept_name;
             $adminBooking->disease_name = $model->disease_name;
             $adminBooking->disease_detail = $model->disease_detail;
+            $adminBooking->is_deal = AdminBooking::IS_DEAL_NO;
+            $adminBooking->booking_service_id = $model->booking_service_id;
             //根据提供的医院查询其所在城市再查询其地推人员与客服人员
             if (strIsEmpty($model->doctor_id) === false) {
                 $doctor = Doctor::model()->getById($model->doctor_id);
@@ -523,6 +528,10 @@ class BookingManager {
             }
             $customer = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_BK, AdminUser::ROLE_CS);
             $bd = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_BK, AdminUser::ROLE_BD);
+            //第三方
+            if ($model->is_vendor == 1 && $model->vendor_id == 2) {
+                $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_160;
+            }
         }
         if (is_null($customer) == false) {
             $adminBooking->admin_user_id = $customer->admin_user_id;
@@ -538,6 +547,7 @@ class BookingManager {
         $adminBooking->expected_time_start = $model->date_start;
         $adminBooking->expected_time_end = $model->date_end;
         $adminBooking->customer_agent = $model->user_agent;
+        $adminBooking->work_schedule = $model->bk_status;
         $adminBooking->save();
         return $adminBooking;
     }
@@ -671,7 +681,7 @@ class BookingManager {
         $output = (object) $output;
         return $output;
     }
-    
+
     //异步删除booking图片
     public function deleteBookingFileById($id, $absolute = false) {
         $output = array('status' => 'no');
@@ -688,4 +698,5 @@ class BookingManager {
         $output = (object) $output;
         return $output;
     }
+
 }

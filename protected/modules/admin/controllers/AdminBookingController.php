@@ -33,7 +33,7 @@ class AdminbookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile', 'ajaxDeleteAdminFile', 'userSearchResult'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile', 'ajaxDeleteAdminFile', 'userSearchResult', 'addCsExplain', 'bdSearchResult', 'bdBkView'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -71,6 +71,26 @@ class AdminbookingController extends AdminController {
             'model' => $form,
             'orderList' => $orderList,
             'adminTasks' => $adminTasks,
+            'creator' => $creator
+        ));
+    }
+
+    public function actionBdBkView($id) {
+        $form = new AdminBookingForm;
+        $data = $this->loadModel($id);
+        $form->initModel($data);
+
+        //salesorder for adminBooking
+        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_ref_no' => $data->ref_no));
+        //创建医生信息
+        $creator = null;
+        if (strIsEmpty($data->creator_doctor_id) == false) {
+            $creator = UserDoctorProfile::model()->getByUserId($data->creator_doctor_id);
+        }
+        $this->render('bdBkView', array(
+            'data' => $data,
+            'model' => $form,
+            'orderList' => $orderList,
             'creator' => $creator
         ));
     }
@@ -401,11 +421,23 @@ class AdminbookingController extends AdminController {
         } else if (isset($_GET['AdminBooking'])) {
             $values = $_GET['AdminBooking'];
         }
-
-        $this->render('search', array(
-            'model' => $model,
-            'form' => $form,
-        ));
+        $user = $this->getCurrentUser();
+        if ($user->role == AdminUser::ROLE_CS) {
+            $this->render('search', array(
+                'model' => $model,
+                'form' => $form,
+            ));
+        } else if ($user->role == AdminUser::ROLE_BD) {
+            $this->render('bdSearch', array(
+                'model' => $model,
+                'form' => $form,
+            ));
+        } else {
+            $this->render('search', array(
+                'model' => $model,
+                'form' => $form,
+            ));
+        }
     }
 
     public function actionSearchResult() {
@@ -418,6 +450,26 @@ class AdminbookingController extends AdminController {
             ),
         ));
         $this->renderPartial('searchResult', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    //地推搜索
+    public function actionBdSearchResult() {
+        $pbSeach = new AdminBookingSearch($_GET);
+        $criteria = $pbSeach->criteria;
+        $userId = Yii::app()->user->id;
+        $user = AdminUser::model()->getById($userId);
+        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
+            $criteria->compare('t.bd_user_id', $userId);
+        }
+        $dataProvider = new CActiveDataProvider('AdminBooking', array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+        ));
+        $this->renderPartial('bdSearchResult', array(
             'dataProvider' => $dataProvider,
         ));
     }
@@ -631,6 +683,20 @@ class AdminbookingController extends AdminController {
         $this->renderPartial('userSearchResult', array(
             'dataProvider' => $dataProvider,
         ));
+    }
+
+    //添加客服说明
+    public function actionAddCsExplain() {
+        if (isset($_POST['AdminBookingForm'])) {
+            $value = $_POST['AdminBookingForm'];
+            $adminbookingId = $value['id'];
+            $model = $this->loadModel($adminbookingId);
+            $model->cs_explain = $value['cs_explain'];
+            if ($model->save()) {
+                $this->redirect(array('view', 'id' => $adminbookingId));
+            }
+        }
+        //$this->renderJsonOutput($output);
     }
 
 }

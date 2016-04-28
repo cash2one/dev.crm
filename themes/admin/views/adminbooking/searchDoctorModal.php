@@ -47,14 +47,14 @@ $urlSearchHospital = $this->createUrl('doctor/searchDoctor', array('name' => '')
         $.ajax({
             url: searchUrl,
             success: function (data) {
-                setHpHtml(data.doctors);
+                setDoctorHtml(data.doctors);
             },
             error: function () {
-                setHpHtml('');
+                setDoctorHtml('');
             }
         });
     }
-    function setHpHtml(doctors) {
+    function setDoctorHtml(doctors) {
         var innerHtml = '';
         if (doctors && doctors.length > 0) {
             for (var i = 0; i < doctors.length; i++) {

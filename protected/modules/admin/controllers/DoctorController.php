@@ -343,8 +343,22 @@ class DoctorController extends AdminController {
         if (isset($_GET['Doctor']))
             $model->attributes = $_GET['Doctor'];
 
-        $this->render('admin', array(
+        $this->render('search', array(
             'model' => $model,
+        ));
+    }
+
+    public function actionSearchResult() {
+        $pbSeach = new DoctorSearch($_GET);
+        $criteria = $pbSeach->criteria;
+        $dataProvider = new CActiveDataProvider('Doctor', array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+        ));
+        $this->renderPartial('searchResult', array(
+            'dataProvider' => $dataProvider,
         ));
     }
 
@@ -472,6 +486,40 @@ class DoctorController extends AdminController {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function actionSearchDoctor($name) {
+        $doctorMgr = new DoctorManager();
+        $output = $doctorMgr->searchDoctorProfileByDoctorName($name);
+        $this->renderJsonOutput($output);
+    }
+
+    //保存文件信息
+    public function actionAjaxSaveAvatarFile() {
+        $output = array('status' => 'no');
+        if (isset($_POST['doctor'])) {
+            $values = $_POST['doctor'];
+            $doctor = Doctor::model()->getById($values['id']);
+            $doctor->base_url = $values['remote_domain'];
+            $doctor->avatar_url = $values['remote_file_key'];
+            $doctor->has_remote = StatCode::HAS_REMOTE;
+            if ($doctor->save()) {
+                $output['status'] = 'ok';
+                $output['doctorId'] = $doctor->id;
+            } else {
+                $output['errors'] = $doctor->getErrors();
+            }
+        } else {
+            $output['errors'] = 'no data....';
+        }
+        $this->renderJsonOutput($output);
+    }
+
+    public function actionAjaxUpload() {
+        $url = 'http://file.mingyizhudao.com/api/tokendravatar';
+        $data = $this->send_get($url);
+        $output = array('uptoken' => $data['uptoken']);
+        $this->renderJsonOutput($output);
     }
 
 }

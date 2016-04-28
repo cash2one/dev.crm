@@ -19,6 +19,7 @@ class OrderManager {
         if ($model instanceof PatientBooking) {
             $order->createRefNo($model->ref_no, $model->id, StatCode::TRANS_TYPE_PB);
             $order->user_id = $model->creator_id;
+            $order->bk_id = $model->getId();
             $order->travel_type = $model->travel_type;
             //根据patient_id查询其资料
             if (strIsEmpty($model->patient_id) === false) {
@@ -62,6 +63,7 @@ class OrderManager {
         } elseif ($model instanceof Booking) {
             $order->createRefNo($model->ref_no, $model->id, StatCode::TRANS_TYPE_BK);
             $order->user_id = $model->getUserId();
+            $order->bk_id = $model->getId();
             $order->bk_type = StatCode::TRANS_TYPE_BK;
             $order->subject = $order->getOrderType(true) . '-' . $model->getContactName();
             $order->disease_name = $model->disease_name;
@@ -81,7 +83,8 @@ class OrderManager {
         } elseif ($model instanceof AdminBooking) {
             $order->admin_booking_id = $model->id;
             $order->createRefNo($model->ref_no, $model->id, AdminBooking::BK_TYPE_CRM);
-            $order->bk_type = AdminBooking::BK_TYPE_CRM;
+            $order->bk_type = $model->booking_type;
+            $order->bk_id = $model->booking_id;
             $order->patient_mobile = $model->patient_mobile;
             $order->patient_age = $model->patient_age;
             $order->patient_name = $model->patient_name;
@@ -104,10 +107,18 @@ class OrderManager {
         }
         $order->bk_ref_no = $model->ref_no;
         $order->is_paid = SalesOrder::ORDER_UNPAIDED;
-        $order->bk_id = $model->getId();
         $order->created_by = Yii::app()->user->id;
         $order->date_open = date('Y-m-d H:i:s');
-        $order->setAmount($order->getOrderTypeDefaultAmount());
+        if (isset($model->booking_service_id)) {
+            $bookingServiceConfig = BookingServiceConfig::model()->getById($model->booking_service_id);
+            if (isset($bookingServiceConfig)) {
+                $order->setAmount($bookingServiceConfig->deposit);
+            } else {
+                $order->setAmount($order->getOrderTypeDefaultAmount());
+            }
+        } else {
+            $order->setAmount($order->getOrderTypeDefaultAmount());
+        }
         $order->save();
         return $order;
     }
@@ -120,6 +131,26 @@ class OrderManager {
     //查询预约单的所有支付情况
     public function loadSalesOrderByBkIdAndBkType($bkId, $bkType = StatCode::TRANS_TYPE_PB, $attributes = '*', $with = null, $options = null) {
         return SalesOrder::model()->getByBkIdAndBkType($bkId, $bkType, $attributes, $with, $options);
+    }
+
+    //创建线下支付记录
+    public function createPaymentByOfflinSalseOrder($order, $values) {
+        $payment = new SalesPayment();
+        $payment->order_id = $order->id;
+        $payment->uid = strRandom();
+        $payment->pay_channel = $values['pay_channel'];
+        $payment->channel_trade_no = $values['channel_trade_no'];
+        $payment->payment_status = 1;
+        $payment->bill_amount = $order->getFinalAmount();
+        $payment->bill_currency = 'RMB';
+        $payment->paid_date = $values['date_closed'];
+        $payment->subject = $order->getSubject();
+        $payment->description = $order->getDescription();
+        if ($payment->save()) {
+            return true;
+        } else {
+            return $payment->getErrors();
+        }
     }
 
 }

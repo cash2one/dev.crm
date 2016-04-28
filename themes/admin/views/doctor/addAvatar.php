@@ -1,4 +1,13 @@
 <?php
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/css/qiniu/highlight.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . '/css/qiniu/main.css');
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/plupload.full.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/zh_CN.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/ui.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/qiniu.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/qiniu/highlight.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/custom/doctorAvatar.js?v=' . time(), CClientScript::POS_END);
+
 /* @var $this DoctorController */
 /* @var $doctor Doctor */
 /* @var $model DoctorAvatar */
@@ -17,6 +26,9 @@ $this->menu = array(
 //    array('label' => 'Delete Doctor', 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $doctor->id), 'confirm' => 'Are you sure you want to delete this item?')),
 //    array('label' => 'Manage Doctor', 'url' => array('admin')),
 );
+$urlUploadFile = $this->createUrl("doctor/ajaxSaveAvatarFile");
+
+$urlReturn = $this->createUrl('doctor/view', array('id' => $doctor->getId()));
 ?>
 <h2>设置头像</h2>
 <h3><?php echo $doctor->getName(); ?></h3>
@@ -30,33 +42,45 @@ $this->menu = array(
 
 <div class="form">
 
-    <?php
-    $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'doctor-form',
-        // Please note: When you enable ajax validation, make sure the corresponding
-        // controller action is handling ajax validation correctly.
-        // There is a call to performAjaxValidation() commented in generated controller code.
-        // See class documentation of CActiveForm for details on this.
-        'enableClientValidation' => false,
-        'clientOptions' => array(
-            'validateOnSubmit' => false,
-        ),
-        'enableAjaxValidation' => true,
-        'htmlOptions' => array('enctype' => 'multipart/form-data'),
-    ));
-    ?>
-
-    <input type="hidden" name="DoctorAvatar['id']" value = "<?php echo $doctor->getId(); ?>">;
-
-    <p class="note">Fields with <span class="required">*</span> are required.</p>
-    <input type="file" name="file"/>
-
-    <?php echo $form->errorSummary($doctor); ?>
-    <br/>
-    <div class="buttons">
-       <button type="submit" class="btn btn-primary">保存</button>
+    <form id="doctor-form" data-url-uploadfile="<?php echo $urlUploadFile; ?>" data-url-return="<?php echo $urlReturn; ?>">
+        <input id="doctorId" type="hidden" name="doctor[id]" value="<?php echo $doctor->getId(); ?>" />
+        <input type="hidden" id="domain" value="http://dr.static.mingyizhudao.com/"> 
+        <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('doctor/ajaxUpload'); ?>">
+    </form>
+    <div class="mb20 row mt20">
+        <div class="">
+            <div class="body">
+                <div class="col-md-12">
+                    <div id="container">
+                        <a class="btn btn-default btn-lg " id="pickfiles" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                    </div>
+                </div>
+                <div style="display:none" id="success" class="col-md-12">
+                    <div class="alert-success">
+                        队列全部文件处理完毕
+                    </div>
+                </div>
+                <div class="col-md-12 ">
+                    <table class="table table-striped table-hover text-left"   style="margin-top:40px;display:none">
+                        <thead>
+                            <tr>
+                                <th class="col-md-4">Filename</th>
+                                <th class="col-md-2">Size</th>
+                                <th class="col-md-6">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fsUploadProgress">
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <button id="btnSubmit" class="btn btn-primary">上传</button>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <?php $this->endWidget(); ?>
 
 </div><!-- form -->

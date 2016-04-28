@@ -33,7 +33,7 @@ class AdminTask extends EActiveRecord {
         return array(
             array('content, url, date_created', 'required'),
             array('subject, url', 'length', 'max' => 100),
-            array('content', 'length', 'max' => 500),
+            array('content', 'length', 'max' => 1000),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

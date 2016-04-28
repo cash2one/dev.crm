@@ -96,7 +96,7 @@ $urlUserView = $this->createAbsoluteUrl('user/view');
         loadUserSearchResult(requestUrl + '?bid=' + bid + '&role=2', selectorSearchResult);
 
         $("#btnSearch").click(function () {
-            var searchUrl = requestUrl + '?role=2';
+            var searchUrl = requestUrl + '?bid=' + bid + '&role=2';
             domForm.find("input,select").each(function () {
                 // trim
                 var value = $.trim($(this).val());

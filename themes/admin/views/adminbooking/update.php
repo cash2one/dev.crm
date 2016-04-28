@@ -368,6 +368,15 @@ if (is_null($creator) == false) {
             ?>
         </div>
         <div class="col-sm-2">
+            <span>服务类型：</span><?php
+            echo $form->dropDownList($model, 'booking_service_id', $model->loadOptionBookingService(), array(
+                'name' => 'AdminBookingForm[booking_service_id]',
+                //'prompt' => '选择',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+        <div class="col-sm-2">
             <span>B端：</span><?php
             echo $form->dropDownList($model, 'business_partner', $model->loadOptionBusinessPartner(), array(
                 'name' => 'AdminBookingForm[business_partner]',
@@ -396,6 +405,11 @@ if (is_null($creator) == false) {
                 'class' => 'form-control',
             ));
             ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <span>补充说明：</span><?php echo $form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500)); ?>
         </div>
     </div>
     <div class="form-group">

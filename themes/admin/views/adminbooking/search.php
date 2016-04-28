@@ -574,6 +574,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         });
     });
     function loadUserSearchResult(requestUrl, selectorSearchResult) {
+        requestUrl = encodeURI(requestUrl);
         $.ajax({
             url: requestUrl,
             async: false,

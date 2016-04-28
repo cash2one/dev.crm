@@ -55,6 +55,9 @@
                                             <?php if (Yii::app()->user->checkAccess('Admin.AdminTask.Search')): ?>
                                                 <li><a href="<?php echo $this->createUrl('admintask/search') ?>">搜索</a></li>
                                             <?php endif; ?>
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Admintask.AdminList')): ?>
+                                                <li><a href="<?php echo $this->createUrl('admintask/adminList') ?>">客服任务信息</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                     <div class="dropdown mt20" >
@@ -234,15 +237,27 @@
             <script>
                 var newTask = 0, undoneTask = 0;
                 $(document).ready(function () {
-                    <?php if (!Yii::app()->user->isGuest): ?>
+                    hidenMunu();
+<?php if (!Yii::app()->user->isGuest && Yii::app()->user->checkAccess('Admin.Admintask.AjaxAlert')): ?>
                         ajaxGetAlert(newTask, undoneTask);
                         ajaxGetPlan();
                         //30s获取一次任务提醒条数
-                        setInterval('ajaxGetAlert(newTask, undoneTask)', 30000);
+                        //setInterval('ajaxGetAlert(newTask, undoneTask)', 30000);
                         //1min获取一次计划跟单并提醒
-                        setInterval('ajaxGetPlan()', 60000);
-                    <?php endif; ?>
+                        //setInterval('ajaxGetPlan()', 60000);
+<?php endif; ?>
                 });
+                //隐藏无子类的菜单栏
+                function hidenMunu() {
+                    $('.dropdown').each(function () {
+                        var value = $(this).find('.dropdown-menu>li').length;
+                        if (value > 0) {
+                            
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
                 //异步获取任务提醒条数
                 function ajaxGetAlert() {
                     var innerHtml = '';
