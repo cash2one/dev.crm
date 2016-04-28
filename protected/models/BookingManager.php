@@ -470,6 +470,7 @@ class BookingManager {
             $adminBooking->booking_detail = $model->detail;
             $adminBooking->travel_type = $model->travel_type;
             $adminBooking->booking_status = $model->status;
+            $adminBooking->work_schedule = $model->status;
             $adminBooking->creator_doctor_id = $model->creator_id;
             $adminBooking->creator_doctor_name = $model->creator_name;
             $adminBooking->is_deal = AdminBooking::IS_DEAL_YES;
@@ -499,6 +500,7 @@ class BookingManager {
             $adminBooking->booking_detail = $model->contact_name;
             $adminBooking->patient_mobile = $model->mobile;
             $adminBooking->booking_status = $model->bk_status;
+            $adminBooking->work_schedule = $model->bk_status;
             if (strIsEmpty($model->expteam_id) == false) {
                 //根据团队id查询其leader
                 $team = ExpertTeam::model()->getById($model->expteam_id);
@@ -547,7 +549,6 @@ class BookingManager {
         $adminBooking->expected_time_start = $model->date_start;
         $adminBooking->expected_time_end = $model->date_end;
         $adminBooking->customer_agent = $model->user_agent;
-        $adminBooking->work_schedule = $model->bk_status;
         $adminBooking->save();
         return $adminBooking;
     }

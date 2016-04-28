@@ -25,24 +25,21 @@ if ($data->booking_type != AdminBooking::BK_TYPE_PB) {
     }
 
     if ($data->booking_type == AdminBooking::BK_TYPE_BK) {
-        $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
-        //$urlLoadDCFiles = 'http://localhost/file.myzd.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id. '&reportType=dc';
+        $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
+        //$urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id. '&reportType=dc';
         $urlLoadDCFiles = '';
         $urlDeleteFile = $this->createUrl('booking/deleteBookingFile', array('id' => ''));
     } else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
-        $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
-        $urlLoadDCFiles = 'http://localhost/file.myzd.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=dc';
+        $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
+        $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=dc';
         $urlDeleteFile = $this->createUrl('patient/deletepatientmr', array('id' => '')); //add file_id;
     } else {
-        $urlLoadFiles = 'http://localhost/file.myzd.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
-        $urlLoadDCFiles = 'http://localhost/file.myzd.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
+        $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
+        $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
         $urlDeleteFile = $this->createUrl('adminbooking/ajaxDeleteAdminFile', array('id' => '')); //add file_id;
     }
 
-    $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
-    $urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'mr'));
     $urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'dc'));
-    $deleteTaskUrl = $this->createUrl('admintask/ajaxDeleteTask', array('id' => ''));
     $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
     $orderList = isset($orderList) ? $orderList : null;
     ?>
@@ -184,7 +181,7 @@ if ($data->booking_type != AdminBooking::BK_TYPE_PB) {
         $(document).ready(function () {
             var urlLoadFiles = '<?php echo $urlLoadFiles; ?>';
             var urlLoadDcFiles = '<?php echo $urlLoadDCFiles; ?>';
-            ajaxLoadFiles(urlLoadFiles, $('.bookingImgList'));
+            //ajaxLoadFiles(urlLoadFiles, $('.bookingImgList'));
             ajaxLoadFiles(urlLoadDcFiles, $('.bookingDcImgList'));
         });
         //加载图片
