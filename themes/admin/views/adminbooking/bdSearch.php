@@ -25,19 +25,19 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
     .w10{width: 10%;float: left;padding-right: 5px;}
 </style>
 <div id = 'searchForm'>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >预约单号</label>
         <div>
             <input class="form-control" name = 'refNo' value = '' >
         </div>
     </div>
-    <div class="mt15 w10 ">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6 ">
         <label >患者姓名</label>
         <div>
             <input class="form-control" name = 'patientName' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >患者性别</label>
         <div>
             <select name="patientGender" class="form-control">
@@ -47,7 +47,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >工作进度</label>
         <div>
             <select name="workSchedule" class="form-control">
@@ -61,7 +61,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >客服</label>
         <div>
             <select name="adminUserId" class="form-control">
@@ -75,7 +75,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >对接人</label>
         <div>
             <select name="contactNameId" class="form-control">
@@ -89,7 +89,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >就诊方式</label>
         <div>
             <select name = 'travelType' class="form-control">
@@ -99,82 +99,82 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >病情诊断</label>
         <div>
             <input class="form-control" name = 'diseaseName' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >理想医院</label>
         <div>
             <input class="form-control" name = 'expectHp' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >理想科室</label>
         <div>
             <input class="form-control" name = 'expectDept' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >理想专家</label>
         <div>
             <input class="form-control" name = 'expectDoctor' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >最终手术专家</label>
         <div>
             <input class="form-control" name = 'finalDoctor' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >最终手术医院</label>
         <div>
             <input class="form-control" name = 'finalHospital' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >手术时间</label>
         <div>
             <input class="form-control datepicker" name = 'finalTime' value = ''>
         </div>
     </div>
     <div class="clearfix"></div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >推送医生</label>
         <div>
             <input class="form-control" name = 'creatorDoctorName' value = ''>
         </div>
     </div>
     
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >推送医生所在医院</label>
         <div>
             <input class="form-control" name = 'creatorDoctorHp' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >推送医生所在科室</label>
         <div>
             <input class="form-control" name = 'creatorDoctorHpDept' value = ''>
         </div>
     </div>
     <div class="clearfix"></div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >支付单号</label>
         <div>
             <input class="form-control" name = 'orderRefNo' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >支付金额</label>
         <div>
             <input class="form-control" name = 'finalAmount' value = ''>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >是否支付</label>
         <div>
             <select name = 'isPaid' class="form-control">
@@ -184,7 +184,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >费用种类</label>
         <div>
             <select name = 'orderType' class="form-control">
@@ -196,13 +196,13 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             </select>
         </div>
     </div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >支付开始时间</label>
         <div>
             <input class="form-control datepicker" name = 'dateOpen' value = ''>
         </div>
     </div> 
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6">
         <label >支付结束时间</label>
         <div>
             <input class="form-control datepicker" name = 'dateClosed' value = ''>
@@ -210,7 +210,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
     </div>
 
     <div class="clearfix"></div>
-    <div class="mt15 w10">
+    <div class="mt15 col-lg-2 col-sm-3 col-xs-6 ">
         <button id = 'btnSearch' type="submit" class="btn btn-primary">搜索</button>
     </div> 
     <div class="clearfix"></div>

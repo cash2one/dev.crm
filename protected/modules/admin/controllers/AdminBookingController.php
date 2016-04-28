@@ -693,6 +693,15 @@ class AdminbookingController extends AdminController {
             $model = $this->loadModel($adminbookingId);
             $model->cs_explain = $value['cs_explain'];
             if ($model->save()) {
+                if ($model->booking_type == AdminBooking::BK_TYPE_BK) {
+                    $booking = Booking::model()->getById($model->booking_id);
+                } elseif ($model->booking_type == AdminBooking::BK_TYPE_PB) {
+                    $booking = PatientBooking::model()->getById($model->booking_id);
+                }
+                if (isset($booking)) {
+                    $booking->cs_explain = $value['cs_explain'];
+                    $booking->save();
+                }
                 $this->redirect(array('view', 'id' => $adminbookingId));
             }
         }

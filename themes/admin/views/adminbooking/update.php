@@ -409,7 +409,7 @@ if (is_null($creator) == false) {
     </div>
     <div class="form-group">
         <div class="col-sm-12">
-            <span>补充说明：</span><?php echo $form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500)); ?>
+            <span>补充说明：</span><?php echo $model->cs_explain;//$form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500)); ?>
         </div>
     </div>
     <div class="form-group">
