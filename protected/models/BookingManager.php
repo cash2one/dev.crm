@@ -530,16 +530,32 @@ class BookingManager {
             }
             $customer = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_BK, AdminUser::ROLE_CS);
             $bd = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_BK, AdminUser::ROLE_BD);
-            //第三方
-            if ($model->is_vendor == 1 && $model->vendor_id == 2) {
-                $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_160;
+			//第三方
+            if ($model->is_vendor == 1 && isset($model->vendor_id)) {
+				if($model->vendor_id == 2){
+					$adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_160;
+				}else if ($model->vendor_id == 3){
+					$adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_7LK;
+				}else{
+					$adminBooking->business_partner = NULL;
+				}
+				/*
+				switch($model->vendor_id) {
+					case 2: $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_160;
+					break;
+					case 3: $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_7LK;
+					break;
+					default: $adminBooking->business_partner = NULL;
+					break;
+				}
+				*/
             }
         }
-        if (is_null($customer) == false) {
+        if (isset($customer)) {
             $adminBooking->admin_user_id = $customer->admin_user_id;
             $adminBooking->admin_user_name = $customer->admin_user_name;
         }
-        if (is_null($bd) == false) {
+        if (isset($bd)) {
             $adminBooking->bd_user_id = $bd->admin_user_id;
             $adminBooking->bd_user_name = $bd->admin_user_name;
         }
