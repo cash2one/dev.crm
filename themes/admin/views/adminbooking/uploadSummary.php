@@ -16,8 +16,12 @@ if ($data->booking_type == AdminBooking::BK_TYPE_CRM) {
     $bookingId = $data->booking_id;
 }
 $urlUploadFile = $this->createUrl("adminbooking/ajaxSaveAdminFile");
-
-$urlReturn = $this->createUrl('adminbooking/view', array('id' => $data->id));
+$user = $this->getCurrentUser();
+if ($user->role == AdminUser::ROLE_BD) {
+    $urlReturn = $this->createUrl('adminbooking/bdBkView', array('id' => $data->id));
+} else {
+    $urlReturn = $this->createUrl('adminbooking/view', array('id' => $data->id));
+}
 ?>
 <?php
 if ($type == 'dc') {
