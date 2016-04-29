@@ -612,11 +612,13 @@ class AdminbookingController extends AdminController {
             $model = $this->loadModel($bid);
             $model->setFinalDoctorId($userid);
             $model->setFinalDoctorName($name);
-            $patientBooking = PatientBooking::model()->getById($model->booking_id);
-            if (isset($patientBooking)) {
-                $patientBooking->setDoctorId($userid);
-                $patientBooking->setDoctorName($name);
-                $patientBooking->save();
+            if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
+                $patientBooking = PatientBooking::model()->getById($model->booking_id);
+                if (isset($patientBooking)) {
+                    $patientBooking->setDoctorId($userid);
+                    $patientBooking->setDoctorName($name);
+                    $patientBooking->save();
+                }
             }
             if ($model->save()) {
                 $user = User::model()->getById($userid);
@@ -624,7 +626,7 @@ class AdminbookingController extends AdminController {
                 $data = new stdClass();
                 $data->refno = $model->ref_no;
                 $data->id = $model->getId();
-                $sendMgs->sendSmsBookingAssignDoctor($user->username, $data);
+                //$sendMgs->sendSmsBookingAssignDoctor($user->username, $data);
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }

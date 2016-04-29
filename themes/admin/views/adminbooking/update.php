@@ -56,6 +56,7 @@ echo CHtml::hiddenField("AdminBookingForm[bd_user_name]", $model->bd_user_name);
 echo CHtml::hiddenField("AdminBookingForm[travel_type]", $model->travel_type);
 echo CHtml::hiddenField("AdminBookingForm[expected_hospital_id]", $model->expected_hospital_id);
 echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
+echo CHtml::hiddenField("AdminBookingForm[cs_explain]", $model->cs_explain);
 ?>
 <input type="hidden" id="domain" value="http://7xq93p.com2.z0.glb.qiniucdn.com"> 
 <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('adminbooking/ajaxUpload'); ?>">
