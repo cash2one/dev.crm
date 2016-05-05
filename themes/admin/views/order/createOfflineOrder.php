@@ -9,8 +9,8 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/c
 /* @var $model SalesTransaction */
 
 $this->breadcrumbs = array(
-    'Sales Order' => array('index'),
-    'Create',
+    '订单' => array('index'),
+    '创建订单',
 );
 
 //$this->menu=array(

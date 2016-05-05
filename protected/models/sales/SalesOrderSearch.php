@@ -12,7 +12,7 @@ class SalesOrderSearch extends ESearchModel {
 
 //refNo orderType crmNo bkType finalAmount isPaid
     public function getQueryFields() {
-        return array('refNo', 'bkType', 'orderType', 'pingId', 'finalAmount', 'isPaid', 'dateOpenStart', 'dateOpenEnd', 'dateClosedStart', 'dateClosedEnd', 'bdCode');
+        return array('refNo', 'bkType', 'orderType', 'pingId', 'finalAmount', 'isPaid', 'dateOpenStart', 'dateOpenEnd', 'dateClosedStart', 'dateClosedEnd', 'bdCode', 'isUnsystemPay');
     }
 
     public function addQueryConditions() {
@@ -72,6 +72,14 @@ class SalesOrderSearch extends ESearchModel {
                 $bdCode = $this->queryParams['bdCode'];
                 $this->criteria->compare("t.bd_code", $bdCode, true);
             }
+            if (isset($this->queryParams['isUnsystemPay'])) {
+                $isUnsystemPay = $this->queryParams['isUnsystemPay'];
+                $this->criteria->compare("t.is_unsystem_pay", $isUnsystemPay, true);
+            }else{
+                $this->criteria->addCondition("t.is_unsystem_pay IS NULL OR t.is_unsystem_pay = 0");
+            }
+        }else{
+            $this->criteria->addCondition("t.is_unsystem_pay IS NULL OR t.is_unsystem_pay = 0");
         }
 
         //去掉测试的支付

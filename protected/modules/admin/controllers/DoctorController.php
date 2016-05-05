@@ -503,6 +503,8 @@ class DoctorController extends AdminController {
             $doctor->base_url = $values['remote_domain'];
             $doctor->avatar_url = $values['remote_file_key'];
             $doctor->has_remote = StatCode::HAS_REMOTE;
+            $doctor->remote_domain = $values['remote_domain'];
+            $doctor->remote_file_key = $values['remote_file_key'];
             if ($doctor->save()) {
                 $output['status'] = 'ok';
                 $output['doctorId'] = $doctor->id;

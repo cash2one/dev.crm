@@ -29,9 +29,6 @@ $returnUrl = $this->createUrl('order/view', array('id' => ''));
     echo $form->hiddenField($model, 'bk_ref_no', array('name' => 'order[bk_ref_no]'));
     ?>
 
-
-    <p class="note">Fields with <span class="required">*</span> are required.</p>
-
     <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
     <div class="form-horizontal">
         <div class="form-group col-sm-7">
@@ -107,36 +104,6 @@ $returnUrl = $this->createUrl('order/view', array('id' => ''));
             <div>
                 <?php echo $form->textField($model, 'cash_back', array('size' => 10, 'name' => 'order[cash_back]', 'maxlength' => 20, 'class' => 'form-control')); ?>
                 <div class="text-danger"><?php echo $form->error($model, 'cash_back'); ?></div>
-            </div>
-        </div>
-        <div class="form-group col-sm-7">
-            <label >支付渠道</label>
-            <div>
-                <select id="order_pay_channel" name="order[pay_channel]" class="form-control">
-                    <option value="">选择</option>
-                    <?php
-                    $payMethod = MrBookingPayment::model()->getOptionsPayMethod();
-                    foreach ($payMethod as $key => $value) {
-                        echo '<option value="' . $key . '">' . $value . '</option>';
-                    }
-                    ?>
-                </select>
-                <div class="text-danger"></div>
-            </div>
-        </div>
-        <div class="form-group col-sm-7">
-            <label >支付交易号</label>
-            <div>
-                <input name="order[channel_trade_no]" id="order_channel_trade_no" class="form-control"/>
-                <div class="text-danger"></div>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        <div class="form-group col-sm-2">
-            <label > <?php echo $form->labelEx($model, 'date_closed'); ?></label>
-            <div>
-                <?php echo $form->textField($model, 'date_closed', array('name' => 'order[date_closed]', 'class' => 'form-control')); ?>
-                <div class="text-danger"><?php echo $form->error($model, 'date_closed'); ?></div>
             </div>
         </div>
         <div class="clearfix"></div>

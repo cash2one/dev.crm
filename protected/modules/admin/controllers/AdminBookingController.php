@@ -612,6 +612,7 @@ class AdminbookingController extends AdminController {
             $model = $this->loadModel($bid);
             $model->setFinalDoctorId($userid);
             $model->setFinalDoctorName($name);
+            //将关联医生信息更新到源booking中
             if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
                 $patientBooking = PatientBooking::model()->getById($model->booking_id);
                 if (isset($patientBooking)) {
@@ -619,14 +620,23 @@ class AdminbookingController extends AdminController {
                     $patientBooking->setDoctorName($name);
                     $patientBooking->save();
                 }
+            } elseif ($model->booking_type == AdminBooking::BK_TYPE_BK) {
+                $booking = Booking::model()->getById($model->booking_id);
+                if (isset($booking)) {
+                    $booking->setDoctorUserId($userid);
+                    $booking->setDoctorUserName($name);
+                    $booking->save();
+                }
             }
+
+
             if ($model->save()) {
                 $user = User::model()->getById($userid);
                 $sendMgs = new SmsManager();
                 $data = new stdClass();
                 $data->refno = $model->ref_no;
                 $data->id = $model->getId();
-                //$sendMgs->sendSmsBookingAssignDoctor($user->username, $data);
+                $sendMgs->sendSmsBookingAssignDoctor($user->username, $data);
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -700,6 +710,7 @@ class AdminbookingController extends AdminController {
                 } elseif ($model->booking_type == AdminBooking::BK_TYPE_PB) {
                     $booking = PatientBooking::model()->getById($model->booking_id);
                 }
+                //将修改保存到源数据中
                 if (isset($booking)) {
                     $booking->cs_explain = $value['cs_explain'];
                     $booking->save();

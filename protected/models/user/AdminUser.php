@@ -57,7 +57,7 @@ class AdminUser extends EActiveRecord {
             array('role', 'length', 'max' => 20),
             array('mobile', 'length', 'max' => 11),
             array('state_name, city_name', 'length', 'max' => 10),
-            array('date_updated, date_deleted', 'safe'),
+            array('date_updated, date_deleted, login_attempts, is_locked', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, username, password, password_raw, password_salt, role, fullname, mobile, email, wechat, qq, state_id, state_name, city_id, city_name, is_active, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),

@@ -357,6 +357,9 @@ class Doctor extends EActiveRecord {
     /*     * ****** Display Methods ******* */
 
     public function getAbsUrlAvatar($thumbnail = false) {
+        if ($this->has_remote == 1) {
+            return $this->remote_domain . $this->remote_file_key;
+        }
         if (isset($this->avatar_url) && $this->avatar_url != '') {
             $url = $this->avatar_url;
             if (strStartsWith($url, 'http')) {

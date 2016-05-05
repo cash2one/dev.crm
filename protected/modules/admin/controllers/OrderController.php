@@ -93,7 +93,7 @@ class OrderController extends AdminController {
               ),
              */
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'search', 'searchResult', 'createAdminBKOrder', 'countAmount', 'deleteOrder', 'createOfflineOrder'),
+                'actions' => array('index', 'create', 'createBKOrder', 'createPBOrder', 'view', 'search', 'searchResult', 'createAdminBKOrder', 'countAmount', 'deleteOrder', 'createOfflineOrder', 'offlinePaySearch', 'createOfflinePayment'),
 //                'users' => array('superbeta'),
             ),
             array('deny', // deny all users
@@ -292,9 +292,9 @@ class OrderController extends AdminController {
             $order->setBdCode($values['bd_code']);
             $order->setCashBack($values['cash_back']);
             $order->order_type = $values['order_type'];
-            $order->setIsPaid(SalesOrder::ORDER_PAIDED);
-            $order->setDateOpen($values['date_closed']);
-            $order->setDateClosed($values['date_closed']);
+            $order->setIsPaid(SalesOrder::ORDER_UNPAIDED);
+            $order->setDateOpen(new CDbExpression('NOW()'));
+            $order->is_unsystem_pay = SalesOrder::IS_UNSYSTEM_PAY;
             $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_AB);
             //$order->validate();
 
@@ -309,20 +309,40 @@ class OrderController extends AdminController {
                 }
                 $booking->save();
                 //生成payment
-                $salesMgr = new SalesManager();
-                $offlineOrder = $salesMgr->createPaymentByOfflinSalseOrder($order, $values);
-                if ($offlineOrder) {
-                    $output['status'] = 'ok';
-                    $output['orderId'] = $order->id;
-                } else {
-                    $output['errors'] = $offlineOrder->getErrors();
-                }
+//                $salesMgr = new SalesManager();
+//                $offlineOrder = $salesMgr->createPaymentByOfflinSalseOrder($order, $values);
+                $output['status'] = 'ok';
+                $output['orderId'] = $order->id;
             } else {
                 $output['errors'] = $order->getErrors();
             }
             $this->renderJsonOutput($output);
         } else {
             $this->render('createOfflineOrder', array(
+                'model' => $order
+            ));
+        }
+    }
+
+    public function actionCreateOfflinePayment($refNo) {
+        $order = SalesOrder::model()->getByRefNo($refNo);
+        if (isset($_POST['order'])) {
+            $output = array('status' => 'no');
+            $values = $_POST['order'];
+            $order->setIsPaid(SalesOrder::ORDER_PAIDED);
+            $order->setDateClosed($values['date_closed']);
+            //$order->validate();
+            $order->update(array('is_paid', 'date_closed'));
+            //生成payment
+            $salesMgr = new SalesManager();
+            $offlineOrder = $salesMgr->createPaymentByOfflinSalseOrder($order, $values);
+            if ($offlineOrder) {
+                $output['status'] = 'ok';
+                $output['orderId'] = $order->id;
+            }
+            $this->renderJsonOutput($output);
+        } else {
+            $this->render('createOfflinePayment', array(
                 'model' => $order
             ));
         }
@@ -479,6 +499,10 @@ class OrderController extends AdminController {
         $this->renderPartial('searchResult', array(
             'dataProvider' => $dataProvider,
         ));
+    }
+
+    public function actionOfflinePaySearch() {
+        $this->render('offlinePaySearch');
     }
 
     /**
