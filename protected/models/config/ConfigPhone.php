@@ -22,14 +22,14 @@
  * @property string $date_updated
  * @property string $date_deleted
  */
-class PhoneConfig extends DB2ActiveRecord
+class ConfigPhone extends DB2ActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'phone_config';
+		return 'config_phone';
 	}
 
 	/**
