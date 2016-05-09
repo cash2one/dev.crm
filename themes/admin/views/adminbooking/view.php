@@ -12,7 +12,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/c
 $bookingCreator = new stdClass();
 if (is_null($creator) == false) {
     $bookingCreator->name = $creator->name;
-    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>';
+    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>' . '   <a data-bookingid="' . $data->getId() . '" data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>';
     $bookingCreator->cTitle = $creator->clinical_title == null ? '无' : $creator->getClinicalTitle(true);
     $bookingCreator->stateName = $creator->state_name == null ? '无' : $creator->state_name;
     $bookingCreator->cityName = $creator->city_name == null ? '无' : $creator->city_name;
@@ -111,7 +111,7 @@ $orderList = isset($orderList) ? $orderList : null;
             <span class="tab-header">患者姓名：</span><?php echo $data->patient_name == null ? '<span class="color-blue">未填写</span>' : $data->patient_name; ?>
         </div>
         <div class="col-md-4 border-bottom">
-            <span class="tab-header">患者电话：</span><?php echo $data->patient_mobile == null ? '<span class="color-blue">未填写</span>' : $data->patient_mobile; ?>
+            <span class="tab-header">患者电话：</span><?php echo $data->patient_mobile == null ? '<span class="color-blue">未填写</span>' : $data->patient_mobile . '   <a data-bookingid="' . $data->getId() . '" data-mobile="' . $data->patient_mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $data->patient_mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>'; ?>
         </div>
         <div class="col-md-4 border-bottom">
             <span class="tab-header">年龄：</span><?php echo $data->patient_age == null ? '<span class="color-blue">未填写</span>' : $data->patient_age; ?>
@@ -132,7 +132,7 @@ $orderList = isset($orderList) ? $orderList : null;
             <span class="tab-header">病情描述：</span><?php echo $data->disease_detail == null ? '<span class="color-blue">未填写</span>' : $data->disease_detail; ?>
         </div>
         <div class="col-md-12 border-bottom">
-            <span class="tab-header">期望手术时间：</span><?php echo $data->expected_time_start == null ? '<span class="color-blue">未填写</span>' : $data->expected_time_start; ?> — <?php echo $data->expected_time_end == null ? '<span class="color-blue">未填写</span>' : $data->expected_time_end; ?>
+            <span class="tab-header">期望手术时间：</span><?php echo $data->expected_time_start == null ? '<span class="color-blue">未填写</span>' : date('Y-m-d', strtotime($data->expected_time_start)); ?> — <?php echo $data->expected_time_end == null ? '<span class="color-blue">未填写</span>' : date('Y-m-d', strtotime($data->expected_time_end)); ?>
         </div>
     </div>
 </div>
@@ -235,6 +235,12 @@ $orderList = isset($orderList) ? $orderList : null;
         <div class="col-sm-10 border-bottom">实际总收款：<?php echo $data->order_amount == null ? '无' : $data->order_amount; ?></div>
         <div class="col-sm-12 border-bottom">
             <span>录入日期：</span><?php echo $data->date_created; ?>
+        </div>
+        <div class="col-sm-12 border-bottom">
+            <span>上级医生是否接受订单：</span><?php echo $data->getDoctorAccept() == null ? '<span class="color-blue">未填写</span>' : $data->getDoctorAccept(); ?>
+        </div>
+        <div class="col-sm-12 border-bottom">
+            <span>医生意见：</span><?php echo $data->doctor_opinion == null ? '<span class="color-blue">未填写</span>' : $data->doctor_opinion; ?>
         </div>
         <div class="col-sm-12 border-bottom">
             <span>补充说明：</span><?php echo $data->cs_explain == null ? '<span class="color-blue">未填写</span>' : $data->cs_explain; ?>
@@ -402,6 +408,8 @@ $this->renderPartial('//user/_showImgModal');
 $this->renderPartial('_shareModal', array('data' => $data, 'bookingCreator' => $bookingCreator, 'orderList' => $orderList));
 $this->renderPartial('_shareKAModal', array('data' => $data));
 $this->renderPartial('addCsExplainModal', array('model' => $model));
+$this->renderPartial('//sms/_sendSmsModal', array('model' => $model));
+$this->renderPartial('outingCallsModal', array('model' => $model));
 ?>
 
 <script>

@@ -313,3 +313,8 @@ img{max-width: 100%;}
 .color-blue{color: #00f;}
 ul.yiiPager .first,ul.yiiPager .last{display:inline;}
 #showImgModal .modal-body img{margin: auto;display: block;}
+.navbar-toggle{background-color: #fff;border-color: #ddd;margin-top: 15px;}
+.navbar-toggle .icon-bar{background-color: #ddd;}
+a:hover{cursor: pointer;}
+.pt7{padding-top: 7px;}
+.divider-line{border-bottom: 1px solid #ddd;}

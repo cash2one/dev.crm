@@ -66,22 +66,29 @@
                     <?php
                     $depositPaid = true;
                     $servicePaid = true;
+                    $depositCount = 0;
+                    $serviceCount = 0;
                     if (arrayNotEmpty($orderList)) {
                         foreach ($orderList as $order):
+                            if ($order->order_type == SalesOrder::ORDER_TYPE_DEPOSIT) {
+                                $depositCount ++;
+                            } elseif ($order->order_type == SalesOrder::ORDER_TYPE_SERVICE) {
+                                $serviceCount ++;
+                            }
                             if ($order->order_type == SalesOrder::ORDER_TYPE_DEPOSIT && $order->is_paid == SalesOrder::ORDER_UNPAIDED) {
                                 $depositPaid = false;
-                            }
+                            }else
                             if ($order->order_type == SalesOrder::ORDER_TYPE_SERVICE && $order->is_paid == SalesOrder::ORDER_UNPAIDED) {
                                 $servicePaid = false;
                             }
                         endforeach;
                         ?>
                         <div class="col-md-12 border-bottom">
-                            <span class="tab-header">定金支付：</span><?php echo $depositPaid ? '已支付' : '未支付'; ?>
+                            <span class="tab-header">定金支付：</span><?php echo $depositPaid && $depositCount > 0 ? '已支付' : '未支付'; ?>
                         </div>
 
                         <div class="col-md-12 border-bottom">
-                            <span class="tab-header">服务费支付：</span><?php echo $servicePaid ? '已支付' : '未支付'; ?>
+                            <span class="tab-header">服务费支付：</span><?php echo $servicePaid && $serviceCount > 0 ? '已支付' : '未支付'; ?>
                         </div>
                         <?php
                     }
