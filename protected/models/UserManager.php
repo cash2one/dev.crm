@@ -30,6 +30,40 @@ class UserManager {
         return null;
     }
 
+    /*     * ** crm *** */
+
+    public function createUserDoctorAndProfileByDoctor(Doctor $doctor) {
+        $user = User::model()->getByUsernameAndRole($doctor->mobile, StatCode::USER_ROLE_DOCTOR);
+        if (isset($user) == false) {
+            $this->createUserDoctor($doctor->mobile);
+            $this->createUserDoctorProfile($doctor);
+        }
+    }
+
+    public function createUserDoctorProfile(Doctor $doctor) {
+        $user = User::model()->getByUsernameAndRole($doctor->mobile, StatCode::USER_ROLE_DOCTOR);
+        $userDoctorProfile = new UserDoctorProfile;
+        $userDoctorProfile->user_id = $user->id;
+        $userDoctorProfile->mobile = $doctor->mobile;
+        $userDoctorProfile->name = $doctor->name;
+        $userDoctorProfile->hospital_id = $doctor->hospital_id;
+        $userDoctorProfile->hospital_name = $doctor->hospital_name;
+        $userDoctorProfile->hp_dept_id = $doctor->hp_dept_id;
+        $userDoctorProfile->hp_dept_name = $doctor->hp_dept_name;
+        $userDoctorProfile->clinical_title = $doctor->medical_title;
+        $userDoctorProfile->academic_title = $doctor->academic_title;
+        $userDoctorProfile->state_id = $doctor->state_id;
+        $country = RegionState::model()->getById($userDoctorProfile->state_id);
+        $userDoctorProfile->state_name = $country->getName();
+        $userDoctorProfile->city_id = $doctor->city_id;
+        $city = RegionCity::model()->getById($userDoctorProfile->city_id);
+        $userDoctorProfile->city_name = $city->getName();
+        if ($userDoctorProfile->save()) {
+            return $userDoctorProfile;
+        }
+        return null;
+    }
+
     /*     * ****** Api 3.0 ******* */
 
     public function createUserDoctorCert($userId) {
@@ -450,6 +484,14 @@ class UserManager {
         } else {
             return $model;
         }
+    }
+
+    public function createLoginLogByAdminUserAndIsSuccess(AdminUser $user, $success = AdminUserLoginLog::LOGIN_SUCCESS) {
+        $adminUserLoginLog = new AdminUserLoginLog();
+        $adminUserLoginLog->admin_user_id = $user->getId();
+        $adminUserLoginLog->login_ip = Yii::app()->request->getUserHostAddress();
+        $adminUserLoginLog->is_success = $success;
+        return $adminUserLoginLog->save();
     }
 
 }
