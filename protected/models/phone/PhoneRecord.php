@@ -25,6 +25,46 @@
  */
 class PhoneRecord extends EActiveRecord
 {
+    const STATUS_1 = 1;
+    const STATUS_2 = 2;
+    const STATUS_3 = 3;
+    const STATUS_4 = 4;
+    const STATUS_5 = 5;
+    const STATUS_6 = 6;
+    const STATUS_7 = 7;
+    const STATUS_8 = 8;
+    const STATUS_9 = 9;
+    const STATUS_10 = 10;
+    const STATUS_11 = 11;
+    const STATUS_12 = 12;
+
+    const STATUS_21 = 21;
+    const STATUS_22 = 22;
+    const STATUS_24 = 24;
+    const STATUS_26 = 26;
+
+    public static function getOptionsStatus() {
+        return array(
+            self::STATUS_1 => '座席接听',
+            self::STATUS_2 => '已呼叫座席',
+            self::STATUS_3 => '系统接听',
+            self::STATUS_4 => '系统未接-IVR配置错误',
+            self::STATUS_5 => '系统未接-停机',
+            self::STATUS_6 => '系统未接-欠费',
+            self::STATUS_7 => '系统未接-黑名单',
+            self::STATUS_8 => '系统未接-未注册',
+            self::STATUS_9 => '系统未接-彩铃',
+            self::STATUS_10 => '网上400未接受',
+            self::STATUS_11 => '系统未接-呼叫超出营帐中设置的最大限制',
+            self::STATUS_12 => '其他错误',
+
+            self::STATUS_21 => '座席接听，客户未接听(超时)',
+            self::STATUS_22 => '座席接听，客户未接听(空号拥塞)',
+            self::STATUS_24 => '座席未接听',
+            self::STATUS_26 => '双方接听',
+        );
+    }
+
 	/**
 	 * @return string the associated database table name
 	 */
