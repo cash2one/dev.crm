@@ -6,15 +6,6 @@ class PhoneManager {
 
     private $config = null;
 
-//    const INTERFACE_SERVER_IP = 'http://puruan.ccic2.com/'; //为使用账号登录www.ccic2.com之后，在浏览器地址栏看到的域名地址
-//    const PREVIEW_OUTCALL = 'interface/PreviewOutcall'; //第三方外呼调用
-//    const QUEUE_MONITORING = 'interface/queueMonitoring/QueueMonitoring'; //队列座席状态
-//    const IN_LIST = 'interfaceAction/cdrIbInterface!listCdrIb.action'; //来电通话记录
-//    const IN_DETAIL = 'interfaceAction/cdrIbInterface!listCdrIbDetail.action'; //来电通话记录详细
-//    const OUT_LIST = 'interfaceAction/cdrObInterface!listCdrOb.action'; //外呼通话记录
-//    const OUT_DETAIL = 'interfaceAction/cdrObInterface!listCdrObDetail.action'; //外呼通话记录详细
-    //
-
     public function __construct() {
         $this->config = ConfigPhone::model()->getByAttributes(array('phone_name' => self::VENDOR_TINET));
         $this->config->password = md5($this->config->password);
@@ -55,12 +46,28 @@ class PhoneManager {
      * @param int $cno
      * @return mixed|string
      */
-    public function sendPreviewOutcall($phone = '17717394560', $cno = 2000) {
+    public function sendPreviewOutcall($phone, $cno) {
         //http://puruan.ccic2.com/interface/PreviewOutcall?enterpriseId=3001875&hotline=51397664&cno=2000&pwd=0659c7992e268962384eb17fafe88364&customerNumber=13916681596&userField=myzd&clidLeftNumber=&sync=
         $url = "{$this->config->interface_server_ip}{$this->config->preview_outcall_url}?enterpriseId={$this->config->enterprise_id}&hotline={$this->config->hotline}&cno={$cno}&pwd={$this->config->password}&customerNumber={$phone}&userField=myzd&clidLeftNumber=&sync=";
         $result = $this->curlRequest($url, false);
 
         return $result;
+    }
+
+    /**
+     * 提取通话录音
+     * @param $mainUniqueId
+     */
+    public function getRecord($mainUniqueId){
+        $model = PhoneRecord::model()->getByAttributes(array('main_unique_id'=>$mainUniqueId));
+        if(is_object($model)){
+            $date = date('Ymd', strtotime($model->date_created));
+            $time = time();
+            $pwd = md5($this->config->password . $time);
+            $url = "{$this->config->interface_server_ip}/voices/record/{$date}/{$model->record_file}?enterpriseId={$this->config->enterprise_id}&hotline={$this->config->hotline}&userName={$this->config->username}&pwd={$pwd}&seed={$time}";
+            header("Content-type: audio/mp3");
+            readfile($url);
+        }
     }
 
     /**
