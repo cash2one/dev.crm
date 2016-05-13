@@ -1,7 +1,7 @@
 <?php
 $urlResImage = Yii::app()->baseUrl;
 $pbOrder = isset($data->orderAdminbooking) ? $data->orderAdminbooking : null;
-$doctorMobile = isset($data->bkOwner) ? $data->bkOwner->username : '无';
+$doctorMobile = isset($data->bkOwner) ? substr_replace($data->bkOwner->username, '****', 3, 4) : '无';
 //var_dump($data);
 //print_r(CJSON::encode($data));exit;
 $userDoctorMobile = isset($data->userDoctorMobile) ? $data->userDoctorMobile : null;

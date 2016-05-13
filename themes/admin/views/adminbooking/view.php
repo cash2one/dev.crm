@@ -12,7 +12,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/c
 $bookingCreator = new stdClass();
 if (is_null($creator) == false) {
     $bookingCreator->name = $creator->name;
-    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>' . '   <a data-bookingid="' . $data->getId() . '" data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>';
+    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . substr_replace($creator->mobile, '****', 3, 4) . '</a>' . '   <a data-bookingid="' . $data->getId() . '" data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>';
     $bookingCreator->cTitle = $creator->clinical_title == null ? '无' : $creator->getClinicalTitle(true);
     $bookingCreator->stateName = $creator->state_name == null ? '无' : $creator->state_name;
     $bookingCreator->cityName = $creator->city_name == null ? '无' : $creator->city_name;

@@ -79,7 +79,7 @@ $phoneRecordListUrl = $this->createUrl('phone/phoneRecordList');
                 </div>
                 <div class="divider-line mt10 mb10"></div>
                 <div class="recordList">
-                    <p>通话历史：<a href="">所有历史通话记录</a></p>
+                    <p>通话历史：</p>
                     <table class="table">
                         <thead>
                             <tr>
@@ -113,7 +113,8 @@ $phoneRecordListUrl = $this->createUrl('phone/phoneRecordList');
             var mobile = button.data('mobile');
             var modal = $(this);
             modal.find('.modal-body input#call_mobile').val(mobile);
-            modal.find('#callOutMobile').text(mobile);
+            var mobileText = new String(mobile);
+            modal.find('#callOutMobile').text(mobileText.substr(0, 3) + '****' + mobileText.substr(7));
             var phoneRecordListUrl = '<?php echo $phoneRecordListUrl; ?>';
             ajaxLoadPhoneRecordByMobile(mobile, phoneRecordListUrl);
         });

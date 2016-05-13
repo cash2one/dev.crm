@@ -16,8 +16,9 @@ $urlSendSms = $this->createUrl('sms/ajaxSendSms');
                 <form id="sendSmd-form" class="" method="post" action="<?php echo $urlSendSms; ?>">
                     <input name="sms[adminBookingId]" id="sms_adminBookingId" type="hidden"/>
                     <div class="form-group">
-                        <label class="control-label">手机号码<span class="color-red">（多个号码以英文分号 ";" 隔开）</span></label>
-                        <input id="sms_mobile" class="form-control" name="sms[mobile]"/>
+                        <label class="control-label">手机号码<span class="color-red"></span></label>
+                        <label class="control-label" id="smsMobileText"></label>
+                        <input type="hidden" id="sms_mobile" class="form-control" name="sms[mobile]"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">短信内容</label>
@@ -43,6 +44,8 @@ $urlSendSms = $this->createUrl('sms/ajaxSendSms');
             var adminBookingId = button.data('bookingid');
             var modal = $(this);
             modal.find('.modal-body input#sms_mobile').val(mobile);
+            var mobileText = new String(mobile);
+            modal.find('.modal-body #smsMobileText').html(mobileText.substr(0, 3) + '****' + mobileText.substr(7));
             modal.find('.modal-body input#sms_adminBookingId').val(adminBookingId);
         });
     });
