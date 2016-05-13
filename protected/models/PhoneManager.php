@@ -115,4 +115,55 @@ class PhoneManager {
         return PhoneRecord::model()->getAllByAttributes(array('customer_number' => $mobile), array('phoneRecordRemark'));
     }
 
+    public function phoneRecord($post){
+        Yii::log('tinet'  . ':' . var_export($post, true), CLogger::LEVEL_ERROR, __METHOD__);
+        if(isset($post['cdr_customer_number_type'])){
+            $model = PhoneRecord::model()->getByAttributes(array('main_unique_id'=>$post['cdr_main_unique_id']));
+            if(is_object($model)){
+                $model->call_type = $post['cdr_call_type']; //呼叫类型
+                $model->client_number = $post['cdr_client_number']; //转接的电话号码	如座席号码、分机号真实号码等
+                $model->customer_number_type = $post['cdr_customer_number_type']; //来电或外呼客户号码类型: 手机/固话
+                $model->status = $post['cdr_status']; //通话状态
+                $model->start_time = date('Y-m-d H:i:s', $post['cdr_start_time']); //进入系统时间
+                $model->answer_time = date('Y-m-d H:i:s', $post['cdr_answer_time']); //系统接听时间
+                $model->end_time = date('Y-m-d H:i:s', $post['cdr_end_time']); //挂机时间
+                $model->record_file = $post['cdr_record_file']; //	录音文件名
+                if($model->save()){
+                    $output = array('result'=>'success');
+                }else{
+                    $output = array('result'=>'error');
+                }
+            }else{
+                $model = new PhoneRecord();
+                $model->main_unique_id = $post['cdr_main_unique_id']; //通话记录唯一标识
+                $model->call_type = $post['cdr_call_type']; //呼叫类型
+                $model->cno = $post['cdr_bridged_cno']; //座席号码
+                $model->client_number = $post['cdr_client_number']; //转接的电话号码	如座席号码、分机号真实号码等
+                $model->customer_number = $post['cdr_customer_number']; //客户号码
+                $model->call_type = $post['cdr_call_type']; //呼叫类型
+                $model->customer_number_type = $post['cdr_customer_number_type']; //来电或外呼客户号码类型: 手机/固话
+                $model->status = $post['cdr_status']; //通话状态
+                $model->start_time = date('Y-m-d H:i:s', $post['cdr_start_time']); //进入系统时间
+                $model->answer_time = date('Y-m-d H:i:s', $post['cdr_answer_time']); //系统接听时间
+                $model->end_time = date('Y-m-d H:i:s', $post['cdr_end_time']); //挂机时间
+                $model->record_file = $post['cdr_record_file']; //	录音文件名
+                if(isset($post['cdr_bridged_cno'])){
+                    $user = AdminUser::model()->getByAttributes(array('cno'=>$post['cdr_bridged_cno']));
+                    if(is_object($user)){
+                        $model->admin_user_id = $user->id;
+                        $model->admin_user_name = $user->fullname;
+                    }
+                }
+                if($model->save()){
+                    $output = array('result'=>'success');
+                }else{
+                    $output = array('result'=>'error');
+                }
+            }
+        }else{
+            $output = array('result'=>'error');
+        }
+        return $output;
+    }
+
 }
