@@ -27,10 +27,14 @@ class OpenController extends Controller {
     }
 
     public function actionList($model) {
+        $output['status'] = 'yes';
         switch ($model) {
             case 'test':
                 $output['status'] = 'yes';
                 break;
+            default:
+                $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
+                Yii::app()->end();
         }
         $this->renderJsonOutput($output);
     }
@@ -49,8 +53,8 @@ class OpenController extends Controller {
         switch ($get['model']) {
             // Get an instance of the respective model
             case 'onhookpush':    // 天润挂机推送
-                Yii::log('tinet'  . ':' . var_export($post, true), CLogger::LEVEL_ERROR, __METHOD__);
-                $output = array('result'=>'success');
+                $model = new PhoneManager();
+                $output = $model->phoneRecord($post);
                 break;
             default:
                 $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
