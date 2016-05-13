@@ -5,10 +5,11 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-            <title><?php echo CHtml::encode($this->pageTitle); ?></title>
+            <title><?php //echo CHtml::encode($this->pageTitle); ?></title>
             <link rel="shortcut icon" type="image/ico" href="http://www.mingyizhudao.com/themes/v4/images/icons/favicon.ico"/>
             <!-- Bootstrap -->
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap.min.css" />
+            <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/font-awesome.min.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/basic.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/crm.css" />                   
             <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery-1.9.1.min.js"></script>
@@ -21,20 +22,21 @@
         <section id="body">
             <div class="container-fluid">
                 <nav class="navbar navbar-default" role="navigation">
-                    <h3>后台管理系统</h3>
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    </div>   
+                    <h3></h3>
                 </nav>
                 <div class="row bg-blue" >
                     <div class="col-sm-3 col-md-2 ">
                         <div class="menu" >
-                            <h3 class="color-white">操作导航</h3>
+                            <h3 class="color-white pull-left">操作导航</h3>
+                            <div class="clearfix"></div>
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>   
                             <div class="collapse navbar-collapse" id="header-navbar-collapse"> 
                                 <style>ul{padding-left:0px; }#header-navbar-collapse a{color:#fff;}</style>
                                 <div class="mt20 text16" >
@@ -137,7 +139,18 @@
                                                 <li><a href="<?php echo $this->createUrl('patientbooking/admin') ?>">搜索</a></li>
                                             <?php endif; ?>
                                         </ul>
-                                    </div> 
+                                    </div>
+                                    <div class="dropdown mt20" >
+                                        <div class="dropdown-toggle color-white"  id="dropdownMenu11" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            短信记录
+                                            <span class="caret pull-right"></span>
+                                        </div>
+                                        <ul class="dropdown-menu bg-success" aria-labelledby="dropdownMenu11">
+                                            <?php if (Yii::app()->user->checkAccess('Admin.Sms.sendSms')): ?>
+                                                <li><a href="<?php echo $this->createUrl('sms/sendSms') ?>">发送短信</a></li>   
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
                                     <div class="dropdown mt20" >
                                         <div class="dropdown-toggle color-white"  id="dropdownMenu10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             其他配置
@@ -163,6 +176,9 @@
                                             <?php endif; ?>
                                             <?php if (Yii::app()->user->checkAccess('Admin.Order.Create')): ?>
                                                 <li><a href="<?php echo $this->createUrl('order/create') ?>">创建</a></li> 
+                                            <?php endif; ?>
+                                                <?php if (Yii::app()->user->checkAccess('Admin.Order.OfflinePaySearch')): ?>
+                                                <li><a href="<?php echo $this->createUrl('order/offlinePaySearch') ?>">线下支付记录</a></li> 
                                             <?php endif; ?>
                                         </ul>
                                     </div>
@@ -244,7 +260,7 @@
                         //30s获取一次任务提醒条数
                         //setInterval('ajaxGetAlert(newTask, undoneTask)', 30000);
                         //1min获取一次计划跟单并提醒
-                        //setInterval('ajaxGetPlan()', 60000);
+                        setInterval('ajaxGetPlan()', 60000);
 <?php endif; ?>
                 });
                 //隐藏无子类的菜单栏
@@ -252,7 +268,7 @@
                     $('.dropdown').each(function () {
                         var value = $(this).find('.dropdown-menu>li').length;
                         if (value > 0) {
-                            
+
                         } else {
                             $(this).hide();
                         }

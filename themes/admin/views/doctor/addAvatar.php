@@ -14,7 +14,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/c
 /* @var $form CActiveForm */
 
 $this->breadcrumbs = array(
-    'Doctors' => array('admin'),
+    '医生' => array('admin'),
     $doctor->getName() => array('view', 'id' => $doctor->getId()),
 );
 
@@ -44,7 +44,7 @@ $urlReturn = $this->createUrl('doctor/view', array('id' => $doctor->getId()));
 
     <form id="doctor-form" data-url-uploadfile="<?php echo $urlUploadFile; ?>" data-url-return="<?php echo $urlReturn; ?>">
         <input id="doctorId" type="hidden" name="doctor[id]" value="<?php echo $doctor->getId(); ?>" />
-        <input type="hidden" id="domain" value="http://dr.static.mingyizhudao.com/"> 
+        <input type="hidden" id="domain" value="http://7xtetc.com1.z0.glb.clouddn.com/"> 
         <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('doctor/ajaxUpload'); ?>">
     </form>
     <div class="mb20 row mt20">

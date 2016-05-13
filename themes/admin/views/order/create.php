@@ -3,8 +3,8 @@
 /* @var $model SalesOrder */
 
 $this->breadcrumbs=array(
-	'Sales Orders'=>array('index'),
-	'Create',
+	'订单'=>array('index'),
+	'手动创建订单',
 );
 
 $this->menu=array(

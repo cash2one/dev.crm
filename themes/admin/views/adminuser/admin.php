@@ -3,8 +3,8 @@
 /* @var $model AdminUser */
 
 $this->breadcrumbs=array(
-	'Admin Users'=>array('admin'),
-	'Manage',
+	'管理员'=>array('admin'),
+	'搜索',
 );
 
 $this->menu=array(
@@ -25,7 +25,7 @@ $('.search-form form').submit(function(){
 });
 ");
 ?>
-<h1>Manage Admin Users</h1>
+<h1>管理员搜索</h1>
 <div class="search-form">
 <?php $this->renderPartial('_search',array(
 	'model'=>$model,

@@ -118,7 +118,7 @@ function setPhoneRecordListHtml(results) {
                     '<td>' + phoneRecord.endTime + '</td>' +
                     '<td>' + phoneRecord.adminUserName + '</td>' +
                     '<td>' + phoneRecord.customerNumberType + '</td>' +
-                    '<td>' + phoneRecord.callType + '</td>' +
+                    '<td>' + phoneRecord.status + '</td>' +
                     '<td>' + phoneRecord.mobile + '</td>' +
                     '<td>' + phoneRecord.remark + '</td>' +
                     '<td>' + phoneRecord.recordFile + '</td>' +

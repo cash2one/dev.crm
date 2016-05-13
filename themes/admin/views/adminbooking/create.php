@@ -311,6 +311,24 @@ $this->renderPartial('//doctor/searchHpModal');
 $this->renderPartial('commonDept');
 $this->renderPartial('searchDoctorModal');
 ?>
+<div class="modal fade mt100" id="createSuccessModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center">新患者信息</h4>
+            </div>
+            <div class="modal-body">
+                <p class="color-red">该手机未注册，已自动注册。请记录并通知该患者！</p>
+                <p>用户名: <span id="userName"></span></p>
+                <p>密码: <span id="passWord"></span></p>
+                <div class="mt20 text-right clearfix">
+                    <a id='successBtn' href="" class="btn btn-primary">确定</a>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script>
     $(document).ready(function () {
         //搜索医院弹框
@@ -319,6 +337,10 @@ $this->renderPartial('searchDoctorModal');
 //        }).keyup(function () {
 //            $('#AdminBookingForm_expected_hospital_id').val('');
 //        });
+        $('#createSuccessModal').on('hidden.bs.modal', function (e) {
+            var successUrl = $(this).find('#successBtn').attr('href');
+            location.href = successUrl;
+        });
         $('#searchHp').click(function () {
             ajaxLoadHospital();
         });

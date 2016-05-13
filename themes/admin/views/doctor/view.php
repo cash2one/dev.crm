@@ -3,7 +3,7 @@
 /* @var $model Doctor */
 
 $this->breadcrumbs = array(
-    'Doctors' => array('admin'),
+    '医生' => array('admin'),
     $model->getName(),
 );
 

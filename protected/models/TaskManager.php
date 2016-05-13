@@ -373,6 +373,7 @@ class TaskManager {
             $taskPlan->taskJoinId = $adminTaskJoin->id;
             $taskPlan->date_plan = $adminTaskJoin->date_plan;
             $taskPlan->admin_user = AdminUser::model()->getById($adminTaskJoin->admin_user_id)->fullname;
+            $taskPlan->type = $adminTaskJoin->getType(false);
             $taskPlan->work_type = $adminTaskJoin->getWorkType();
             $taskPlan->content = $adminTask->content;
             $taskPlan->date_done = $adminTaskJoin->date_done;
@@ -426,6 +427,79 @@ class TaskManager {
         $values['work_type'] = AdminTaskJoin::WORK_TYPE_TEL;
         $values['date_plan'] = null;
         $this->createTaskPlan($adminbooking, $values);
+    }
+
+    public function createTaskBookingDAFile(AdminBooking $model, $values) {
+        $adminTask = new AdminTask();
+
+        $adminTask->subject = '上传出院小结，预约编号：' . $model->ref_no;
+        $adminTask->content = $values['content'];
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/adminBooking/view', array('id' => $model->getId()));
+
+        $dbTran = Yii::app()->db->beginTransaction();
+        try {
+            if ($adminTask->save() === false) {
+
+                throw new CException("Error saving adminTask");
+            }
+            $adminTaskJoin = new AdminTaskJoin();
+            if (strIsEmpty($values['date_plan']) == false) {
+                $adminTaskJoin->date_plan = $values['date_plan'];
+            }
+            $adminTaskJoin->admin_task_id = $adminTask->getId();
+            $adminTaskJoin->admin_user_id = $values['admin_user_id'];
+            $adminTaskJoin->work_type = $values['work_type'];
+            $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_DA;
+
+            if ($adminTaskJoin->save() === false) {
+                throw new CException("Error saving adminTask");
+            }
+
+            $adminTaskBkJoin = new AdminTaskBkJoin();
+            $adminTaskBkJoin->admin_task_join_id = $adminTaskJoin->getId();
+            $adminTaskBkJoin->admin_booking_id = $model->getId();
+            if ($adminTaskBkJoin->save() === false) {
+                throw new CException("Error saving adminTaskBkJoin");
+            }
+            $dbTran->commit();
+        } catch (CDbException $cdbex) {
+            $dbTran->rollback();
+            return false;
+        } catch (CException $cex) {
+            $dbTran->rollback();
+            return false;
+        }
+
+        return true;
+    }
+
+    public function createBookingDaFileTaskPlan(AdminBooking $adminbooking, $user) {
+        $values = array();
+        $values['content'] = $user->fullname . '上传了出院小结;';
+        $values['admin_user_id'] = $adminbooking->admin_user_id;
+        $values['work_type'] = AdminTaskJoin::WORK_TYPE_TEL;
+        $values['date_plan'] = null;
+        $this->createTaskBookingDAFile($adminbooking, $values);
+    }
+
+    public function completeTaskByAdminBookingIdAndWorkSchedule($adminbookingId, $workSchedule) {
+        $taskType = null;
+        switch ($workSchedule) {
+            case StatCode::BK_STATUS_PROCESS_DONE:
+                $taskType = AdminTaskJoin::TASK_TYPE_DA;
+        }
+        if (is_null($taskType) == false) {
+            $with = array('adminTaskJoin' => array('on' => 'adminTaskJoin.date_done IS NULL AND adminTaskJoin.type = ' . $taskType));
+            $adminTaskBkJoin = AdminTaskBkJoin::model()->getAllByAttributes(array('admin_booking_id' => $adminbookingId), $with);
+            foreach ($adminTaskBkJoin as $value) {
+                $adminTaskJoin = $value->getAdminTaskJoin();
+                if (is_null($adminTaskJoin) == false) {
+                    $adminTaskJoin->status = AdminTaskJoin::STATUS_OK;
+                    $adminTaskJoin->date_done = new CDbExpression('NOW()');
+                    $adminTaskJoin->update(array('status', 'date_done'));
+                }
+            }
+        }
     }
 
 }

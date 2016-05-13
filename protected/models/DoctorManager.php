@@ -339,28 +339,6 @@ class DoctorManager {
                 $dept = HospitalDepartment::model()->getById($form->hp_dept_id);
                 $form->hp_dept_name = $dept->getName();
             }
-            //判断是否有值，若无则赋值为null
-            if (strIsEmpty($form->description)) {
-                $form->description = null;
-            }
-            if (strIsEmpty($form->career_exp)) {
-                $form->career_exp = null;
-            }
-            if (strIsEmpty($form->reason_one)) {
-                $form->reason_one = null;
-            }
-            if (strIsEmpty($form->reason_two)) {
-                $form->reason_two = null;
-            }
-            if (strIsEmpty($form->reason_three)) {
-                $form->reason_three = null;
-            }
-            if (strIsEmpty($form->reason_four)) {
-                $form->reason_four = null;
-            }
-            if (strIsEmpty($form->honour)) {
-                $form->honour = null;
-            }
             $model->setAttributes($form->attributes);
             $model->honour = $form->honour; //explode('#', $form->honour);
             
@@ -685,4 +663,21 @@ class DoctorManager {
         return $output;
     }
 
+    /*     * ** 根据医生名查询医生号码及相关信息 *** */
+
+    public function searchDoctorProfileByDoctorName($name) {
+        $output = array('status' => 'no');
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->addSearchCondition('t.name', $name);
+        $criteria->limit = 50;
+        $models = UserDoctorProfile::model()->findAll($criteria);
+        if (isset($models)) {
+            $output['status'] = 'ok';
+            $output['doctors'] = $models;
+        } else {
+            $output['errors'] = 'no data...';
+        }
+        return $output;
+    }
 }

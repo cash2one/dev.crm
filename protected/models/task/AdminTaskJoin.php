@@ -27,6 +27,7 @@ class AdminTaskJoin extends EActiveRecord {
     const TASK_TYPE_BK = 1;
     const TASK_TYPE_USER_DR = 2;
     const TASK_TYPE_ORDER = 3;
+    const TASK_TYPE_DA = 4;//出院小结
 
     /**
      * @return string the associated database table name
@@ -196,9 +197,10 @@ class AdminTaskJoin extends EActiveRecord {
 
     public static function getOptionsType() {
         return array(
-            self::TASK_TYPE_BK => '预约',
-            self::TASK_TYPE_ORDER => '订单',
+            self::TASK_TYPE_BK => '新的预约',
+            self::TASK_TYPE_ORDER => '支付订单',
             self::TASK_TYPE_USER_DR => '医生用户',
+            self::TASK_TYPE_DA => '出院小结',
         );
     }
 

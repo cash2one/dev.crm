@@ -76,7 +76,7 @@ $returnUrl = $this->createUrl('order/view', array('id' => ''));
         <div class="form-group col-sm-7">
             <label >  <?php echo '订单描述<br>'; ?></label>
             <div>
-                <?php echo $form->textArea($model, 'description', array('class' => 'form-control', 'name' => 'order[description]', 'rows' => 3, 'cols' => 50, 'maxlength' => 1000)); ?>     
+                <?php echo $form->textArea($model, 'description', array('class' => 'form-control', 'name' => 'order[description]', 'rows' => 3, 'cols' => 50, 'maxlength' => 128)); ?>     
                 <div class="text-danger"><?php echo $form->error($model, 'description'); ?></div>
             </div>
         </div>

@@ -3,8 +3,8 @@
 /* @var $model AdminUser */
 
 $this->breadcrumbs=array(
-	'Admin Users'=>array('admin'),
-	'Create',
+	'管理员'=>array('admin'),
+	'创建',
 );
 
 $this->menu=array(
@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create AdminUser</h1>
+<h1>创建管理员</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

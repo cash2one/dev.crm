@@ -230,4 +230,23 @@ class SmsManager {
         }
     }
 
+    /**
+     * 创建新用户后通知短信
+     * @param type $to
+     * @param type $data 参数顺序 1. name 患者名, 2. password 密码.
+     * @param type $vendor
+     * @return type
+     */
+    public function sendSmsNewUser($to, $data, $vendor = self::VENDOR_ACTIVE) {
+        if ($vendor == self::VENDOR_YUNTONGXUN) {
+        } elseif ($vendor == self::VENDOR_JIANZHOU) {
+            $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'newUser', 'vendor_name' => $vendor));
+            $mobile = substr($to, -4);
+            $url = 'http://www.mingyizhudao.com/user/forgetPassword';
+            $values = array($data->name, $mobile, $data->password, $url);
+            $content = str_replace(array('{name}', '{mobile}', '{password}', '{url}'), $values, $model->content);
+            return $this->sendSmsTemplateViaJianZhou($to, $content);
+        }
+    }
+
 }

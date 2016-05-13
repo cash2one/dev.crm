@@ -3,7 +3,7 @@
 /* @var $model AdminUser */
 
 $this->breadcrumbs=array(
-	'Admin Users'=>array('admin'),
+	'管理员'=>array('admin'),
 	$model->id,
 );
 
@@ -16,7 +16,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>View AdminUser #<?php echo $model->id; ?></h1>
+<h1>管理员信息 #<?php echo $model->id; ?></h1>
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(

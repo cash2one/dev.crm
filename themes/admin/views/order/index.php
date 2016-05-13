@@ -3,7 +3,7 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs = array(
-    'Sales Orders',
+    '订单',
 );
 
 $this->menu = array(
@@ -15,7 +15,7 @@ $this->menu = array(
     .data-list .table td{word-break: break-all; word-wrap:break-word;min-width: 5.5em;max-width: 50em;vertical-align: middle;}
     .data-list .table thead{color: #fff;}
 </style>
-<h1>Sales Orders</h1>
+<h1>订单列表</h1>
 <div class="data-list mt10">
     <table class="table">
         <thead>

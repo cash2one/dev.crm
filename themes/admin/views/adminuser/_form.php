@@ -19,7 +19,6 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         'enableAjaxValidation' => false,
     ));
     ?>
-    <p class="note">Fields with <span class="required">*</span> are required.</p>
     <div class="text-danger"><?php echo $form->errorSummary($model); ?></div>
     <div class="form-horizontal">
         <div class="form-group col-sm-7">

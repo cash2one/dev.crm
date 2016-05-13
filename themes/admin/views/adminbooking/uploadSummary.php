@@ -24,7 +24,7 @@ if ($user->role == AdminUser::ROLE_BD) {
 }
 ?>
 <?php
-if ($type == 'dc') {
+if ($type == StatCode::MR_REPORTTYPE_DA) {
     echo '<h1>上传出院小结</h1>';
 } else {
     echo '<h1>上传病历图片</h1>';

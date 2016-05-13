@@ -11,6 +11,7 @@ class StatCode {
     const USER_ROLE_DOCTOR = 2; // 医生
     const USER_ROLE_MR = 3;     //医药代表  medical representative.
     const USER_ROLE_ADMIN = 9;    // 管理员
+    const BK_TYPE_CRM = 0;     // 预约某个医生
     const BK_TYPE_DOCTOR = 1;     // 预约某个医生
     const BK_TYPE_EXPERTTEAM = 2; // 预约专家团队
     const BK_TYPE_DEPT = 3;       // 预约医院科室
@@ -26,8 +27,8 @@ class StatCode {
     //const BK_STATUS_PROCESS_DONE = 7;   // 跟进结束
     const BK_STATUS_DONE = 8;         // 已完成
     const BK_STATUS_CANCELLED = 9;   // 已取消
-    const BK_STATUS_REFUNDING = 7;//申请退款
-    const BK_STATUS_REFUNDED = 10;//已退款
+    const BK_STATUS_REFUNDING = 7; //申请退款
+    const BK_STATUS_REFUNDED = 10; //已退款
     const BK_STATUS_PROCESS_DONE = 11;         // 跟进结束（提交出院小结）
     const BK_STATUS_CHECKOUT = 12;   // 已结账（返款）
     const BK_STATUS_INVALID = 13;   // 跟进失效
@@ -48,7 +49,7 @@ class StatCode {
     const PAY_SUCCESS = 1;          //支付成功
     const PAY_FAIL = 2;             //支付失败
     const MR_REPORTTYPE_MR = 'mr';    // 病历  Medical Record - PatientMRFile.reprot_type
-    const MR_REPORTTYPE_DA = 'dc';    // 出院小结  Discharge Certificate - PatientMRFile.reprot_type
+    const MR_REPORTTYPE_DA = 'da';    // 出院小结  Discharge Certificate - PatientMRFile.reprot_type
     const USER_AGENT_WEBSITE = 'website';
     const USER_AGENT_WEIXIN = 'weixin';  //预约来源为微信
     const USER_AGENT_MOBILEWEB = 'wap'; // 手机网站
@@ -134,8 +135,8 @@ class StatCode {
             self::BK_STATUS_DONE => '已完成',
             self::BK_STATUS_CANCELLED => '已取消',
             self::BK_STATUS_CHECKOUT => '已结账',
-            self::BK_STATUS_REFUNDING =>'申请退款',
-            self::BK_STATUS_REFUNDED =>'已退款',
+            self::BK_STATUS_REFUNDING => '申请退款',
+            self::BK_STATUS_REFUNDED => '已退款',
         );
     }
 

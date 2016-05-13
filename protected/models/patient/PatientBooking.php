@@ -60,7 +60,7 @@ class PatientBooking extends EActiveRecord {
             array('user_agent, doctor_name, patient_name, creator_name', 'length', 'max' => 20),
             array('detail', 'length', 'max' => 1000),
             array('remark', 'length', 'max' => 500),
-            array('appt_date, date_confirm, date_created, date_updated, date_deleted', 'safe'),
+            array('appt_date, date_confirm, date_created, date_updated, date_deleted, cs_explain', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, ref_no, patient_id, patient_name, doctor_id, doctor_name, creator_id, creator_name, status, travel_type, date_start, date_end, detail, appt_date, date_confirm, remark, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),

@@ -59,7 +59,7 @@ $(function () {
             'UploadComplete': function () {
                 $('#success').show();
                 btnSubmit.attr('disabled', false);
-                //location.href = returnUrl;
+                location.href = returnUrl;
             },
             'FileUploaded': function (up, file, info) {
                 //单个文件上传成功所做的事情 
@@ -73,7 +73,7 @@ $(function () {
                 // var res = parseJSON(info);
                 // var sourceLink = domain + res.key; 获取上传成功后的文件的Url
                 var progress = new FileProgress(file, 'fsUploadProgress');
-                var infoJson = eval('(' + info + ')'); 
+                var infoJson = eval('(' + info + ')');
                 progress.setComplete(up, info);
                 var formdata = new FormData();
                 var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
@@ -89,6 +89,8 @@ $(function () {
                     success: function (data) {
                         if (data.status == 'no') {
                             alert('上传失败!');
+                        } else {
+                            location.href = returnUrl;
                         }
                     },
                     error: function (data) {
@@ -109,12 +111,12 @@ $(function () {
                 alert('上传失败!');
             }
             ,
-             'Key': function(up, file) {
-                 var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
-                 var key = (new Date()).getTime()+''+Math.floor(Math.random()*100)+'.'+fileExtension;
-                 // do something with key
-                 return key;
-             }
+            'Key': function (up, file) {
+                var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
+                var key = (new Date()).getTime() + '' + Math.floor(Math.random() * 100) + '.' + fileExtension;
+                // do something with key
+                return key;
+            }
         }
     });
     uploader.bind('FileUploaded', function () {

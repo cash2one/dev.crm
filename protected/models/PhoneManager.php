@@ -58,9 +58,9 @@ class PhoneManager {
      * 提取通话录音
      * @param $mainUniqueId
      */
-    public function getRecord($mainUniqueId){
-        $model = PhoneRecord::model()->getByAttributes(array('main_unique_id'=>$mainUniqueId));
-        if(is_object($model)){
+    public function getRecord($mainUniqueId) {
+        $model = PhoneRecord::model()->getByAttributes(array('main_unique_id' => $mainUniqueId));
+        if (is_object($model)) {
             $date = date('Ymd', strtotime($model->date_created));
             $time = time();
             $pwd = md5($this->config->password . $time);
@@ -76,7 +76,7 @@ class PhoneManager {
      * @param int $cno
      * @return mixed|string
      */
-    public function sendOutcall($phone='17717394560', $cno=2000) {
+    public function sendOutcall($phone = '17717394560', $cno = 2000) {
         //http://puruan.ccic2.com/interface/PreviewOutcall?enterpriseId=3001875&hotline=51397664&cno=2000&pwd=0659c7992e268962384eb17fafe88364&customerNumber=13916681596&userField=myzd&clidLeftNumber=&sync=
         $url = "{$this->config->interface_server_ip}{$this->config->preview_outcall_url}?enterpriseId={$this->config->enterprise_id}&hotline={$this->config->hotline}&cno={$cno}&pwd={$this->config->password}&customerNumber={$phone}&userField=myzd&clidLeftNumber=&sync=";
         $result = $this->curlRequest($url, false);
@@ -84,15 +84,13 @@ class PhoneManager {
         return $result;
     }
 
-
-
     /**
      * 队列座席状态
      * @param string $phone
      * @param int $cno
      * @return mixed|string
      */
-    public function sendQueueMonitoring($phone='17717394560', $cno=2000) {
+    public function sendQueueMonitoring($phone = '17717394560', $cno = 2000) {
         $pwd = md5($this->config->password);
         //http://puruan.ccic2.com/interface/queueMonitoring/QueueMonitoring?userName=admin&pwd=0659c7992e268962384eb17fafe88364&enterpriseId=3001875&queueQids=30018750000
         $url = "{$this->config->interface_server_ip}{$this->config->queue_monitoring_url}?userName={$this->config->username}&pwd={$this->config->password}&enterpriseId={$this->config->enterpriseId}&pwd={$pwd}&customerNumber={$phone}&userField=myzd&clidLeftNumber=&sync=";
@@ -110,6 +108,11 @@ class PhoneManager {
         $url = "{$this->config->interface_server_ip}{$this->config->queue_list_url}?enterpriseId={$this->config->enterprise_id}&userName={$this->config->username}&password={$this->config->password}";
         $result = $this->curlRequest($url, false);
         return $result;
+    }
+
+    //根据手机号查询所有的通话记录
+    public function loadAllPhoneRecordByMobile($mobile) {
+        return PhoneRecord::model()->getAllByAttributes(array('customer_number' => $mobile), array('phoneRecordRemark'));
     }
 
 }

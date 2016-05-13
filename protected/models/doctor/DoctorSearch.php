@@ -11,7 +11,7 @@ class DoctorSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('city', 'state', 'disease', 'hospital', 'hpdept', 'mTitle','aTitle', 'name','hpName','hpDeptName');
+        return array('city', 'state', 'disease', 'hospital', 'hpdept', 'mTitle', 'aTitle', 'name', 'hpName', 'hpDeptName', 'role', 'isContracted');
     }
 
     public function addQueryConditions() {
@@ -52,6 +52,16 @@ class DoctorSearch extends ESearchModel {
             if (isset($this->queryParams['state'])) {
                 $stateId = $this->queryParams['state'];
                 $this->criteria->compare('t.state_id', $stateId);
+            }
+            // role.
+            if (isset($this->queryParams['role'])) {
+                $role = $this->queryParams['role'];
+                $this->criteria->compare('t.role', $role);
+            }
+            // isContracted.
+            if (isset($this->queryParams['isContracted'])) {
+                $isContracted = $this->queryParams['isContracted'];
+                $this->criteria->compare('t.is_contracted', $isContracted);
             }
             // Disease.
             if (isset($this->queryParams['disease'])) {

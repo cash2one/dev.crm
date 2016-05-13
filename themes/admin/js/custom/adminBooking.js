@@ -416,10 +416,18 @@ $(function () {
                 success: function (data) {
                     //图片上传
                     if (data.status == 'ok') {
-                        fileParam.id = data.booking.id;
-                        //基本数据插入成功  上传图片
                         returnUrl = returnUrl + '/' + data.booking.id;
-                        uploader.start();
+                        if (data.user) {
+                            $('#createSuccessModal .modal-body #userName').text(data.user.username);
+                            $('#createSuccessModal .modal-body #passWord').text(data.user.password);
+                            $('#createSuccessModal .modal-body #successBtn').attr('href', returnUrl);
+                            $('#createSuccessModal').modal();
+                        } else {
+                            location.href = returnUrl;
+                        }
+                        //基本数据插入成功  上传图片
+                        //fileParam.id = data.booking.id;
+                        //uploader.start();
                         enableBtn(btnSubmit);
                     } else {
                         domForm.find("div.error").remove();

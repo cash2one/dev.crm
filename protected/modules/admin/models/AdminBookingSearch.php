@@ -26,7 +26,7 @@ class AdminBookingSearch extends ESearchModel {
 //        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
 //            $this->criteria->compare('t.admin_user_id', $userId);
 //        }
-        $this->criteria->with = array('bkOwner', 'orderAdminbooking');
+        $this->criteria->with = array('bkOwner', 'orderAdminbooking', 'userDoctorMobile');
         $this->criteria->distinct = true;
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['orderRefNo']) || isset($this->queryParams['orderType']) || isset($this->queryParams['isPaid']) || isset($this->queryParams['finalAmount']) || isset($this->queryParams['dateOpen']) || isset($this->queryParams['dateClosed'])) {
@@ -162,19 +162,13 @@ class AdminBookingSearch extends ESearchModel {
                 $this->criteria->addSearchCondition("t.final_time", $finalTime, true);
             }
             //时间区间
-            if (isset($this->queryParams['dateCreatedStart']) & isset($this->queryParams['dateCreatedEnd'])) {
+            if (isset($this->queryParams['dateCreatedStart'])) {
                 $dateCreatedStart = $this->queryParams['dateCreatedStart'];
+                $this->criteria->addCondition("t.date_created >= '" . $dateCreatedStart . "'");
+            }
+            if (isset($this->queryParams['dateCreatedEnd'])) {
                 $dateCreatedEnd = $this->queryParams['dateCreatedEnd'];
-                $this->criteria->addBetweenCondition("t.date_created", $dateCreatedStart, $dateCreatedEnd);
-            } else {
-                if (isset($this->queryParams['dateCreatedStart'])) {
-                    $dateCreatedStart = $this->queryParams['dateCreatedStart'];
-                    $this->criteria->addBetweenCondition("t.date_created", $dateCreatedStart, date('Y-m-d'));
-                }
-                if (isset($this->queryParams['dateCreatedEnd'])) {
-                    $dateCreatedEnd = $this->queryParams['dateCreatedEnd'];
-                    $this->criteria->addBetweenCondition("t.date_created", date('2000-01-01'), $dateCreatedEnd);
-                }
+                $this->criteria->addCondition("t.date_created <= '" . $dateCreatedEnd . "'");
             }
             if (isset($this->queryParams['creatorDoctorName'])) {
                 $creatorDoctorName = $this->queryParams['creatorDoctorName'];

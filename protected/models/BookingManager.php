@@ -445,7 +445,7 @@ class BookingManager {
         if ($model instanceof PatientBooking) {
             $adminBooking->booking_type = AdminBooking::BK_TYPE_PB;
             //添加期望医生
-            //$adminBooking->expected_doctor_name = $model->expected_doctor;
+            $adminBooking->expected_doctor_name = $model->expected_doctor;
             $adminBooking->patient_id = $model->patient_id;
             $adminBooking->patient_name = $model->patient_name;
             if (strIsEmpty($model->patient_id) === false) {
@@ -476,6 +476,8 @@ class BookingManager {
             $adminBooking->is_deal = AdminBooking::IS_DEAL_YES;
             //医生端预约的导流来源，默认为“医生推荐”
             $adminBooking->customer_diversion = AdminBooking::CUS_DIVERSION_DOCTOR;
+            $adminBooking->customer_request = AdminBooking::CUS_REQUEST_SHOUSHU;
+            $adminBooking->customer_type = AdminBooking::CUS_TYPE_YSSZZ;
             //一开始创建时 只能以下级医生作为标准给其默认值
             if (strIsEmpty($model->creator_id) === false) {
                 $doctor = UserDoctorProfile::model()->getByUserId($model->creator_id);
@@ -493,6 +495,9 @@ class BookingManager {
             }
             $customer = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_CS);
             $bd = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_PB, AdminUser::ROLE_BD);
+            if (isset($bd)) {
+                $adminBooking->contact_name = $bd->admin_user_name;
+            }
         } elseif ($model instanceof Booking) {
             $adminBooking->booking_type = AdminBooking::BK_TYPE_BK;
             $adminBooking->patient_id = $model->user_id;
@@ -530,25 +535,25 @@ class BookingManager {
             }
             $customer = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_BK, AdminUser::ROLE_CS);
             $bd = $this->getAdminUser($cityId, $stateId, AdminBooking::BK_TYPE_BK, AdminUser::ROLE_BD);
-			//第三方
+            //第三方
             if ($model->is_vendor == 1 && isset($model->vendor_id)) {
-				if($model->vendor_id == 2){
-					$adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_160;
-				}else if ($model->vendor_id == 3){
-					$adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_7LK;
-				}else{
-					$adminBooking->business_partner = NULL;
-				}
-				/*
-				switch($model->vendor_id) {
-					case 2: $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_160;
-					break;
-					case 3: $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_7LK;
-					break;
-					default: $adminBooking->business_partner = NULL;
-					break;
-				}
-				*/
+                if ($model->vendor_id == 2) {
+                    $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_160;
+                } else if ($model->vendor_id == 3) {
+                    $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_7LK;
+                } else {
+                    $adminBooking->business_partner = NULL;
+                }
+                /*
+                  switch($model->vendor_id) {
+                  case 2: $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_160;
+                  break;
+                  case 3: $adminBooking->business_partner = AdminBooking::BUSINESS_PARTNER_7LK;
+                  break;
+                  default: $adminBooking->business_partner = NULL;
+                  break;
+                  }
+                 */
             }
         }
         if (isset($customer)) {
@@ -714,6 +719,34 @@ class BookingManager {
         }
         $output = (object) $output;
         return $output;
+    }
+
+    public function createBookingByAdminBooking(AdminBookingForm $form, User $user) {
+        $booking = new Booking();
+        $booking->mobile = $form->patient_mobile;
+        $booking->contact_name = $form->patient_name;
+        $booking->bk_status = StatCode::BK_STATUS_NEW;
+        $booking->bk_type = StatCode::BK_TYPE_CRM;
+        $booking->doctor_name = $form->expected_doctor_name;
+        $booking->city_id = $form->city_id;
+        $booking->hospital_name = $form->expected_hospital_name;
+        $booking->hp_dept_name = $form->expected_hp_dept_name;
+        $booking->disease_name = $form->disease_name;
+        $booking->disease_detail = $form->disease_detail;
+        $booking->date_start = $form->expected_time_start;
+        $booking->date_end = $form->expected_time_end;
+        $booking->user_id = $user->getId();
+        $booking->is_deposit_paid = 0;
+        $booking->user_agent = $form->customer_agent;
+        $booking->remark = $form->remark;
+        $booking->is_corporate = 0;
+        $booking->is_vendor = 0;
+        $booking->is_commonweal = $form->is_commonweal;
+        $booking->booking_service_id = $form->booking_service_id;
+        if ($booking->save()) {
+            return $booking;
+        }
+        return null;
     }
 
 }

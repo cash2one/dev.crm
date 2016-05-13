@@ -143,13 +143,9 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
         var requestUrl = "<?php echo $urlSearch; ?>";
-        var countAmountUrl = "<?php echo $urlCountAmount; ?>";
-        loadUserSearchResult(requestUrl + '?he=2', selectorSearchResult);
-        loadCountAmountResult(countAmountUrl + '?he=2');
-
+        loadUserSearchResult(requestUrl + '?isUnsystemPay=1', selectorSearchResult);
         $("#btnSearch").click(function () {
-            var searchUrl = requestUrl + '?he=2';
-            var countUrl = countAmountUrl + '?he=2';
+            var searchUrl = requestUrl + '?isUnsystemPay=1';
             domForm.find("input,select").each(function () {
                 // trim
                 var value = $.trim($(this).val());
@@ -159,7 +155,6 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
                 }
             });
             loadUserSearchResult(searchUrl, selectorSearchResult);
-            loadCountAmountResult(countUrl);
         });
 
     });
@@ -169,18 +164,6 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             async: false,
             success: function (data) {
                 $(selectorSearchResult).html(data);
-            },
-            complete: function () {
-                // hide loading gif.
-            }
-        });
-    }
-    function loadCountAmountResult(requestUrl){
-        $.ajax({
-            url: requestUrl,
-            async: false,
-            success: function (data) {
-                $('#countAmount').html('<span class="color-red">总支付金额：'+data.amount+'</span>');
             },
             complete: function () {
                 // hide loading gif.

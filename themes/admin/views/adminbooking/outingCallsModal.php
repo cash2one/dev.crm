@@ -88,7 +88,7 @@ $phoneRecordListUrl = $this->createUrl('phone/phoneRecordList');
                                 <th>结束时间</th>
                                 <th>操作员</th>
                                 <th>所属队列</th>
-                                <th>类型</th>
+                                <th>通话状态</th>
                                 <th>电话号码</th>
                                 <th>备注</th>
                                 <th>录音</th>

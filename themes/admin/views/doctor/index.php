@@ -8,7 +8,7 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs = array(
-    'Doctors',
+    '医生列表',
 );
 
 $this->menu = array(
@@ -17,7 +17,7 @@ $this->menu = array(
 );
 ?>
 
-<h1>Doctors</h1>
+<h1>医生列表</h1>
 <style>
     .data-list, .list-view {position: relative;}
     .pager {margin: 0;}

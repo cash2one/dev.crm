@@ -3,8 +3,8 @@
 /* @var $model Doctor */
 
 $this->breadcrumbs=array(
-	'Doctors'=>array('admin'),
-	'Create',
+	'医生'=>array('admin'),
+	'创建',
 );
 
 $this->menu=array(
@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Doctor</h1>
+<h1>创建医生</h1>
 
 <?php $this->renderPartial('_formNew', array('model'=>$model)); ?>

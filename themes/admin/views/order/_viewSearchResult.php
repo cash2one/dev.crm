@@ -32,6 +32,15 @@ if (arrayNotEmpty($payments)) {
         }
         ?>
     </td>
-    <td><a target="_blank" href="<?php echo $this->createUrl('view', array('id' => $data->id)) ?>" ><img src="/myzd/assets/9f55b493/gridview/view.png" alt="查看"></a></td>
+    <td>
+        <?php
+        if ($data->is_unsystem_pay == SalesOrder::IS_UNSYSTEM_PAY) {
+            echo '<a target="_blank" href="' . $this->createUrl('order/createOfflinePayment', array('refNo' => $data->getRefNo())) . '" >添加交易号</a>';
+        } else {
+            echo '<a target="_blank" href="' . $this->createUrl('view', array('id' => $data->id)) . '" >查看</a>';
+        }
+        ?>
+
+    </td>
 
 </tr>

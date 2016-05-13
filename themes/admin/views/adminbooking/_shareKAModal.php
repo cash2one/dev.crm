@@ -42,6 +42,9 @@
                             <?php echo $data->expected_time_start == null ? '<span class="color-blue">未填写</span>' : date('Y-m-d', strtotime($data->expected_time_start)); ?> — <?php echo $data->expected_time_end == null ? '<span class="color-blue">未填写</span>' : date('Y-m-d', strtotime($data->expected_time_end)); ?>
                         </div>
                     </div>
+                    <div class="col-md-12 border-bottom">
+                        <span class="">备注：</span><?php echo $data->remark == null ? '<span class="color-blue">未填写</span>' : $data->remark; ?>
+                    </div>
                 </div>
             </div>
         </div><!-- /.modal-content -->

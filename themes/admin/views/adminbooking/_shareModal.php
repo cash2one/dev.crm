@@ -63,6 +63,9 @@
                     <div class="col-md-12 border-bottom">
                         <span class="tab-header">最终手术时间：</span><?php echo $data->final_time == null ? '<span class="color-blue">未填写</span>' : $data->final_time; ?>
                     </div>
+                    <div class="col-md-12 border-bottom">
+                        <span class="tab-header">录入日期：</span><?php echo $data->date_created == null ? '<span class="color-blue">未填写</span>' : $data->date_created; ?>
+                    </div>
                     <?php
                     $depositPaid = true;
                     $servicePaid = true;

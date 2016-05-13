@@ -12,7 +12,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/c
 $bookingCreator = new stdClass();
 if (is_null($creator) == false) {
     $bookingCreator->name = $creator->name;
-    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>' . '   <a data-bookingid="' . $data->getId() . '" data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>';
+    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>' . '   <a data-bookingid="' . $data->getId() . '" data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>';
     $bookingCreator->cTitle = $creator->clinical_title == null ? '无' : $creator->getClinicalTitle(true);
     $bookingCreator->stateName = $creator->state_name == null ? '无' : $creator->state_name;
     $bookingCreator->cityName = $creator->city_name == null ? '无' : $creator->city_name;
@@ -30,25 +30,32 @@ if (is_null($creator) == false) {
 
 if ($data->booking_type == AdminBooking::BK_TYPE_BK) {
     $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id;
-    //$urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id. '&reportType=dc';
+    //$urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadbookingmr?userId=' . $data->patient_id . '&bookingId=' . $data->booking_id. '&reportType=' . StatCode::MR_REPORTTYPE_DA;
     $urlLoadDCFiles = '';
     $urlDeleteFile = $this->createUrl('booking/deleteBookingFile', array('id' => ''));
 } else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
-    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
-    $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=dc';
+    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=' . StatCode::MR_REPORTTYPE_MR;
+    $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=' . StatCode::MR_REPORTTYPE_DA;
     $urlDeleteFile = $this->createUrl('patient/deletepatientmr', array('id' => '')); //add file_id;
 } else {
-    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
-    $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
+    $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=' . StatCode::MR_REPORTTYPE_MR;
+    $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=' . StatCode::MR_REPORTTYPE_DA;
     $urlDeleteFile = $this->createUrl('adminbooking/ajaxDeleteAdminFile', array('id' => '')); //add file_id;
 }
 
 $urlUpdateAdminBooking = $this->createUrl('adminbooking/update', array('id' => $data->id));
-$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'mr'));
-$urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'dc'));
+$urlUploadPatientCaseFile = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => StatCode::MR_REPORTTYPE_MR));
+$urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => StatCode::MR_REPORTTYPE_DA));
 $deleteTaskUrl = $this->createUrl('admintask/ajaxDeleteTask', array('id' => ''));
 $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
 $orderList = isset($orderList) ? $orderList : null;
+if (arrayNotEmpty($orderList)) {
+    foreach ($orderList as $order) {
+        if ($order->is_paid == SalesOrder::ORDER_PAIDED) {
+            $data->order_amount += $order->getFinalAmount();
+        }
+    }
+}
 ?>
 <style>
     .header-menu>a.btn{margin-bottom: 10px;}
@@ -194,6 +201,12 @@ $orderList = isset($orderList) ? $orderList : null;
         <div class="col-md-6 col-lg-3 border-bottom">
             <span class="tab-header">最终手术时间：</span><?php echo $data->final_time == null ? '<span class="color-blue">未填写</span>' : $data->final_time; ?>
         </div>
+        <div class="col-md-6 col-lg-3 border-bottom">
+            <span class="tab-header">关联医生：</span><?php echo $data->doctor_user_name == null ? '<span class="color-blue">未填写</span>' : '<a href="' . $this->createUrl('user/view', array('id' => $data->doctor_user_id)) . '" target="_blank">' . $data->doctor_user_name . '</a>'; ?>
+        </div>
+        <div class="col-md-6 col-lg-9 border-bottom">
+            <span class="tab-header">关联时间：</span><?php echo $data->date_related == null ? '<span class="color-blue">未填写</span>' : $data->date_related; ?>
+        </div>
     </div>
 </div>
 <div class="mt30">
@@ -232,7 +245,7 @@ $orderList = isset($orderList) ? $orderList : null;
             <span>是否成单：</span><?php echo $data->getIsDeal() == null ? '<span class="color-blue">未填写</span>' : $data->getIsDeal(); ?>
         </div>
         <div class="col-md-4 col-lg-2 border-bottom">销售总额：<?php echo $data->total_amount == null ? '无' : $data->total_amount; ?></div>
-        <div class="col-sm-10 border-bottom">实际总收款：<?php echo $data->order_amount == null ? '无' : $data->order_amount; ?></div>
+        <div class="col-sm-10 border-bottom">实际总收款：<?php echo $data->order_amount == null ? '0.00' : $data->order_amount; ?></div>
         <div class="col-sm-12 border-bottom">
             <span>录入日期：</span><?php echo $data->date_created; ?>
         </div>
@@ -273,7 +286,14 @@ $orderList = isset($orderList) ? $orderList : null;
                         <td><?php echo $bktask->admin_user; ?></td>
                         <td><?php echo $bktask->work_type; ?></td>
                         <td><?php echo $bktask->content; ?></td>
-                        <td><a class="completedTask" href="<?php echo $this->createUrl('admintask/ajaxCompletedTask', array('id' => $bktask->taskJoinId)) ?>">完成任务</a></td>
+                        <td>
+                            <?php
+                            if ($bktask->type == AdminTaskJoin::TASK_TYPE_DA) {
+                                echo '<a class="" data-toggle="modal" data-target="#updateStatusModal">完成任务</a>';
+                            } else {
+                                ?>
+                                <a class="completedTask" href="<?php echo $this->createUrl('admintask/ajaxCompletedTask', array('id' => $bktask->taskJoinId)) ?>">完成任务</a></td>
+                        <?php } ?>
                     </tr>
                     <?php
                 }
@@ -411,7 +431,6 @@ $this->renderPartial('addCsExplainModal', array('model' => $model));
 $this->renderPartial('//sms/_sendSmsModal', array('model' => $model));
 $this->renderPartial('outingCallsModal', array('model' => $model));
 ?>
-
 <script>
     $(document).ready(function () {
         //删除支付单

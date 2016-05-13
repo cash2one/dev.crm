@@ -30,16 +30,16 @@ if ($data->booking_type != AdminBooking::BK_TYPE_PB) {
         $urlLoadDCFiles = '';
         $urlDeleteFile = $this->createUrl('booking/deleteBookingFile', array('id' => ''));
     } else if ($data->booking_type == AdminBooking::BK_TYPE_PB) {
-        $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=mr';
-        $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=dc';
+        $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=' . StatCode::MR_REPORTTYPE_MR;
+        $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadpatientmr?userId=' . $data->creator_doctor_id . '&patientId=' . $data->patient_id . '&reportType=' . StatCode::MR_REPORTTYPE_DA;
         $urlDeleteFile = $this->createUrl('patient/deletepatientmr', array('id' => '')); //add file_id;
     } else {
-        $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=mr';
-        $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=dc';
+        $urlLoadFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=' . StatCode::MR_REPORTTYPE_MR;
+        $urlLoadDCFiles = 'http://file.mingyizhudao.com/api/loadadminmr?abId=' . $data->id . '&reportType=' . StatCode::MR_REPORTTYPE_DA;
         $urlDeleteFile = $this->createUrl('adminbooking/ajaxDeleteAdminFile', array('id' => '')); //add file_id;
     }
 
-    $urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => 'dc'));
+    $urlUploadSummary = $this->createUrl('adminbooking/uploadsummary', array('id' => $data->id, 'type' => StatCode::MR_REPORTTYPE_DA));
     $urlOrderView = $this->createAbsoluteUrl('order/view', array('id' => ''));
     $orderList = isset($orderList) ? $orderList : null;
     ?>
@@ -228,5 +228,5 @@ if ($data->booking_type != AdminBooking::BK_TYPE_PB) {
             });
         }
     </script>
-    <?php }
+<?php }
 ?>

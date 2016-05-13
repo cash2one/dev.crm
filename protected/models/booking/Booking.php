@@ -69,7 +69,7 @@ class Booking extends EActiveRecord {
             array('disease_detail', 'length', 'max' => 1000),
             array('remark', 'length', 'max' => 500),
             array('submit_via', 'length', 'max' => 10),
-            array('date_start, date_end, appt_date, date_created, date_updated, date_deleted, user_agent', 'safe'),
+            array('booking_service_id, doctor_user_id, doctor_user_name, date_start, date_end, appt_date, date_created, date_updated, date_deleted, user_agent, cs_explain', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, ref_no, user_id, mobile, contact_name, contact_email, bk_status, bk_type, doctor_id, doctor_name, expteam_id, expteam_name, city_id, hospital_id, hospital_name, hp_dept_id, hp_dept_name, disease_name, disease_detail, date_start, date_end, appt_date, remark, submit_via, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -91,7 +91,7 @@ class Booking extends EActiveRecord {
             'bkOwner' => array(self::BELONGS_TO, 'User', 'user_id'),
             'bkFiles' => array(self::HAS_MANY, 'BookingFile', 'booking_id'),
             'countFiles' => array(self::STAT, "BookingFile", 'booking_id'),
-            'pbOrder' => array(self::HAS_MANY, 'SalesOrder', 'bk_id'),
+            'pbOrder' => array(self::HAS_MANY, 'SalesOrder', 'bk_id', 'on' => 'pbOrder.bk_type=1'),
         );
     }
 
@@ -345,6 +345,8 @@ class Booking extends EActiveRecord {
                 return "QB";
             case StatCode::BK_TYPE_DEPT :
                 return "HP";
+            case AdminBooking::BK_TYPE_CRM :
+                return "BK";
             default:
                 return "AA";
         }
@@ -510,8 +512,27 @@ class Booking extends EActiveRecord {
         return $this->corp_staff_rel;
     }
 
-    public function getUserAgent() {
-        return $this->user_agent;
+    public function getUserAgent($text = true) {
+        if ($text) {
+            $options = AdminBooking::model()->getOptionsCustomerAgent();
+            if (isset($options[$this->user_agent])) {
+                return $options[$this->user_agent];
+            } else {
+                return null;
+            }
+        } else {
+            return $this->user_agent;
+        }
+    }
+
+    //设置关联医生ID
+    public function setDoctorUserId($v) {
+        $this->doctor_user_id = $v;
+    }
+
+    //设置关联医生ID
+    public function setDoctorUserName($v) {
+        $this->doctor_user_name = $v;
     }
 
 }

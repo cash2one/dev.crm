@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <label class="control-label">补充说明</label>
-                        <?php echo $form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500, 'rows' => 5, 'placeholder' => '请填写说明')); ?>
+                        <?php echo $form->textArea($model, 'cs_explain', array('class' => 'form-control', 'maxlength' => 500, 'rows' => 5, 'placeholder' => '请填写说明')); ?>
                     </div>
                 </div>
                 <div class="mt20 text-right clearfix">
