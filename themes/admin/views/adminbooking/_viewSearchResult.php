@@ -5,6 +5,9 @@ $doctorMobile = isset($data->bkOwner) ? substr_replace($data->bkOwner->username,
 //var_dump($data);
 //print_r(CJSON::encode($data));exit;
 $userDoctorMobile = isset($data->userDoctorMobile) ? $data->userDoctorMobile : null;
+$mobilePatientBooking = isset($data->mobilePatientBooking) ? $data->mobilePatientBooking : null;
+$mobileBooking = isset($data->mobileBooking) ? $data->mobileBooking : null;
+$countBooking = count($mobilePatientBooking) + count($mobileBooking);
 ?>
 <?php if (count($pbOrder) == 0) { ?>
     <tr>
@@ -15,6 +18,9 @@ $userDoctorMobile = isset($data->userDoctorMobile) ? $data->userDoctorMobile : n
             <?php
             if (is_null($userDoctorMobile) == false) {
                 echo "<a target='_blank' href={$this->createUrl('user/view', array('id' => $userDoctorMobile->id))}><i class='fa fa-user-md' aria-hidden='true'></i></a>";
+            }
+            if ($countBooking > 1) {
+                echo "<a target='_blank' href={$this->createUrl('patient/view', array('mobile' => $data->patient_mobile))}><i class='fa fa-user' aria-hidden='true'></i></a>";
             }
             ?>
         </td>
@@ -48,7 +54,10 @@ $userDoctorMobile = isset($data->userDoctorMobile) ? $data->userDoctorMobile : n
                     <a href="<?php echo $this->createUrl('patient/view', array('mobile' => $data->patient_mobile)); ?>" target="_blank"><?php echo $data->patient_mobile; ?></a>
                     <?php
                     if (is_null($userDoctorMobile) == false) {
-                        echo "<a target='_blank' href={$this->createUrl('user/view', array('id' => $userDoctorMobile->id))}><i class='fa fa-user-md' aria-hidden='true'></i></a>";
+                        echo "<a target='_blank' href={$this->createUrl('user/view', array('id' => $userDoctorMobile->id))}><i class='fa fa-user-md' aria-hidden='true'></i></a>    ";
+                    }
+                    if ($countBooking > 1) {
+                        echo "<a target='_blank' href={$this->createUrl('patient/view', array('mobile' => $data->patient_mobile))}><i class='fa fa-users' aria-hidden='true'></i></a>";
                     }
                     ?>
                 </td>

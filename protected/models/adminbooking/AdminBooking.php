@@ -178,6 +178,8 @@ class AdminBooking extends EActiveRecord {
             'bkOwner' => array(self::BELONGS_TO, 'User', 'creator_doctor_id'),
             'pbUserDoctorProfile' => array(self::BELONGS_TO, 'UserDoctorProfile', 'creator_doctor_id'),
             'userDoctorMobile' => array(self::BELONGS_TO, 'User', '', 'on' => 't.patient_mobile = userDoctorMobile.username AND userDoctorMobile.role = 2'),
+            'mobilePatientBooking' => array(self::HAS_MANY, 'PatientInfo', '', 'on' => 't.patient_mobile = mobilePatientBooking.mobile'),
+            'mobileBooking' => array(self::HAS_MANY, 'Booking', '', 'on' => 't.patient_mobile = mobileBooking.mobile'),
         );
     }
 
@@ -326,7 +328,7 @@ class AdminBooking extends EActiveRecord {
 
     //去掉不为空字段的空格
     protected function trimAttributes() {
-        return array('expected_time_start', 'expected_time_end');
+        return array('expected_time_start', 'expected_time_end', 'final_hospital_name', 'final_doctor_name', 'final_doctor_mobile');
     }
 
     public function beforeSave() {
@@ -354,6 +356,13 @@ class AdminBooking extends EActiveRecord {
     public function beforeValidate() {
         $this->createRefNumber();
         return parent::beforeValidate();
+    }
+
+    protected function afterFind() {
+        if (is_null($this->final_time) == false) {
+            $this->final_time = $this->dateToDBFormat($this->final_time);
+        }
+        parent::afterFind();
     }
 
     private function createRefNumber() {

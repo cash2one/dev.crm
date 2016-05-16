@@ -26,7 +26,7 @@ class AdminBookingSearch extends ESearchModel {
 //        if ($user->level == AdminUser::LEVEL_USER_NORMAL) {
 //            $this->criteria->compare('t.admin_user_id', $userId);
 //        }
-        $this->criteria->with = array('bkOwner', 'orderAdminbooking', 'userDoctorMobile');
+        $this->criteria->with = array('bkOwner', 'orderAdminbooking', 'userDoctorMobile', 'mobilePatientBooking', 'mobileBooking');
         $this->criteria->distinct = true;
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['orderRefNo']) || isset($this->queryParams['orderType']) || isset($this->queryParams['isPaid']) || isset($this->queryParams['finalAmount']) || isset($this->queryParams['dateOpen']) || isset($this->queryParams['dateClosed'])) {

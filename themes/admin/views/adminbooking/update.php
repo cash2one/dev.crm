@@ -59,7 +59,6 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 echo CHtml::hiddenField("AdminBookingForm[cs_explain]", $model->cs_explain);
 
 echo CHtml::hiddenField("AdminBookingForm[patient_name]", $model->patient_name);
-echo CHtml::hiddenField("AdminBookingForm[patient_mobile]", $model->patient_mobile);
 echo CHtml::hiddenField("AdminBookingForm[patient_age]", $model->patient_age);
 echo CHtml::hiddenField("AdminBookingForm[patient_gender]", $model->patient_gender);
 echo CHtml::hiddenField("AdminBookingForm[state_id]", $model->state_id);
@@ -70,10 +69,6 @@ echo CHtml::hiddenField("AdminBookingForm[disease_name]", $model->disease_name);
 echo CHtml::hiddenField("AdminBookingForm[disease_detail]", $model->disease_detail);
 echo CHtml::hiddenField("AdminBookingForm[expected_time_start]", $model->expected_time_start);
 echo CHtml::hiddenField("AdminBookingForm[expected_time_end]", $model->expected_time_end);
-echo CHtml::hiddenField("AdminBookingForm[expected_hospital_name]", $model->expected_hospital_name);
-echo CHtml::hiddenField("AdminBookingForm[expected_hp_dept_name]", $model->expected_hp_dept_name);
-echo CHtml::hiddenField("AdminBookingForm[expected_doctor_name]", $model->expected_doctor_name);
-echo CHtml::hiddenField("AdminBookingForm[expected_doctor_mobile]", $model->expected_doctor_mobile);
 ?>
 <input type="hidden" id="domain" value="http://7xq93p.com2.z0.glb.qiniucdn.com"> 
 <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('adminbooking/ajaxUpload'); ?>">
@@ -114,7 +109,7 @@ echo CHtml::hiddenField("AdminBookingForm[expected_doctor_mobile]", $model->expe
             <span class="tab-header">患者姓名：</span><?php echo $data->patient_name == null ? '<span class="color-blue">未填写</span>' : $data->patient_name; ?>
         </div>
         <div class="col-md-4">
-            <span class="tab-header">患者电话：</span><?php echo $data->patient_mobile == null ? '<span class="color-blue">未填写</span>' : $data->patient_mobile; ?>
+            <span class="tab-header">患者电话：</span><?php echo $form->textField($model, 'patient_mobile', array('class' => 'form-control w50')); ?>
         </div>
     </div>
     <div class="form-group">
@@ -198,7 +193,7 @@ echo CHtml::hiddenField("AdminBookingForm[expected_doctor_mobile]", $model->expe
 $bookingCreator = new stdClass();
 if (is_null($creator) == false) {
     $bookingCreator->name = $creator->name;
-    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . $creator->mobile . '</a>';
+    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->user_id)) . '">' . substr_replace($creator->mobile, '****', 3, 4) . '</a>';
     $bookingCreator->cTitle = $creator->clinical_title == null ? '无' : $creator->getClinicalTitle(true);
     $bookingCreator->stateName = $creator->state_name == null ? '无' : $creator->state_name;
     $bookingCreator->cityName = $creator->city_name == null ? '无' : $creator->city_name;
@@ -240,21 +235,30 @@ if (is_null($creator) == false) {
         <div class="col-md-8 border-bottom">
             <span class="tab-header">预约详情：</span><?php echo $data->booking_detail == null ? '无' : $data->booking_detail; ?>
         </div>
-        <div class="col-md-3">
-            <span class="tab-header">理想医院：</span><?php echo $data->expected_hospital_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_hospital_name; ?>
+        <div class="col-md-6 col-sm-6">
+            <span class="tab-header">理想医院：</span><?php
+            echo $form->textField($model, 'expected_hospital_name', array('class' => 'form-control w50'));
+            ?>
+            <span><a data-toggle="modal" data-target="#hospitalSearchModal">搜索</a></span>
         </div>
-        <div class="col-md-3">
-            <span class="tab-header">理想科室：</span><?php echo $data->expected_hp_dept_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_hp_dept_name; ?>
-        </div>
-        <div class="col-md-3">
-            <span class="tab-header">理想专家：</span><?php echo $data->expected_doctor_name == null ? '<span class="color-blue">未填写</span>' : $data->expected_doctor_name; ?>
-        </div>
-        <div class="col-md-3">
-            <span class="tab-header">理想专家电话：</span><?php echo $data->expected_doctor_mobile == null ? '<span class="color-blue">未填写</span>' : $data->expected_doctor_mobile; ?>
+        <div class="col-md-6 col-sm-6">
+            <span class="tab-header">理想科室：</span><?php
+            echo $form->textField($model, 'expected_hp_dept_name', array('class' => 'form-control w50'));
+            ?>
+            <a data-toggle="modal" data-target="#commonDeptModal">常用科室</a>
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-6">
+            <span class="tab-header">理想专家：</span><?php echo $form->textField($model, 'expected_doctor_name', array('class' => 'form-control w50')); ?>
+            <a data-toggle="modal" data-target="#searchDoctorModal">搜医生</a>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <span class="tab-header">理想专家电话：</span><?php echo $form->textField($model, 'expected_doctor_mobile', array('class' => 'form-control')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6 col-sm-6">
             <span class="tab-header">最终手术的医院：</span><?php
             echo $form->textField($model, 'final_hospital_name', array('class' => 'form-control'));
 //            echo $form->dropDownList($model, 'final_hospital_id', $model->loadOptionsHospital(), array(
@@ -263,9 +267,8 @@ if (is_null($creator) == false) {
 //                'class' => 'form-control',
 //            ));
             ?>
-            <span><a data-toggle="modal" data-target="#hospitalSearchModal">搜索</a></span>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-6">
             <span class="tab-header">最终手术的专家：</span><?php
             echo $form->textField($model, 'final_doctor_name', array('class' => 'form-control'));
 //            echo $form->dropDownList($model, 'final_doctor_id', $model->loadOptionsDoctorProfile(), array(
@@ -274,14 +277,13 @@ if (is_null($creator) == false) {
 //                'class' => 'form-control',
 //            ));
             ?>
-            <a data-toggle="modal" data-target="#searchDoctorModal">搜医生</a>
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-6">
             <span class="tab-header">最终手术的专家电话：</span><?php echo $form->textField($model, 'final_doctor_mobile', array('class' => 'form-control')); ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-6">
             <span class="tab-header">最终手术时间：</span><?php echo $form->textField($model, 'final_time', array('class' => 'form-control datepicker', 'data-format' => 'yyyy-mm-dd', 'readonly' => true)); ?>
         </div>
     </div>
@@ -405,7 +407,7 @@ if (is_null($creator) == false) {
     </div>
     <div class="form-group">
         <div class="col-sm-12">
-            <span>补充说明：</span><?php echo $data->cs_explain == null ? '<span class="color-blue">未填写</span>' : $data->cs_explain; //$form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500));               ?>
+            <span>补充说明：</span><?php echo $data->cs_explain == null ? '<span class="color-blue">未填写</span>' : $data->cs_explain; //$form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500));                  ?>
         </div>
     </div>
     <div class="form-group">
@@ -547,7 +549,7 @@ $this->renderPartial('searchDoctorModal');
         $('.determineHp').click(function () {
             var hpId = $(this).attr('data-id');
             var hpName = $(this).attr('data-hpName');
-            $('#AdminBookingForm_final_hospital_name').val(hpName);
+            $('#AdminBookingForm_expected_hospital_name').val(hpName);
             //$('#AdminBookingForm_expected_hospital_id').val(hpId);
             $('#hospitalSearchModal').modal('hide');
         });
@@ -556,9 +558,9 @@ $this->renderPartial('searchDoctorModal');
         $('.determineDoctor').click(function () {
             var doctorMobile = $(this).attr('data-mobile') == 'null' ? '' : $(this).attr('data-mobile');
             var doctorName = $(this).attr('data-doctorName');
-            $('#AdminBookingForm_final_doctor_name').val(doctorName);
-            $('#AdminBookingForm_final_doctor_mobile').val(doctorMobile);
+            $('#AdminBookingForm_expected_doctor_name').val(doctorName);
+            $('#AdminBookingForm_expected_doctor_mobile').val(doctorMobile);
             $('#searchDoctorModal').modal('hide');
         });
     }
-</script> 
+</script>
