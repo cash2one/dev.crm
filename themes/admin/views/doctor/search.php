@@ -23,6 +23,12 @@ $urlLoadCity = $this->createUrl('region/loadCities');
 
 <div id='searchForm'>
     <div class="form-group col-sm-2">
+        <label >医生ID</label>
+        <div>
+            <input class="form-control" name = 'id' value = '' >
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
         <label >姓名</label>
         <div>
             <input class="form-control" name = 'name' value = '' >
@@ -119,7 +125,26 @@ $urlLoadCity = $this->createUrl('region/loadCities');
             </select>
         </div>
     </div>
-
+    <div class="form-group col-sm-2">
+        <label >是否签约</label>
+        <div>
+            <select name='isContracted' class="form-control">
+                <option value=''>全部</option>
+                <option value='1'>是</option>
+                <option value='0'>否</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-sm-2">
+        <label >是否牛人榜</label>
+        <div>
+            <select name='role' class="form-control">
+                <option value=''>全部</option>
+                <option value='1'>是</option>
+                <option value='0'>否</option>
+            </select>
+        </div>
+    </div>
     <div class="form-group col-sm-2 mt24">
         <button id = 'btnSearch' type="button" class="btn btn-primary">搜索</button>
     </div> 
@@ -132,10 +157,26 @@ $urlLoadCity = $this->createUrl('region/loadCities');
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
         var requestUrl = "<?php echo $urlSearch; ?>";
-        loadUserSearchResult(requestUrl + '?role=2', selectorSearchResult);
+        loadUserSearchResult(requestUrl + '?he=2', selectorSearchResult);
+
+        //搜索回车操作
+        domForm.find("input,select").keydown(function (event) {
+            if (event.keyCode == "13") {
+                event.preventDefault();
+                var searchUrl = requestUrl + '?he=2';
+                domForm.find("input,select").each(function () {
+                    // trim
+                    var value = $.trim($(this).val());
+                    if (value !== '') {
+                        searchUrl += '&' + $(this).attr('name') + '=' + value;
+                    }
+                });
+                loadUserSearchResult(searchUrl, selectorSearchResult);
+            }
+        });
 
         $("#btnSearch").click(function () {
-            var searchUrl = requestUrl + '?role=2';
+            var searchUrl = requestUrl + '?he=2';
             domForm.find("input,select").each(function () {
                 // trim
                 var value = $.trim($(this).val());

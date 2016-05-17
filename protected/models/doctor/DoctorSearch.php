@@ -11,13 +11,18 @@ class DoctorSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('city', 'state', 'disease', 'hospital', 'hpdept', 'mTitle', 'aTitle', 'name', 'hpName', 'hpDeptName', 'role', 'isContracted');
+        return array('id', 'city', 'state', 'disease', 'hospital', 'hpdept', 'mTitle', 'aTitle', 'name', 'hpName', 'hpDeptName', 'role', 'isContracted');
     }
 
     public function addQueryConditions() {
         $this->criteria->addCondition('t.date_deleted is NULL');
 
         if ($this->hasQueryParams()) {
+            // Doctor.id
+            if (isset($this->queryParams['id'])) {
+                $id = $this->queryParams['id'];
+                $this->criteria->compare('t.id', $id);
+            }
             // Doctor.name
             if (isset($this->queryParams['name'])) {
                 $name = $this->queryParams['name'];
