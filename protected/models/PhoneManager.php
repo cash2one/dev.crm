@@ -64,7 +64,7 @@ class PhoneManager {
             $date = date('Ymd', strtotime($model->date_created));
             $time = time();
             $pwd = md5($this->config->password . $time);
-            $url = "{$this->config->interface_server_ip}/voices/record/{$date}/{$model->record_file}?enterpriseId={$this->config->enterprise_id}&hotline={$this->config->hotline}&userName={$this->config->username}&pwd={$pwd}&seed={$time}";
+            $url = "{$this->config->interface_server_ip}voices/record/{$date}/{$model->record_file}?enterpriseId={$this->config->enterprise_id}&hotline={$this->config->hotline}&userName={$this->config->username}&pwd={$pwd}&seed={$time}";
             header("Content-type: audio/mp3");
             readfile($url);
         }
@@ -80,7 +80,7 @@ class PhoneManager {
             $date = date('Ymd', strtotime($model->date_created));
             $time = time();
             $pwd = md5($this->config->password . $time);
-            $url = "{$this->config->interface_server_ip}/voices/record/{$date}/{$model->record_file}?enterpriseId={$this->config->enterprise_id}&hotline={$this->config->hotline}&userName={$this->config->username}&pwd={$pwd}&seed={$time}";
+            $url = "{$this->config->interface_server_ip}voices/record/{$date}/{$model->record_file}?enterpriseId={$this->config->enterprise_id}&hotline={$this->config->hotline}&userName={$this->config->username}&pwd={$pwd}&seed={$time}";
             header('Content-type: application/x-mp3');
             header('Content-Disposition: attachment; filename='.$model->record_file);
             readfile($url);
