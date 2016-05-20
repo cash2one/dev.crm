@@ -10,6 +10,7 @@
  * @property string $vendor_template_id
  * @property string $content
  * @property integer $type
+ * @property integer $is_auto
  * @property string $module
  * @property string $remark
  * @property string $date_created
@@ -35,14 +36,14 @@ class MsgSmsTemplate extends EActiveRecord
 		// will receive user inputs.
 		return array(
 			array('code, content', 'required'),
-			array('type', 'numerical', 'integerOnly'=>true),
+			array('type, is_auto', 'numerical', 'integerOnly'=>true),
 			array('code, vendor_name, module', 'length', 'max'=>50),
 			array('vendor_template_id', 'length', 'max'=>10),
 			array('content, remark', 'length', 'max'=>200),
 			array('date_created, date_updated, date_deleted', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, code, vendor_name, vendor_template_id, content, type, module, remark, date_created, date_updated, date_deleted', 'safe', 'on'=>'search'),
+			array('id, code, vendor_name, vendor_template_id, content, type, is_auto, module, remark, date_created, date_updated, date_deleted', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -69,6 +70,7 @@ class MsgSmsTemplate extends EActiveRecord
 			'vendor_template_id' => '短信供应商的模板id',
 			'content' => '短信内容',
 			'type' => '1通知类 2营销类',
+			'is_auto' => '1自动 2手动 ',
 			'module' => '模块名称',
 			'remark' => '备注',
 			'date_created' => 'Date Created',
@@ -101,6 +103,7 @@ class MsgSmsTemplate extends EActiveRecord
 		$criteria->compare('vendor_template_id',$this->vendor_template_id,true);
 		$criteria->compare('content',$this->content,true);
 		$criteria->compare('type',$this->type);
+		$criteria->compare('is_auto',$this->is_auto);
 		$criteria->compare('module',$this->module,true);
 		$criteria->compare('remark',$this->remark,true);
 		$criteria->compare('date_created',$this->date_created,true);
