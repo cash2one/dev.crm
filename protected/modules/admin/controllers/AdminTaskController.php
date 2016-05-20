@@ -35,7 +35,7 @@ class AdmintaskController extends AdminController {
 //				'users'=>array('@'),
 //			),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask', 'ajaxReadTask', 'list', 'adminList'),
+                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask', 'ajaxReadTask', 'list', 'adminList', 'ajaxCreateShareTask'),
 //				'users'=>array('admin'),
             ),
             array('deny', // deny all users
@@ -353,6 +353,12 @@ class AdmintaskController extends AdminController {
         $this->render('adminList', array(
             'data' => $output
         ));
+    }
+
+    public function actionAjaxCreateShareTask($id, $type) {
+        $adminBooking = AdminBooking::model()->getById($id);
+        $taskMgr = new TaskManager();
+        $taskMgr->createShareTask($adminBooking, $type);
     }
 
 }

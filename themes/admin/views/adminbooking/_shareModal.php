@@ -73,15 +73,15 @@
                     $serviceCount = 0;
                     if (arrayNotEmpty($orderList)) {
                         foreach ($orderList as $order):
-                            if ($order->order_type == SalesOrder::ORDER_TYPE_DEPOSIT) {
+                            if ($order->orderTypeCode == SalesOrder::ORDER_TYPE_DEPOSIT) {
                                 $depositCount ++;
-                            } elseif ($order->order_type == SalesOrder::ORDER_TYPE_SERVICE) {
+                            } elseif ($order->orderTypeCode == SalesOrder::ORDER_TYPE_SERVICE) {
                                 $serviceCount ++;
                             }
-                            if ($order->order_type == SalesOrder::ORDER_TYPE_DEPOSIT && $order->is_paid == SalesOrder::ORDER_UNPAIDED) {
+                            if ($order->orderTypeCode == SalesOrder::ORDER_TYPE_DEPOSIT && $order->isPaidCode == SalesOrder::ORDER_UNPAIDED) {
                                 $depositPaid = false;
                             }else
-                            if ($order->order_type == SalesOrder::ORDER_TYPE_SERVICE && $order->is_paid == SalesOrder::ORDER_UNPAIDED) {
+                            if ($order->orderTypeCode == SalesOrder::ORDER_TYPE_SERVICE && $order->isPaidCode == SalesOrder::ORDER_UNPAIDED) {
                                 $servicePaid = false;
                             }
                         endforeach;

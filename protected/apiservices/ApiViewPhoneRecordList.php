@@ -60,11 +60,13 @@ class ApiViewPhoneRecordList extends EApiViewService {
             $data->customerNumberType = $model->customer_number_type == null ? '无' : $model->customer_number_type;
             $data->status = $model->getStatus() == null ? '无' : $model->getStatus();
             $data->mobile = $model->customer_number;
-            $data->remark = '无';
+            $data->remark = array();
             if (isset($model->phoneRecordRemark)) {
-                $data->remark = $model->phoneRecordRemark->remark;
+                foreach ($model->phoneRecordRemark as $value) {
+                    $data->remark[] = $value->remark;
+                }
             }
-            $data->recordFile = $model->record_file == null ? '无' : $model->record_file;
+            $data->recordFile = $model->record_file;
             $this->phoneRecords[] = $data;
         }
         $this->results->phoneRecords = $this->phoneRecords;

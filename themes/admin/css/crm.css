@@ -318,3 +318,8 @@ ul.yiiPager .first,ul.yiiPager .last{display:inline;}
 a:hover{cursor: pointer;}
 .pt7{padding-top: 7px;}
 .divider-line{border-bottom: 1px solid #ddd;}
+@media (min-width: 1200px){#outingCallsModal .modal-lg {width: 1200px;}}
+#sendSmdModal ul>li{clear: none;}
+#sendSmdModal ul>li>a{color: #333;}
+#sendSmdModal ul>li.active>a{color: #00f;}
+#sendSmdModal .smsTemplate,#sendSmdModal .smsAmountTemplate,#sendSmdModal .smsWxTemplate{display: inline-block;padding-right: 10px;border-right: 1px solid #ddd;margin-right: 10px;}

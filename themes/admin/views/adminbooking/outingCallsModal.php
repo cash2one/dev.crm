@@ -8,6 +8,7 @@ $callOutUrl = $this->createUrl('phone/callOut');
 $savePhoneRecordUrl = $this->createUrl('phone/createPhoneRecord');
 $actionUrl = $this->createUrl('phone/createPhoneRecordRemark');
 $phoneRecordListUrl = $this->createUrl('phone/phoneRecordList');
+$recordFileUrl = $this->createUrl('phone/recordFile', array('uniqueId' => ''));
 ?>
 <style>.w50{width: 50%;}</style>
 <div class="modal fade" id="outingCallsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -23,8 +24,7 @@ $phoneRecordListUrl = $this->createUrl('phone/phoneRecordList');
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'outingCalls-form',
-                            'action' => $actionUrl,
-                            'htmlOptions' => array('class' => 'form-horizontal'),
+                            'htmlOptions' => array('class' => 'form-horizontal', 'data-action' => $actionUrl, 'data-phoneRecordListUrl' => $phoneRecordListUrl, 'data-recordFileUrl' => $recordFileUrl),
                             'enableAjaxValidation' => false,
                         ));
                         echo CHtml::hiddenField("call[mobile]");
@@ -34,7 +34,7 @@ $phoneRecordListUrl = $this->createUrl('phone/phoneRecordList');
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <label class="control-label">来电号码</label>
-                                <span id="callOutMobile"><?php //echo $model->patient_mobile;  ?></span>
+                                <span id="callOutMobile"><?php //echo $model->patient_mobile;           ?></span>
                                 <span id="callOut" class="btn btn-primary ml30">呼出</span>
                             </div>
                         </div>
@@ -73,23 +73,21 @@ $phoneRecordListUrl = $this->createUrl('phone/phoneRecordList');
                         <div class="clearfix"></div>
                         <div class="mt10 text-right clearfix">
                             <button id="submitCallOutBtn" class="btn btn-primary">保存</button>
+                            <input id="formReset" type="reset" name="reset" style="display: none;" />
                         </div>
                         <?php $this->endWidget(); ?>
                     </div>
                 </div>
                 <div class="divider-line mt10 mb10"></div>
                 <div class="recordList">
-                    <p>通话历史：</p>
-                    <table class="table">
+                    <p>通话历史 ( <span id="callMobile"></span> ) ：</p>
+                    <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>会话ID</th>
-                                <th>开始时间</th>
-                                <th>结束时间</th>
+                                <th>呼出时间</th>
+                                <th>挂机时间</th>
                                 <th>操作员</th>
-                                <th>所属队列</th>
                                 <th>通话状态</th>
-                                <th>电话号码</th>
                                 <th>备注</th>
                                 <th>录音</th>
                             </tr>
@@ -115,8 +113,11 @@ $phoneRecordListUrl = $this->createUrl('phone/phoneRecordList');
             modal.find('.modal-body input#call_mobile').val(mobile);
             var mobileText = new String(mobile);
             modal.find('#callOutMobile').text(mobileText.substr(0, 3) + '****' + mobileText.substr(7));
+            modal.find('#callMobile').text(mobileText.substr(0, 3) + '****' + mobileText.substr(7));
             var phoneRecordListUrl = '<?php echo $phoneRecordListUrl; ?>';
-            ajaxLoadPhoneRecordByMobile(mobile, phoneRecordListUrl);
+            var recordFileUrl = '<?php echo $recordFileUrl; ?>';
+            ajaxLoadPhoneRecordByMobile(mobile, phoneRecordListUrl, recordFileUrl);
+            enableBtn($('#callOut'));
         });
         $('#callOut').click(function () {
             disabledBtn($(this));

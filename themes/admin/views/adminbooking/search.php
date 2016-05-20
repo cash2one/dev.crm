@@ -17,6 +17,9 @@ $this->menu = array(
 $urlSearch = $this->createUrl('adminbooking/searchResult');
 $urlUserView = $this->createAbsoluteUrl('adminbooking/view');
 $urlLoadCity = $this->createUrl('region/loadCities');
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datepicker.css");
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datetimepicker.css");
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.zh-CN.js', CClientScript::POS_END);
@@ -333,13 +336,13 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
     <div class="mt15 w10">
         <label >录入日期</label>
         <div>
-            <input class="form-control dateOpen inline-block" name = 'dateCreatedStart' value = '' placeholder="开始时间">
+            <input class="form-control dateTimeOpen inline-block" name = 'dateCreatedStart' value = '' placeholder="开始时间">
         </div>
     </div> 
     <div class="mt15 w10">
         <label >&nbsp;</label>
         <div>
-            <input class="form-control dateClosed inline-block" name = 'dateCreatedEnd' value = '' placeholder="结束时间">
+            <input class="form-control dateTimeClosed inline-block" name = 'dateCreatedEnd' value = '' placeholder="结束时间">
         </div>
     </div>
     <div class="clearfix"></div>
@@ -478,14 +481,34 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
     <div class="clearfix"></div>
 </div>
 
-<div id="searchResult">   
+<div id="searchResult" class="mt10">   
 </div>
 
 
 <script>
     $(document).ready(function () {
         var days = "";
-        var date = $(".dateOpen").datetimepicker({
+        var date = $(".dateOpen").datepicker({
+            //startDate: "+1d",
+            //todayBtn: true,
+            autoclose: true,
+            //todayHighlight: true,
+            pickerPosition: "bottom-left",
+            format: "yyyy-mm-dd",
+            language: "zh-CN"
+        }).on('changeDate', function (e) {
+            $('.dateClosed').datepicker('setStartDate', getStartTime(e.date));
+        });
+        $(".dateClosed").datepicker({
+            //startDate: "+1d",
+            //todayBtn: true,
+            autoclose: true,
+            //todayHighlight: true,
+            pickerPosition: "bottom-left",
+            format: "yyyy-mm-dd",
+            language: "zh-CN"
+        });
+        $(".dateTimeOpen").datetimepicker({
             //startDate: "+1d",
             //todayBtn: true,
             autoclose: true,
@@ -494,9 +517,9 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
             format: "yyyy-mm-dd hh:ii",
             language: "zh-CN"
         }).on('changeDate', function (e) {
-            $('.dateClosed').datetimepicker('setStartDate', getStartTime(e.date));
+            $('.dateTimeClosed').datetimepicker('setStartDate', getStartTime(e.date));
         });
-        $(".dateClosed").datetimepicker({
+        $(".dateTimeClosed").datetimepicker({
             //startDate: "+1d",
             //todayBtn: true,
             autoclose: true,
@@ -513,7 +536,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
         }
         var selectorSearchResult = '#searchResult';
         var domForm = $("#searchForm");
-        var requestUrl = "<?php echo $urlSearch; ?>";
+        var requestUrl = "<?php echo $urlSearch; ?>?getcount=1";
         loadUserSearchResult(requestUrl, selectorSearchResult);
 
         $("#btnSearch").click(function () {
@@ -525,7 +548,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/b
                     searchUrl += '&' + $(this).attr('name') + '=' + value;
                 }
             });
-            searchUrl = '?' + searchUrl.substr(1);
+            //searchUrl = '?' + searchUrl.substr(1);
             loadUserSearchResult(requestUrl + searchUrl, selectorSearchResult);
         });
 

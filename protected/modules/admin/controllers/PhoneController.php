@@ -31,7 +31,7 @@ class PhoneController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('view', 'callOut', 'createPhoneRecord', 'createPhoneRecordRemark', 'phoneRecordList'),
+                'actions' => array('view', 'callOut', 'createPhoneRecord', 'createPhoneRecordRemark', 'phoneRecordList', 'recordFile'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -62,7 +62,7 @@ class PhoneController extends AdminController {
             $user = $this->getCurrentUser();
             $phoneRecord = new PhoneRecord();
             $phoneRecord->main_unique_id = $value['uniqueId'];
-            $phoneRecord->callee_number = $value['mobile'];
+            $phoneRecord->customer_number = $value['mobile'];
             $phoneRecord->admin_user_id = $user->id;
             $phoneRecord->admin_user_name = $user->fullname;
             $phoneRecord->cno = $user->cno;
@@ -92,6 +92,11 @@ class PhoneController extends AdminController {
         $apisvc = new ApiViewPhoneRecordList($mobile);
         $output = $apisvc->loadApiViewData();
         $this->renderJsonOutput($output);
+    }
+
+    public function actionRecordFile($uniqueId) {
+        $model = new PhoneManager();
+        $model->getRecord($uniqueId);
     }
 
     public function actionTest() {

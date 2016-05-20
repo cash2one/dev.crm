@@ -7,11 +7,15 @@ class SmsManager {
     const VENDOR_ACTIVE = 'jianzhou';
     const TYPE_INFORM = 1; //通知
     const TYPE_MARKETING = 2; //营销
+    const IS_AUTO_YES = 1;
+    const IS_AUTO_NO = 0;
     const ACTIVATE_NO = 0; //未激活
     const ACTIVATE_OK = 1; //已激活
+
     /**
      * 发起HTTPS请求
      */
+
     public function curlRequest($url, $data, $post = 1) {
         //初始化curl
         $ch = curl_init();
@@ -38,8 +42,8 @@ class SmsManager {
         return $result;
     }
 
-    public function sendSmsTemplateViaJianZhou($to, $content, $type=self::TYPE_INFORM) {
-        $config = ConfigSms::model()->getByAttributes(array('sms_name'=>self::VENDOR_JIANZHOU, 'type'=>$type));
+    public function sendSmsTemplateViaJianZhou($to, $content, $type = self::TYPE_INFORM) {
+        $config = ConfigSms::model()->getByAttributes(array('sms_name' => self::VENDOR_JIANZHOU, 'type' => $type));
         $post_data = array(
             'account' => $config->sms_id,
             'password' => $config->key,
@@ -240,6 +244,7 @@ class SmsManager {
      */
     public function sendSmsNewUser($to, $data, $vendor = self::VENDOR_ACTIVE) {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
+            
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'newUser', 'vendor_name' => $vendor));
             $mobile = substr($to, -4);
@@ -259,10 +264,11 @@ class SmsManager {
      */
     public function sendSmsServicePhoneNot($to, $data, $vendor = self::VENDOR_ACTIVE) {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
+            
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'service.phone.not', 'vendor_name' => $vendor));
-            $values = array($data->disease, $data->expert);
-            $content = str_replace(array('{disease}', '{expert}'), $values, $model->content);
+            $values = array($data->disease);
+            $content = str_replace(array('{disease}'), $values, $model->content);
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
     }
@@ -275,8 +281,10 @@ class SmsManager {
      */
     public function sendSmsServiceDistrust($to, $vendor = self::VENDOR_ACTIVE) {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
+            
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'service.distrust', 'vendor_name' => $vendor));
+            $content = $model->content;
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
     }
@@ -289,8 +297,10 @@ class SmsManager {
      */
     public function sendSmsServiceReject($to, $vendor = self::VENDOR_ACTIVE) {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
+            
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'service.reject', 'vendor_name' => $vendor));
+            $content = $model->content;
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
     }
@@ -304,6 +314,7 @@ class SmsManager {
      */
     public function sendSmsWeixinAdd($to, $data, $vendor = self::VENDOR_ACTIVE) {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
+            
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'wx.add', 'vendor_name' => $vendor));
             $values = array($data->weixin);
@@ -311,6 +322,7 @@ class SmsManager {
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
     }
+
     /**
      * 汇款方式支付宝
      * @param type $to
@@ -320,6 +332,7 @@ class SmsManager {
      */
     public function sendSmsPayAlipay($to, $data, $vendor = self::VENDOR_ACTIVE) {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
+            
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'pay.alipay', 'vendor_name' => $vendor));
             $values = array($data->money);
@@ -327,6 +340,7 @@ class SmsManager {
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
     }
+
     /**
      * 汇款方式银行汇款
      * @param type $to
@@ -336,12 +350,33 @@ class SmsManager {
      */
     public function sendSmsPayBank($to, $data, $vendor = self::VENDOR_ACTIVE) {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
+            
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'pay.bank', 'vendor_name' => $vendor));
             $values = array($data->money);
             $content = str_replace(array('{money}'), $values, $model->content);
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
+    }
+
+    //查询某订单的短信发送记录
+    public function loadSmsLogByAdminBookingId($adminBookingId) {
+        return AdminUserSmsJoin::model()->getAllByAttributes(array('admin_booking_id' => $adminBookingId), array('msgSmsLog'));
+    }
+
+    //查询手动发送的短信模板
+    public function loadMsgSmsTemplateByIsNotAuto($is_auto = self::IS_AUTO_NO) {
+        $output = array();
+        $templateSms = MsgSmsTemplate::model()->getAllByAttributes(array('is_auto' => $is_auto));
+        foreach ($templateSms as $v) {
+            $data = new stdClass();
+            $data->code = $v->code;
+            $data->type = $v->type;
+            $data->remark = $v->remark;
+            $data->content = $v->content;
+            $output[] = $data;
+        }
+        return $output;
     }
 
 }

@@ -27,11 +27,12 @@ class AdminTaskJoin extends EActiveRecord {
     const TASK_TYPE_BK = 1;
     const TASK_TYPE_USER_DR = 2;
     const TASK_TYPE_ORDER = 3;
-    const TASK_TYPE_DA = 4;//出院小结
+    const TASK_TYPE_DA = 4; //出院小结
 
     /**
      * @return string the associated database table name
      */
+
     public function tableName() {
         return 'admin_task_join';
     }
@@ -131,12 +132,12 @@ class AdminTaskJoin extends EActiveRecord {
     /**
      * 获取新任务
      */
-    public function getNewTask($adminUserId, $count=0) {
+    public function getNewTask($adminUserId, $count = 0) {
         $criteria = new CDbCriteria();
         $criteria->addCondition("t.date_deleted is NULL");
         $criteria->compare("t.is_read", self::NOT_READ);
         $criteria->addCondition("t.admin_user_id=:adminUserId");
-        if($count > 0){
+        if ($count > 0) {
             $criteria->offset = $count;
         }
         $criteria->limit = 99;
@@ -148,12 +149,12 @@ class AdminTaskJoin extends EActiveRecord {
     /**
      * 获取未完成任务
      */
-    public function getUndoneTask($adminUserId, $count=0) {
+    public function getUndoneTask($adminUserId, $count = 0) {
         $criteria = new CDbCriteria();
         $criteria->addCondition("t.date_deleted is NULL");
         $criteria->addCondition("t.date_done is NULL");
         $criteria->addCondition("t.admin_user_id=:adminUserId");
-        if($count > 0){
+        if ($count > 0) {
             $criteria->offset = $count;
         }
         $criteria->limit = 99;
@@ -161,7 +162,6 @@ class AdminTaskJoin extends EActiveRecord {
 
         return $this->findAll($criteria);
     }
-
 
     /**
      * 获取推送任务
@@ -260,6 +260,10 @@ class AdminTaskJoin extends EActiveRecord {
 
     public function getDateDone() {
         return $this->date_done;
+    }
+
+    public function getAdminTask() {
+        return $this->adminTask;
     }
 
 }

@@ -75,7 +75,7 @@ class PhoneRecord extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'phoneRecordRemark' => array(self::BELONGS_TO, 'PhoneRecordRemark', '', 'on' => 't.id = phoneRecordRemark.phone_record_id'),
+            'phoneRecordRemark' => array(self::HAS_MANY, 'PhoneRecordRemark', '', 'on' => 't.id = phoneRecordRemark.phone_record_id'),
         );
     }
 

@@ -1,25 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "admin_user_sms_join".
+ * This is the model class for table "crm_core_access".
  *
- * The followings are the available columns in table 'admin_user_sms_join':
+ * The followings are the available columns in table 'crm_core_access':
  * @property integer $id
  * @property integer $admin_user_id
  * @property string $admin_user_name
- * @property string $admin_user_title
- * @property integer $msg_sms_id
+ * @property string $user_host_ip
+ * @property string $url
+ * @property string $url_referrer
+ * @property string $user_agent
+ * @property string $user_host
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
  */
-class AdminUserSmsJoin extends EActiveRecord {
+class CrmCoreAccess extends EActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'admin_user_sms_join';
+        return 'crm_core_access';
     }
 
     /**
@@ -29,12 +32,16 @@ class AdminUserSmsJoin extends EActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('id, admin_user_id, admin_booking_id, msg_sms_id', 'numerical', 'integerOnly' => true),
-            array('admin_user_name, admin_user_title', 'length', 'max' => 20),
+            array('admin_user_id', 'numerical', 'integerOnly' => true),
+            array('admin_user_name', 'length', 'max' => 50),
+            array('user_host_ip', 'length', 'max' => 20),
+            array('url, user_agent', 'length', 'max' => 200),
+            array('url_referrer', 'length', 'max' => 255),
+            array('user_host', 'length', 'max' => 45),
             array('date_created, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, admin_user_id, admin_user_name, admin_user_title, msg_sms_id, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, admin_user_id, admin_user_name, user_host_ip, url, url_referrer, user_agent, user_host, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -45,7 +52,6 @@ class AdminUserSmsJoin extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'msgSmsLog' => array(self::BELONGS_TO, 'MsgSmsLog', '', 'on' => 't.msg_sms_id = msgSmsLog.id'),
         );
     }
 
@@ -55,11 +61,14 @@ class AdminUserSmsJoin extends EActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'admin_user_id' => '发送的客服ID',
-            'admin_user_name' => '客服姓名',
-            'admin_user_title' => '角色抬头',
-            'msg_sms_id' => '短信信息ID',
-            'date_created' => '创建时间',
+            'admin_user_id' => '管理员ID',
+            'admin_user_name' => '管理员姓名',
+            'user_host_ip' => 'IP地址',
+            'url' => '访问链接',
+            'url_referrer' => '所在页面地址',
+            'user_agent' => '操作系统',
+            'user_host' => 'User Host',
+            'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
             'date_deleted' => 'Date Deleted',
         );
@@ -85,8 +94,11 @@ class AdminUserSmsJoin extends EActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('admin_user_id', $this->admin_user_id);
         $criteria->compare('admin_user_name', $this->admin_user_name, true);
-        $criteria->compare('admin_user_title', $this->admin_user_title, true);
-        $criteria->compare('msg_sms_id', $this->msg_sms_id);
+        $criteria->compare('user_host_ip', $this->user_host_ip, true);
+        $criteria->compare('url', $this->url, true);
+        $criteria->compare('url_referrer', $this->url_referrer, true);
+        $criteria->compare('user_agent', $this->user_agent, true);
+        $criteria->compare('user_host', $this->user_host, true);
         $criteria->compare('date_created', $this->date_created, true);
         $criteria->compare('date_updated', $this->date_updated, true);
         $criteria->compare('date_deleted', $this->date_deleted, true);
@@ -100,13 +112,10 @@ class AdminUserSmsJoin extends EActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return AdminUserSmsJoin the static model class
+     * @return CrmCoreAccess the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
-    public function getMsgSmsLog() {
-        return $this->msgSmsLog;
-    }
 }

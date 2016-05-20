@@ -193,7 +193,7 @@ class OrderController extends AdminController {
         $order->subject = $booking->patient_name;
         $order->description = $booking->booking_detail;
         $order->bd_code = $booking->bd_user_name;
-        $order->cash_back = $booking->bd_user_name;
+        $order->cash_back = strIsEmpty($booking->bd_user_name) ? '否' : $booking->bd_user_name;
         if ($booking->getTravelType(false) == StatCode::BK_TRAVELTYPE_PATIENT_GO) {
             $order->order_type = SalesOrder::ORDER_TYPE_SERVICE;
             $order->setAmount(1000.00);
@@ -456,6 +456,7 @@ class OrderController extends AdminController {
         $criteria->compare("s.payment_status", StatCode::PAY_SUCCESS);
         $criteria->distinct = true;
         $criteria->addCondition("t.date_deleted is NULL");
+        $criteria->addCondition("t.final_amount > 1");
         $criteria->order = "t.id DESC";
         $dataProvider = new CActiveDataProvider('SalesOrder', array(
             'criteria' => $criteria,

@@ -1,22 +1,28 @@
 jQuery(function () {
     var $ = jQuery, // just in case. Make sure it's not an other libaray.
-            domForm = $("#outingCalls-form"),
-            btnSubmit = $("#submitCallOutBtn");
+            outingCallsForm = $("#outingCalls-form"),
+            submitCallOutBtn = $("#submitCallOutBtn");
 //提交按钮点击事件
-    btnSubmit.click(function () {
+    submitCallOutBtn.click(function () {
         //触发表单提交事件
-        domForm.submit();
+        //outingCallsForm.submit();
     });
 //表单验证板块
-    var validator = domForm.validate({
+    var validator = outingCallsForm.validate({
         rules: {
             'call[remark]': {
+                required: true
+            },
+            'call[phoneRecordId]': {
                 required: true
             }
         },
         messages: {
             'call[remark]': {
                 required: '请填写备注内容'
+            },
+            'call[phoneRecordId]': {
+                required: '请先拨打电话'
             }
         },
 //        errorContainer: "div.error",
@@ -29,31 +35,38 @@ jQuery(function () {
         },
         submitHandler: function () {
             //form插件的异步无刷新提交
-            actionUrl = domForm.attr('action');
-            disabledBtn(btnSubmit);
-            //alert("asdf");
-            //    btnSubmit.button("disable");
-            domForm.ajaxSubmit({
+            actionUrl = outingCallsForm.attr('data-action');
+            disabledBtn(submitCallOutBtn);
+            var phoneRecordId = outingCallsForm.find('#call_phoneRecordId').val();
+            var mobile = outingCallsForm.find('#call_mobile').val();
+            var phoneRecordListUrl = outingCallsForm.attr('data-phoneRecordListUrl');
+            if (!phoneRecordId) {
+                alert('请先拨打电话!');
+                enableBtn(submitCallOutBtn);
+                return;
+            }
+            outingCallsForm.ajaxSubmit({
                 type: 'post',
                 url: actionUrl,
                 success: function (data) {
                     if (data.status == 'ok') {
                         alert('保存成功!');
-                        location.reload();
+                        $('#formReset').trigger("click");
+                        ajaxLoadPhoneRecordByMobile(mobile, phoneRecordListUrl);
                     } else {
                         alert('保存失败!');
                     }
-                    enableBtn(btnSubmit);
+                    enableBtn(submitCallOutBtn);
                 },
                 error: function (XmlHttpRequest, textStatus, errorThrown) {
                     alert('保存失败!');
-                    enableBtn(btnSubmit);
+                    enableBtn(submitCallOutBtn);
                     console.log(XmlHttpRequest);
                     console.log(textStatus);
                     console.log(errorThrown);
                 },
                 complete: function () {
-                    enableBtn(btnSubmit);
+                    enableBtn(submitCallOutBtn);
                 }
             });
         }
@@ -94,35 +107,53 @@ function savePhoneRecord(mobile, uniqueId, savePhoneRecordUrl) {
         }
     });
 }
-function ajaxLoadPhoneRecordByMobile(mobile, phoneRecordListUrl) {
+function ajaxLoadPhoneRecordByMobile(mobile, phoneRecordListUrl, recordFileUrl) {
     $.ajax({
         url: phoneRecordListUrl,
         data: {'mobile': mobile},
         success: function (data) {
-            setPhoneRecordListHtml(data.results);
+            setPhoneRecordListHtml(data.results, recordFileUrl);
         },
         error: function () {
 
         }
     });
 }
-function setPhoneRecordListHtml(results) {
+function setPhoneRecordListHtml(results, recordFileUrl) {
     var innerHtml = '';
     if (results.phoneRecords) {
         var phoneRecords = results.phoneRecords;
         for (var i = 0; i < phoneRecords.length; i++) {
             var phoneRecord = phoneRecords[i];
-            innerHtml += '<tr>' +
-                    '<td>' + phoneRecord.uniqueId + '</td>' +
-                    '<td>' + phoneRecord.startTime + '</td>' +
-                    '<td>' + phoneRecord.endTime + '</td>' +
-                    '<td>' + phoneRecord.adminUserName + '</td>' +
-                    '<td>' + phoneRecord.customerNumberType + '</td>' +
-                    '<td>' + phoneRecord.status + '</td>' +
-                    '<td>' + phoneRecord.mobile + '</td>' +
-                    '<td>' + phoneRecord.remark + '</td>' +
-                    '<td>' + phoneRecord.recordFile + '</td>' +
-                    '</tr>';
+            var remarks = phoneRecord.remark;
+            var remarkLength = remarks.length;
+            var recordFile = phoneRecord.recordFile == null || phoneRecord.recordFile == '' ? '无' : '<a target="_blank" href="' + recordFileUrl + '/' + phoneRecord.uniqueId + '">播放</a>';
+            if (remarkLength > 1) {
+                for (var j = 0; j < remarkLength; j++) {
+                    var remark = remarks[j];
+                    innerHtml += '<tr>';
+                    if (j == 0) {
+                        innerHtml += '<td rowspan="' + remarkLength + '">' + phoneRecord.startTime + '</td>' +
+                                '<td rowspan="' + remarkLength + '">' + phoneRecord.endTime + '</td>' +
+                                '<td rowspan="' + remarkLength + '">' + phoneRecord.adminUserName + '</td>' +
+                                '<td rowspan="' + remarkLength + '">' + phoneRecord.status + '</td>'
+                    }
+                    innerHtml += '<td>' + remark + '</td>';
+                    if (j == 0) {
+                        innerHtml += '<td rowspan="' + remarkLength + '">' + recordFile + '</td>';
+                    }
+                    innerHtml += '</tr>';
+                }
+            } else {
+                innerHtml += '<tr>' +
+                        '<td>' + phoneRecord.startTime + '</td>' +
+                        '<td>' + phoneRecord.endTime + '</td>' +
+                        '<td>' + phoneRecord.adminUserName + '</td>' +
+                        '<td>' + phoneRecord.status + '</td>' +
+                        '<td>' + phoneRecord.remark + '</td>' +
+                        '<td>' + recordFile + '</td>' +
+                        '</tr>';
+            }
         }
     } else {
         innerHtml = '<tr><td colspan="9">无记录</td></tr>';

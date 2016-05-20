@@ -67,6 +67,7 @@ class AdminController extends RController {
     }
 
     public function init() {
+        $this->storeAdminUserAccessInfo();
         parent::init();
     }
 
@@ -98,7 +99,7 @@ class AdminController extends RController {
             return null;
         }
     }
-    
+
     public function getCurrentUserId() {
         return Yii::app()->user->id;
     }
@@ -128,4 +129,25 @@ class AdminController extends RController {
         $result = file_get_contents($url, false);
         return json_decode($result, true);
     }
+
+    /**
+     * Stores user's access info for every request.
+     */
+    public function storeAdminUserAccessInfo() {
+        $crmCoreAccess = new CrmCoreAccess();
+        $crmCoreAccess->admin_user_id = $this->getCurrentUserId();
+        $crmCoreAccess->admin_user_name = Yii::app()->user->name;
+        $crmCoreAccess->user_host_ip = Yii::app()->request->getUserHostAddress();
+        $crmCoreAccess->url = $this->getCurrentRequestUrl();
+        $crmCoreAccess->url_referrer = Yii::app()->request->getUrlReferrer();
+        $crmCoreAccess->user_agent = Yii::app()->request->getUserAgent();
+        $crmCoreAccess->user_host = Yii::app()->request->getUserHost();
+        $crmCoreAccess->save();
+    }
+
+    public function getCurrentRequestUrl() {
+        $request = Yii::app()->request;
+        return $request->hostInfo . $request->url;
+    }
+
 }

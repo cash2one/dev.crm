@@ -150,8 +150,7 @@ class TaskManager {
      */
     public function createTaskOrder(SalesOrder $model) {
         $adminTask = new AdminTask();
-
-        $adminTask->subject = $model->subject;
+        $adminTask->subject = "订单号{$model->ref_no}的订单已完成支付"; //$model->subject;
         $adminTask->content = $model->description . '已支付完成';
         $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/order/view', array('id' => $model->getId()));
 
@@ -167,7 +166,6 @@ class TaskManager {
             if ($adminBooking) {
                 $adminTaskJoin->admin_user_id = $adminBooking->admin_user_id;
             }
-
             $adminTaskJoin->work_type = AdminTaskJoin::WORK_TYPE_TEL;
             $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_ORDER;
             if ($adminTaskJoin->save() === false) {
@@ -500,6 +498,26 @@ class TaskManager {
                 }
             }
         }
+    }
+
+    public function createShareTask($adminBooking, $type) {
+        $values = array();
+        $shareType = null;
+        switch ($type) {
+            case 'KA':
+                $shareType = 'KA';
+                break;
+            case 'BD':
+                $shareType = '地推';
+                break;
+            default :
+                $shareType = '地推';
+        }
+        $values['content'] = '将此订单分享给了' . $shareType;
+        $values['admin_user_id'] = Yii::app()->user->id;
+        $values['work_type'] = AdminTaskJoin::WORK_TYPE_TEL;
+        $values['date_plan'] = date('Y-m-d H:i:s', time() + 3600 * 24 * 3);
+        $this->createTaskPlan($adminBooking, $values);
     }
 
 }
