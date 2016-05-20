@@ -322,7 +322,7 @@ class SmsManager {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'pay.alipay', 'vendor_name' => $vendor));
-            $values = array($data->disease, $data->expert);
+            $values = array($data->money);
             $content = str_replace(array('{money}'), $values, $model->content);
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
@@ -338,7 +338,7 @@ class SmsManager {
         if ($vendor == self::VENDOR_YUNTONGXUN) {
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'pay.bank', 'vendor_name' => $vendor));
-            $values = array($data->disease, $data->expert);
+            $values = array($data->money);
             $content = str_replace(array('{money}'), $values, $model->content);
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
