@@ -70,7 +70,7 @@ class MsgSmsTemplate extends EActiveRecord
 			'vendor_template_id' => '短信供应商的模板id',
 			'content' => '短信内容',
 			'type' => '1通知类 2营销类',
-			'is_auto' => '1自动 2手动 ',
+			'is_auto' => '0手动  1自动',
 			'module' => '模块名称',
 			'remark' => '备注',
 			'date_created' => 'Date Created',
