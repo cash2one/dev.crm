@@ -446,6 +446,9 @@ class BookingManager {
             $adminBooking->booking_type = AdminBooking::BK_TYPE_PB;
             //添加期望医生
             $adminBooking->expected_doctor_name = $model->expected_doctor;
+            //补充字段 科室 医院
+            $adminBooking->expected_hospital_name = $model->expected_hospital;
+            $adminBooking->expected_hp_dept_name = $model->expected_dept;
             $adminBooking->patient_id = $model->patient_id;
             $adminBooking->patient_name = $model->patient_name;
             if (strIsEmpty($model->patient_id) === false) {
@@ -466,7 +469,6 @@ class BookingManager {
                     $stateId = $patient->state_id;
                 }
             }
-
             $adminBooking->booking_detail = $model->detail;
             $adminBooking->travel_type = $model->travel_type;
             $adminBooking->booking_status = $model->status;
@@ -517,7 +519,7 @@ class BookingManager {
             }
             $adminBooking->expected_hospital_id = $model->hospital_id;
             $adminBooking->expected_hospital_name = $model->hospital_name;
-            $adminBooking->expected_hp_dept_name = $model->hp_dept_id;
+            $adminBooking->expected_hp_dept_id = $model->hp_dept_id;
             $adminBooking->expected_hp_dept_name = $model->hp_dept_name;
             $adminBooking->disease_name = $model->disease_name;
             $adminBooking->disease_detail = $model->disease_detail;
