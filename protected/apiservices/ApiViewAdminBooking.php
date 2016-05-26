@@ -15,6 +15,7 @@ class ApiViewAdminBooking extends EApiViewService {
     public function __construct($id) {
         $this->id = $id;
         $this->smsMrg = new SmsManager();
+        $this->results = new stdClass();
     }
 
     protected function loadData() {
@@ -53,13 +54,13 @@ class ApiViewAdminBooking extends EApiViewService {
         $this->adminBooking = $model;
         $this->bookingRefNo = $model->ref_no;
         $this->creatorDoctorId = $model->creator_doctor_id;
-        $this->results['adminBooking'] = $this->adminBooking;
+        $this->results->adminBooking = $this->adminBooking;
     }
 
     private function initAdminBookingForm($model) {
         $form = new AdminBookingForm;
         $form->initModel($model);
-        $this->results['model'] = $form;
+        $this->results->model = $form;
     }
 
     private function loadOrderList() {
@@ -87,7 +88,7 @@ class ApiViewAdminBooking extends EApiViewService {
             $data->dateClosed = $value->date_closed;
             $this->orderList[] = $data;
         }
-        $this->results['orderList'] = $this->orderList;
+        $this->results->orderList = $this->orderList;
     }
 
     private function loadAdminTasks() {
@@ -109,7 +110,12 @@ class ApiViewAdminBooking extends EApiViewService {
             $data->id = $taskBkJoin->id;
             $data->taskJoinId = $taskJoin->id;
             $data->date_plan = $taskJoin->date_plan;
-            $data->admin_user = AdminUser::model()->getById($taskJoin->admin_user_id)->fullname;
+            $adminUser = AdminUser::model()->getById($taskJoin->admin_user_id);
+            if (isset($adminUser)) {
+                $data->admin_user = $adminUser->fullname;
+            } else {
+                $data->admin_user = '无';
+            }
             $data->type = $taskJoin->getType(false);
             $data->work_type = $taskJoin->getWorkType();
             $data->content = $task->content;
@@ -120,32 +126,41 @@ class ApiViewAdminBooking extends EApiViewService {
                 $this->adminTasks['adminTasksNotDone'][] = $data;
             }
         }
-        $this->results['adminTasks'] = $this->adminTasks;
+        $this->results->adminTasks = $this->adminTasks;
     }
 
     private function loadCreator() {
         if (is_null($this->creator) && strIsEmpty($this->creatorDoctorId) == false) {
-            $model = UserDoctorProfile::model()->getByUserId($this->creatorDoctorId);
+            //$model = UserDoctorProfile::model()->getByUserId($this->creatorDoctorId);
+            $model = User::model()->getByAttributes(array('id' => $this->creatorDoctorId, 'role' => User::ROLE_DOCTOR), array('userDoctorProfile'));
             if (isset($model)) {
                 $this->setCreator($model);
             }
-        } else {
-            $this->results['creator'] = null;
         }
     }
 
     private function setCreator($model) {
         $data = new stdClass();
-        $data->userId = $model->user_id;
-        $data->name = $model->name;
-        $data->mobile = $model->mobile;
-        $data->cTitle = $model->clinical_title == null ? '无' : $model->getClinicalTitle(true);
-        $data->stateName = $model->state_name == null ? '无' : $model->state_name;
-        $data->cityName = $model->city_name == null ? '无' : $model->city_name;
-        $data->hpName = $model->hospital_name == null ? '无' : $model->hospital_name;
-        $data->hpDeptName = $model->hp_dept_name == null ? '无' : $model->hp_dept_name;
+        $data->userId = $model->id;
+        $userDocotrProfile = $model->getUserDoctorProfile();
+        $data->mobile = $model->username;
+        if (is_null($userDocotrProfile) == false) {
+            $data->name = $userDocotrProfile->name;
+            $data->cTitle = $userDocotrProfile->clinical_title == null ? '无' : $userDocotrProfile->getClinicalTitle(true);
+            $data->stateName = $userDocotrProfile->state_name == null ? '无' : $userDocotrProfile->state_name;
+            $data->cityName = $userDocotrProfile->city_name == null ? '无' : $userDocotrProfile->city_name;
+            $data->hpName = $userDocotrProfile->hospital_name == null ? '无' : $userDocotrProfile->hospital_name;
+            $data->hpDeptName = $userDocotrProfile->hp_dept_name == null ? '无' : $userDocotrProfile->hp_dept_name;
+        } else {
+            $data->name = '无';
+            $data->cTitle = '无';
+            $data->stateName = '无';
+            $data->cityName = '无';
+            $data->hpName = '无';
+            $data->hpDeptName = '无';
+        }
         $this->creator = $data;
-        $this->results['creator'] = $this->creator;
+        $this->results->creator = $this->creator;
     }
 
     private function loadSmsList() {
@@ -168,7 +183,7 @@ class ApiViewAdminBooking extends EApiViewService {
             $data->dateCreated = $smsLog->date_created;
             $this->smsList[] = $data;
         }
-        $this->results['smsList'] = $this->smsList;
+        $this->results->smsList = $this->smsList;
     }
 
 }

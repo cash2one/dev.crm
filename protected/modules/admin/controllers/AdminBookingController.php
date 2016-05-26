@@ -227,13 +227,21 @@ class AdminbookingController extends AdminController {
         if (strIsEmpty($model->creator_doctor_id) == false) {
             $creator = UserDoctorProfile::model()->getByUserId($model->creator_doctor_id);
         }
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        $this->render('update', array(
-            'model' => $form,
-            'data' => $model,
-            'creator' => $creator
-        ));
+        //高级客服修改更多信息
+        $user = $this->getCurrentUser();
+        if ($user->level == AdminUser::LEVEL_USER_SUPER) {
+            $this->render('superUpdate', array(
+                'model' => $form,
+                'data' => $model,
+                'creator' => $creator
+            ));
+        } else {
+            $this->render('update', array(
+                'model' => $form,
+                'data' => $model,
+                'creator' => $creator
+            ));
+        }
     }
 
     public function actionAjaxUpdate() {
@@ -269,15 +277,28 @@ class AdminbookingController extends AdminController {
                 $form->final_doctor_name = $userDoctorProfile->getName();
             }
             //业务员信息
-            if (!strIsEmpty($form->admin_user_id)) {
-                $adminUser = AdminUser::model()->getById($form->admin_user_id);
-                $form->admin_user_name = $adminUser->fullname;
-            }
-
+//            if (!strIsEmpty($form->admin_user_id)) {
+//                $adminUser = AdminUser::model()->getById($form->admin_user_id);
+//                $form->admin_user_name = $adminUser->fullname;
+//            }
             //最终手术时间如无则设为NULL
             if (strIsEmpty($form->final_time)) {
                 $form->final_time = NULL;
             }
+            //设置年龄
+            if (strIsEmpty($form->birth_year) == false && strIsEmpty($form->birth_month) == false) {
+                $form->patient_age = $form->birth_year . ',' . $form->birth_month;
+            } else if (strIsEmpty($form->birth_year) == false) {
+                $form->patient_age = $form->birth_year . ',0';
+            } else if (strIsEmpty($form->birth_month) == false) {
+                $form->patient_age = '0,' . $form->birth_month;
+            } else {
+                $form->patient_age = null;
+            }
+            //同步修改patientBooking和patientInfo里的信息
+            $bookingMgr = new BookingManager();
+            $attr = array('patient_name' => $form->patient_name, 'age' => $form->patient_age, 'mobile' => $form->patient_mobile, 'disease_name' => $form->disease_name);
+            $bookingMgr->updateBookingByRefNoAndTypeAndAttr($model->ref_no, $model->booking_type, $attr);
             $model->setAttributes($form->attributes);
             if ($model->save()) {
                 $output['status'] = 'ok';

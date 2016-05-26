@@ -195,7 +195,7 @@ class AuthManager {
             $output['status'] = EApiViewService::RESPONSE_OK;
             $output['errorCode'] = ErrorList::ERROR_NONE;
             $output['errorMsg'] = 'success';
-            $output['results'] = array('token' => $authTokenUser->getToken(), 'isProfile'=>is_object(UserDoctorProfile::model()->getByUserId($user->getId())) ? 1 : 0);
+            $output['results'] = array('token' => $authTokenUser->getToken(), 'isProfile' => is_object(UserDoctorProfile::model()->getByUserId($user->getId())) ? 1 : 0);
         }
         return $output;
     }
@@ -471,6 +471,28 @@ class AuthManager {
      */
     public function getUsersWithAdminAccess() {
         return 'admin';
+    }
+
+    public function adminSendAuthSmsVerifyCode($mobile, $actionType, $userHostIp) {
+        $output = array('status'=>'no');
+        // create AuthSmsVerify record in db.
+        $smsVerify = $this->createAuthSmsVerify($mobile, $actionType, $userHostIp);
+
+        if (isset($smsVerify) === false) {
+            $output['errors'] = 'null model';
+            return $output;
+        }else{
+            $output['status'] = 'ok';
+            $output['smsVerify'] = $smsVerify->getCode();
+            $output['mobile'] = $smsVerify->getMobile();
+            $output['actionType'] = $smsVerify->getActionType();
+        }
+        if ($smsVerify->hasErrors()) {
+            $output['errors'] = $smsVerify->getFirstErrors();
+            return $output;
+        }
+
+        return $output;
     }
 
 }

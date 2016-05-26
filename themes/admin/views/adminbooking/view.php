@@ -8,17 +8,17 @@ Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyun
 Yii::app()->clientScript->registerScriptFile('http://myzd.oss-cn-hangzhou.aliyuncs.com/static/mobile/js/jquery.validate.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . "/js/custom/task.js", CClientScript::POS_END);
 
-$adminBooking = $data->results['adminBooking'];
-$model = $data->results['model'];
-$orderList = isset($data->results['orderList']) ? $data->results['orderList'] : null;
-$adminTasks = $data->results['adminTasks'];
-$creator = $data->results['creator'];
-$smsList = $data->results['smsList'];
+$adminBooking = $data->results->adminBooking;
+$model = $data->results->model;
+$orderList = isset($data->results->orderList) ? $data->results->orderList : null;
+$adminTasks = $data->results->adminTasks;
+$creator = isset($data->results->creator) ? $data->results->creator : null;
+$smsList = $data->results->smsList;
 //设置订单creater信息
 $bookingCreator = new stdClass();
 if (is_null($creator) == false) {
     $bookingCreator->name = $creator->name;
-    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->userId)) . '">' . substr_replace($creator->mobile, '****', 3, 4) . '</a>' . '   <a data-disease="' + $adminBooking->disease_name + '" data-bookingid="' . $adminBooking->getId() . '" data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>';
+    $bookingCreator->mobile = $creator->mobile == null ? '无' : '<a target="_blank" href="' . $this->createUrl('user/view', array('id' => $creator->userId)) . '">' . substr_replace($creator->mobile, '****', 3, 4) . '</a>' . '   <a data-disease="' . $adminBooking->disease_name . '" data-bookingid="' . $adminBooking->getId() . '" data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $creator->mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>';
     $bookingCreator->cTitle = $creator->cTitle;
     $bookingCreator->stateName = $creator->stateName;
     $bookingCreator->cityName = $creator->cityName;
@@ -82,6 +82,7 @@ if (arrayNotEmpty($orderList)) {
     <a class="btn btn-primary" data-toggle="modal" data-target="#shareModal" <?php echo $adminBooking->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>分享地推</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#shareKAModal" <?php echo $adminBooking->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>分享KA</a>
     <a class="btn btn-primary" data-toggle="modal" data-target="#addCsExplainModal" <?php echo $adminBooking->work_schedule == StatCode::BK_STATUS_NULLIFY ? 'disabled' : ''; ?>>补充说明</a>
+    <a class="btn btn-primary" data-toggle="modal" data-target="#smsListModal">短信记录</a>
 </div>
 <style>
     .border-bottom{border-bottom: 1px solid #ddd;margin-bottom: 5px;padding-bottom: 5px;}
@@ -128,7 +129,22 @@ if (arrayNotEmpty($orderList)) {
             <span class="tab-header">患者电话：</span><?php echo $adminBooking->patient_mobile == null ? '<span class="color-blue">未填写</span>' : $adminBooking->patient_mobile . '   <a data-disease="' . $adminBooking->disease_name . '" data-bookingid="' . $adminBooking->getId() . '" data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>'; ?>
         </div>
         <div class="col-md-4 border-bottom">
-            <span class="tab-header">年龄：</span><?php echo $adminBooking->patient_age == null ? '<span class="color-blue">未填写</span>' : $adminBooking->patient_age; ?>
+            <span class="tab-header">年龄：</span><?php
+            if ($adminBooking->patient_age == null) {
+                $patientAge = '<span class="color-blue">未填写</span>';
+            } else {
+                $ageArray = explode(',', $adminBooking->patient_age);
+                $patientAge = '';
+                foreach ($ageArray as $key => $value) {
+                    if ($key == 0) {
+                        $patientAge .= $value . '岁';
+                    } else if ($key == 1) {
+                        $patientAge .= $value . '月';
+                    }
+                }
+            }
+            echo $patientAge;
+            ?>
         </div>
         <div class="col-md-4 border-bottom">
             <span class="tab-header">性别：</span><?php echo $adminBooking->getPatientGender() == null ? '<span class="color-blue">未填写</span>' : $adminBooking->getPatientGender(); ?>
@@ -345,37 +361,6 @@ if (arrayNotEmpty($orderList)) {
         </tbody>
     </table>
 </div>
-<?php
-if (isset($smsList) && arrayNotEmpty($smsList)) :
-    ?>
-    <div class="mt30 smsList">
-        <h3>短信记录</h3>
-        <table class="table">
-            <tbody>
-                <tr class="odd">
-                    <td>发送人</td>
-                    <td>手机号码</td>
-                    <td style="width:50%;">内容</td>
-                    <td>是否成功</td>
-                    <td>发送时间</td>
-                </tr>
-                <?php
-                foreach ($smsList as $sms) {
-                    ?>
-                    <tr class="odd">
-                        <td><?php echo $sms->adminUserName; ?></td>
-                        <td><?php echo substr_replace($sms->mobile, '****', 3, 4); ?></td>
-                        <td><?php echo $sms->content; ?></td>
-                        <td><?php echo $sms->isSuccess == 1 ? '是' : '否'; ?></td>
-                        <td><?php echo $sms->dateCreated; ?></td>
-                    </tr>
-                    <?php
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
-<?php endif; ?>
 <div style="mt30">
     <h3>订单</h3>
     <?php
@@ -468,6 +453,7 @@ $this->renderPartial('_shareKAModal', array('data' => $adminBooking));
 $this->renderPartial('addCsExplainModal', array('model' => $model));
 $this->renderPartial('//sms/_sendSmsModal', array('model' => $model));
 $this->renderPartial('outingCallsModal');
+$this->renderPartial('//sms/_smsListModal', array('smsList' => $smsList));
 ?>
 <script>
     $(document).ready(function () {

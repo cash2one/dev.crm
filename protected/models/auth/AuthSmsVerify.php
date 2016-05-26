@@ -314,4 +314,26 @@ class AuthSmsVerify extends EActiveRecord {
         return $this->is_active == 1;
     }
 
+    public function getActionType($text = true) {
+        if ($text) {
+            $options = self::getActionTypeOption();
+            if (isset($options[$this->action_type])) {
+                return $options[$this->action_type];
+            } else {
+                return $this->action_type;
+            }
+        } else {
+            return $this->action_type;
+        }
+    }
+
+    public function getActionTypeOption() {
+        return array(
+            self::ACTION_USER_REGISTER => '注册',
+            self::ACTION_USER_PASSWORD_RESET => '修改密码',
+            self::ACTION_USER_LOGIN => '登录',
+            self::ACTION_BOOKING => '预约'
+        );
+    }
+
 }
