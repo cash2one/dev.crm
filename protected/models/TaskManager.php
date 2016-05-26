@@ -151,7 +151,10 @@ class TaskManager {
     public function createTaskOrder(SalesOrder $model) {
         $adminTask = new AdminTask();
         $adminTask->subject = "订单号{$model->ref_no}的订单已完成支付"; //$model->subject;
-        $adminTask->content = $model->description . '已支付完成';
+        date_default_timezone_set("Asia/Shanghai");
+        $nowTime = date('Y-m-d H:i:s');
+        $dateClosed = strIsEmpty($model->date_closed) ? $nowTime : $model->date_closed;
+        $adminTask->content = "订单号{$model->ref_no}的在{$dateClosed}已完成支付";//$model->description . '已支付完成';
         $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/order/view', array('id' => $model->getId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
@@ -177,6 +180,14 @@ class TaskManager {
             $adminTaskOrderJoin->order_id = $model->getId();
             if ($adminTaskOrderJoin->save() === false) {
                 throw new CException("Error saving adminTaskBkJoin");
+            }
+            if ($adminBooking) {
+                $adminTaskBkJoin = new AdminTaskBkJoin();
+                $adminTaskBkJoin->admin_task_join_id = $adminTaskJoin->getId();
+                $adminTaskBkJoin->admin_booking_id = $adminBooking->getId();
+                if ($adminTaskBkJoin->save() === false) {
+                    throw new CException("Error saving adminTaskBkJoin");
+                }
             }
             $dbTran->commit();
         } catch (CDbException $cdbex) {
@@ -420,7 +431,12 @@ class TaskManager {
         $newUser = AdminUser::model()->getById($newUserId);
         $operatorId = Yii::app()->user->id;
         $operator = AdminUser::model()->getById($operatorId);
-        $values['content'] = $operator->fullname . '将' . $oldUser->fullname . '的订单分配给' . $newUser->fullname;
+        if (isset($oldUser)) {
+            $oldUserName = $oldUser->fullname;
+        } else {
+            $oldUserName = '离职人员';
+        }
+        $values['content'] = $operator->fullname . '将' . $oldUserName . '的订单分配给' . $newUser->fullname;
         $values['admin_user_id'] = $newUser->id;
         $values['work_type'] = AdminTaskJoin::WORK_TYPE_TEL;
         $values['date_plan'] = null;
@@ -478,6 +494,15 @@ class TaskManager {
         $values['work_type'] = AdminTaskJoin::WORK_TYPE_TEL;
         $values['date_plan'] = null;
         $this->createTaskBookingDAFile($adminbooking, $values);
+    }
+
+    public function createPatientBookingDaFileTaskPlan(AdminBooking $adminbooking) {
+        $values = array();
+        $values['content'] = "预约{$adminbooking->ref_no}上传了出院小结";
+        $values['admin_user_id'] = $adminbooking->admin_user_id;
+        $values['work_type'] = AdminTaskJoin::WORK_TYPE_TEL;
+        $values['date_plan'] = null;
+        return $this->createTaskBookingDAFile($adminbooking, $values);
     }
 
     public function completeTaskByAdminBookingIdAndWorkSchedule($adminbookingId, $workSchedule) {

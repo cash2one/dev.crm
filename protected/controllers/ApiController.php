@@ -25,9 +25,10 @@ class ApiController extends Controller {
     public function domainWhiteList() {
         return array(
             'http://md.mingyizhudao.com',
-            'http://m.mingyizd.com',
-            'http://192.168.31.169',
-            'http://192.168.31.118',
+            'http://mingyizhudao.com',
+            'http://m.mingyizhudao.com',
+            'http://api.mingyizhudao.com',
+            'http://pc.dev.mingyizd.com',
         );
     }
 
@@ -71,10 +72,67 @@ class ApiController extends Controller {
                     $output['status'] = 'ok';
                 } catch (Exception $ex) {
                     $output['status'] = 'no';
+                    $output['errorMsg'] = 'data error...';
                 }
                 break;
-            case 'test':
-                $output['status'] = 'yes';
+            case 'taskuserdoctor':
+                $output = array("status" => 'no');
+                $values = $_GET;
+                $user = UserDoctorProfile::model()->getByUserId($values['userid']);
+                $type = $values['type'];
+                $taskMgr = new TaskManager();
+                $output['status'] = $taskMgr->createTaskDoctorCert($user, $type);
+
+                break;
+            case 'taskpatientmr':
+                $output = array("status" => 'no');
+                $values = $_GET;
+                $booking = PatientBooking::model()->getById($values['id'], array('pbUserDoctorProfile'));
+                $taskMgr = new TaskManager();
+                $output['status'] = $taskMgr->createTaskPatientFile($booking);
+                break;
+            case 'taskpatientda':
+                $output = array("status" => 'no');
+                $values = $_GET;
+                $adminbooking = AdminBooking::model()->getByAttributes(array('booking_id' => $values['id'], 'booking_type' => AdminBooking::BK_TYPE_PB));
+                $taskMgr = new TaskManager();
+                if (isset($adminbooking)) {
+                    $output['status'] = $taskMgr->createPatientBookingDaFileTaskPlan($adminbooking);
+                }
+                break;
+            case 'changepwd':
+                $output = array();
+                $list = AdminUser::model()->getAll();
+                foreach ($list as $v) {
+                    $password = substr(md5(rand()), 0, 6) . strtoupper(substr(md5(rand()), 11, 6));
+                    $mdpassword = hash('sha256', $password);
+                    $v->password = $mdpassword;
+                    $v->password_raw = $password;
+                    if ($v->update(array('password', 'password_raw'))) {
+                        $output[$v->fullname] = $v->password_raw;
+                    }
+                }
+                break;
+            case 'doctoraccept':
+                $output = 'no';
+                $values = $_GET;
+                $booking = AdminBooking::model()->getByAttributes(array('booking_id' => $values['id'], 'booking_type' => $values['type']));
+                if (isset($booking)) {
+                    $booking->doctor_accept = $values['accept'];
+                    $booking->doctor_opinion = $values['opinion'];
+                    if ($booking->update(array('doctor_accept', 'doctor_opinion'))) {
+                        $output = 'ok';
+                    }
+                }
+                break;
+            case 'tasksalseorder':
+                $output = array("status" => 'no');
+                $values = $_GET;
+                $order = SalesOrder::model()->getByRefNo($values['refno']);
+                $taskMgr = new TaskManager();
+                if (isset($order)) {
+                    $output['status'] = $taskMgr->createTaskOrder($order);
+                }
                 break;
         }
         $this->renderJsonOutput($output);
