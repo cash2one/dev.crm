@@ -77,6 +77,16 @@ class SalesOrder extends EActiveRecord {
     const PAY_CHANNEL_EBANK = '网银转账';
     const PAY_CHANNEL_ALIPAY = '支付宝转账';
     const PAY_CHANNEL_CASH = '现金';
+    const CUS_REQUEST_SHOUSHU = 'shoushu';
+    const CUS_REQUEST_MENZHEN = 'menzhen';
+    const CUS_REQUEST_MAZUI = 'mazui';
+    const CUS_REQUEST_TUWENZIXUN = 'tuwenzixun';
+    const CUS_REQUEST_DIANHUAZIXUN = 'dianhuazixun';
+    const CUS_REQUEST_ZHUANZHEN = 'zhuanzhen';
+    const CUS_REQUEST_WENZHEN = 'wenzhen';
+    const CUS_REQUEST_HUIZHEN = 'huizhen';
+    const CUS_REQUEST_ERCISHOUSHU = 'ercishoushu';
+    const CUS_REQUEST_YUANCHENGZIXUN = 'yuanchengzixun';
 
     /**
      * @return array validation rules for model attributes.
@@ -85,7 +95,7 @@ class SalesOrder extends EActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('ref_no, date_open', 'required'),
+            array('ref_no, date_open, subject, description, final_amount', 'required'),
             array('user_id, bk_id, bk_type, is_paid, discount_percent', 'numerical', 'integerOnly' => true),
             array('ref_no', 'length', 'max' => 16),
             array('bk_ref_no, order_type', 'length', 'max' => 20),
@@ -94,6 +104,7 @@ class SalesOrder extends EActiveRecord {
             array('description', 'length', 'max' => 1000),
             array('ping_id', 'length', 'max' => 30),
             array('total_amount, discount_amount, final_amount', 'length', 'max' => 10),
+            array('final_amount', 'numerical', 'min' => 0),
             array('currency', 'length', 'max' => 3),
             array('patient_adress', 'length', 'max' => 200),
             array('disease_detail', 'length', 'max' => 1000),
@@ -254,6 +265,10 @@ class SalesOrder extends EActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    protected function trimAttributes() {
+        return array('description', 'subject');
     }
 
     public function checkBookingExists() {
@@ -504,6 +519,32 @@ class SalesOrder extends EActiveRecord {
             self::PAY_CHANNEL_ALIPAY => '支付宝转账',
             self::PAY_CHANNEL_CASH => '现金'
         );
+    }
+
+    public function getOptionsCustomerRequest() {
+        return array(
+            self:: CUS_REQUEST_SHOUSHU => '手术',
+            self:: CUS_REQUEST_MENZHEN => '门诊',
+            self:: CUS_REQUEST_MAZUI => '麻醉',
+            self:: CUS_REQUEST_TUWENZIXUN => '图文咨询',
+            self:: CUS_REQUEST_DIANHUAZIXUN => '电话咨询',
+            self:: CUS_REQUEST_ZHUANZHEN => '转诊',
+            self:: CUS_REQUEST_HUIZHEN => '会诊',
+            self:: CUS_REQUEST_ERCISHOUSHU => '二次手术',
+        );
+    }
+
+    public function getCustomerRequest($v = true) {
+        if ($v) {
+            $options = self::getOptionsCustomerRequest();
+            if (isset($options[$this->customer_request])) {
+                return $options[$this->customer_request];
+            } else {
+                return null;
+            }
+        } else {
+            return $this->customer_request;
+        }
     }
 
 }

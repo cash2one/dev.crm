@@ -83,12 +83,24 @@
             <label >  <?php echo '订单类型<br>'; ?></label>
             <div>
                 <?php
-            echo $form->dropDownList($model, 'order_type', $model->getOptionsOrderType(), array(
-                'name' => 'order[order_type]',
-                'class' => 'form-control w50',
-            ));
-            ?>
+                echo $form->dropDownList($model, 'order_type', $model->getOptionsOrderType(), array(
+                    'name' => 'order[order_type]',
+                    'class' => 'form-control w50',
+                ));
+                ?>
                 <div class="text-danger"><?php echo $form->error($model, 'order_type'); ?></div>
+            </div>
+        </div>
+        <div class="form-group col-sm-7">
+            <label >  <?php echo '订单目的<br>'; ?></label>
+            <div>
+                <?php
+                echo $form->dropDownList($model, 'customer_request', $model->getOptionsCustomerRequest(), array(
+                    'name' => 'order[customer_request]',
+                    'class' => 'form-control w50',
+                ));
+                ?>
+                <div class="text-danger"><?php echo $form->error($model, 'customer_request'); ?></div>
             </div>
         </div>
         <div class="form-group col-sm-7">
@@ -106,9 +118,22 @@
             </div>
         </div>
         <div class="form-group col-sm-7">
-            <input type="submit" class="btn btn-primary" name="yt0" value="<?php echo $model->isNewRecord ? 'Create' : 'Save'; ?>">
+            <input id="submitBtn" type="button" class="btn btn-primary" name="yt0" value="<?php echo $model->isNewRecord ? 'Create' : 'Save'; ?>">
         </div>
 
         <?php $this->endWidget(); ?>
     </div>
 </div><!-- form -->
+<script>
+    $(document).ready(function () {
+        $('#submitBtn').click(function () {
+            var domForm = $('#sales-order-form');
+            var finalAmount = $('#order_final_amount').val();
+            if (finalAmount > 1) {
+                domForm.submit();
+            } else {
+                $('#order_final_amount').next().html('<div class="errorMessage">最终交易金额 数值太小 (最小值为 1).</div>');
+            }
+        });
+    });
+</script>
