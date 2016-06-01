@@ -28,6 +28,7 @@ class AdminTaskJoin extends EActiveRecord {
     const TASK_TYPE_USER_DR = 2;
     const TASK_TYPE_ORDER = 3;
     const TASK_TYPE_DA = 4; //出院小结
+    const TASK_TYPE_OPERATION_FINISHED = 5; //完成手术
 
     /**
      * @return string the associated database table name
@@ -201,6 +202,7 @@ class AdminTaskJoin extends EActiveRecord {
             self::TASK_TYPE_ORDER => '支付订单',
             self::TASK_TYPE_USER_DR => '医生用户',
             self::TASK_TYPE_DA => '出院小结',
+            self::TASK_TYPE_OPERATION_FINISHED => '完成手术',
         );
     }
 
