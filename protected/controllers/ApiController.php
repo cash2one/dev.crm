@@ -137,7 +137,7 @@ class ApiController extends Controller {
             case 'operationfinished':
                 $output = array("status" => 'no');
                 $values = $_GET;
-                $booking = AdminBooking::model()->getByAttributes(array('booking_id' => $values['id'], 'booking_type' => $values['type']));
+                $booking = AdminBooking::model()->getByAttributes(array('booking_id' => $values['id'], 'booking_type' => AdminBooking::BK_TYPE_PB));
                 $taskMgr = new TaskManager();
                 if (isset($booking)) {
                     $output['status'] = $taskMgr->createTaskOperationFinished($booking);
