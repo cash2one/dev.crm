@@ -154,7 +154,7 @@ class TaskManager {
         date_default_timezone_set("Asia/Shanghai");
         $nowTime = date('Y-m-d H:i:s');
         $dateClosed = strIsEmpty($model->date_closed) ? $nowTime : $model->date_closed;
-        $adminTask->content = "订单号{$model->ref_no}的在{$dateClosed}已完成支付";//$model->description . '已支付完成';
+        $adminTask->content = "订单号{$model->ref_no}的在{$dateClosed}已完成支付"; //$model->description . '已支付完成';
         $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/order/view', array('id' => $model->getId()));
 
         $dbTran = Yii::app()->db->beginTransaction();
@@ -469,6 +469,44 @@ class TaskManager {
                 throw new CException("Error saving adminTask");
             }
 
+            $adminTaskBkJoin = new AdminTaskBkJoin();
+            $adminTaskBkJoin->admin_task_join_id = $adminTaskJoin->getId();
+            $adminTaskBkJoin->admin_booking_id = $model->getId();
+            if ($adminTaskBkJoin->save() === false) {
+                throw new CException("Error saving adminTaskBkJoin");
+            }
+            $dbTran->commit();
+        } catch (CDbException $cdbex) {
+            $dbTran->rollback();
+            return false;
+        } catch (CException $cex) {
+            $dbTran->rollback();
+            return false;
+        }
+
+        return true;
+    }
+
+    public function createTaskOperationFinished(AdminBooking $model) {
+        $adminTask = new AdminTask();
+
+        $adminTask->subject = '完成手术，预约编号：' . $model->ref_no;
+        $adminTask->content = "预约{$model->ref_no}完成了手术";
+        $adminTask->url = Yii::app()->createAbsoluteUrl('/admin/adminBooking/view', array('id' => $model->getId()));
+
+        $dbTran = Yii::app()->db->beginTransaction();
+        try {
+            if ($adminTask->save() === false) {
+                throw new CException("Error saving adminTask");
+            }
+            $adminTaskJoin = new AdminTaskJoin();
+            $adminTaskJoin->admin_task_id = $adminTask->getId();
+            $adminTaskJoin->admin_user_id = $model->admin_user_id;
+            $adminTaskJoin->work_type = AdminTaskJoin::WORK_TYPE_TEL;
+            $adminTaskJoin->type = AdminTaskJoin::TASK_TYPE_OPERATION_FINISHED;
+            if ($adminTaskJoin->save() === false) {
+                throw new CException("Error saving adminTask");
+            }
             $adminTaskBkJoin = new AdminTaskBkJoin();
             $adminTaskBkJoin->admin_task_join_id = $adminTaskJoin->getId();
             $adminTaskBkJoin->admin_booking_id = $model->getId();

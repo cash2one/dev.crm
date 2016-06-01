@@ -134,6 +134,15 @@ class ApiController extends Controller {
                     $output['status'] = $taskMgr->createTaskOrder($order);
                 }
                 break;
+            case 'operationfinished':
+                $output = array("status" => 'no');
+                $values = $_GET;
+                $booking = AdminBooking::model()->getByAttributes(array('booking_id' => $values['id'], 'booking_type' => $values['type']));
+                $taskMgr = new TaskManager();
+                if (isset($booking)) {
+                    $output['status'] = $taskMgr->createTaskOperationFinished($booking);
+                }
+                break;
         }
         $this->renderJsonOutput($output);
     }
