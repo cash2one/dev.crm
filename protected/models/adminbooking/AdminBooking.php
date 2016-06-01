@@ -37,6 +37,7 @@
  * @property integer $final_hospital_id
  * @property string $final_hospital_name
  * @property string $final_time
+ * @property string $operation_finished
  * @property integer $disease_confirm
  * @property string $customer_request
  * @property integer $customer_intention
@@ -140,6 +141,8 @@ class AdminBooking extends EActiveRecord {
     const BUSINESS_PARTNER_TMALL = 'tmall';
     const BUSINESS_PARTNER_7LK = '7lk';
     const BUSINESS_PARTNER_OTHER = 'other';
+    const OPERATION_FINISHED_YES = 1;
+    const OPERATION_FINISHED_NO = 0;
 
     /**
      * @return array validation rules for model attributes.
@@ -158,7 +161,7 @@ class AdminBooking extends EActiveRecord {
             array('disease_name, final_hospital_name', 'length', 'max' => 100),
             array('expected_hospital_name, expected_hp_dept_name, expected_doctor_name, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_name, admin_user_name, customer_request, customer_diversion, customer_agent', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
-            array('doctor_user_id, doctor_user_name, date_related, deposit_total, deposit_paid, service_total, service_paid, business_partner, is_commonweal, is_buy_insurance, is_deal, booking_service_id, contact_name, contact_name, patient_gender, expected_time_start, expected_time_end, final_time, date_updated, date_deleted, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile,cs_explain', 'safe'),
+            array('operation_finished,doctor_user_id, doctor_user_name, date_related, deposit_total, deposit_paid, service_total, service_paid, business_partner, is_commonweal, is_buy_insurance, is_deal, booking_service_id, contact_name, contact_name, patient_gender, expected_time_start, expected_time_end, final_time, date_updated, date_deleted, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile,cs_explain', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_gender, patient_identity, state_id, city_id, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, expected_doctor_id, expected_doctor_name, creator_doctor_id, creator_doctor_name, creator_hospital_name, creator_dept_name, final_doctor_id, final_doctor_name, final_hospital_id, final_hospital_name, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, work_schedule, order_status, order_amount, total_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, display_order, deposit_total, deposit_paid, service_total, service_paid, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -177,9 +180,7 @@ class AdminBooking extends EActiveRecord {
             'orderAdminbooking' => array(self::HAS_MANY, 'SalesOrder', 'admin_booking_id', 'on' => 'orderAdminbooking.date_deleted IS NULL'),
             'bkOwner' => array(self::BELONGS_TO, 'User', 'creator_doctor_id'),
             'pbUserDoctorProfile' => array(self::BELONGS_TO, 'UserDoctorProfile', 'creator_doctor_id'),
-            'userDoctorMobile' => array(self::BELONGS_TO, 'User', '', 'on' => 't.patient_mobile = userDoctorMobile.username AND userDoctorMobile.role = 2'),
-            'mobilePatientBooking' => array(self::HAS_MANY, 'PatientInfo', '', 'on' => 't.patient_mobile = mobilePatientBooking.mobile'),
-            'mobileBooking' => array(self::HAS_MANY, 'Booking', '', 'on' => 't.patient_mobile = mobileBooking.mobile'),
+            'userDoctorMobile' => array(self::BELONGS_TO, 'User', '', 'on' => 't.patient_mobile = userDoctorMobile.username AND userDoctorMobile.role = 2')
         );
     }
 
@@ -816,6 +817,26 @@ class AdminBooking extends EActiveRecord {
 
     public function addServicePaid($v) {
         $this->service_paid += $v;
+    }
+
+    public static function getOptionsOperationFinished() {
+        return array(
+            self::OPERATION_FINISHED_NO => '否',
+            self::OPERATION_FINISHED_YES => '是',
+        );
+    }
+
+    public function getOperationFinished($v = true) {
+        if ($v) {
+            $options = self::getOptionsOperationFinished();
+            if (isset($options[$this->operation_finished])) {
+                return $options[$this->operation_finished];
+            } else {
+                return null;
+            }
+        } else {
+            $this->operation_finished;
+        }
     }
 
 }
