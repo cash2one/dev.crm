@@ -267,8 +267,8 @@ class SmsManager {
             
         } elseif ($vendor == self::VENDOR_JIANZHOU) {
             $model = MsgSmsTemplate::model()->getByAttributes(array('code' => 'service.phone.not', 'vendor_name' => $vendor));
-            $values = array($data->disease);
-            $content = str_replace(array('{disease}'), $values, $model->content);
+            $values = array($data->disease, $data->hospital, $data->expert);
+            $content = str_replace(array('{disease}', '{hospital}', '{expert}'), $values, $model->content);
             return $this->sendSmsTemplateViaJianZhou($to, $content, $model->type);
         }
     }

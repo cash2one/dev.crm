@@ -680,4 +680,24 @@ class DoctorManager {
         }
         return $output;
     }
+    
+    //根据医生id查询其填写的会诊信息
+    public function loadUserDoctorHuizhenByUserId($userId, $with = null) {
+        return UserDoctorHuizhen::model()->getByAttributes(array('user_id' => $userId), $with);
+    }
+
+    //根据id查询会诊信息
+    public function loadUserDoctorHuizhenById($id) {
+        return UserDoctorHuizhen::model()->getById($id);
+    }
+
+    //根据医生id查询其填写的转诊信息
+    public function loadUserDoctorZhuanzhenByUserId($userId, $with = null) {
+        return UserDoctorZhuanzhen::model()->getByAttributes(array('user_id' => $userId), $with);
+    }
+
+    //根据id查询转诊信息
+    public function loadUserDoctorZhuanzhenById($id) {
+        return UserDoctorZhuanzhen::model()->getById($id);
+    }
 }

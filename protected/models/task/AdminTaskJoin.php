@@ -7,6 +7,11 @@
  * @property integer $id
  * @property integer $admin_task_id
  * @property integer $admin_user_id
+ * @property integer $created_user_id
+ * @property string $created_user_name
+ * @property integer $finished_user_id
+ * @property string $finished_user_name
+ * @property integer $type
  * @property integer $work_type
  * @property integer $status
  * @property string $date_plan
@@ -46,11 +51,12 @@ class AdminTaskJoin extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('admin_task_id, admin_user_id, date_created', 'required'),
-            array('admin_task_id, admin_user_id, work_type, status, is_read', 'numerical', 'integerOnly' => true),
+            array('admin_task_id, admin_user_id, created_user_id, finished_user_id, type, work_type, status, is_read', 'numerical', 'integerOnly' => true),
+            array('created_user_name, finished_user_name', 'length', 'max' => 20),
             array('date_plan, date_done, date_read, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, admin_task_id, admin_user_id, work_type, status, date_plan, date_done, is_read, date_read, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, admin_task_id, admin_user_id, created_user_id, created_user_name, finished_user_id, finished_user_name, type, work_type, status, date_plan, date_done, is_read, date_read, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -71,8 +77,13 @@ class AdminTaskJoin extends EActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'admin_task_id' => 'admin_msg.id',
+            'admin_task_id' => 'admin_task.id',
             'admin_user_id' => 'admin_user.id',
+            'created_user_id' => '创建者ID',
+            'created_user_name' => '创建者姓名',
+            'finished_user_id' => '完成者ID',
+            'finished_user_name' => '完成者姓名',
+            'type' => '任务类型',
             'work_type' => '跟单方式',
             'status' => '完成状态 0未完成 1已完成',
             'date_plan' => '计划跟单时间',
@@ -105,6 +116,11 @@ class AdminTaskJoin extends EActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('admin_task_id', $this->admin_task_id);
         $criteria->compare('admin_user_id', $this->admin_user_id);
+        $criteria->compare('created_user_id', $this->created_user_id);
+        $criteria->compare('created_user_name', $this->created_user_name, true);
+        $criteria->compare('finished_user_id', $this->finished_user_id);
+        $criteria->compare('finished_user_name', $this->finished_user_name, true);
+        $criteria->compare('type', $this->type);
         $criteria->compare('work_type', $this->work_type);
         $criteria->compare('status', $this->status);
         $criteria->compare('date_plan', $this->date_plan, true);

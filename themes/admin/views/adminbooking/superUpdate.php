@@ -60,14 +60,9 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 echo CHtml::hiddenField("AdminBookingForm[cs_explain]", $model->cs_explain);
 
 echo CHtml::hiddenField("AdminBookingForm[patient_gender]", $model->patient_gender);
-echo CHtml::hiddenField("AdminBookingForm[state_id]", $model->state_id);
-echo CHtml::hiddenField("AdminBookingForm[city_id]", $model->city_id);
-echo CHtml::hiddenField("AdminBookingForm[patient_state]", $model->patient_state);
-echo CHtml::hiddenField("AdminBookingForm[patient_city]", $model->patient_city);
-echo CHtml::hiddenField("AdminBookingForm[disease_name]", $model->disease_name);
-echo CHtml::hiddenField("AdminBookingForm[disease_detail]", $model->disease_detail);
 echo CHtml::hiddenField("AdminBookingForm[expected_time_start]", $model->expected_time_start);
 echo CHtml::hiddenField("AdminBookingForm[expected_time_end]", $model->expected_time_end);
+echo CHtml::hiddenField("AdminBookingForm[is_super_user]", 1);
 ?>
 <input type="hidden" id="domain" value="http://mr.file.mingyizhudao.com"> 
 <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('adminbooking/ajaxUpload'); ?>">
@@ -129,9 +124,25 @@ echo CHtml::hiddenField("AdminBookingForm[expected_time_end]", $model->expected_
     </div>
     <div class="form-group">
         <div class="col-md-4">
-            <span class="tab-header">地址：</span><?php echo $data->patient_state; ?>省/市 <?php echo $data->patient_city; ?> 市
+            <span class="tab-header">地址：</span>
+            <?php
+            echo $form->dropDownList($model, 'state_id', $model->loadOptionsState(), array(
+                'name' => 'AdminBookingForm[state_id]',
+                'prompt' => '选择省份',
+                'class' => 'form-control w50',
+            ));
+            ?> 省/市
         </div>
-        <div class="col-md-7">
+        <div class="col-md-3">
+            <?php
+            echo $form->dropDownList($model, 'city_id', $model->loadOptionsCity(), array(
+                'name' => 'AdminBookingForm[city_id]',
+                'prompt' => '选择城市',
+                'class' => 'form-control w50',
+            ));
+            ?> 市
+        </div>
+        <div class="col-md-5">
             <span class="tab-header">详细地址：</span><?php echo $form->textField($model, 'patient_address', array('class' => 'form-control w50')); ?>
         </div>
     </div>
@@ -142,7 +153,7 @@ echo CHtml::hiddenField("AdminBookingForm[expected_time_end]", $model->expected_
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <span class="tab-header">病情描述：</span><?php echo $data->disease_detail == null ? '<span class="color-blue">未填写</span>' : $data->disease_detail; ?>
+            <span class="tab-header">病情描述：</span><?php echo $form->textArea($model, 'disease_detail', array('class' => 'form-control w50', 'maxlength' => 1000)); ?>
         </div>
     </div>
     <div class="form-group">
@@ -398,6 +409,17 @@ if (is_null($creator) == false) {
             ));
             ?>
         </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2">
+            <span>是否完成手术：</span><?php
+            echo $form->dropDownList($model, 'operation_finished', $model->loadOptionOperationFinished(), array(
+                'name' => 'AdminBookingForm[operation_finished]',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
     </div>
     <div class="form-group">
         <div class="col-sm-12">
@@ -411,7 +433,7 @@ if (is_null($creator) == false) {
     </div>
     <div class="form-group">
         <div class="col-sm-12">
-            <span>补充说明：</span><?php echo $data->cs_explain == null ? '<span class="color-blue">未填写</span>' : $data->cs_explain; //$form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500));                     ?>
+            <span>补充说明：</span><?php echo $data->cs_explain == null ? '<span class="color-blue">未填写</span>' : $data->cs_explain; //$form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500));                      ?>
         </div>
     </div>
     <div class="form-group">

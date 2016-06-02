@@ -38,7 +38,7 @@ if ($type == StatCode::MR_REPORTTYPE_DA) {
         <input id="creatorId" type="hidden" name="AdminBooking[creator_id]" value="<?php echo $data->creator_doctor_id; ?>" />
         <input id="reportType" type="hidden" name="AdminBooking[report_type]" value="<?php echo $type; ?>" />
         <input id="bookingType" type="hidden" name="booking_type" value="<?php echo $data->booking_type; ?>" />
-        <input type="hidden" id="domain" value="http://7xq93p.com2.z0.glb.qiniucdn.com"> 
+        <input type="hidden" id="domain" value="http://mr.file.mingyizhudao.com"> 
         <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('adminbooking/ajaxUpload'); ?>">
     </form>
     <div class="mb20 row">

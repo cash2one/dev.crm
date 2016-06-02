@@ -3,7 +3,11 @@ jQuery(function () {
             domForm = $("#task-form"), // form - html dom object.;
             btnSubmit = $("#taskSubmit");
 
-    //登陆页面表单验证模块
+// 手机号码验证
+    $.validator.addMethod("contentVal", function (value, element) {
+        var mobile = '****';
+        return this.optional(element) || (value.indexOf(mobile) < 0);
+    }, "请修改自定义内容");
     var validator = domForm.validate({
         //focusInvalid: true,
         rules: {
@@ -17,7 +21,8 @@ jQuery(function () {
                 required: true
             },
             'task[content]': {
-                required: true
+                required: true,
+                contentVal: true
             }
         },
         messages: {
@@ -31,7 +36,8 @@ jQuery(function () {
                 required: "请选择跟单方式"
             },
             'task[content]': {
-                required: "请填写跟单内容"
+                required: "请填写跟单内容",
+                contentVal: "请修改自定义内容"
             }
         },
         errorElement: "div",

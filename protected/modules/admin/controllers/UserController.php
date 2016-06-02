@@ -71,10 +71,12 @@ class UserController extends AdminController {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $with = array('userDoctorProfile', 'userDoctorCerts' => array('on' => 'userDoctorCerts.date_deleted is NULL'));
-        $model = $this->loadModel($id, $with);
+//        $with = array('userDoctorProfile', 'userDoctorCerts' => array('on' => 'userDoctorCerts.date_deleted is NULL'));
+//        $model = $this->loadModel($id, $with);
+        $apisvc = new ApiViewUserDoctorView($id);
+        $output = $apisvc->loadApiViewData();
         $this->render('view', array(
-            'model' => $model
+            'data' => $output
         ));
     }
 

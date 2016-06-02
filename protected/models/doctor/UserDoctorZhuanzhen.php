@@ -110,10 +110,10 @@ class UserDoctorZhuanzhen extends EFileModel {
     }
 
     public function getOptionsPrepDays() {
-        return array(self::PTEP_DAYS_ONE => '三天内安排床位',
-            self::PTEP_DAYS_TWO => '一周内安排床位',
-            self::PTEP_DAYS_THREE => '两周内安排床位',
-            self::PTEP_DAYS_FOUR => '三周内安排床位'
+        return array(self::PTEP_DAYS_ONE => '三天内',
+            self::PTEP_DAYS_TWO => '一周内',
+            self::PTEP_DAYS_THREE => '两周内',
+            self::PTEP_DAYS_FOUR => '三周内'
         );
     }
 

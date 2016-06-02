@@ -216,6 +216,7 @@ class OrderController extends AdminController {
             $order->setIsPaid(0);
             $order->setDateOpen(new CDbExpression('NOW()'));
             $order->order_type = $values['order_type'];
+            $order->customer_request = $values['customer_request'];
             $order->createRefNo($booking->ref_no, $booking->id, StatCode::TRANS_TYPE_AB);
             //$order->validate();
             //var_dump($order);exit;
@@ -336,6 +337,8 @@ class OrderController extends AdminController {
             //生成payment
             $salesMgr = new SalesManager();
             $offlineOrder = $salesMgr->createPaymentByOfflinSalseOrder($order, $values);
+            $taskMgr = new TaskManager();
+            $taskMgr->createTaskOrder($order);
             if ($offlineOrder) {
                 $output['status'] = 'ok';
                 $output['orderId'] = $order->id;

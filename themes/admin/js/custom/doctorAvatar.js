@@ -108,7 +108,6 @@ $(function () {
                 var progress = new FileProgress(err.file, 'fsUploadProgress');
                 progress.setError();
                 progress.setStatus(errTip);
-                alert('上传失败!');
             }
             ,
             'Key': function (up, file) {

@@ -4,8 +4,8 @@
 /* @var $model User */
 
 $this->breadcrumbs = array(
-    'Users' => array('admin'),
-    'Manage',
+    '医生用户' => array('admin'),
+    '搜索',
 );
 
 $this->menu = array(
@@ -13,7 +13,7 @@ $this->menu = array(
 );
 ?>
 
-<h1>Manage UserDoctors</h1>
+<h1>医生用户搜索</h1>
 
 <?php
 $urlSearch = $this->createUrl('user/searchResult');

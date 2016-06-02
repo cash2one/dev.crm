@@ -9,6 +9,17 @@ if (is_null($creator) == false) {
     $creatorName = '无';
     $creatorMobile = '无';
 }
+$patientAge = '';
+if (strIsEmpty($data->patient_age) == false) {
+    $ageArray = explode(',', $data->patient_age);
+    foreach ($ageArray as $key => $value) {
+        if ($key == 0) {
+            $patientAge .= $value . '岁';
+        } else if ($key == 1) {
+            $patientAge .= $value . '月';
+        }
+    }
+}
 ?>
 <tr class="view">
 
@@ -41,9 +52,9 @@ if (is_null($creator) == false) {
     </td>
 
     <td>
-        <?php echo CHtml::encode($data->patient_age); ?>
+        <?php echo CHtml::encode($patientAge); ?>
     </td>
-    
+
     <td>
         <?php echo CHtml::encode($creatorName); ?>
     </td>
@@ -51,7 +62,7 @@ if (is_null($creator) == false) {
     <td>
         <?php echo CHtml::encode($creatorMobile); ?>
     </td>
-    
+
     <td>
         <?php echo CHtml::encode($data->getCustomerAgent() == '' ? '未填写' : $data->getCustomerAgent()); ?>
     </td>

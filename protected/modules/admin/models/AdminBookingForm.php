@@ -85,6 +85,11 @@ class AdminBookingForm extends EFormModel {
     public $option_booking_service_id;
     public $options_patient_gender;
     public $options_doctor_accept;
+    public $birth_year;
+    public $birth_month;
+    public $is_super_user;
+    public $operation_finished;
+    public $option_operation_finished;
 
     /**
      * @return array validation rules for model attributes.
@@ -105,7 +110,7 @@ class AdminBookingForm extends EFormModel {
             array('admin_user_name', 'length', 'max' => 50),
             array('remark', 'length', 'max' => 2000),
             array('cs_explain, doctor_opinion', 'length', 'max' => 500),
-            array('business_partner, is_commonweal, is_buy_insurance, is_deal, booking_service_id, patient_gender, id, travel_type, state_id, city_id, expected_time_start, expected_time_end, final_time, final_hospital_id, final_hospital_name, patient_state,patient_city, customer_request, customer_diversion, customer_agent, bd_user_id, bd_user_name, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile', 'safe'),
+            array('operation_finished,is_super_user,birth_year, birth_month, business_partner, is_commonweal, is_buy_insurance, is_deal, booking_service_id, patient_gender, id, travel_type, state_id, city_id, expected_time_start, expected_time_end, final_time, final_hospital_id, final_hospital_name, patient_state,patient_city, customer_request, customer_diversion, customer_agent, bd_user_id, bd_user_name, expected_hp_dept_name, expected_doctor_name, final_doctor_name, expected_doctor_mobile, final_doctor_mobile', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, booking_id, booking_type, ref_no, patient_id, patient_name, patient_mobile, patient_age, patient_identity, patient_state, patient_city, patient_address, disease_name, disease_detail, expected_time_start, expected_time_end, expected_hospital_id, expected_hospital_name, expected_hp_dept_id, expected_hp_dept_name, expected_doctor_id, expected_doctor_name, final_doctor_id, final_doctor_name, expected_doctor_mobile, final_doctor_mobile, final_time, disease_confirm, customer_request, customer_intention, customer_type, customer_diversion, customer_agent, booking_status, work_schedule, order_status, order_amount, total_amount, admin_user_id, admin_user_name, bd_user_id, bd_user_name, remark, cs_explain, doctor_accept, doctor_opinion, display_order, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
@@ -176,6 +181,16 @@ class AdminBookingForm extends EFormModel {
 
             //$this->attributes = $attributes;
             $this->setAttributes($attributes);
+            if (is_null($this->patient_age) == false) {
+                $ageArray = explode(',', $this->patient_age);
+                foreach ($ageArray as $key => $value) {
+                    if ($key == 0) {
+                        $this->birth_year = $value;
+                    } else if ($key == 1) {
+                        $this->birth_month = $value;
+                    }
+                }
+            }
         } else {
             // $this->model = new Doctor();
         }
@@ -310,6 +325,9 @@ class AdminBookingForm extends EFormModel {
             $adminUserOptions = array();
             foreach ($adminUsers as $value) {
                 $std = new stdClass();
+                if ($value->username == 'wangyong2') {
+                    continue;
+                }
                 $std->id = $value->id;
                 $std->fullname = strIsEmpty($value->title) ? $value->fullname : $value->title . ' ' . $value->fullname;
                 $adminUserOptions[] = $std;
@@ -353,12 +371,19 @@ class AdminBookingForm extends EFormModel {
         }
         return $this->option_booking_service_id;
     }
-    
+
     public function loadOptionDoctorAccept() {
         if (is_null($this->options_doctor_accept)) {
             $this->options_doctor_accept = AdminBooking::model()->getOptionsDoctorAccept();
         }
         return $this->options_doctor_accept;
+    }
+
+    public function loadOptionOperationFinished() {
+        if (is_null($this->option_operation_finished)) {
+            $this->option_operation_finished = AdminBooking::model()->getOptionsOperationFinished();
+        }
+        return $this->option_operation_finished;
     }
 
 }

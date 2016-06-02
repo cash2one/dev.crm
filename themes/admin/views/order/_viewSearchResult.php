@@ -34,7 +34,7 @@ if (arrayNotEmpty($payments)) {
     </td>
     <td>
         <?php
-        if ($data->is_unsystem_pay == SalesOrder::IS_UNSYSTEM_PAY) {
+        if ($data->is_unsystem_pay == SalesOrder::IS_UNSYSTEM_PAY && $data->is_paid == SalesOrder::ORDER_UNPAIDED) {
             echo '<a target="_blank" href="' . $this->createUrl('order/createOfflinePayment', array('refNo' => $data->getRefNo())) . '" >添加交易号</a>';
         } else {
             echo '<a target="_blank" href="' . $this->createUrl('view', array('id' => $data->id)) . '" >查看</a>';

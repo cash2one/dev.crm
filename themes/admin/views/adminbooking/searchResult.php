@@ -27,11 +27,19 @@ $urlSearchPage = $this->createUrl('adminbooking/searchResult');
                 echo '<li class="first"><a href="' . $urlSearchPage . '?getcount=1&page=1">&lt;&lt; 首页</a></li>';
                 echo '<li class="previous"><a href="' . $urlSearchPage . '?getcount=1&page=' . $prePage . '">&lt; 前页</a></li>';
             }
-            for ($i = 1; $i <= $pageCount; $i++) {
-                if ($i == $pageItem) {
-                    echo '<li class="page selected"><a href="' . $urlSearchPage . '?getcount=1&page=' . $i . '">' . $i . '</a></li>';
+            $active;
+            $maxPages = $pageCount > 8 ? 8 : $pageCount;
+            $starPage = $pageItem > 5 ? $pageItem : 5;
+            $activePage = $pageItem > 5 ? 5 : $pageItem;
+            for ($i = 1; $i <= $maxPages; $i++) {
+                $pageText = $starPage - 5 + $i;
+                if ($pageText > $pageCount) {
+                    break;
+                }
+                if ($i == $activePage) {
+                    echo '<li class="page selected"><a href="' . $urlSearchPage . '?getcount=1&page=' . $pageText . '">' . $pageText . '</a></li>';
                 } else {
-                    echo '<li class="page"><a href="' . $urlSearchPage . '?getcount=1&page=' . $i . '">' . $i . '</a></li>';
+                    echo '<li class="page"><a href="' . $urlSearchPage . '?getcount=1&page=' . $pageText . '">' . $pageText . '</a></li>';
                 }
             }
             if ($pageItem != $pageCount) {

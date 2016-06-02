@@ -1,5 +1,8 @@
 <?php
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/css/adminbooking.css");
+Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datepicker.css");
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl . "/js/bootstrap-datepicker/css/bootstrap-datetimepicker.css");
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.min.js', CClientScript::POS_END);
 Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker/bootstrap-datetimepicker.zh-CN.js', CClientScript::POS_END);
@@ -126,7 +129,18 @@ if (arrayNotEmpty($orderList)) {
             <span class="tab-header">患者姓名：</span><?php echo $adminBooking->patient_name == null ? '<span class="color-blue">未填写</span>' : $adminBooking->patient_name; ?>
         </div>
         <div class="col-md-4 border-bottom">
-            <span class="tab-header">患者电话：</span><?php echo $adminBooking->patient_mobile == null ? '<span class="color-blue">未填写</span>' : $adminBooking->patient_mobile . '   <a data-disease="' . $adminBooking->disease_name . '" data-bookingid="' . $adminBooking->getId() . '" data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>'; ?>
+            <span class="tab-header">患者电话：</span><?php
+            $patientMobile = '';
+            if (strIsEmpty($adminBooking->patient_mobile)) {
+                $patientMobile = '<span class="color-blue">未填写</span>';
+            } else if (strlen($adminBooking->patient_mobile) == 11) {
+                $patientMobile = substr_replace($adminBooking->patient_mobile, '****', 3, 4) . '   <a data-disease="' . $adminBooking->disease_name . '" data-bookingid="' . $adminBooking->getId() . '" data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>';
+            } else {
+                $patientMobile = substr_replace($adminBooking->patient_mobile, '***', 2, 3) . '   <a data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>';
+            }
+            echo $patientMobile;
+            //echo $adminBooking->patient_mobile == null ? '<span class="color-blue">未填写</span>' : $adminBooking->patient_mobile . '   <a data-disease="' . $adminBooking->disease_name . '" data-bookingid="' . $adminBooking->getId() . '" data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#sendSmdModal">发短信</a>' . '   <a data-mobile="' . $adminBooking->patient_mobile . '" data-toggle="modal" data-target="#outingCallsModal">打电话</a>';
+            ?>
         </div>
         <div class="col-md-4 border-bottom">
             <span class="tab-header">年龄：</span><?php
@@ -222,7 +236,10 @@ if (arrayNotEmpty($orderList)) {
             <span class="tab-header">手术专家电话：</span><?php echo $adminBooking->final_doctor_mobile == null ? '<span class="color-blue">未填写</span>' : $adminBooking->final_doctor_mobile; ?>
         </div>
         <div class="col-md-6 col-lg-3 border-bottom">
-            <span class="tab-header">最终手术时间：</span><?php echo $adminBooking->final_time == null ? '<span class="color-blue">未填写</span>' : $adminBooking->final_time; ?>
+            <span class="tab-header">最终手术时间：</span><?php
+            echo $adminBooking->final_time == null ? '<span class="color-blue">未填写</span>' : $adminBooking->final_time;
+            ?>
+            <a class="" data-toggle="modal" data-target="#updateFinalTimeModal">修改</a>
         </div>
         <div class="col-md-6 col-lg-3 border-bottom">
             <span class="tab-header">关联医生：</span><?php echo $adminBooking->doctor_user_name == null ? '<span class="color-blue">未填写</span>' : '<a href="' . $this->createUrl('user/view', array('id' => $adminBooking->doctor_user_id)) . '" target="_blank">' . $adminBooking->doctor_user_name . '</a>'; ?>
@@ -264,8 +281,11 @@ if (arrayNotEmpty($orderList)) {
         <div class="col-md-4 col-lg-2 border-bottom">
             <span>是否购买保险：</span><?php echo $adminBooking->getIsBuyInsurance() == null ? '<span class="color-blue">未填写</span>' : $adminBooking->getIsBuyInsurance(); ?>
         </div>
-        <div class="col-md-4 col-lg-4 border-bottom">
+        <div class="col-md-4 col-lg-2 border-bottom">
             <span>是否成单：</span><?php echo $adminBooking->getIsDeal() == null ? '<span class="color-blue">未填写</span>' : $adminBooking->getIsDeal(); ?>
+        </div>
+        <div class="col-md-4 col-lg-2 border-bottom">
+            <span>是否完成手术：</span><?php echo $adminBooking->getOperationFinished() == null ? '否' : $adminBooking->getOperationFinished(); ?>
         </div>
         <div class="col-md-4 col-lg-2 border-bottom">销售总额：<?php echo $adminBooking->total_amount == null ? '无' : $adminBooking->total_amount; ?></div>
         <div class="col-sm-10 border-bottom">实际总收款：<?php echo $adminBooking->order_amount == null ? '0.00' : $adminBooking->order_amount; ?></div>
@@ -296,6 +316,7 @@ if (arrayNotEmpty($orderList)) {
                 <td>客服</td>
                 <td>跟单方式</td>
                 <td>跟单任务</td>
+                <td>完成人</td>
                 <td>操作</td>
             </tr>
             <?php
@@ -305,23 +326,25 @@ if (arrayNotEmpty($orderList)) {
                     ?>
                     <tr id="task<?php echo $bktask->id; ?>" class="odd">
                         <td><input class="bkTaskId" type="checkbox" value="<?php echo $bktask->id; ?>"></td>
-                        <td><?php echo $bktask->date_plan; ?></td>
-                        <td><?php echo $bktask->admin_user; ?></td>
-                        <td><?php echo $bktask->work_type; ?></td>
+                        <td><?php echo $bktask->datePlan; ?></td>
+                        <td><?php echo $bktask->adminUser; ?></td>
+                        <td><?php echo $bktask->workType; ?></td>
                         <td><?php echo $bktask->content; ?></td>
+                        <td><?php echo $bktask->finishedUserName; ?></td>
                         <td>
                             <?php
                             if ($bktask->type == AdminTaskJoin::TASK_TYPE_DA) {
                                 echo '<a class="" data-toggle="modal" data-target="#updateStatusModal">完成任务</a>';
                             } else {
+                                echo '<a class="" data-id="' . $bktask->taskJoinId . '" data-toggle="modal" data-target="#completeTaskModal">完成任务</a>';
                                 ?>
-                                <a class="completedTask" href="<?php echo $this->createUrl('admintask/ajaxCompletedTask', array('id' => $bktask->taskJoinId)) ?>">完成任务</a></td>
+<!--                                <a class="completedTask" href="<?php //echo $this->createUrl('admintask/ajaxCompletedTask', array('id' => $bktask->taskJoinId)) ?>">完成任务</a></td>-->
                         <?php } ?>
                     </tr>
                     <?php
                 }
             } else {
-                echo '<tr><td colspan="6">无跟单记录</td></tr>';
+                echo '<tr><td colspan="8">无跟单记录</td></tr>';
             }
             ?>
         </tbody>
@@ -337,6 +360,7 @@ if (arrayNotEmpty($orderList)) {
                 <td>客服</td>
                 <td>跟单方式</td>
                 <td>跟单任务</td>
+                <td>完成人</td>
                 <td>完成时间</td>
             </tr>
             <?php
@@ -346,16 +370,17 @@ if (arrayNotEmpty($orderList)) {
                     ?>
                     <tr id="task<?php echo $bktask->id; ?>" class="odd">
                         <td><input class="bkTaskId" type="checkbox" value="<?php echo $bktask->id; ?>"></td>
-                        <td><?php echo $bktask->date_plan; ?></td>
-                        <td><?php echo $bktask->admin_user; ?></td>
-                        <td><?php echo $bktask->work_type; ?></td>
+                        <td><?php echo $bktask->datePlan; ?></td>
+                        <td><?php echo $bktask->adminUser; ?></td>
+                        <td><?php echo $bktask->workType; ?></td>
                         <td><?php echo $bktask->content; ?></td>
-                        <td><?php echo $bktask->date_done; ?></td>
+                        <td><?php echo $bktask->finishedUserName; ?></td>
+                        <td><?php echo $bktask->dateDone; ?></td>
                     </tr>
                     <?php
                 }
             } else {
-                echo '<tr><td colspan="6">无跟单历史</td></tr>';
+                echo '<tr><td colspan="8">无跟单历史</td></tr>';
             }
             ?>
         </tbody>
@@ -454,6 +479,8 @@ $this->renderPartial('addCsExplainModal', array('model' => $model));
 $this->renderPartial('//sms/_sendSmsModal', array('model' => $model));
 $this->renderPartial('outingCallsModal');
 $this->renderPartial('//sms/_smsListModal', array('smsList' => $smsList));
+$this->renderPartial('updateFinalTimeModal', array('model' => $model));
+$this->renderPartial('completeTaskModal');
 ?>
 <script>
     $(document).ready(function () {
@@ -491,6 +518,15 @@ $this->renderPartial('//sms/_smsListModal', array('smsList' => $smsList));
             autoclose: true,
             todayBtn: true,
             pickerPosition: "bottom-left",
+            language: "zh-CN"
+        });
+        $(".datepicker").datepicker({
+            //startDate: "+0d",
+            //todayBtn: true,
+            autoclose: true,
+            maxView: 2,
+            todayHighlight: true,
+            format: "yyyy-mm-dd",
             language: "zh-CN"
         });
         //全选

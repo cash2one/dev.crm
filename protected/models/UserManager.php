@@ -494,4 +494,36 @@ class UserManager {
         return $adminUserLoginLog->save();
     }
 
+    public function createCoreLogUpdate($modelBefore, $modelUpdated, $saveAll = false) {
+        $dataClass = get_class($modelBefore);
+        if ($saveAll) {
+            $dataJsonBefore = CJSON::encode($modelBefore);
+            $dataJsonUpdated = CJSON::encode($modelUpdated);
+        } else {
+            $dataArrayBefore = CJSON::decode(CJSON::encode($modelBefore));
+            $dataArrayUpdated = CJSON::decode(CJSON::encode($modelUpdated));
+            $dataBefore = array();
+            $dataUpdated = array();
+            foreach ($dataArrayUpdated as $key => $value) {
+                if ($dataArrayBefore[$key] != $value || $key == 'id') {
+                    $dataBefore[$key] = $dataArrayBefore[$key];
+                    $dataUpdated[$key] = $value;
+                }
+            }
+            $dataJsonBefore = CJSON::encode($dataBefore);
+            $dataJsonUpdated = CJSON::encode($dataUpdated);
+        }
+        $adminUpdateLog = new CoreLogUpdate();
+        $adminUpdateLog->admin_user_id = Yii::app()->user->id;
+        $adminUpdateLog->admin_user_name = Yii::app()->user->name;
+        $adminUpdateLog->data_class = $dataClass;
+        $adminUpdateLog->data_before = $dataJsonBefore;
+        $adminUpdateLog->data_updated = $dataJsonUpdated;
+        if ($adminUpdateLog->save()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

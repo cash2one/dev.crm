@@ -1,28 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "crm_core_access".
+ * This is the model class for table "admin_update_log".
  *
- * The followings are the available columns in table 'crm_core_access':
+ * The followings are the available columns in table 'admin_update_log':
  * @property integer $id
  * @property integer $admin_user_id
  * @property string $admin_user_name
- * @property string $user_host_ip
- * @property string $url
- * @property string $url_referrer
- * @property string $user_agent
- * @property string $user_host
+ * @property string $data_class
+ * @property string $data_before
+ * @property string $data_updated
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
  */
-class CrmCoreAccess extends EActiveRecord {
+class CoreLogUpdate extends EActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'crm_core_access';
+        return 'core_log_update';
     }
 
     /**
@@ -33,15 +31,13 @@ class CrmCoreAccess extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('admin_user_id', 'numerical', 'integerOnly' => true),
-            array('admin_user_name', 'length', 'max' => 50),
-            array('user_host_ip', 'length', 'max' => 20),
-            array('url, user_agent', 'length', 'max' => 200),
-            array('url_referrer', 'length', 'max' => 255),
-            array('user_host', 'length', 'max' => 45),
+            array('admin_user_name', 'length', 'max' => 20),
+            array('data_class', 'length', 'max' => 50),
+            array('data_before, data_updated', 'length', 'max' => 2000),
             array('date_created, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, admin_user_id, admin_user_name, user_host_ip, url, url_referrer, user_agent, user_host, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, admin_user_id, admin_user_name, data_class, data_before, data_updated, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -63,11 +59,9 @@ class CrmCoreAccess extends EActiveRecord {
             'id' => 'ID',
             'admin_user_id' => '管理员ID',
             'admin_user_name' => '管理员姓名',
-            'user_host_ip' => 'IP地址',
-            'url' => '访问链接',
-            'url_referrer' => '所在页面地址',
-            'user_agent' => '操作系统',
-            'user_host' => 'User Host',
+            'data_class' => '更新数据的类',
+            'data_before' => '更新之前的数据',
+            'data_updated' => '更新之后的数据',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
             'date_deleted' => 'Date Deleted',
@@ -94,11 +88,9 @@ class CrmCoreAccess extends EActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('admin_user_id', $this->admin_user_id);
         $criteria->compare('admin_user_name', $this->admin_user_name, true);
-        $criteria->compare('user_host_ip', $this->user_host_ip, true);
-        $criteria->compare('url', $this->url, true);
-        $criteria->compare('url_referrer', $this->url_referrer, true);
-        $criteria->compare('user_agent', $this->user_agent, true);
-        $criteria->compare('user_host', $this->user_host, true);
+        $criteria->compare('data_class', $this->data_class, true);
+        $criteria->compare('data_before', $this->data_before, true);
+        $criteria->compare('data_updated', $this->data_updated, true);
         $criteria->compare('date_created', $this->date_created, true);
         $criteria->compare('date_updated', $this->date_updated, true);
         $criteria->compare('date_deleted', $this->date_deleted, true);
@@ -112,7 +104,7 @@ class CrmCoreAccess extends EActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return CrmCoreAccess the static model class
+     * @return CoreLogUpdate the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

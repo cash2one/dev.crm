@@ -33,7 +33,7 @@ class AdminbookingController extends AdminController {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile', 'ajaxDeleteAdminFile', 'userSearchResult', 'addCsExplain', 'bdSearchResult', 'bdBkView'),
+                'actions' => array('create', 'update', 'ajaxCreate', 'ajaxUploadFile', 'bookingFile', 'ajaxUpdate', 'list', 'uploadsummary', 'admin', 'searchResult', 'adminBookingFile', 'addAdminUser', 'addBdUser', 'addContactUser', 'relateDoctor', 'relate', 'updateBookingStatus', 'ajaxUpload', 'ajaxSaveAdminFile', 'ajaxDeleteAdminFile', 'userSearchResult', 'addCsExplain', 'bdSearchResult', 'bdBkView', 'updateFinalTime'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -56,31 +56,6 @@ class AdminbookingController extends AdminController {
         $this->render('view', array(
             'data' => $output,
         ));
-//        $form = new AdminBookingForm;
-//        $data = $this->loadModel($id);
-//        $form->initModel($data);
-//        //salesorder for adminBooking
-//        $orderList = SalesOrder::model()->getAllByAttributes(array('bk_ref_no' => $data->ref_no));
-//        //跟单任务
-//        $taskMr = new TaskManager;
-//        $adminTasks['adminTasksNotDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '0');
-//        $adminTasks['adminTasksDone'] = $taskMr->loadAdminTaskByAdminBookingId($id, '1');
-//        //创建医生信息
-//        $creator = null;
-//        if (strIsEmpty($data->creator_doctor_id) == false) {
-//            $creator = UserDoctorProfile::model()->getByUserId($data->creator_doctor_id);
-//        }
-//        $smsMgr = new SmsManager();
-//        $smsList = $smsMgr->loadSmsLogByAdminBookingId($id);
-//
-//        $this->render('view', array(
-//            'data' => $data,
-//            'model' => $form,
-//            'orderList' => $orderList,
-//            'adminTasks' => $adminTasks,
-//            'creator' => $creator,
-//            'smsList' => $smsList
-//        ));
     }
 
     public function actionBdBkView($id) {
@@ -159,7 +134,7 @@ class AdminbookingController extends AdminController {
             $adminUser = AdminUser::model()->getById($form->admin_user_id);
             $form->admin_user_name = $adminUser->fullname;
             //设置booking type 为 bk_type_crm
-            $form->booking_type = AdminBooking::BK_TYPE_BK;
+            $form->booking_type = AdminBooking::BK_TYPE_CRM;
             $form->booking_status = StatCode::BK_STATUS_NEW;
             $form->work_schedule = StatCode::BK_STATUS_NEW;
             $model = new AdminBooking();
@@ -167,6 +142,7 @@ class AdminbookingController extends AdminController {
             //手动创建预约；若手机号未注册；则注册User
             if (strIsEmpty($model->patient_mobile) == false && strlen($model->patient_mobile) == 11) {
                 $userBooking = null;
+                $form->booking_type = AdminBooking::BK_TYPE_BK;
                 $user = User::model()->getByUsernameAndRole($model->patient_mobile, User::ROLE_PATIENT);
                 $bookMgr = new BookingManager();
                 if (isset($user) == false) {
@@ -252,6 +228,7 @@ class AdminbookingController extends AdminController {
             $value = $_POST['AdminBookingForm'];
             $form = new AdminBookingForm();
             $model = $this->loadModel($value['id']);
+            $modelBefore = clone $model;
             $form->attributes = $_POST['AdminBookingForm'];
             //给 医院 科室名称赋值
             if (!strIsEmpty($form->expected_hospital_id)) {
@@ -285,22 +262,42 @@ class AdminbookingController extends AdminController {
             if (strIsEmpty($form->final_time)) {
                 $form->final_time = NULL;
             }
-            //设置年龄
-            if (strIsEmpty($form->birth_year) == false && strIsEmpty($form->birth_month) == false) {
-                $form->patient_age = $form->birth_year . ',' . $form->birth_month;
-            } else if (strIsEmpty($form->birth_year) == false) {
-                $form->patient_age = $form->birth_year . ',0';
-            } else if (strIsEmpty($form->birth_month) == false) {
-                $form->patient_age = '0,' . $form->birth_month;
+            if ($form->is_super_user == 1) {
+                //设置年龄
+                if (strIsEmpty($form->birth_year) == false && strIsEmpty($form->birth_month) == false) {
+                    $form->patient_age = $form->birth_year . ',' . $form->birth_month;
+                } else if (strIsEmpty($form->birth_year) == false) {
+                    $form->patient_age = $form->birth_year . ',0';
+                } else if (strIsEmpty($form->birth_month) == false) {
+                    $form->patient_age = '0,' . $form->birth_month;
+                } else {
+                    $form->patient_age = null;
+                }
+                //同步修改patientBooking和patientInfo里的信息
+                $bookingMgr = new BookingManager();
+                $attr = array(
+                    'patient_name' => $form->patient_name,
+                    'age' => $form->patient_age,
+                    'mobile' => $form->patient_mobile,
+                    'disease_name' => $form->disease_name,
+                    'disease_detail' => $form->disease_detail,
+                    'state_id' => $form->state_id,
+                    'city_id' => $form->city_id,
+                    'operation_finished' => $form->operation_finished
+                );
+                $bookingMgr->updateBookingByRefNoAndTypeAndAttr($model->ref_no, $model->booking_type, $attr);
             } else {
-                $form->patient_age = null;
+                //同步修改patientBooking和patientInfo里的信息
+                $bookingMgr = new BookingManager();
+                $attr = array(
+                    'operation_finished' => $form->operation_finished
+                );
+                $bookingMgr->updateBookingByRefNoAndTypeAndAttr($model->ref_no, $model->booking_type, $attr);
             }
-            //同步修改patientBooking和patientInfo里的信息
-            $bookingMgr = new BookingManager();
-            $attr = array('patient_name' => $form->patient_name, 'age' => $form->patient_age, 'mobile' => $form->patient_mobile, 'disease_name' => $form->disease_name);
-            $bookingMgr->updateBookingByRefNoAndTypeAndAttr($model->ref_no, $model->booking_type, $attr);
             $model->setAttributes($form->attributes);
-            if ($model->save()) {
+            if ($model->update()) {
+                $userMgr = new UserManager();
+                $userMgr->createCoreLogUpdate($modelBefore, $model);
                 $output['status'] = 'ok';
                 $output['booking']['id'] = $model->id;
             } else {
@@ -661,19 +658,9 @@ class AdminbookingController extends AdminController {
                         $model->booking_status = $form->work_schedule;
                     }
                     //修改原始的booking中的状态
-                    if ($model->booking_type == AdminBooking::BK_TYPE_BK) {
-                        $booking = Booking::model()->getById($model->booking_id);
-                        $booking->bk_status = $model->booking_status;
-                        if (isset($booking)) {
-                            $booking->update(array('bk_status'));
-                        }
-                    } else if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
-                        $booking = PatientBooking::model()->getById($model->booking_id);
-                        $booking->status = $model->booking_status;
-                        if (isset($booking)) {
-                            $booking->update(array('status'));
-                        }
-                    }
+                    $bookingMgr = new BookingManager();
+                    $attr = array('booking_status' => $model->booking_status);
+                    $bookingMgr->updateBookingByRefNoAndTypeAndAttr($model->ref_no, $model->booking_type, $attr);
                 }
                 //根据类型完成对应的跟单任务
                 $taskMgr->completeTaskByAdminBookingIdAndWorkSchedule($adminbookingId, $model->work_schedule);
@@ -711,21 +698,10 @@ class AdminbookingController extends AdminController {
             $model->setDoctorUserName($name);
             $model->setDateRelated(new CDbExpression('NOW()'));
             //将关联医生信息更新到源booking中
-            if ($model->booking_type == AdminBooking::BK_TYPE_PB) {
-                $patientBooking = PatientBooking::model()->getById($model->booking_id);
-                if (isset($patientBooking)) {
-                    $patientBooking->setDoctorId($userid);
-                    $patientBooking->setDoctorName($name);
-                    $patientBooking->update(array('doctor_id', 'doctor_name'));
-                }
-            } elseif ($model->booking_type == AdminBooking::BK_TYPE_BK) {
-                $booking = Booking::model()->getById($model->booking_id);
-                if (isset($booking)) {
-                    $booking->setDoctorUserId($userid);
-                    $booking->setDoctorUserName($name);
-                    $booking->update('doctor_user_id', 'doctor_user_name');
-                }
-            }
+            $bookingMgr = new BookingManager();
+            $attr = array('doctor_user_id' => $userid, 'doctor_user_name' => $name);
+            $bookingMgr->updateBookingByRefNoAndTypeAndAttr($model->ref_no, $model->booking_type, $attr);
+
             if ($model->update(array('doctor_user_id', 'doctor_user_name', 'date_related'))) {
                 $user = User::model()->getById($userid);
                 $sendMgs = new SmsManager();
@@ -801,20 +777,27 @@ class AdminbookingController extends AdminController {
             $model = $this->loadModel($adminbookingId);
             $model->cs_explain = $value['cs_explain'];
             if ($model->save()) {
-                if ($model->booking_type == AdminBooking::BK_TYPE_BK) {
-                    $booking = Booking::model()->getById($model->booking_id);
-                } elseif ($model->booking_type == AdminBooking::BK_TYPE_PB) {
-                    $booking = PatientBooking::model()->getById($model->booking_id);
-                }
                 //将修改保存到源数据中
-                if (isset($booking)) {
-                    $booking->cs_explain = $value['cs_explain'];
-                    $booking->update('cs_explain');
-                }
+                $bookingMgr = new BookingManager();
+                $attr = array('cs_explain' => $value['cs_explain']);
+                $bookingMgr->updateBookingByRefNoAndTypeAndAttr($model->ref_no, $model->booking_type, $attr);
+
                 $this->redirect(array('view', 'id' => $adminbookingId));
             }
         }
         //$this->renderJsonOutput($output);
+    }
+
+    public function actionUpdateFinalTime() {
+        if (isset($_POST['AdminBookingForm'])) {
+            $value = $_POST['AdminBookingForm'];
+            $adminbookingId = $value['id'];
+            $model = $this->loadModel($adminbookingId);
+            $model->final_time = $value['final_time'];
+            if ($model->save()) {
+                $this->redirect(array('view', 'id' => $adminbookingId));
+            }
+        }
     }
 
 }

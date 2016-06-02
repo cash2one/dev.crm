@@ -109,17 +109,19 @@ class ApiViewAdminBooking extends EApiViewService {
             $task = $taskJoin->getAdminTask();
             $data->id = $taskBkJoin->id;
             $data->taskJoinId = $taskJoin->id;
-            $data->date_plan = $taskJoin->date_plan;
+            $data->datePlan = $taskJoin->date_plan;
             $adminUser = AdminUser::model()->getById($taskJoin->admin_user_id);
             if (isset($adminUser)) {
-                $data->admin_user = $adminUser->fullname;
+                $data->adminUser = $adminUser->fullname;
             } else {
-                $data->admin_user = '无';
+                $data->adminUser = '无';
             }
             $data->type = $taskJoin->getType(false);
-            $data->work_type = $taskJoin->getWorkType();
+            $data->workType = $taskJoin->getWorkType();
             $data->content = $task->content;
-            $data->date_done = $taskJoin->date_done;
+            $data->dateDone = $taskJoin->date_done;
+            $data->createdUserName = $taskJoin->created_user_name == null ? '系统' : $taskJoin->created_user_name;
+            $data->finishedUserName = $taskJoin->finished_user_name == null ? '无' : $taskJoin->finished_user_name;
             if ($taskJoin->status == AdminTaskJoin::STATUS_OK && is_null($taskJoin->date_done) == false) {
                 $this->adminTasks['adminTasksDone'][] = $data;
             } else {

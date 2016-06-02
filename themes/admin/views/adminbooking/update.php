@@ -59,6 +59,7 @@ echo CHtml::hiddenField("AdminBookingForm[ref_no]", $model->ref_no);
 echo CHtml::hiddenField("AdminBookingForm[cs_explain]", $model->cs_explain);
 
 echo CHtml::hiddenField("AdminBookingForm[patient_name]", $model->patient_name);
+echo CHtml::hiddenField("AdminBookingForm[patient_mobile]", $model->patient_mobile);
 echo CHtml::hiddenField("AdminBookingForm[patient_age]", $model->patient_age);
 echo CHtml::hiddenField("AdminBookingForm[patient_gender]", $model->patient_gender);
 echo CHtml::hiddenField("AdminBookingForm[state_id]", $model->state_id);
@@ -70,7 +71,7 @@ echo CHtml::hiddenField("AdminBookingForm[disease_detail]", $model->disease_deta
 echo CHtml::hiddenField("AdminBookingForm[expected_time_start]", $model->expected_time_start);
 echo CHtml::hiddenField("AdminBookingForm[expected_time_end]", $model->expected_time_end);
 ?>
-<input type="hidden" id="domain" value="http://7xq93p.com2.z0.glb.qiniucdn.com"> 
+<input type="hidden" id="domain" value="http://mr.file.mingyizhudao.com"> 
 <input type="hidden" id="uptoken_url" value="<?php echo $this->createUrl('adminbooking/ajaxUpload'); ?>">
 <input id="reportType" type="hidden" name="AdminBookingForm[report_type]" value="mr" />
 <div class="mt30">
@@ -109,12 +110,27 @@ echo CHtml::hiddenField("AdminBookingForm[expected_time_end]", $model->expected_
             <span class="tab-header">患者姓名：</span><?php echo $data->patient_name == null ? '<span class="color-blue">未填写</span>' : $data->patient_name; ?>
         </div>
         <div class="col-md-4">
-            <span class="tab-header">患者电话：</span><?php echo $form->textField($model, 'patient_mobile', array('class' => 'form-control w50')); ?>
+            <span class="tab-header">患者电话：</span><?php echo $data->patient_mobile == null ? '<span class="color-blue">未填写</span>' : substr_replace($data->patient_mobile, '****', 3, 4); ?>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-4">
-            <span class="tab-header">年龄：</span><?php echo $data->patient_age == null ? '<span class="color-blue">未填写</span>' : $data->patient_age; ?>
+            <span class="tab-header">年龄：</span><?php
+            if ($data->patient_age == null) {
+                $patientAge = '<span class="color-blue">未填写</span>';
+            } else {
+                $ageArray = explode(',', $data->patient_age);
+                $patientAge = '';
+                foreach ($ageArray as $key => $value) {
+                    if ($key == 0) {
+                        $patientAge .= $value . '岁';
+                    } else if ($key == 1) {
+                        $patientAge .= $value . '月';
+                    }
+                }
+            }
+            echo $patientAge;
+            ?>
         </div>
         <div class="col-md-4">
             <span class="">性别：</span><?php echo $data->getPatientGender() == null ? '<span class="color-blue">未填写</span>' : $data->getPatientGender(); ?>
@@ -396,6 +412,16 @@ if (is_null($creator) == false) {
         </div>
     </div>
     <div class="form-group">
+        <div class="col-sm-2">
+            <span>是否完成手术：</span><?php
+            echo $form->dropDownList($model, 'operation_finished', $model->loadOptionOperationFinished(), array(
+                'name' => 'AdminBookingForm[operation_finished]',
+                'class' => 'form-control',
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
         <div class="col-sm-12">
             <span>上级医生是否接受订单：</span><?php echo $data->getDoctorAccept() == null ? '<span class="color-blue">未填写</span>' : $data->getDoctorAccept(); ?>
         </div>
@@ -407,7 +433,7 @@ if (is_null($creator) == false) {
     </div>
     <div class="form-group">
         <div class="col-sm-12">
-            <span>补充说明：</span><?php echo $data->cs_explain == null ? '<span class="color-blue">未填写</span>' : $data->cs_explain; //$form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500));                  ?>
+            <span>补充说明：</span><?php echo $data->cs_explain == null ? '<span class="color-blue">未填写</span>' : $data->cs_explain; //$form->textArea($model, 'cs_explain', array('class' => 'form-control w50', 'maxlength' => 500));                   ?>
         </div>
     </div>
     <div class="form-group">
@@ -417,8 +443,9 @@ if (is_null($creator) == false) {
     </div>
     <div class="form-group">
         <div class="col-sm-4">
-            <span>业务员：&nbsp;&nbsp;&nbsp;</span><input class="form-control" type="text" value="<?php echo $model->admin_user_name; ?>" readonly/>
+            <span>业务员：&nbsp;&nbsp;&nbsp;</span>
             <?php
+            echo $form->textField($model, 'admin_user_name', array('class' => 'form-control w50', 'readonly' => true));
 //            echo $form->dropDownList($model, 'admin_user_id', $model->loadOptionsAdminUser(), array(
 //                'name' => 'AdminBookingForm[admin_user_id]',
 //                'prompt' => '选择',
@@ -432,7 +459,7 @@ if (is_null($creator) == false) {
 <div class="mt30">
     <div class="buttons">
         <button id="btnSubmitForm" class="btn btn-primary" type="button" name="yt0">保存</button>
-        <?php //echo CHtml::submitButton('保存', array('class' => 'btn btn-primary'));   ?>
+<?php //echo CHtml::submitButton('保存', array('class' => 'btn btn-primary'));    ?>
     </div>
 </div>
 <?php $this->endWidget(); ?>

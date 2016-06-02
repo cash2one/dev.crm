@@ -27,7 +27,7 @@ class SmsController extends AdminController {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('index', 'view', 'search', 'searchResult', 'sendSms', 'ajaxSendSms'),
+                'actions' => array('index', 'view', 'search', 'searchResult', 'sendSms', 'ajaxSendSms', 'ajaxLoadSmsTemplate', 'sendTemplateSms'),
 //                'users' => array('test'),
             ),
             array('deny', // deny all users
@@ -102,6 +102,73 @@ class SmsController extends AdminController {
             $output['status'] = 'ok';
         }
         $this->renderJsonOutput($output);
+    }
+
+    public function actionAjaxLoadSmsTemplate() {
+        $output = array('status' => 'no');
+        $smsMgr = new SmsManager();
+        $smsTemplate = $smsMgr->loadMsgSmsTemplateByIsNotAuto();
+        $output['status'] = 'ok';
+        $output['template'] = $smsTemplate;
+        $this->renderJsonOutput($output);
+    }
+
+    public function actionSendTemplateSms() {
+        $output['status'] = 'no';
+        if (isset($_POST['sms'])) {
+            $value = $_POST['sms'];
+            $code = $value['code'];
+            $smsMgr = new SmsManager();
+            $adminBookingId = $value['adminBookingId'];
+            $to = $value['mobile'];
+            $data = new stdClass();
+            switch ($code) {
+                case 'service.phone.not':
+                    //电话无人接听或者挂断
+                    $data->disease = $value['disease'];
+                    $data->hospital = $value['hospital'];
+                    $data->expert = $value['expert'];
+                    $result = $smsMgr->sendSmsServicePhoneNot($to, $data);
+                    break;
+                case 'service.distrust':
+                    //对平台不信任
+                    $result = $smsMgr->sendSmsServiceDistrust($to);
+                    break;
+                case 'service.reject':
+                    //不接受平台服务
+                    $result = $smsMgr->sendSmsServiceReject($to);
+                    break;
+                case 'wx.add':
+                    //添加微信
+                    $data->weixin = $value['text'];
+                    $result = $smsMgr->sendSmsWeixinAdd($to, $data);
+                    break;
+                case 'pay.alipay':
+                    //汇款方式支付宝
+                    $data->money = $value['text'];
+                    $result = $smsMgr->sendSmsPayAlipay($to, $data);
+                    break;
+                case 'pay.alipay':
+                    //汇款方式银行汇款
+                    $data->money = $value['text'];
+                    $result = $smsMgr->sendSmsPayBank($to, $data);
+                    break;
+            }
+            $smsIds = $result['smsId'];
+            $user = $this->getCurrentUser();
+            foreach ($smsIds as $smsId) {
+                $userSmsJoin = new AdminUserSmsJoin();
+                $userSmsJoin->admin_user_id = $user->getId();
+                $userSmsJoin->admin_user_name = $user->fullname;
+                $userSmsJoin->admin_user_title = $user->title;
+                $userSmsJoin->admin_booking_id = $adminBookingId;
+                $userSmsJoin->msg_sms_id = $smsId;
+                $userSmsJoin->save();
+            }
+            
+            $output['status'] = 'ok';
+            $this->renderJsonOutput($output);
+        }
     }
 
 }

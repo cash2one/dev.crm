@@ -322,4 +322,6 @@ a:hover{cursor: pointer;}
 #sendSmdModal ul>li{clear: none;}
 #sendSmdModal ul>li>a{color: #333;}
 #sendSmdModal ul>li.active>a{color: #00f;}
-#sendSmdModal .smsTemplate,#sendSmdModal .smsAmountTemplate,#sendSmdModal .smsWxTemplate{display: inline-block;padding-right: 10px;border-right: 1px solid #ddd;margin-right: 10px;}
+#sendSmdModal .smsTemplate,#sendSmdModal .smsAmountTemplate,#sendSmdModal .smsWxTemplate,#sendSmdModal .smsPhoneNotTemplate{display: inline-block;padding-right: 10px;border-right: 1px solid #ddd;margin-right: 10px;}
+#taskModal .taskTemplete{list-style: decimal;padding-left: 50px;display: none;}
+#taskModal .taskTemplete>li:hover,#taskModal #togglerTemplete:hover{cursor: pointer;color: #00f;}

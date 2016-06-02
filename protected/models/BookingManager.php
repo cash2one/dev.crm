@@ -456,7 +456,7 @@ class BookingManager {
                 if (isset($patient)) {
                     $adminBooking->patient_mobile = $patient->mobile;
                     $patientAgeStr = strIsEmpty($patient->age_month) ? '0' : $patient->age_month;
-                    $adminBooking->patient_age = $patient->age . '岁' . $patientAgeStr . '月';
+                    $adminBooking->patient_age = $patient->age . ',' . $patientAgeStr;
                     $adminBooking->patient_name = $patient->name;
                     $adminBooking->patient_state = $patient->state_name;
                     $adminBooking->patient_city = $patient->city_name;
@@ -749,6 +749,120 @@ class BookingManager {
             return $booking;
         }
         return null;
+    }
+
+    public function updateBookingByRefNoAndTypeAndAttr($refNo, $type, array $attr) {
+        if ($type == AdminBooking::BK_TYPE_BK) {
+            $booking = Booking::model()->getByRefNo($refNo);
+            if (isset($booking)) {
+                foreach ($attr as $key => $value) {
+                    if (is_null($value) == false) {
+                        switch ($key) {
+                            case 'patient_name':
+                                $booking->contact_name = $value;
+                                break;
+                            case 'mobile':
+                                $booking->mobile = $value;
+                                break;
+                            case 'disease_name':
+                                $booking->disease_name = $value;
+                                break;
+                            case 'disease_detail':
+                                $booking->disease_detail = $value;
+                                break;
+                            case 'booking_status':
+                                $booking->bk_status = $value;
+                                break;
+                            case 'doctor_user_id':
+                                $booking->doctor_user_id = $value;
+                                break;
+                            case 'doctor_user_name':
+                                $booking->doctor_user_name = $value;
+                                break;
+                            case 'cs_explain':
+                                $booking->cs_explain = $value;
+                                break;
+                            case 'city_id':
+                                $booking->city_id = $value;
+                                break;
+                        }
+                    }
+                }
+                $booking->update();
+            }
+        } elseif ($type == AdminBooking::BK_TYPE_PB) {
+            $patientBooking = PatientBooking::model()->getByAttributes(array('ref_no' => $refNo));
+            if (isset($patientBooking)) {
+                $patient = PatientInfo::model()->getById($patientBooking->patient_id);
+                foreach ($attr as $key => $value) {
+                    if (is_null($value) == false) {
+                        switch ($key) {
+                            case 'patient_name':
+                                $patientBooking->patient_name = $value;
+                                $patient->name = $value;
+                                break;
+                            case 'age':
+                                $ageArray = explode(',', $value);
+                                foreach ($ageArray as $k => $v) {
+                                    if ($k == 0) {
+                                        $ageYear = $v;
+                                    } else {
+                                        $ageMonth = $v;
+                                    }
+                                }
+                                $patient->age = $ageYear;
+                                $patient->age_month = $ageMonth;
+                                date_default_timezone_set("Asia/Shanghai");
+                                $birthDate = date('Y-m-d', mktime(date("H"), date("i"), date("s"), date("m") - $ageMonth, date("d"), date("Y") - $ageYear));
+                                $patient->birth_year = date("Y", strtotime($birthDate));
+                                $patient->birth_month = date("m", strtotime($birthDate));
+                                break;
+                            case 'mobile':
+                                $patient->mobile = $value;
+                                break;
+                            case 'disease_name':
+                                $patient->disease_name = $value;
+                                break;
+                            case 'disease_detail':
+                                $patient->disease_detail = $value;
+                                break;
+                            case 'booking_status':
+                                $patientBooking->status = $value;
+                                break;
+                            case 'doctor_user_id':
+                                $patientBooking->doctor_id = $value;
+                                break;
+                            case 'doctor_user_name':
+                                $patientBooking->doctor_name = $value;
+                                break;
+                            case 'cs_explain':
+                                $patientBooking->cs_explain = $value;
+                                break;
+                            case 'state_id':
+                                $patient->state_id = $value;
+                                $state = RegionState::model()->getById($value);
+                                $patient->state_name = $state->getName();
+                                break;
+                            case 'city_id':
+                                $patient->city_id = $value;
+                                $city = RegionCity::model()->getById($value);
+                                $patient->city_name = $city->getName();
+                                break;
+                            case 'operation_finished':
+                                $patientBooking->operation_finished = $value;
+                                break;
+                        }
+                    }
+                }
+                $patientBooking->update();
+                $patient->update();
+            }
+        }
+    }
+
+    public function updateAdminBookingOperationFinished(AdminBooking $booking) {
+        $booking->operation_finished = AdminBooking::OPERATION_FINISHED_YES;
+        $booking->update(array('operation_finished'));
     }
 
 }

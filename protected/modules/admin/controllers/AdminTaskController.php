@@ -35,7 +35,7 @@ class AdmintaskController extends AdminController {
 //				'users'=>array('@'),
 //			),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxDeleteTask', 'ajaxReadTask', 'list', 'adminList', 'ajaxCreateShareTask'),
+                'actions' => array('admin', 'search', 'searchResult', 'delete', 'index', 'view', 'create', 'ajaxCreate', 'update', 'ajaxAlert', 'ajaxPlan', 'ajaxTaskPlan', 'ajaxCompletedTask', 'ajaxCompletedTaskByFinishedUser', 'ajaxDeleteTask', 'ajaxReadTask', 'list', 'adminList', 'ajaxCreateShareTask'),
 //				'users'=>array('admin'),
             ),
             array('deny', // deny all users
@@ -297,6 +297,14 @@ class AdmintaskController extends AdminController {
         date_default_timezone_set("Asia/Shanghai");
         $model->date_done = date('Y-m-d H:i:s');
         $model->status = AdminTaskJoin::STATUS_OK;
+        $userId = Yii::app()->user->id;
+        $model->finished_user_id = $userId;
+        $finishedUser = AdminUser::model()->getById($userId);
+        if (isset($finishedUser)) {
+            $model->finished_user_name = $finishedUser->fullname;
+        } else {
+            $model->finished_user_name = null;
+        }
         //如果任务未读;则完成时设置为已读
         if ($model->is_read == AdminTaskJoin::NOT_READ) {
             $model->is_read = AdminTaskJoin::IS_READ;
@@ -305,6 +313,33 @@ class AdmintaskController extends AdminController {
         if ($model->save()) {
             $output['status'] = 'ok';
             $output['taskJoin']['id'] = $model->id;
+        }
+        $this->renderJsonOutput($output);
+    }
+
+    //完成计划跟单
+    public function actionAjaxCompletedTaskByFinishedUser() {
+        $output = array('status' => 'no');
+        if (isset($_POST['task'])) {
+            $value = $_POST['task'];
+            $model = AdminTaskJoin::model()->getById($value['id']);
+            $model->date_done = new CDbExpression('NOW()');
+            $model->status = AdminTaskJoin::STATUS_OK;
+            $finishedUserName = $value['finished_user_name'];
+            if (strIsEmpty($finishedUserName) == false) {
+                $model->finished_user_name = $finishedUserName;
+            } else {
+                $model->finished_user_name = null;
+            }
+            //如果任务未读;则完成时设置为已读
+            if ($model->is_read == AdminTaskJoin::NOT_READ) {
+                $model->is_read = AdminTaskJoin::IS_READ;
+                $model->date_read = date('Y-m-d H:i:s');
+            }
+            if ($model->save()) {
+                $output['status'] = 'ok';
+                $output['taskJoin']['id'] = $model->id;
+            }
         }
         $this->renderJsonOutput($output);
     }

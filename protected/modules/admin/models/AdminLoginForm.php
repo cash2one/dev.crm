@@ -46,7 +46,7 @@ class AdminLoginForm extends CFormModel {
             } else if ($this->_identity->errorCode == 2) {
                 $this->addError('password', '密码错误');
             } else if ($this->_identity->errorCode == 3) {
-                $this->addError('password', '账号已锁定;请联系管理员');
+                $this->addError('password', '密码输入错误3次，账号已冻结，请联系管理员');
             }
         }
     }

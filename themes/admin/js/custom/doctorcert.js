@@ -58,7 +58,7 @@ $(function () {
             'UploadComplete': function () {
                 $('#success').show();
                 location.reload();
-                btnSubmit.attr('disabled',false);
+                btnSubmit.attr('disabled', false);
             },
             'FileUploaded': function (up, file, info) {
                 //单个文件上传成功所做的事情 
@@ -71,7 +71,7 @@ $(function () {
                 // var domain = up.getOption('domain');
                 // var res = parseJSON(info);
                 // var sourceLink = domain + res.key; 获取上传成功后的文件的Url
-                var infoJson = eval('(' + info + ')'); 
+                var infoJson = eval('(' + info + ')');
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 progress.setComplete(up, info);
                 var formdata = new FormData();
@@ -96,7 +96,7 @@ $(function () {
                         }
                     },
                     error: function (data) {
-                        alert('上传失败!');
+                        //alert('上传失败!');
                     }
                 });
 //                var infoJson = JSON.parse(info);
@@ -112,23 +112,24 @@ $(function () {
                 progress.setStatus(errTip);
             }
             ,
-             'Key': function(up, file) {
-                 var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
-                 var key = (new Date()).getTime()+''+Math.floor(Math.random()*100)+'.'+fileExtension;;
-                 // do something with key
-                 return key;
-             }
+            'Key': function (up, file) {
+                var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
+                var key = (new Date()).getTime() + '' + Math.floor(Math.random() * 100) + '.' + fileExtension;
+                ;
+                // do something with key
+                return key;
+            }
         }
     });
     uploader.bind('FileUploaded', function () {
         console.log('hello man,a file is uploaded');
     });
-    
-    btnSubmit.click(function(){
-        btnSubmit.attr('disabled',true);
+
+    btnSubmit.click(function () {
+        btnSubmit.attr('disabled', true);
         uploader.start();
     });
-    
+
     $('#container').on(
             'dragenter',
             function (e) {
